@@ -110,8 +110,8 @@ const AudioPlayerOnScreen = ({ pageParam }) => {
   }, []);
 
   return (
-    <div className="meditation tw-p-0 tw-pt-[62px]">
-      <div id="player" className="visible !tw-bottom-0 tw-z-50">
+    <div className="meditation-audio">
+      <div id="player" className="visible">
         <div
           className={classNames('audioplayer', {
             'audioplayer-playing': isPlaying,
@@ -122,36 +122,39 @@ const AudioPlayerOnScreen = ({ pageParam }) => {
             title=""
             onClick={onPlayPauseClick}
           >
-            {!isPlaying && <img src="/img/ic-play-40-hover.svg" />}
-            {isPlaying && <img src="/img/ic-pause-40-hover.svg" />}
+            {!isPlaying && <span class="icon-aol iconaol-play"></span>}
+            {isPlaying && <span class="icon-aol iconaol-pause"></span>}
           </div>
-          <div className="player-song">
-            <span>{artist}</span>
-            <p>{title}</p>
+          <div className="player-right">
+            <div className="player-song">
+              <p>{title}</p>
+            </div>
+            <div className="audiobar-info">
+              <div className="audioplayer-time audioplayer-time-current">
+                {secondsToTime(trackProgress)}
+              </div>
+              <div
+                ref={barRef}
+                className="audioplayer-bar"
+                onMouseDown={!isTouch ? trackerMousedown : () => {}}
+                onMouseMove={!isTouch ? trackerMousemove : () => {}}
+                onMouseUp={!isTouch ? trackerMouseup : () => {}}
+                onTouchStart={isTouch ? trackerMousedown : () => {}}
+                onTouchMove={isTouch ? trackerMousemove : () => {}}
+                onTouchCancel={isTouch ? trackerMouseup : () => {}}
+              >
+                <div className="audioplayer-bar-loaded tw-w-full"></div>
+                <div
+                  className="audioplayer-bar-played"
+                  style={{ width: currentPercentage }}
+                ></div>
+              </div>
+              <div className="audioplayer-time audioplayer-time-duration">
+                {secondsToTime(duration)}
+              </div>
+            </div>
           </div>
-          <div className="audioplayer-time audioplayer-time-current">
-            {secondsToTime(trackProgress)}
-          </div>
-          <div
-            ref={barRef}
-            className="audioplayer-bar"
-            onMouseDown={!isTouch ? trackerMousedown : () => {}}
-            onMouseMove={!isTouch ? trackerMousemove : () => {}}
-            onMouseUp={!isTouch ? trackerMouseup : () => {}}
-            onTouchStart={isTouch ? trackerMousedown : () => {}}
-            onTouchMove={isTouch ? trackerMousemove : () => {}}
-            onTouchCancel={isTouch ? trackerMouseup : () => {}}
-          >
-            <div className="audioplayer-bar-loaded tw-w-full"></div>
-            <div
-              className="audioplayer-bar-played"
-              style={{ width: currentPercentage }}
-            ></div>
-          </div>
-          <div className="audioplayer-time audioplayer-time-duration">
-            {secondsToTime(duration)}
-          </div>
-          <div></div>
+          <></>
         </div>
       </div>
     </div>
