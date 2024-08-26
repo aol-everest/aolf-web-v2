@@ -241,9 +241,6 @@ const GuidedMeditation = (props) => {
             to feel revived, refreshed, and restored again
           </div>
           <div className="banner-audio">
-            <AudioPlayerSmall
-              audioSrc={randomMeditate.track?.fields?.file?.url}
-            />
             <AudioPlayerOnScreen
               id="global-player"
               pageParam={{
