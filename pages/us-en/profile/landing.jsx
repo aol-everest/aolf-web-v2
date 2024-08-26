@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import { Navigation, Pagination, Scrollbar, A11y } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/react';
 // Import Swiper styles
@@ -6,6 +6,16 @@ import 'swiper/css';
 import 'swiper/css/pagination';
 import 'swiper/css/scrollbar';
 import { useAuth } from '@contexts';
+import { useEffect } from 'react';
+import { api, concatenateStrings, tConvert } from '@utils';
+import { useQuery } from '@tanstack/react-query';
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
+
+import { fetchContentfulBannerDetails } from '@components/contentful';
+import { ABBRS, COURSE_MODES } from '@constants';
+
+dayjs.extend(utc);
 
 const ProfileLanding = () => {
   const upcomingCourseRef = useRef(null);
@@ -14,6 +24,8 @@ const ProfileLanding = () => {
   const bannerRef = useRef(null);
 
   const { profile } = useAuth();
+
+  const [banners, setBanners] = useState([]);
 
   const { first_name } = profile || {};
 
@@ -62,6 +74,26 @@ const ProfileLanding = () => {
     },
   };
 
+  useEffect(() => {
+    const getBannersData = async () => {
+      const banners = await fetchContentfulBannerDetails();
+      setBanners(banners);
+    };
+    getBannersData();
+  }, []);
+
+  const { data = [], isLoading } = useQuery({
+    queryKey: 'getUserUpcomingCourses',
+    queryFn: async () => {
+      const response = await api.get({
+        path: 'getUserUpcomingCourses',
+      });
+      return response.data;
+    },
+  });
+
+  const upcomingEvents = [...(data?.workshops || []), ...(data?.meetups || [])];
+
   const handlePrev = () => {
     if (upcomingCourseRef.current && upcomingCourseRef.current.swiper) {
       upcomingCourseRef.current.swiper.slidePrev();
@@ -108,6 +140,17 @@ const ProfileLanding = () => {
     if (bannerRef.current && bannerRef.current.swiper) {
       bannerRef.current.swiper.slideNext();
     }
+  };
+
+  const getMeetupDuration = (item, updateMeetupDuration) => {
+    const { meetupStartDate, meetupTimeZone, meetupStartTime } = item;
+    return (
+      <>
+        {`${dayjs.utc(meetupStartDate).format('MMM DD')}, `}
+        {`${tConvert(meetupStartTime)} ${ABBRS[meetupTimeZone]}, `}
+        {`${updateMeetupDuration}`}
+      </>
+    );
   };
 
   return (
@@ -250,354 +293,143 @@ const ProfileLanding = () => {
                   swiper.navigation.update();
                 }}
               >
-                <SwiperSlide>
-                  <div className="swiper-slide">
-                    <div className="flip-card">
-                      <div className="flip-card-inner">
-                        <div className="flip-card-front">
-                          <div className="ds-course-item">
-                            <div className="ds-image-wrap">
-                              <img
-                                src="/img/all-course-img12.webp"
-                                alt="course"
-                              />
-                            </div>
-                            <div className="ds-course-header">
-                              <div className="play-time">Course</div>
-                            </div>
-                            <div className="ds-course-info">
-                              <div className="ds-course-title">
-                                Sri Sri Yoga Foundation
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                        <div className="flip-card-back">
-                          <div className="course-item">
-                            <div className="course-item-header">
-                              <div className="course-title-duration">
-                                <div className="course-title">
-                                  Sri Sri Yoga Foundation
+                {upcomingEvents.map((item) => {
+                  const {
+                    sfid,
+                    title,
+                    meetupTitle,
+                    mode,
+                    primaryTeacherName,
+                    eventType,
+                    meetupDuration,
+                    locationPostalCode,
+                    isOnlineMeetup,
+                    locationCity,
+                    locationProvince,
+                    locationStreet,
+                    centerName,
+                    coTeacher1Name,
+                    timings,
+                  } = item || {};
+                  const isWorkshop = eventType === 'Workshop';
+                  const isOnline = mode === COURSE_MODES.ONLINE;
+                  const updateMeetupDuration = meetupDuration?.replace(
+                    /Minutes/g,
+                    'Min',
+                  );
+
+                  return (
+                    <SwiperSlide key={sfid}>
+                      <div className="swiper-slide">
+                        <div className="flip-card">
+                          <div className="flip-card-inner">
+                            <div className="flip-card-front">
+                              <div className="ds-course-item">
+                                <div className="ds-image-wrap">
+                                  <img
+                                    src="/img/all-course-img12.webp"
+                                    alt="course"
+                                  />
                                 </div>
-                                <div className="course-type in-person">
-                                  In Person
+                                <div className="ds-course-header">
+                                  <div className="play-time">
+                                    {isWorkshop ? 'Course' : 'Meetup'}
+                                  </div>
                                 </div>
-                                <div className="course-type online">Online</div>
-                              </div>
-                            </div>
-                            <div className="course-location">
-                              1901 Thornridge Cir. Shiloh, Hawaii 81063
-                            </div>
-                            <div className="course-instructors">
-                              Cameron Williamson, Cameron Williamson
-                            </div>
-                            <div className="course-timings">
-                              <div className="course-timing">
-                                1/18, Monday, 12pm - 2:30 pm ET
-                              </div>
-                              <div className="course-timing">
-                                1/19, Tuesdauy, 12pm - 2:30 pm ET
-                              </div>
-                              <div className="course-timing">
-                                1/20, Wednesday, 12pm - 2:30pm ET
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </SwiperSlide>
-                <SwiperSlide>
-                  <div className="swiper-slide">
-                    <div className="flip-card">
-                      <div className="flip-card-inner">
-                        <div className="flip-card-front">
-                          <div className="ds-course-item">
-                            <div className="ds-image-wrap">
-                              <img
-                                src="/img/all-course-img1.webp"
-                                alt="course"
-                              />
-                            </div>
-                            <div className="ds-course-header">
-                              <div className="play-time">Course</div>
-                            </div>
-                            <div className="ds-course-info">
-                              <div className="ds-course-title">
-                                Sahaj Samadhi Meditation
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                        <div className="flip-card-back">
-                          <div className="course-item">
-                            <div className="course-item-header">
-                              <div className="course-title-duration">
-                                <div className="course-title">
-                                  Sahaj Samadhi Meditation
+                                <div className="ds-course-info">
+                                  <div className="ds-course-title">
+                                    {isWorkshop ? title : meetupTitle}
+                                  </div>
                                 </div>
-                                <div className="course-type in-person">
-                                  In Person
+                              </div>
+                            </div>
+                            <div className="flip-card-back">
+                              <div className="course-item">
+                                <div className="course-item-header">
+                                  <div className="course-title-duration">
+                                    <div className="course-title">
+                                      {isWorkshop ? title : meetupTitle}
+                                    </div>
+                                    <div
+                                      className={`course-type ${isOnline ? 'online' : 'in-person'}`}
+                                    >
+                                      {mode}
+                                    </div>
+                                    {!isWorkshop && (
+                                      <div className="course-mode-duration">
+                                        <div className="course-duration">
+                                          {getMeetupDuration(
+                                            item,
+                                            updateMeetupDuration,
+                                          )}
+                                        </div>
+                                      </div>
+                                    )}
+                                  </div>
                                 </div>
-                                <div className="course-type online">Online</div>
-                              </div>
-                            </div>
-                            <div className="course-location">
-                              1901 Thornridge Cir. Shiloh, Hawaii 81063
-                            </div>
-                            <div className="course-instructors">
-                              Cameron Williamson, Cameron Williamson
-                            </div>
-                            <div className="course-timings">
-                              <div className="course-timing">
-                                1/18, Monday, 12pm - 2:30 pm ET
-                              </div>
-                              <div className="course-timing">
-                                1/19, Tuesdauy, 12pm - 2:30 pm ET
-                              </div>
-                              <div className="course-timing">
-                                1/20, Wednesday, 12pm - 2:30pm ET
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </SwiperSlide>
-                <SwiperSlide>
-                  <div className="swiper-slide">
-                    <div className="flip-card">
-                      <div className="flip-card-inner">
-                        <div className="flip-card-front">
-                          <div className="ds-course-item">
-                            <div className="ds-image-wrap">
-                              <img
-                                src="/img/all-course-img2.webp"
-                                alt="course"
-                              />
-                            </div>
-                            <div className="ds-course-header">
-                              <div className="play-time">Course</div>
-                            </div>
-                            <div className="ds-course-info">
-                              <div className="ds-course-title">
-                                Art of Living Part 1
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                        <div className="flip-card-back">
-                          <div className="course-item">
-                            <div className="course-item-header">
-                              <div className="course-title-duration">
-                                <div className="course-title">
-                                  Art of Living Part 1
+                                {isWorkshop ? (
+                                  <>
+                                    {mode !== 'Online' && locationCity && (
+                                      <div className="course-location">
+                                        {concatenateStrings([
+                                          locationStreet,
+                                          locationCity,
+                                          locationProvince,
+                                          locationPostalCode,
+                                        ])}
+                                      </div>
+                                    )}
+                                  </>
+                                ) : (
+                                  <div className="course-location">
+                                    {isOnlineMeetup ? (
+                                      'Live Streaming from' + ' ' + centerName
+                                    ) : (
+                                      <>
+                                        {locationCity
+                                          ? concatenateStrings([
+                                              locationCity,
+                                              locationProvince,
+                                              locationPostalCode,
+                                            ])
+                                          : centerName}
+                                      </>
+                                    )}
+                                  </div>
+                                )}
+
+                                <div className="course-instructors">
+                                  {concatenateStrings([
+                                    primaryTeacherName,
+                                    coTeacher1Name,
+                                  ])}
                                 </div>
-                                <div className="course-type in-person">
-                                  In Person
-                                </div>
-                                <div className="course-type online">Online</div>
-                              </div>
-                            </div>
-                            <div className="course-location">
-                              1901 Thornridge Cir. Shiloh, Hawaii 81063
-                            </div>
-                            <div className="course-instructors">
-                              Cameron Williamson, Cameron Williamson
-                            </div>
-                            <div className="course-timings">
-                              <div className="course-timing">
-                                1/18, Monday, 12pm - 2:30 pm ET
-                              </div>
-                              <div className="course-timing">
-                                1/19, Tuesdauy, 12pm - 2:30 pm ET
-                              </div>
-                              <div className="course-timing">
-                                1/20, Wednesday, 12pm - 2:30pm ET
+                                {isWorkshop && timings?.length > 0 && (
+                                  <div className="course-timings">
+                                    {timings.map((time, i) => {
+                                      return (
+                                        <div className="course-timing" key={i}>
+                                          <span>
+                                            {dayjs
+                                              .utc(time.startDate)
+                                              .format('M/D dddd')}
+                                          </span>
+                                          {`, ${tConvert(time.startTime)} - ${tConvert(time.endTime)} ${
+                                            ABBRS[time.timeZone]
+                                          }`}
+                                        </div>
+                                      );
+                                    })}
+                                  </div>
+                                )}
                               </div>
                             </div>
                           </div>
                         </div>
                       </div>
-                    </div>
-                  </div>
-                </SwiperSlide>
-                <SwiperSlide>
-                  <div className="swiper-slide">
-                    <div className="flip-card">
-                      <div className="flip-card-inner">
-                        <div className="flip-card-front">
-                          <div className="ds-course-item">
-                            <div className="ds-image-wrap">
-                              <img
-                                src="/img/all-course-img4.webp"
-                                alt="course"
-                              />
-                            </div>
-                            <div className="ds-course-header">
-                              <div className="play-time">Course</div>
-                            </div>
-                            <div className="ds-course-info">
-                              <div className="ds-course-title">
-                                Art of Living Part 2
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                        <div className="flip-card-back">
-                          <div className="course-item">
-                            <div className="course-item-header">
-                              <div className="course-title-duration">
-                                <div className="course-title">
-                                  Art of Living Part 2
-                                </div>
-                                <div className="course-type in-person">
-                                  In Person
-                                </div>
-                                <div className="course-type online">Online</div>
-                              </div>
-                            </div>
-                            <div className="course-location">
-                              1901 Thornridge Cir. Shiloh, Hawaii 81063
-                            </div>
-                            <div className="course-instructors">
-                              Cameron Williamson, Cameron Williamson
-                            </div>
-                            <div className="course-timings">
-                              <div className="course-timing">
-                                1/18, Monday, 12pm - 2:30 pm ET
-                              </div>
-                              <div className="course-timing">
-                                1/19, Tuesdauy, 12pm - 2:30 pm ET
-                              </div>
-                              <div className="course-timing">
-                                1/20, Wednesday, 12pm - 2:30pm ET
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </SwiperSlide>
-                <SwiperSlide>
-                  <div className="swiper-slide">
-                    <div className="flip-card">
-                      <div className="flip-card-inner">
-                        <div className="flip-card-front">
-                          <div className="ds-course-item">
-                            <div className="ds-image-wrap">
-                              <img
-                                src="/img/all-course-img3.webp"
-                                alt="course"
-                              />
-                            </div>
-                            <div className="ds-course-header">
-                              <div className="play-time">Course</div>
-                            </div>
-                            <div className="ds-course-info">
-                              <div className="ds-course-title">
-                                Art Of Living Premium
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                        <div className="flip-card-back">
-                          <div className="course-item">
-                            <div className="course-item-header">
-                              <div className="course-title-duration">
-                                <div className="course-title">
-                                  Art Of Living Premium
-                                </div>
-                                <div className="course-type in-person">
-                                  In Person
-                                </div>
-                                <div className="course-type online">Online</div>
-                              </div>
-                            </div>
-                            <div className="course-location">
-                              1901 Thornridge Cir. Shiloh, Hawaii 81063
-                            </div>
-                            <div className="course-instructors">
-                              Cameron Williamson, Cameron Williamson
-                            </div>
-                            <div className="course-timings">
-                              <div className="course-timing">
-                                1/18, Monday, 12pm - 2:30 pm ET
-                              </div>
-                              <div className="course-timing">
-                                1/19, Tuesdauy, 12pm - 2:30 pm ET
-                              </div>
-                              <div className="course-timing">
-                                1/20, Wednesday, 12pm - 2:30pm ET
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </SwiperSlide>
-                <SwiperSlide>
-                  <div className="swiper-slide">
-                    <div className="flip-card">
-                      <div className="flip-card-inner">
-                        <div className="flip-card-front">
-                          <div className="ds-course-item">
-                            <div className="ds-image-wrap">
-                              <img
-                                src="/img/all-course-img5.webp"
-                                alt="course"
-                              />
-                            </div>
-                            <div className="ds-course-header">
-                              <div className="play-time">Course</div>
-                            </div>
-                            <div className="ds-course-info">
-                              <div className="ds-course-title">
-                                Blessings Course
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                        <div className="flip-card-back">
-                          <div className="course-item">
-                            <div className="course-item-header">
-                              <div className="course-title-duration">
-                                <div className="course-title">
-                                  Blessings Course
-                                </div>
-                                <div className="course-type in-person">
-                                  In Person
-                                </div>
-                                <div className="course-type online">Online</div>
-                              </div>
-                            </div>
-                            <div className="course-location">
-                              1901 Thornridge Cir. Shiloh, Hawaii 81063
-                            </div>
-                            <div className="course-instructors">
-                              Cameron Williamson, Cameron Williamson
-                            </div>
-                            <div className="course-timings">
-                              <div className="course-timing">
-                                1/18, Monday, 12pm - 2:30 pm ET
-                              </div>
-                              <div className="course-timing">
-                                1/19, Tuesdauy, 12pm - 2:30 pm ET
-                              </div>
-                              <div className="course-timing">
-                                1/20, Wednesday, 12pm - 2:30pm ET
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </SwiperSlide>
+                    </SwiperSlide>
+                  );
+                })}
               </Swiper>
             </div>
           </div>

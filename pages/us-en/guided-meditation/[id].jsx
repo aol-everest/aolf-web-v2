@@ -22,10 +22,7 @@ import {
 import { meditatePlayEvent, pushRouteWithUTMQuery } from '@service';
 import HubSpotForm from '@components/hubSpotForm';
 import { useRouter } from 'next/router';
-import {
-  fetchContentfulBannerDetails,
-  fetchContentfulDataDetails,
-} from '@components/contentful';
+import { fetchContentfulDataDetails } from '@components/contentful';
 import AudioPlayerOnScreen from '@components/audioPlayer/AudioPlayerOnScreen';
 
 const swiperOption = {
@@ -79,9 +76,6 @@ const GuidedMeditation = (props) => {
         randomMeditateData?.contentfulId || '',
       );
       setRandomMeditate({ ...randomMeditateData, ...audioVideoDetails });
-
-      // const banners = await fetchContentfulBannerDetails();
-      // console.log(banners);
     };
 
     getContentfulData();
