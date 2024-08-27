@@ -114,6 +114,7 @@ const GuidedMeditation = (props) => {
         path: 'library',
         param: {
           folderId: categoryId,
+          accessible: true,
         },
       });
       const [contentFolder] = response.data.folder;
