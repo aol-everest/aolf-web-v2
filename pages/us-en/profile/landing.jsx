@@ -1,3 +1,4 @@
+/* eslint-disable no-inline-styles/no-inline-styles */
 import React, { useRef, useState } from 'react';
 import { Navigation, Pagination, Scrollbar, A11y } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/react';
@@ -82,7 +83,6 @@ const ProfileLanding = () => {
   useEffect(() => {
     const getBannersData = async () => {
       const banners = await fetchContentfulBannerDetails();
-      console.log('banners-->', banners);
       setBanners(banners);
     };
     getBannersData();
@@ -159,6 +159,8 @@ const ProfileLanding = () => {
     );
   };
 
+  const handleBannerButtonClick = () => {};
+
   return (
     <main className="profile-home">
       <section className="welcome-section">
@@ -182,68 +184,38 @@ const ProfileLanding = () => {
                 swiper.navigation.update();
               }}
             >
-              <SwiperSlide>
-                <div className="swiper-slide">
-                  <div className="banner-slide-content banner-slide-1">
-                    <div className="slide-1-content">
-                      <div className="first-box">
-                        <img
-                          src="/img/journey-app-banner-preview.webp"
-                          alt="Journey App"
-                          height="458"
-                        />
-                      </div>
-                      <div className="second-box">
-                        <div className="mobile-app-info">
-                          <div className="info-header">
-                            <div className="app-icon">
-                              <img src="/img/logo-icon-small.webp" alt="logo" />
-                            </div>
-                            <div className="app-title">
-                              <h2>Art of living</h2>
-                              <h3>Journey App</h3>
-                            </div>
+              {banners.map((banner, index) => {
+                return (
+                  <SwiperSlide key={index}>
+                    <div className="swiper-slide">
+                      <div
+                        className="banner-slide-content banner-slide-2"
+                        style={{
+                          backgroundImage: `url(${banner.media?.fields?.file.url})`,
+                        }}
+                      >
+                        <div className="slide-2-content">
+                          <h2>{banner.name}</h2>
+                          <p>
+                            Discover exciting urban transformation with the
+                            Cities 4 Peace peace building initiative
+                          </p>
+                          <div className="banner-btn">
+                            <button
+                              className="primary-btn"
+                              onClick={() =>
+                                window.open(banner.deeplinkUrl, '_blank')
+                              }
+                            >
+                              {banner.buttonText}
+                            </button>
                           </div>
                         </div>
-                        <div className="banner1-btn">
-                          <button className="primary-btn">
-                            Start your free trial
-                          </button>
-                        </div>
                       </div>
                     </div>
-                  </div>
-                </div>
-              </SwiperSlide>
-              <SwiperSlide>
-                <div className="swiper-slide">
-                  <div className="banner-slide-content banner-slide-2">
-                    <div className="slide-2-content">
-                      <h2>Transforming Trauma Through Breath</h2>
-                      <p>
-                        Discover exciting urban transformation with the Cities 4
-                        Peace peace building initiative
-                      </p>
-                      <div className="banner-btn">
-                        <button className="primary-btn">Be the change</button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </SwiperSlide>
-              <SwiperSlide>
-                <div className="swiper-slide">
-                  <div className="banner-slide-content banner-slide-3">
-                    <div className="slide-3-content">
-                      <h2>Be The Change</h2>
-                      <p>Peace and Nonviolence Education Module</p>
-                      <div className="banner-btn">
-                        <button className="primary-btn">Learn More</button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </SwiperSlide>
+                  </SwiperSlide>
+                );
+              })}
             </Swiper>
 
             <div
