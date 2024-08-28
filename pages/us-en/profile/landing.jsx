@@ -7,7 +7,12 @@ import 'swiper/css/pagination';
 import 'swiper/css/scrollbar';
 import { useAuth } from '@contexts';
 import { useEffect } from 'react';
-import { api, concatenateStrings, tConvert } from '@utils';
+import {
+  api,
+  concatenateStrings,
+  findSlugByProductTypeId,
+  tConvert,
+} from '@utils';
 import { useQuery } from '@tanstack/react-query';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
@@ -77,6 +82,7 @@ const ProfileLanding = () => {
   useEffect(() => {
     const getBannersData = async () => {
       const banners = await fetchContentfulBannerDetails();
+      console.log('banners-->', banners);
       setBanners(banners);
     };
     getBannersData();
@@ -146,9 +152,9 @@ const ProfileLanding = () => {
     const { meetupStartDate, meetupTimeZone, meetupStartTime } = item;
     return (
       <>
-        {`${dayjs.utc(meetupStartDate).format('MMM DD')}, `}
+        {`${dayjs.utc(meetupStartDate).format('MM/DD dddd')}, `}
         {`${tConvert(meetupStartTime)} ${ABBRS[meetupTimeZone]}, `}
-        {`${updateMeetupDuration}`}
+        {`${updateMeetupDuration} Mins`}
       </>
     );
   };
@@ -310,13 +316,16 @@ const ProfileLanding = () => {
                     centerName,
                     coTeacher1Name,
                     timings,
+                    productTypeId,
                   } = item || {};
                   const isWorkshop = eventType === 'Workshop';
+                  const isMeetup = eventType === 'Meetup';
                   const isOnline = mode === COURSE_MODES.ONLINE;
                   const updateMeetupDuration = meetupDuration?.replace(
                     /Minutes/g,
                     'Min',
                   );
+                  const slug = findSlugByProductTypeId(productTypeId);
 
                   return (
                     <SwiperSlide key={sfid}>
@@ -327,18 +336,26 @@ const ProfileLanding = () => {
                               <div className="ds-course-item">
                                 <div className="ds-image-wrap">
                                   <img
-                                    src="/img/all-course-img12.webp"
+                                    src={
+                                      isMeetup
+                                        ? `/img/silent-retreat-bg@2x.png`
+                                        : `/img/courses/${slug}.webp`
+                                    }
                                     alt="course"
                                   />
                                 </div>
                                 <div className="ds-course-header">
                                   <div className="play-time">
-                                    {isWorkshop ? 'Course' : 'Meetup'}
+                                    {isWorkshop
+                                      ? 'Course'
+                                      : isMeetup
+                                        ? 'Meetup'
+                                        : 'Event'}
                                   </div>
                                 </div>
                                 <div className="ds-course-info">
                                   <div className="ds-course-title">
-                                    {isWorkshop ? title : meetupTitle}
+                                    {isMeetup ? meetupTitle : title}
                                   </div>
                                 </div>
                               </div>
@@ -348,39 +365,16 @@ const ProfileLanding = () => {
                                 <div className="course-item-header">
                                   <div className="course-title-duration">
                                     <div className="course-title">
-                                      {isWorkshop ? title : meetupTitle}
+                                      {isMeetup ? meetupTitle : title}
                                     </div>
                                     <div
                                       className={`course-type ${isOnline ? 'online' : 'in-person'}`}
                                     >
                                       {mode}
                                     </div>
-                                    {!isWorkshop && (
-                                      <div className="course-mode-duration">
-                                        <div className="course-duration">
-                                          {getMeetupDuration(
-                                            item,
-                                            updateMeetupDuration,
-                                          )}
-                                        </div>
-                                      </div>
-                                    )}
                                   </div>
                                 </div>
-                                {isWorkshop ? (
-                                  <>
-                                    {mode !== 'Online' && locationCity && (
-                                      <div className="course-location">
-                                        {concatenateStrings([
-                                          locationStreet,
-                                          locationCity,
-                                          locationProvince,
-                                          locationPostalCode,
-                                        ])}
-                                      </div>
-                                    )}
-                                  </>
-                                ) : (
+                                {isMeetup ? (
                                   <div className="course-location">
                                     {isOnlineMeetup ? (
                                       'Live Streaming from' + ' ' + centerName
@@ -396,6 +390,19 @@ const ProfileLanding = () => {
                                       </>
                                     )}
                                   </div>
+                                ) : (
+                                  <>
+                                    {mode !== 'Online' && locationCity && (
+                                      <div className="course-location">
+                                        {concatenateStrings([
+                                          locationStreet,
+                                          locationCity,
+                                          locationProvince,
+                                          locationPostalCode,
+                                        ])}
+                                      </div>
+                                    )}
+                                  </>
                                 )}
 
                                 <div className="course-instructors">
@@ -404,7 +411,7 @@ const ProfileLanding = () => {
                                     coTeacher1Name,
                                   ])}
                                 </div>
-                                {isWorkshop && timings?.length > 0 && (
+                                {timings?.length > 0 ? (
                                   <div className="course-timings">
                                     {timings.map((time, i) => {
                                       return (
@@ -412,7 +419,7 @@ const ProfileLanding = () => {
                                           <span>
                                             {dayjs
                                               .utc(time.startDate)
-                                              .format('M/D dddd')}
+                                              .format('MM/DD dddd')}
                                           </span>
                                           {`, ${tConvert(time.startTime)} - ${tConvert(time.endTime)} ${
                                             ABBRS[time.timeZone]
@@ -420,6 +427,15 @@ const ProfileLanding = () => {
                                         </div>
                                       );
                                     })}
+                                  </div>
+                                ) : (
+                                  <div className="course-timings">
+                                    <div className="course-timing">
+                                      {getMeetupDuration(
+                                        item,
+                                        updateMeetupDuration,
+                                      )}
+                                    </div>
                                   </div>
                                 )}
                               </div>

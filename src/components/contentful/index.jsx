@@ -21,12 +21,23 @@ export const fetchContentfulBannerDetails = async (entryId) => {
   try {
     const entries = await client.getEntries({
       content_type: 'banner', // Replace 'banner' with your actual content type ID
-      limit: 10, // You can adjust the limit based on your needs
+      limit: 10, // Adjust the limit based on your needs
     });
 
-    return entries.items.map((entry) => ({
-      ...entry.fields,
-    }));
+    return entries.items.map((entry) => {
+      // Directly modify the URL if needed
+      const media = entry.fields.media;
+      if (media && media.fields && media.fields.file && media.fields.file.url) {
+        const url = media.fields.file.url;
+        if (url.startsWith('//')) {
+          media.fields.file.url = `https:${url}`;
+        }
+      }
+
+      return {
+        ...entry.fields,
+      };
+    });
   } catch (error) {
     console.error('Error fetching banners:', error);
     return [];
