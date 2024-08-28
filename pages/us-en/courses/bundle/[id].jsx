@@ -800,8 +800,8 @@ const Course = () => {
                 value={onlyWeekend}
                 closeEvent={onFilterChange('onlyWeekend')}
                 showList={false}
-                label="Weekend courses"
-                buttonText={onlyWeekend ? 'Weekend courses' : null}
+                label="Weekend Courses / Events"
+                buttonText={onlyWeekend ? 'Weekend Courses / Events' : null}
               ></Popup>
 
               <Popup
@@ -903,7 +903,7 @@ const Course = () => {
                           className="selected-filter-item"
                           onClick={onFilterClearEvent('onlyWeekend')}
                         >
-                          Weekend Courses
+                          Weekend Courses / Events
                         </div>
                       )}
 
@@ -1001,7 +1001,7 @@ const Course = () => {
                         />
                       </div>
                     </MobileFilterModal>
-                    <label>Weekend courses</label>
+                    <label>Weekend Courses / Events</label>
                     <div
                       className={classNames('courses-filter', {
                         'with-selected': onlyWeekend,
@@ -1020,7 +1020,7 @@ const Course = () => {
                           setOnlyWeekend(!onlyWeekend ? true : null);
                         }}
                       >
-                        Weekend courses
+                        Weekend Courses / Events
                       </button>
                       <button
                         className="courses-filter__remove"
@@ -1168,7 +1168,7 @@ const Course = () => {
                   className="selected-filter-item"
                   onClick={onFilterClearEvent('onlyWeekend')}
                 >
-                  Weekend Courses
+                  Weekend Courses / Events
                 </div>
               )}
 
