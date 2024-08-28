@@ -19,6 +19,8 @@ import 'swiper/css/scrollbar';
 
 import 'bootstrap-daterangepicker/daterangepicker.css';
 import { orgConfig } from '@org';
+import { navigateToLogin } from '@utils';
+import queryString from 'query-string';
 
 const SKYBreathMeditation = dynamic(() =>
   import('@components/courseDetails').then((mod) => mod.SKYBreathMeditation),
@@ -102,21 +104,44 @@ const MarmaTraining = dynamic(() =>
 function CourseDetail() {
   const { profile, isAuthenticated } = useAuth();
   const router = useRouter();
-  const { id: workshopId, mode = '' } = router.query;
+  const { id: workshopId, mode = '', bundle } = router.query;
+
   const { track, page } = useAnalytics();
   const { data, isLoading, isError, error } = useQuery({
     queryKey: 'workshopDetail',
     queryFn: async () => {
-      const response = await api.get({
-        path: 'workshopDetail',
-        param: {
+      let param = {
+        id: workshopId,
+      };
+      if (bundle) {
+        param = {
+          ...param,
+          bundleSfid: bundle,
           id: workshopId,
-        },
+        };
+      }
+      const response = await api.get({
+        path: bundle ? 'workshopDetailWithBundles' : 'workshopDetail',
+        param,
       });
       return response.data;
     },
     enabled: router.isReady,
   });
+  if (data?.bundleInfo) {
+    data.listPrice = data?.bundleInfo.comboListPrice;
+    data.unitPrice = data?.bundleInfo.comboUnitPrice;
+  }
+  let checkOutQueryParam = {
+    ctype: data?.productTypeId,
+    page: 'c-o',
+  };
+  if (bundle) {
+    checkOutQueryParam = {
+      ...checkOutQueryParam,
+      bundle,
+    };
+  }
   useEffect(() => {
     if (!isAuthenticated || !data) return;
 
@@ -197,10 +222,7 @@ function CourseDetail() {
     ) {
       pushRouteWithUTMQuery(router, {
         pathname: `/us-en/course/checkout/${data.id}`,
-        query: {
-          ctype: data.productTypeId,
-          page: 'c-o',
-        },
+        query: checkOutQueryParam,
       });
     }
   }, [router.isReady, data]);
@@ -285,10 +307,40 @@ function CourseDetail() {
   const isMarmaTraining =
     COURSE_TYPES.MARMA_TRAINING.value.indexOf(data.productTypeId) >= 0;
 
+  const handleRegister =
+    (courseType = COURSE_TYPES.SKY_BREATH_MEDITATION.code) =>
+    (e) => {
+      e.preventDefault();
+      const { sfid, isGuestCheckoutEnabled, productTypeId } = data || {};
+
+      if (sfid) {
+        if (isAuthenticated || isGuestCheckoutEnabled) {
+          pushRouteWithUTMQuery(router, {
+            pathname: `/us-en/course/checkout/${sfid}`,
+            query: checkOutQueryParam,
+          });
+        } else {
+          navigateToLogin(
+            router,
+            `/us-en/course/checkout/${sfid}?${queryString.stringify(
+              checkOutQueryParam,
+            )}&${queryString.stringify(router.query)}`,
+          );
+        }
+      } else {
+        pushRouteWithUTMQuery(router, {
+          pathname: `/us-en/course/scheduling`,
+          query: {
+            courseType: courseType,
+          },
+        });
+      }
+    };
   const props = {
     data,
     swiperOption,
     mode,
+    handleRegister,
   };
 
   const renderCourseDetail = () => {

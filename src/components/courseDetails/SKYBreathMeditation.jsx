@@ -54,40 +54,12 @@ const settings = {
   ],
 };
 
-export const SKYBreathMeditation = ({ data, mode: courseViewMode }) => {
-  const { sfid, title, isGuestCheckoutEnabled, productTypeId } = data || {};
-  const router = useRouter();
-  const { isAuthenticated = false } = useAuth();
-  const { showModal } = useGlobalModalContext();
-
-  const handleRegister = (e) => {
-    e.preventDefault();
-    if (sfid) {
-      if (isAuthenticated || isGuestCheckoutEnabled) {
-        pushRouteWithUTMQuery(router, {
-          pathname: `/us-en/course/checkout/${sfid}`,
-          query: {
-            ctype: productTypeId,
-            page: 'c-o',
-          },
-        });
-      } else {
-        navigateToLogin(
-          router,
-          `/us-en/course/checkout/${sfid}?ctype=${productTypeId}&page=c-o&${queryString.stringify(
-            router.query,
-          )}`,
-        );
-      }
-    } else {
-      pushRouteWithUTMQuery(router, {
-        pathname: `/us-en/course/scheduling`,
-        query: {
-          courseType: COURSE_TYPES.SKY_BREATH_MEDITATION.code,
-        },
-      });
-    }
-  };
+export const SKYBreathMeditation = ({
+  data,
+  mode: courseViewMode,
+  handleRegister,
+}) => {
+  const { sfid, title } = data || {};
 
   return (
     <>
@@ -150,7 +122,9 @@ export const SKYBreathMeditation = ({ data, mode: courseViewMode }) => {
               <div className="hero-register-button-wrapper">
                 <button
                   className="hero-register-button"
-                  onClick={handleRegister}
+                  onClick={handleRegister(
+                    COURSE_TYPES.SKY_BREATH_MEDITATION.code,
+                  )}
                 >
                   Register Now <FaArrowRightLong className="fa-solid" />
                 </button>
@@ -158,7 +132,13 @@ export const SKYBreathMeditation = ({ data, mode: courseViewMode }) => {
             )}
           </div>
           {sfid && (
-            <PriceCard workshop={data} courseViewMode={courseViewMode} />
+            <PriceCard
+              workshop={data}
+              courseViewMode={courseViewMode}
+              handleRegister={handleRegister(
+                COURSE_TYPES.SKY_BREATH_MEDITATION.code,
+              )}
+            />
           )}
         </section>
         <section className="progress-section">
@@ -254,7 +234,9 @@ export const SKYBreathMeditation = ({ data, mode: courseViewMode }) => {
                     {courseViewMode !== WORKSHOP_MODE.VIEW && (
                       <button
                         className="register-button"
-                        onClick={handleRegister}
+                        onClick={handleRegister(
+                          COURSE_TYPES.SKY_BREATH_MEDITATION.code,
+                        )}
                       >
                         Register Now <FaArrowRightLong />
                       </button>
@@ -703,7 +685,12 @@ export const SKYBreathMeditation = ({ data, mode: courseViewMode }) => {
                 </div>
               </div>
               <div className="bar-right">
-                <button className="register-button" onClick={handleRegister}>
+                <button
+                  className="register-button"
+                  onClick={handleRegister(
+                    COURSE_TYPES.SKY_BREATH_MEDITATION.code,
+                  )}
+                >
                   Register Now <FaArrowRightLong className="fa-solid" />
                 </button>
               </div>

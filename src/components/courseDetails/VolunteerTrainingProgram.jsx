@@ -68,31 +68,19 @@ export const VolunteerTrainingProgram = ({
   data,
   swiperOption,
   mode: courseViewMode,
+  handleRegister,
 }) => {
-  const { showAlert } = useGlobalAlertContext();
-  const router = useRouter();
   const [selectedFAQ, setSelectedFAQ] = useState(-1);
 
-  const showResearchModal = (e) => {
-    if (e) e.preventDefault();
-    showAlert(ALERT_TYPES.CUSTOM_ALERT, {
-      title: 'Success',
-      children: <ResearchFindingSource />,
-      className: 'research-detail-modal',
-      hideConfirm: true,
-    });
-  };
-
-  const handleRegister = (e) => {
-    e.preventDefault();
-    pushRouteWithUTMQuery(router, {
-      pathname: `/us-en/course/checkout/${data.sfid}`,
-      query: {
-        ctype: data.productTypeId,
-        page: 'c-o',
-      },
-    });
-  };
+  // const showResearchModal = (e) => {
+  //   if (e) e.preventDefault();
+  //   showAlert(ALERT_TYPES.CUSTOM_ALERT, {
+  //     title: 'Success',
+  //     children: <ResearchFindingSource />,
+  //     className: 'research-detail-modal',
+  //     hideConfirm: true,
+  //   });
+  // };
 
   const handleFAQselection = (index) => {
     if (selectedFAQ === index) {
@@ -100,19 +88,6 @@ export const VolunteerTrainingProgram = ({
     } else {
       setSelectedFAQ(index);
     }
-  };
-
-  const autoSwiperOption = {
-    slidesPerView: 1,
-    spaceBetween: 30,
-    centeredSlides: true,
-    autoplay: {
-      delay: 2000,
-    },
-    pagination: {
-      el: '.research__list-pagination',
-      clickable: true,
-    },
   };
 
   const {
@@ -137,7 +112,6 @@ export const VolunteerTrainingProgram = ({
     productTypeId,
     corporateName,
   } = data || {};
-  const { fee, delfee, offering } = priceCalculation({ workshop: data });
 
   return (
     <>
@@ -660,7 +634,10 @@ export const VolunteerTrainingProgram = ({
                   You matter.
                 </h2>
                 <Element name="registerNowBlock">
-                  <RegisterPanel workshop={data} />
+                  <RegisterPanel
+                    workshop={data}
+                    handleRegister={handleRegister()}
+                  />
                 </Element>
               </div>
             </div>
@@ -773,7 +750,7 @@ export const VolunteerTrainingProgram = ({
               <button
                 type="button"
                 className="btn-secondary program-meet__button"
-                onClick={handleRegister}
+                onClick={handleRegister()}
               >
                 Let's Get Started
               </button>

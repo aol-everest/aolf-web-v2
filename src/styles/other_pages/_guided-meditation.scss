@@ -94,6 +94,127 @@ main.guided-meditation {
       }
     }
     .banner-audio {
+      .audioplayer {
+        background-color: white;
+        box-shadow: 0px 0px 46.6px 0px #d0cccc40;
+        border-radius: 14px;
+        padding: 10px;
+        height: 81px;
+        max-width: 520px;
+        display: flex;
+        gap: 30px;
+        @media screen and (max-width: 991px) {
+          margin: auto;
+          height: 62px;
+          width: 520px;
+          max-width: 100%;
+          gap: 12px;
+          position: relative;
+        }
+        .audioplayer-playpause {
+          height: 60px;
+          width: 60px;
+          border-radius: 100%;
+          background: linear-gradient(
+            102.78deg,
+            #3d8be8 -37.89%,
+            #89beec 100.28%
+          );
+          opacity: 1;
+          @media screen and (max-width: 991px) {
+            height: 42px;
+            width: 42px;
+          }
+          .icon-aol {
+            font-size: 27px;
+            color: white;
+            @media screen and (max-width: 991px) {
+              font-size: 19px;
+            }
+          }
+        }
+        .player-right {
+          display: flex;
+          flex-direction: column;
+          flex-grow: 1;
+          gap: 4px;
+        }
+        .audiobar-info {
+          display: flex;
+          gap: 8px;
+          align-items: center;
+        }
+        .player-song {
+          margin-left: 0;
+          p {
+            font-size: 18px;
+            font-weight: 600;
+            line-height: 21.11px;
+            color: #6f7283;
+            text-align: left;
+            @media screen and (max-width: 991px) {
+              font-size: 16px;
+              line-height: 18.77px;
+            }
+          }
+        }
+        .audioplayer-time-current {
+          margin-left: 0px;
+        }
+        .audioplayer-time {
+          color: #6f7283;
+          font-size: 16px;
+          font-weight: 400;
+          line-height: 36px;
+          padding: 0;
+          @media screen and (max-width: 991px) {
+            font-size: 12px;
+            line-height: 19px;
+          }
+        }
+        .audioplayer-bar {
+          margin: 0;
+          height: 13px;
+          @media screen and (max-width: 991px) {
+            height: 9px;
+          }
+          &::before {
+            background: #e9e9e9;
+            border-radius: 24px;
+            height: 13px;
+            top: 0;
+            @media screen and (max-width: 991px) {
+              height: 9px;
+              border-radius: 16px;
+            }
+          }
+        }
+        .audioplayer-bar-loaded {
+          background: #e9e9e9;
+          border-radius: 24px;
+          height: 13px;
+          @media screen and (max-width: 991px) {
+            height: 9px;
+            border-radius: 16px;
+          }
+        }
+        .audioplayer-bar-played {
+          background-color: #89beec;
+          border-radius: 24px;
+          height: 13px;
+          top: 0;
+          @media screen and (max-width: 991px) {
+            height: 9px;
+            border-radius: 16px;
+          }
+          &::after {
+            display: none;
+          }
+        }
+        .audioplayer-time-duration {
+          margin-right: 0px;
+        }
+      }
       @media screen and (max-width: 991px) {
         text-align: center;
       }

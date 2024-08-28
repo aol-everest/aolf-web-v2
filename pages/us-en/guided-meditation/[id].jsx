@@ -22,8 +22,11 @@ import {
 import { meditatePlayEvent, pushRouteWithUTMQuery } from '@service';
 import HubSpotForm from '@components/hubSpotForm';
 import { useRouter } from 'next/router';
-import { fetchContentfulDataDetails } from '@components/contentful';
-// import AudioPlayerOnScreen from '@components/audioPlayer/AudioPlayerOnScreen';
+import {
+  fetchContentfulBannerDetails,
+  fetchContentfulDataDetails,
+} from '@components/contentful';
+import AudioPlayerOnScreen from '@components/audioPlayer/AudioPlayerOnScreen';
 
 const swiperOption = {
   modules: [Navigation, Scrollbar, A11y, Pagination],
@@ -58,7 +61,7 @@ export const getServerSideProps = async (context) => {
 
 const GuidedMeditation = (props) => {
   const [accordionIndex, setAccordionIndex] = useState(0);
-  const [topic, setTopic] = useQueryString('topic');
+  const [categoryId, setCategoryId] = useQueryString('categoryId');
   const router = useRouter();
   const scrollToRef = useRef(null);
   const { id: rootFolderID } = router.query;
@@ -76,11 +79,15 @@ const GuidedMeditation = (props) => {
         randomMeditateData?.contentfulId || '',
       );
       setRandomMeditate({ ...randomMeditateData, ...audioVideoDetails });
+
+      // const banners = await fetchContentfulBannerDetails();
+      // console.log(banners);
     };
 
     getContentfulData();
   }, []);
 
+  // For geting the first load Data with root folder id
   const { data: rootFolder = {} } = useQuery({
     queryKey: ['library'],
     queryFn: async () => {
@@ -99,49 +106,25 @@ const GuidedMeditation = (props) => {
     },
   });
 
-  const { data: meditationCategory = [] } = useQuery({
-    queryKey: 'meditationCategory',
+  // For geting the Category Data
+  const { isLoading: loading, data } = useQuery({
+    queryKey: ['library', categoryId],
     queryFn: async () => {
       const response = await api.get({
-        path: 'meditationCategory',
+        path: 'library',
+        param: {
+          folderId: categoryId,
+          accessible: true,
+        },
       });
-      return response.data;
+      const [contentFolder] = response.data.folder;
+      return contentFolder;
     },
-  });
-
-  const { isLoading: loading, data } = useQuery({
-    queryKey: [
-      'meditations',
-      {
-        topic,
-      },
-    ],
-    queryFn: async ({ pageParam = 1 }) => {
-      let param = {
-        page: pageParam,
-        size: 12,
-        deviceType: 'Web',
-        folderName: 'Meditations',
-        accessible: true,
-      };
-
-      if (topic) {
-        param = {
-          ...param,
-          category: topic,
-        };
-      }
-
-      const res = await api.get({
-        path: 'library/search',
-        param,
-      });
-      return res;
-    },
+    enabled: !!categoryId,
   });
 
   const onFilterChange = (value) => {
-    setTopic(value);
+    setCategoryId(value);
   };
 
   const handlePrev = () => {
@@ -204,10 +187,14 @@ const GuidedMeditation = (props) => {
       folder.title && folder.title.toLowerCase().indexOf('popular') > -1,
   );
 
-  const content = topic
-    ? data?.data
-    : popularFolder?.content?.length
-      ? popularFolder.content
+  const nonListingFolders = contentFolders?.filter(
+    (folder) => !folder.isListingFolder,
+  );
+
+  const categoryContent = categoryId
+    ? data
+    : popularFolder?.content?.length > 0
+      ? popularFolder?.content
       : [];
 
   const meditationHabbit = (
@@ -247,7 +234,7 @@ const GuidedMeditation = (props) => {
       {loading && <Loader />}
       <section className="banner-section">
         <div className="container">
-          <div className="banner-title">{`Your Guide 
+          <div className="banner-title">{`Your Guide
           to Meditation`}</div>
           <div className="banner-desc">
             Meditation is the delicate art of doing nothing and letting go of
@@ -255,10 +242,7 @@ const GuidedMeditation = (props) => {
             to feel revived, refreshed, and restored again
           </div>
           <div className="banner-audio">
-            <AudioPlayerSmall
-              audioSrc={randomMeditate.track?.fields?.file?.url}
-            />
-            {/* <AudioPlayerOnScreen
+            <AudioPlayerOnScreen
               id="global-player"
               pageParam={{
                 track: {
@@ -268,7 +252,7 @@ const GuidedMeditation = (props) => {
                   audioSrc: randomMeditate.track?.fields?.file?.url,
                 },
               }}
-            /> */}
+            />
           </div>
         </div>
       </section>
@@ -408,24 +392,28 @@ const GuidedMeditation = (props) => {
           <h2 className="section-title">Meditation is for everyone</h2>
           <div className="section-desc">Guided meditations for any mood.</div>
           <div className="categories-pills">
-            {meditationCategory &&
-              meditationCategory.map((category) => (
+            {nonListingFolders &&
+              nonListingFolders.map((category) => (
                 <a
-                  className={`cat-pill ${topic === category ? 'active' : ''}`}
-                  key={category}
+                  className={`cat-pill ${categoryId === category.id ? 'active' : ''}`}
+                  key={category.id}
                   onClick={() =>
-                    onFilterChange(topic === category ? '' : category)
+                    onFilterChange(
+                      categoryId === category.id ? '' : category.id,
+                    )
                   }
                 >
-                  {category}
+                  {category.title}
                 </a>
               ))}
           </div>
-          {content?.length > 0 && (
+          {categoryContent?.content?.length > 0 && (
             <div className="top-picks-container">
               <div className="top-picks-content top-picks-slider swiper">
                 <div className="top-picks-header">
-                  <div className="top-picks-title">{topic || 'Top picks'}</div>
+                  <div className="top-picks-title">
+                    {categoryId ? data.title : 'Top picks'}
+                  </div>
                   <div className="top-picks-actions">
                     <div
                       className="slide-button-prev slide-button"
@@ -454,7 +442,7 @@ const GuidedMeditation = (props) => {
                     swiper.navigation.update();
                   }}
                 >
-                  {content?.map((meditate, index) => {
+                  {categoryContent?.content?.map((meditate, index) => {
                     return (
                       <SwiperSlide key={index}>
                         <div
@@ -674,9 +662,9 @@ const GuidedMeditation = (props) => {
                 data-parent="#accordion"
               >
                 <div className="card-body">
-                  {`Yes! Everyone benefits from meditation. It is accessible to everyone. 
+                  {`Yes! Everyone benefits from meditation. It is accessible to everyone.
 
-                    There are so many reasons people start meditating—the benefits support all aspects of life, wherever you are. 
+                    There are so many reasons people start meditating—the benefits support all aspects of life, wherever you are.
 
                     Experience is the best way to discover just how profound the practice is.`}
                 </div>
