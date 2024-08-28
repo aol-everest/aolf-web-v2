@@ -1140,6 +1140,10 @@
         color: #6f7283;
         font-weight: normal;
         word-break: break-all;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        width: 330px;
       }
     }
   }
