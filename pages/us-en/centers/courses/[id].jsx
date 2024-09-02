@@ -109,7 +109,8 @@ const parseCourseType = (courseTypesOptions) => {
       }
     },
     serialize(value) {
-      return value;
+      if (value) return value;
+      return null;
     },
   });
 };
