@@ -38,9 +38,54 @@ import { navigateToLogin } from '@utils';
 import { NextSeo } from 'next-seo';
 import { SmartInput, SmartDropDown, Popup } from '@components';
 import { MobileFilterModal } from '@components/filterComps/mobileFilterModal';
+import { withAuth } from '@hoc';
 
 // (Optional) Import component styles. If you are using Less, import the `index.less` file.
 import 'rsuite/DateRangePicker/styles/index.css';
+
+export async function getServerSideProps(context) {
+  let bundle = null;
+  let allowCourseTypes = null;
+  const { id } = context.params;
+
+  try {
+    const response = await api.get({
+      path: 'getBundleDetail',
+      param: {
+        bundleSfid: id,
+      },
+    });
+    bundle = response.data;
+    if (bundle && bundle.comboDetails) {
+      allowCourseTypes = getCourseTypes(bundle.comboDetails);
+    }
+  } catch (error) {
+    console.error('Failed to fetch ZIP code by IP');
+  }
+
+  return {
+    props: { bundle, allowCourseTypes },
+  };
+}
+
+const getCourseTypes = (comboDetails) => {
+  return comboDetails.reduce((accumulator, comboDetail) => {
+    const allowedProducts = comboDetail.comboDetailProductAllowedFamilyProduct;
+
+    if (allowedProducts && allowedProducts.length > 0) {
+      allowedProducts.split(',').forEach((productTypeId) => {
+        for (const courseKey in COURSE_TYPES) {
+          const course = COURSE_TYPES[courseKey];
+          if (course.value.includes(productTypeId)) {
+            accumulator[courseKey] = course;
+          }
+        }
+      });
+    }
+
+    return accumulator;
+  }, {});
+};
 
 const AddressSearch = dynamic(() =>
   import('@components').then((mod) => mod.AddressSearch),
@@ -314,7 +359,7 @@ const COURSE_TYPES_OPTIONS = COURSE_TYPES_MASTER[orgConfig.name].reduce(
   {},
 );
 
-const Course = () => {
+const Course = ({ bundle, allowCourseTypes }) => {
   const { track, page } = useAnalytics();
   const { ref, inView } = useInView({
     /* Optional options */
@@ -325,6 +370,10 @@ const Course = () => {
   const router = useRouter();
   const { id: bundleSfid } = router.query;
 
+  const [courseTypeFilter, setCourseTypeFilter] = useQueryState(
+    'course-type',
+    parseCourseType(COURSE_TYPES_OPTIONS),
+  );
   const [courseModeFilter, setCourseModeFilter] = useQueryState('mode');
   const [onlyWeekend, setOnlyWeekend] = useQueryState(
     'onlyWeekend',
@@ -344,12 +393,33 @@ const Course = () => {
   const [searchKey, setSearchKey] = useState('');
   const [showFilterModal, setShowFilterModal] = useState(false);
 
+  const {
+    mainProductCtypeIds,
+    isPartialPaymentAllowedOnBundle,
+    minimumPartialPaymentOnBundle,
+    remainPartialPaymentDateCap,
+    comboSfid,
+    comboName,
+    comboDescription,
+    comboIsActive,
+    comboUnitPrice: unitPrice,
+    comboListPrice: listPrice,
+    comboProductSfid: productTypeId,
+    comboDetails,
+    masterPriceBookId,
+    masterPriceBookEntryId,
+    otherPaymentOptionAvailable,
+    showSecondCourseButton,
+    isOnlyBundleCheckout,
+  } = bundle || {};
+
   const { isSuccess, data, isFetchingNextPage, fetchNextPage, hasNextPage } =
     useInfiniteQuery(
       {
         queryKey: [
           'workshopsWithBundles',
           {
+            courseTypeFilter,
             locationFilter,
             bundleSfid,
             filterStartEndDate,
@@ -370,6 +440,13 @@ const Course = () => {
             param = {
               ...param,
               mode: COURSE_MODES[courseModeFilter].value,
+            };
+          }
+
+          if (courseTypeFilter) {
+            param = {
+              ...param,
+              ctype: courseTypeFilter.value,
             };
           }
 
@@ -436,8 +513,6 @@ const Course = () => {
     );
   //console.log(data.pages[0]);
 
-  const { bundleInfo } = data?.pages[0] || {};
-  const { comboName, comboDescription } = bundleInfo || {};
   let instructorResult = useQuery({
     queryKey: ['instructor', searchKey],
     queryFn: queryInstructor,
@@ -475,10 +550,14 @@ const Course = () => {
     setLocationFilter(null);
     setTimeZoneFilter(null);
     setFilterStartEndDate(null);
+    setCourseTypeFilter(null);
   };
 
   const onFilterChange = (field) => async (value) => {
     switch (field) {
+      case 'courseTypeFilter':
+        setCourseTypeFilter(value?.slug);
+        break;
       case 'courseModeFilter':
         setCourseModeFilter(value);
         break;
@@ -501,6 +580,9 @@ const Course = () => {
   const onFilterClearEvent = (field) => async (e) => {
     if (e) e.preventDefault();
     switch (field) {
+      case 'courseTypeFilter':
+        setCourseTypeFilter(null);
+        break;
       case 'courseModeFilter':
         setCourseModeFilter(null);
         break;
@@ -519,6 +601,9 @@ const Course = () => {
   const onFilterChangeEvent = (field) => (value) => async (e) => {
     if (e) e.preventDefault();
     switch (field) {
+      case 'courseTypeFilter':
+        setCourseTypeFilter(value.slug);
+        break;
       case 'courseModeFilter':
         setCourseModeFilter(value);
         break;
@@ -580,6 +665,9 @@ const Course = () => {
     filterCount++;
   }
   if (timeZoneFilter) {
+    filterCount++;
+  }
+  if (courseTypeFilter) {
     filterCount++;
   }
 
@@ -729,6 +817,35 @@ const Course = () => {
                   </>
                 )}
               </Popup>
+              <Popup
+                tabIndex="3"
+                value={courseTypeFilter}
+                buttonText={
+                  courseTypeFilter && courseTypeFilter.name
+                    ? courseTypeFilter.name
+                    : null
+                }
+                label="Course Type"
+                closeEvent={onFilterChange('courseTypeFilter')}
+              >
+                {({ closeHandler }) => (
+                  <>
+                    {Object.values(allowCourseTypes).map(
+                      (courseType, index) => {
+                        return (
+                          <li
+                            className="courses-filter__list-item"
+                            key={index}
+                            onClick={closeHandler(courseType)}
+                          >
+                            {courseType.name}
+                          </li>
+                        );
+                      },
+                    )}
+                  </>
+                )}
+              </Popup>
 
               <div
                 data-filter="timezone"
@@ -872,6 +989,14 @@ const Course = () => {
                 {showFilterModal && (
                   <div className="filter--box">
                     <div className="selected-filter-wrap">
+                      {courseTypeFilter && (
+                        <div
+                          className="selected-filter-item"
+                          onClick={onFilterClearEvent('courseTypeFilter')}
+                        >
+                          {courseTypeFilter.name}
+                        </div>
+                      )}
                       {locationFilter && (
                         <div
                           className="selected-filter-item"
@@ -978,7 +1103,45 @@ const Course = () => {
                         </SmartDropDown>
                       </div>
                     </MobileFilterModal>
-
+                    <MobileFilterModal
+                      label="Course Type"
+                      value={
+                        courseTypeFilter && courseTypeFilter.name
+                          ? courseTypeFilter.name
+                          : null
+                      }
+                      clearEvent={onFilterClearEvent('courseTypeFilter')}
+                    >
+                      <div className="dropdown">
+                        <SmartDropDown
+                          value={courseTypeFilter}
+                          buttonText={
+                            courseTypeFilter && courseTypeFilter.name
+                              ? courseTypeFilter.name
+                              : null
+                          }
+                          closeEvent={onFilterChange('courseTypeFilter')}
+                        >
+                          {({ closeHandler }) => (
+                            <>
+                              {Object.values(allowCourseTypes).map(
+                                (courseType, index) => {
+                                  return (
+                                    <li
+                                      className="dropdown-item"
+                                      key={index}
+                                      onClick={closeHandler(courseType)}
+                                    >
+                                      {courseType.name}
+                                    </li>
+                                  );
+                                },
+                              )}
+                            </>
+                          )}
+                        </SmartDropDown>
+                      </div>
+                    </MobileFilterModal>
                     <MobileFilterModal
                       label="Dates"
                       value={
@@ -1140,6 +1303,14 @@ const Course = () => {
           </div>
           <div className="course-listing">
             <div className="selected-filter-wrap">
+              {courseTypeFilter && (
+                <div
+                  className="selected-filter-item"
+                  onClick={onFilterClearEvent('courseTypeFilter')}
+                >
+                  {courseTypeFilter.name}
+                </div>
+              )}
               {locationFilter && (
                 <div
                   className="selected-filter-item"
@@ -1199,7 +1370,6 @@ const Course = () => {
   );
 };
 
-// Course.requiresAuth = true;
-// Course.redirectUnauthenticated = "/login";
+Course.requiresAuth = true;
 
-export default Course;
+export default withAuth(Course);
