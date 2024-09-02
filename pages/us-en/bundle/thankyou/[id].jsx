@@ -324,7 +324,7 @@ const Thankyou = () => {
               <div className="welcome__content">
                 <p className="welcome__heading">
                   <img src="/img/ic-success.svg" alt="success-icon" /> You’re
-                  going!
+                  registered!
                 </p>
                 <h1 className="welcome__title">{title}</h1>
                 <p className="welcome__description">
