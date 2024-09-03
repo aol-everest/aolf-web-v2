@@ -1,15 +1,7 @@
 /* eslint-disable react/no-unescaped-entities */
 /* eslint-disable no-irregular-whitespace */
 import { AddToCalendarModal, PageLoading } from '@components';
-import {
-  InPersonGenericCourse,
-  OnlineCourse,
-  SKYBreathMeditation,
-  SKYBreathMeditationCombo,
-  SahajSamadhi,
-  SahajSamadhiCombo,
-  SilentRetreat,
-} from '@components/coursethankYouDetails';
+import classNames from 'classnames';
 import { ABBRS, ALERT_TYPES, COURSE_MODES, COURSE_TYPES } from '@constants';
 import { useGlobalAlertContext } from '@contexts';
 import { orgConfig } from '@org';
@@ -272,6 +264,16 @@ const Thankyou = () => {
     });
   };
 
+  const findCourseAction = (e) => {
+    if (e) e.preventDefault();
+    pushRouteWithUTMQuery(router, {
+      pathname: `/us-en/bundle/courses/${comboSfid}`,
+      query: {
+        'course-type': 'art-of-living-part-1',
+      },
+    });
+  };
+
   const renderStickyFooter = () => {
     if (isMobile()) {
       return null;
@@ -345,11 +347,13 @@ const Thankyou = () => {
                   the <b>Art of Living Part 1</b> course.
                 </p>
 
-                {/* <div className="welcome__navigation">
+                <div className="welcome__navigation">
                   <div className="course-action">
-                    <a className="course-link">Find a course</a>
+                    <a className="course-link" onClick={findCourseAction}>
+                      Find a course
+                    </a>
                   </div>
-                </div> */}
+                </div>
               </div>
 
               <div className="welcome__player player-welcome">
@@ -363,7 +367,7 @@ const Thankyou = () => {
           </section>
           <section className="schedule">
             <div className="schedule__container container_md">
-              <div className="schedule__download download-schedule">
+              <div className="schedule__download download-schedule scheduleDownload">
                 <h3 className="download-schedule__title">
                   Download the app and relax with a <br />
                   meditation

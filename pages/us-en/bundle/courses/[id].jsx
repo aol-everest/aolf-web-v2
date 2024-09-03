@@ -411,7 +411,6 @@ const Course = ({ bundle, allowCourseTypes, defaultCourseType }) => {
     'course-type',
     parseCourseType(COURSE_TYPES_OPTIONS),
   );
-  console.log(courseTypeFilter);
   const [courseModeFilter, setCourseModeFilter] = useQueryState('mode');
   const [onlyWeekend, setOnlyWeekend] = useQueryState(
     'onlyWeekend',

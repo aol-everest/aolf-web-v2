@@ -126,6 +126,16 @@
   .schedule {
     padding-bottom: 80px;
 
+    .scheduleDownload {
+      background: linear-gradient(
+          180deg,
+          #ffffff 20%,
+          rgba(255, 255, 255, 0.8) 55%,
+          rgba(255, 255, 255, 0) 100%
+        ),
+        url('/img/schedule-download-bg.png');
+    }
+
     &__container {
       display: flex;
       justify-content: space-between;
