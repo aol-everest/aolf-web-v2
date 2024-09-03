@@ -34,7 +34,7 @@ import classNames from 'classnames';
 import { orgConfig } from '@org';
 import DateRangePicker from 'rsuite/DateRangePicker';
 import dynamic from 'next/dynamic';
-import { navigateToLogin } from '@utils';
+import { navigateToLogin, isEmpty } from '@utils';
 import { NextSeo } from 'next-seo';
 import { SmartInput, SmartDropDown, Popup } from '@components';
 import { MobileFilterModal } from '@components/filterComps/mobileFilterModal';
@@ -46,6 +46,7 @@ import 'rsuite/DateRangePicker/styles/index.css';
 export async function getServerSideProps(context) {
   let bundle = null;
   let allowCourseTypes = null;
+  let defaultCourseType = null;
   const { id } = context.params;
 
   try {
@@ -58,29 +59,35 @@ export async function getServerSideProps(context) {
     bundle = response.data;
     if (bundle && bundle.comboDetails) {
       allowCourseTypes = getCourseTypes(bundle.comboDetails);
+      defaultCourseType = getCourseTypes(bundle.comboDetails, true);
+      if (defaultCourseType && typeof defaultCourseType === 'object') {
+        const [[, value]] = Object.entries(defaultCourseType);
+        defaultCourseType = value;
+      }
     }
   } catch (error) {
     console.error('Failed to fetch ZIP code by IP');
   }
 
   return {
-    props: { bundle, allowCourseTypes },
+    props: { bundle, allowCourseTypes, defaultCourseType },
   };
 }
 
-const getCourseTypes = (comboDetails) => {
+const getCourseTypes = (comboDetails, onlyMain = false) => {
   return comboDetails.reduce((accumulator, comboDetail) => {
     const allowedProducts = comboDetail.comboDetailProductAllowedFamilyProduct;
-
-    if (allowedProducts && allowedProducts.length > 0) {
-      allowedProducts.split(',').forEach((productTypeId) => {
-        for (const courseKey in COURSE_TYPES) {
-          const course = COURSE_TYPES[courseKey];
-          if (course.value.includes(productTypeId)) {
-            accumulator[courseKey] = course;
+    if (!onlyMain || (onlyMain && comboDetail.comboDetailIsMainProduct)) {
+      if (allowedProducts && allowedProducts.length > 0) {
+        allowedProducts.split(',').forEach((productTypeId) => {
+          for (const courseKey in COURSE_TYPES) {
+            const course = COURSE_TYPES[courseKey];
+            if (course.value.includes(productTypeId)) {
+              accumulator[courseKey] = course;
+            }
           }
-        }
-      });
+        });
+      }
     }
 
     return accumulator;
@@ -177,7 +184,7 @@ const ItemLoaderTile = () => {
   );
 };
 
-const CourseTile = ({ data, isAuthenticated, bundleSfid }) => {
+const CourseTile = ({ data, isAuthenticated }) => {
   const router = useRouter();
   const { track } = useAnalytics();
   const { showModal } = useGlobalModalContext();
@@ -196,35 +203,33 @@ const CourseTile = ({ data, isAuthenticated, bundleSfid }) => {
     isGuestCheckoutEnabled = false,
     coTeacher1Name,
     timings,
+    unitPrice,
+    listPrice,
     isEventFull,
     isPurchased,
     category,
     title,
-    bundleInfo,
   } = data || {};
-
-  const { comboUnitPrice, comboListPrice } = bundleInfo || {};
 
   const enrollAction = () => {
     track('allcourses_enroll_click', {
       course_format: data?.productTypeId,
       course_name: data?.title,
       course_id: data?.sfid,
-      course_price: data?.comboUnitPrice,
+      course_price: data?.unitPrice,
     });
     if (isGuestCheckoutEnabled || isAuthenticated) {
       pushRouteWithUTMQuery(router, {
         pathname: `/us-en/course/checkout/${sfid}`,
         query: {
           ctype: productTypeId,
-          bundle: bundleSfid,
           page: 'c-o',
         },
       });
     } else {
       navigateToLogin(
         router,
-        `/us-en/course/checkout/${sfid}?ctype=${productTypeId}&bundle=${bundleSfid}&page=c-o&${queryString.stringify(
+        `/us-en/course/checkout/${sfid}?ctype=${productTypeId}&page=c-o&${queryString.stringify(
           router.query,
         )}`,
       );
@@ -244,7 +249,6 @@ const CourseTile = ({ data, isAuthenticated, bundleSfid }) => {
       pathname: `/us-en/course/${sfid}`,
       query: {
         ctype: productTypeId,
-        bundle: bundleSfid,
       },
     });
   };
@@ -270,6 +274,28 @@ const CourseTile = ({ data, isAuthenticated, bundleSfid }) => {
     );
   };
 
+  const { usableCredit } = data;
+
+  const isUsableCreditAvailable = usableCredit && !isEmpty(usableCredit);
+
+  let UpdatedFeeAfterCredits;
+  if (
+    isUsableCreditAvailable &&
+    usableCredit.creditMeasureUnit === 'Quantity' &&
+    usableCredit.availableCredit === 1
+  ) {
+    UpdatedFeeAfterCredits = 0;
+  } else if (
+    isUsableCreditAvailable &&
+    usableCredit.creditMeasureUnit === 'Amount'
+  ) {
+    if (usableCredit.availableCredit > unitPrice) {
+      UpdatedFeeAfterCredits = 0;
+    } else {
+      UpdatedFeeAfterCredits = unitPrice - usableCredit.availableCredit;
+    }
+  }
+
   return (
     <div
       className={classNames('course-item', {
@@ -288,17 +314,28 @@ const CourseTile = ({ data, isAuthenticated, bundleSfid }) => {
           >
             {COURSE_MODES_MAP[mode]}
           </div>
+          {/* <div className="course-duration">{getCourseDeration()}</div> */}
         </div>
         {!isPurchased && (
-          <div className="course-price">
-            {comboListPrice === comboUnitPrice ? (
-              <span>${comboUnitPrice}</span>
-            ) : (
-              <>
-                <s>${comboListPrice}</s> <span>${comboUnitPrice}</span>
-              </>
+          <>
+            {isUsableCreditAvailable && (
+              <div className="course-price">
+                <s>${listPrice}</s> <span>${UpdatedFeeAfterCredits}</span>
+              </div>
             )}
-          </div>
+
+            {!isUsableCreditAvailable && (
+              <div className="course-price">
+                {listPrice === unitPrice ? (
+                  <span>${unitPrice}</span>
+                ) : (
+                  <>
+                    <s>${listPrice}</s> <span>${unitPrice}</span>
+                  </>
+                )}
+              </div>
+            )}
+          </>
         )}
       </div>
       {mode !== 'Online' && locationCity && (
@@ -359,7 +396,7 @@ const COURSE_TYPES_OPTIONS = COURSE_TYPES_MASTER[orgConfig.name].reduce(
   {},
 );
 
-const Course = ({ bundle, allowCourseTypes }) => {
+const Course = ({ bundle, allowCourseTypes, defaultCourseType }) => {
   const { track, page } = useAnalytics();
   const { ref, inView } = useInView({
     /* Optional options */
@@ -374,6 +411,7 @@ const Course = ({ bundle, allowCourseTypes }) => {
     'course-type',
     parseCourseType(COURSE_TYPES_OPTIONS),
   );
+  console.log(courseTypeFilter);
   const [courseModeFilter, setCourseModeFilter] = useQueryState('mode');
   const [onlyWeekend, setOnlyWeekend] = useQueryState(
     'onlyWeekend',
@@ -417,7 +455,7 @@ const Course = ({ bundle, allowCourseTypes }) => {
     useInfiniteQuery(
       {
         queryKey: [
-          'workshopsWithBundles',
+          'getBundleWorkshopsOnly',
           {
             courseTypeFilter,
             locationFilter,
@@ -498,7 +536,7 @@ const Course = ({ bundle, allowCourseTypes }) => {
           }
 
           const res = await api.get({
-            path: 'workshopsWithBundles',
+            path: 'getBundleWorkshopsOnly',
             param,
           });
           return res;
