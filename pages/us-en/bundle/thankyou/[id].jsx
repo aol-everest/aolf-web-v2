@@ -347,13 +347,13 @@ const Thankyou = () => {
                   the <b>Art of Living Part 1</b> course.
                 </p>
 
-                <div className="welcome__navigation">
+                {/* <div className="welcome__navigation">
                   <div className="course-action">
                     <a className="course-link" onClick={findCourseAction}>
                       Find a course
                     </a>
                   </div>
-                </div>
+                </div> */}
               </div>
 
               <div className="welcome__player player-welcome">
