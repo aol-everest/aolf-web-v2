@@ -346,14 +346,16 @@ const Thankyou = () => {
                   We highly recommend that you <b>start your journey</b> with
                   the <b>Art of Living Part 1</b> course.
                 </p>
-
-                {/* <div className="welcome__navigation">
+                <div className="welcome__navigation">
                   <div className="course-action">
                     <a className="course-link" onClick={findCourseAction}>
                       Find a course
                     </a>
                   </div>
-                </div> */}
+                </div>
+                <p className="welcome__description tw-pt-10">
+                  We are with you on your journey..every step of the way!
+                </p>
               </div>
 
               <div className="welcome__player player-welcome">
@@ -365,52 +367,6 @@ const Thankyou = () => {
               </div>
             </div>
           </section>
-          <section className="schedule">
-            <div className="schedule__container container_md">
-              <div className="schedule__download download-schedule scheduleDownload">
-                <h3 className="download-schedule__title">
-                  Download the app and relax with a <br />
-                  meditation
-                </h3>
-
-                <div className="download-schedule__actions">
-                  <a
-                    className="download-schedule__link"
-                    href="https://apps.apple.com/us-en/app/art-of-living-journey/id1469587414?ls=1"
-                    target="_blank"
-                    rel="noreferrer"
-                  >
-                    <img
-                      className="download-schedule__logo"
-                      src="/img/ic-appstore.svg"
-                      alt="appstore-link"
-                    />
-                    <div className="download-schedule__wrapper">
-                      <p className="download-schedule__text">Download on the</p>
-                      <p className="download-schedule__market">App Store</p>
-                    </div>
-                  </a>
-
-                  <a
-                    className="download-schedule__link"
-                    href="https://play.google.com/store/apps/details?id=com.aol.app"
-                    target="_blank"
-                    rel="noreferrer"
-                  >
-                    <img
-                      className="download-schedule__logo"
-                      src="/img/ic-google-play.svg"
-                      alt="google-play-link"
-                    />
-                    <div className="download-schedule__wrapper">
-                      <p className="download-schedule__text">Get it On</p>
-                      <p className="download-schedule__market">Google Play</p>
-                    </div>
-                  </a>
-                </div>
-              </div>
-            </div>
-          </section>
         </div>
       </main>
     </>
@@ -419,5 +375,7 @@ const Thankyou = () => {
 
 // Workshop.requiresAuth = true;
 // Workshop.redirectUnauthenticated = "/login";
+Thankyou.hideHeader = true;
+Thankyou.hideFooter = true;
 
 export default Thankyou;
