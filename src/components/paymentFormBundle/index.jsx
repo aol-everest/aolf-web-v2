@@ -456,13 +456,13 @@ export const PaymentFormBundle = ({
                               screen="DESKTOP"
                             />
 
-                            <div className="note">
+                            {/* <div className="note">
                               For any health related questions, please contact
                               us at{' '}
                               <a href="mailto:healthinfo@us.artofliving.org">
                                 healthinfo@us.artofliving.org
                               </a>
-                            </div>
+                            </div> */}
                             <div className="form-item submit-item">
                               <button
                                 className="submit-btn"

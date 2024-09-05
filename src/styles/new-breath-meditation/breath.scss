@@ -2,6 +2,12 @@
   .welcome {
     padding: 80px 0;
 
+    a.btn-primary {
+      background: linear-gradient(102.78deg, #ffd16f -37.89%, #ff865b 100.28%);
+      border: none;
+      color: #fff;
+    }
+
     a.course-link {
       font-size: 18px;
       font-weight: 600;
@@ -45,6 +51,10 @@
     &__description {
       line-height: 22px;
       margin-bottom: 30px;
+    }
+
+    &__description.v1 {
+      font-size: 18px;
     }
 
     &__btn-course {

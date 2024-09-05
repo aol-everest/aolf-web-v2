@@ -264,14 +264,8 @@ const Thankyou = () => {
     });
   };
 
-  const findCourseAction = (e) => {
-    if (e) e.preventDefault();
-    pushRouteWithUTMQuery(router, {
-      pathname: `/us-en/bundle/courses/${comboSfid}`,
-      query: {
-        'course-type': 'art-of-living-part-1',
-      },
-    });
+  const getCourseFindLink = () => {
+    return `/us-en/bundle/courses/${comboSfid}?course-type=art-of-living-part-1`;
   };
 
   const renderStickyFooter = () => {
@@ -329,31 +323,51 @@ const Thankyou = () => {
                   registered!
                 </p>
                 <h1 className="welcome__title">{title}</h1>
-                <p className="welcome__description">
+                <p className="welcome__description v1">
                   Congratulations on signing up for the <b>{title}</b>.
                 </p>
-                <p className="welcome__description">
+                <p className="welcome__description v1">
                   You will receive an email with details, next steps and link to
                   start scheduling your courses. You may schedule your first
                   course now or later at your convenience.
                 </p>
-                <p className="welcome__description">
+                <p className="welcome__description v1">
                   We`ve created your account and your user name and the
                   temporary password have been sent to you via email. You will
                   need this to schedule your courses.
                 </p>
-                <p className="welcome__description">
+                <p className="welcome__description v1">
                   We highly recommend that you <b>start your journey</b> with
                   the <b>Art of Living Part 1</b> course.
                 </p>
-
-                {/* <div className="welcome__navigation">
-                  <div className="course-action">
-                    <a className="course-link" onClick={findCourseAction}>
-                      Find a course
-                    </a>
-                  </div>
-                </div> */}
+                <div>
+                  <a
+                    class="btn-primary"
+                    href={getCourseFindLink()}
+                    target="_blank"
+                  >
+                    Schedule Now
+                  </a>
+                </div>
+                <p className="welcome__description v1 tw-pt-10">
+                  We are with you on your journey..every step of the way!
+                </p>
+                <p className="welcome__description v1">
+                  If you have any questions, feel free to reach out to us
+                </p>
+                <p className="welcome__description v1">
+                  <ul>
+                    <li>
+                      Email:{' '}
+                      <a href="mailto:support@us.artofliving.org">
+                        support@us.artofliving.org
+                      </a>
+                    </li>
+                    <li>
+                      Phone: <a href="tel:+1 (855) 202-4400">(855) 202-4400</a>
+                    </li>
+                  </ul>
+                </p>
               </div>
 
               <div className="welcome__player player-welcome">
@@ -365,52 +379,6 @@ const Thankyou = () => {
               </div>
             </div>
           </section>
-          <section className="schedule">
-            <div className="schedule__container container_md">
-              <div className="schedule__download download-schedule scheduleDownload">
-                <h3 className="download-schedule__title">
-                  Download the app and relax with a <br />
-                  meditation
-                </h3>
-
-                <div className="download-schedule__actions">
-                  <a
-                    className="download-schedule__link"
-                    href="https://apps.apple.com/us-en/app/art-of-living-journey/id1469587414?ls=1"
-                    target="_blank"
-                    rel="noreferrer"
-                  >
-                    <img
-                      className="download-schedule__logo"
-                      src="/img/ic-appstore.svg"
-                      alt="appstore-link"
-                    />
-                    <div className="download-schedule__wrapper">
-                      <p className="download-schedule__text">Download on the</p>
-                      <p className="download-schedule__market">App Store</p>
-                    </div>
-                  </a>
-
-                  <a
-                    className="download-schedule__link"
-                    href="https://play.google.com/store/apps/details?id=com.aol.app"
-                    target="_blank"
-                    rel="noreferrer"
-                  >
-                    <img
-                      className="download-schedule__logo"
-                      src="/img/ic-google-play.svg"
-                      alt="google-play-link"
-                    />
-                    <div className="download-schedule__wrapper">
-                      <p className="download-schedule__text">Get it On</p>
-                      <p className="download-schedule__market">Google Play</p>
-                    </div>
-                  </a>
-                </div>
-              </div>
-            </div>
-          </section>
         </div>
       </main>
     </>
@@ -419,5 +387,7 @@ const Thankyou = () => {
 
 // Workshop.requiresAuth = true;
 // Workshop.redirectUnauthenticated = "/login";
+Thankyou.hideHeader = true;
+Thankyou.hideFooter = true;
 
 export default Thankyou;

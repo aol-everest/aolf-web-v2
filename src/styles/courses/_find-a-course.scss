@@ -323,6 +323,16 @@ main.page--find-a-course {
               display: none;
             }
           }
+          &.upward {
+            .courses-filter__wrapper-list {
+              top: auto !important;
+              bottom: 44px;
+              .smart-input--list {
+                order: -1;
+                margin: 0 0 5px 0 !important;
+              }
+            }
+          }
         }
       }
       @media screen and (max-width: 991px) {
