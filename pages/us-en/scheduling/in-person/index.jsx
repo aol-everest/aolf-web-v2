@@ -101,6 +101,13 @@ const WorkshopSelectModal = React.memo(
     const { track } = useAnalytics();
     const [localSelectedWorkshop, setLocalSelectedWorkshop] = useState(null);
     const [backPressed, setBackPressed] = useState(false);
+
+    useEffect(() => {
+      if (workshops?.length === 1) {
+        handleWorkshopSelect(workshops[0]);
+      }
+    }, [workshops]);
+
     const handleWorkshopSelect = async (workshop) => {
       setLocalSelectedWorkshop(workshop);
       track('cmodal_course_select');
@@ -208,7 +215,7 @@ const WorkshopSelectModal = React.memo(
         className="available-time modal fade bd-example-modal-lg"
         dialogClassName="modal-dialog modal-dialog-centered modal-lg"
       >
-        <Modal.Header closeButton>Available Time</Modal.Header>
+        <Modal.Header closeButton>Available Times</Modal.Header>
         <Modal.Body>
           <div className="time-slot-changer">
             <button
