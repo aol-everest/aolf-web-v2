@@ -1,5 +1,4 @@
 /* eslint-disable no-inline-styles/no-inline-styles */
-import { ScheduleLocationFilterNew } from '@components/scheduleLocationFilter/ScheduleLocationFilterNew';
 import { useQueryState, parseAsString, parseAsJson } from 'nuqs';
 import moment from 'moment';
 import {
@@ -10,17 +9,14 @@ import {
   tConvert,
 } from '@utils';
 import React, { useEffect, useRef, useState } from 'react';
-import { StripeExpressCheckoutElement } from '@components/checkout/StripeExpressCheckoutElement';
 import dayjs from 'dayjs';
-import { sortBy } from 'lodash';
 import Flatpickr from 'react-flatpickr';
 import { ABBRS, COURSE_MODES, COURSE_TYPES, ALERT_TYPES } from '@constants';
 import { useAnalytics } from 'use-analytics';
-import { useEffectOnce } from 'react-use';
 import { useQuery } from '@tanstack/react-query';
 import { useRouter } from 'next/router';
 import 'flatpickr/dist/flatpickr.min.css';
-import { pushRouteWithUTMQuery, replaceRouteWithUTMQuery } from '@service';
+import { replaceRouteWithUTMQuery } from '@service';
 import { useGlobalAlertContext } from '@contexts';
 import ErrorPage from 'next/error';
 import { PageLoading } from '@components';
@@ -52,6 +48,13 @@ const WorkshopSelectModal = React.memo(
     const { track } = useAnalytics();
     const [localSelectedWorkshop, setLocalSelectedWorkshop] = useState(null);
     const [backPressed, setBackPressed] = useState(false);
+
+    useEffect(() => {
+      if (workshops?.length === 1) {
+        handleWorkshopSelect(workshops[0]);
+      }
+    }, [workshops]);
+
     const handleWorkshopSelect = async (workshop) => {
       setLocalSelectedWorkshop(workshop);
       track('cmodal_course_select');
@@ -159,7 +162,7 @@ const WorkshopSelectModal = React.memo(
         className="available-time modal fade bd-example-modal-lg"
         dialogClassName="modal-dialog modal-dialog-centered modal-lg"
       >
-        <Modal.Header closeButton>Available Time</Modal.Header>
+        <Modal.Header closeButton>Available Times</Modal.Header>
         <Modal.Body>
           <div className="time-slot-changer">
             <button

@@ -26,11 +26,17 @@ const WorkshopSelectModal = React.memo(
     loading,
     setActiveWorkshop,
     handleAutoScrollForMobile,
-    slug,
   }) => {
     const { track } = useAnalytics();
     const [localSelectedWorkshop, setLocalSelectedWorkshop] = useState(null);
     const [backPressed, setBackPressed] = useState(false);
+
+    useEffect(() => {
+      if (workshops?.length === 1) {
+        handleWorkshopSelect(workshops[0]);
+      }
+    }, [workshops]);
+
     const handleWorkshopSelect = async (workshop) => {
       setLocalSelectedWorkshop(workshop);
       track('cmodal_course_select');
