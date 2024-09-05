@@ -35,7 +35,6 @@ export const AddressSearch = ({
 
   const renderItem = (placePrediction) => {
     const { structured_formatting } = placePrediction;
-    console.log(placePrediction);
     return (
       <>
         <div
