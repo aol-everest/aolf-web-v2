@@ -264,14 +264,8 @@ const Thankyou = () => {
     });
   };
 
-  const findCourseAction = (e) => {
-    if (e) e.preventDefault();
-    pushRouteWithUTMQuery(router, {
-      pathname: `/us-en/bundle/courses/${comboSfid}`,
-      query: {
-        'course-type': 'art-of-living-part-1',
-      },
-    });
+  const getCourseFindLink = () => {
+    return `/us-en/bundle/courses/${comboSfid}?course-type=art-of-living-part-1`;
   };
 
   const renderStickyFooter = () => {
@@ -329,32 +323,50 @@ const Thankyou = () => {
                   registered!
                 </p>
                 <h1 className="welcome__title">{title}</h1>
-                <p className="welcome__description">
+                <p className="welcome__description v1">
                   Congratulations on signing up for the <b>{title}</b>.
                 </p>
-                <p className="welcome__description">
+                <p className="welcome__description v1">
                   You will receive an email with details, next steps and link to
                   start scheduling your courses. You may schedule your first
                   course now or later at your convenience.
                 </p>
-                <p className="welcome__description">
+                <p className="welcome__description v1">
                   We`ve created your account and your user name and the
                   temporary password have been sent to you via email. You will
                   need this to schedule your courses.
                 </p>
-                <p className="welcome__description">
+                <p className="welcome__description v1">
                   We highly recommend that you <b>start your journey</b> with
                   the <b>Art of Living Part 1</b> course.
                 </p>
-                <div className="welcome__navigation">
-                  <div className="course-action">
-                    <a className="course-link" onClick={findCourseAction}>
-                      Find a course
-                    </a>
-                  </div>
+                <div>
+                  <a
+                    class="btn-primary"
+                    href={getCourseFindLink()}
+                    target="_blank"
+                  >
+                    Schedule Now
+                  </a>
                 </div>
-                <p className="welcome__description tw-pt-10">
+                <p className="welcome__description v1 tw-pt-10">
                   We are with you on your journey..every step of the way!
+                </p>
+                <p className="welcome__description v1">
+                  If you have any questions, feel free to reach out to us
+                </p>
+                <p className="welcome__description v1">
+                  <ul>
+                    <li>
+                      Email:{' '}
+                      <a href="mailto:support@us.artofliving.org">
+                        support@us.artofliving.org
+                      </a>
+                    </li>
+                    <li>
+                      Phone: <a href="tel:+1 (855) 202-4400">(855) 202-4400</a>
+                    </li>
+                  </ul>
                 </p>
               </div>
 
