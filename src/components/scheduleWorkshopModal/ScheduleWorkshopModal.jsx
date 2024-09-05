@@ -139,7 +139,7 @@ const WorkshopSelectModal = React.memo(
         className="available-time modal fade bd-example-modal-lg"
         dialogClassName="modal-dialog modal-dialog-centered modal-lg"
       >
-        <Modal.Header closeButton>Available Time</Modal.Header>
+        <Modal.Header closeButton>Available Times</Modal.Header>
         <Modal.Body>
           <div className="time-slot-changer">
             <button
@@ -324,7 +324,7 @@ const WorkshopSelectModal = React.memo(
                   </div>
                 )}
           </div>
-          <div className="event-type-pills">
+          {/*<div className="event-type-pills">
             <div className="online">
               <span className="icon-aol iconaol-monitor-mobile"></span>
               Online
@@ -357,11 +357,11 @@ const WorkshopSelectModal = React.memo(
                 </p>
               </div>
             </div>
-          </div>
-          <div className="specific-teacher-text">
+          </div>*/}
+          {/*<div className="specific-teacher-text">
             Are you looking for a course with a specific teacher?{' '}
             <a href={`/us-en/courses/${slug}`}>Click here</a>
-          </div>
+                  </div>*/}
           <div className="slot-action">
             <button
               type="button"
@@ -371,6 +371,10 @@ const WorkshopSelectModal = React.memo(
             >
               Continue
             </button>
+          </div>
+          <div className="additionalInfo">
+            <span className="icon-aol iconaol-info-circle"></span> Flexible
+            rescheduling at no additional cost
           </div>
         </Modal.Body>
       </Modal>

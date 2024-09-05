@@ -1015,15 +1015,6 @@
             }
           }
         }
-        .slot-listing {
-          order: 2;
-        }
-        .specific-teacher-text {
-          order: 3;
-        }
-        .slot-action {
-          order: 4;
-        }
       }
     }
     .form-item {
@@ -1160,6 +1151,31 @@
         font-size: 16px;
         font-weight: 600;
         line-height: 21px;
+        display: flex;
+        gap: 6px;
+        align-items: center;
+        .icon-aol {
+          width: 36px;
+          height: 36px;
+          border-radius: 100%;
+          background: linear-gradient(
+            102.78deg,
+            #ffd16f -37.89%,
+            #ff865b 100.28%
+          );
+          color: white;
+          font-size: 20px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          &.iconaol-profile-users {
+            background: linear-gradient(
+              102.78deg,
+              #3d8be8 -37.89%,
+              #89beec 100.28%
+            );
+          }
+        }
       }
       .slot-select {
         margin: 0 !important;
@@ -1200,7 +1216,27 @@
     text-decoration: none;
   }
 }
-
+.additionalInfo {
+  font-size: 16px;
+  line-height: 24px;
+  justify-content: center;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  font-weight: 500;
+  padding-top: 24px;
+  .icon-aol {
+    width: 28px;
+    height: 28px;
+    background: #edf5fc;
+    border-radius: 80px;
+    font-size: 16px;
+    color: #3d8be8;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
 .event-type-pills {
   display: flex;
   gap: 16px;

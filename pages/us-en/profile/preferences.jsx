@@ -308,6 +308,8 @@ const AddCenterModel = ({
     }
   };
 
+  console.log('location', location);
+
   return (
     <div
       className="modal-dialog modal-dialog-centered modal-lg"
@@ -334,17 +336,31 @@ const AddCenterModel = ({
           </div>
           <div className="input-search-wrap">
             <div className="search-input-wrap">
-              <input
-                id="search-field"
-                className="search-input"
-                value={location.address}
-                onChange={(evt) => {
-                  getPlacePredictions({ input: evt.target.value });
-                  handleChange(evt.target.value);
-                }}
-                placeholder={placeholder}
-                loading={isPlacePredictionsLoading}
-              />
+              {location.latitude ? (
+                <span
+                  className={classNames(
+                    'schedule-location-input scheduling-address',
+                  )}
+                >
+                  <span className={classNames('schedule-location-value')}>
+                    {location.address}
+                  </span>
+                </span>
+              ) : (
+                <input
+                  id="search-field"
+                  className="search-input"
+                  value={location.address}
+                  onChange={(evt) => {
+                    getPlacePredictions({ input: evt.target.value });
+                    handleChange(evt.target.value);
+                  }}
+                  onSelect={(ev) => console.log('seeeee', ev)}
+                  placeholder={placeholder}
+                  loading={isPlacePredictionsLoading}
+                />
+              )}
+
               {location.address && (
                 <button className="search-clear" onClick={clearSearch}>
                   <svg

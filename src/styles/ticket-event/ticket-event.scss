@@ -1138,8 +1138,12 @@
       align-items: flex-start;
       .value {
         color: #6f7283;
-        font-weight: normal;
+        font-weight: 400;
+        width: 100%;
         word-break: break-all;
+        max-height: 100px;
+        overflow-y: auto;
+        padding: 0;
       }
     }
   }

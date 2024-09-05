@@ -109,7 +109,8 @@ const parseCourseType = (courseTypesOptions) => {
       }
     },
     serialize(value) {
-      return value;
+      if (value) return value;
+      return null;
     },
   });
 };
@@ -816,6 +817,7 @@ const Course = ({ centerDetail }) => {
               }
               closeEvent={onFilterChange('timeZoneFilter')}
               label="Time Zone"
+              parentClassName="upward"
             >
               {({ closeHandler }) => (
                 <>
@@ -858,6 +860,7 @@ const Course = ({ centerDetail }) => {
               buttonText={instructorFilter ? instructorFilter.label : null}
               closeEvent={onFilterChange('instructorFilter')}
               label="Instructor"
+              parentClassName="upward"
             >
               {({ closeHandler }) => (
                 <SmartInput

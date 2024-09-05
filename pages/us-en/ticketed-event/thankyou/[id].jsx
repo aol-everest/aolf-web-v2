@@ -1,4 +1,4 @@
-import { api, tConvert } from '@utils';
+import { api, concatenateStrings, tConvert } from '@utils';
 import { useRouter } from 'next/router';
 import React from 'react';
 import moment from 'moment';
@@ -9,7 +9,7 @@ import utc from 'dayjs/plugin/utc';
 import { useEffectOnce } from 'react-use';
 import { FaTicket, FaAngellist, FaMoneyBill, FaList } from 'react-icons/fa6';
 import { FaInfoCircle } from 'react-icons/fa';
-import { ALERT_TYPES, COURSE_MODES } from '@constants';
+import { ABBRS, ALERT_TYPES, COURSE_MODES } from '@constants';
 import { AddToCalendarModal } from '@components/addToCalendarModal';
 import { useGlobalAlertContext } from '@contexts';
 import { useAnalytics } from 'use-analytics';
@@ -84,6 +84,8 @@ const TicketCongratulations = () => {
     zip,
     country,
     timings,
+    primaryTeacherName,
+    coTeacher1Name,
   } = attendeeDetail.ticketedEvent || {};
 
   const totalNoOfTickets = attendeeDetail.attendees.length;
@@ -140,8 +142,6 @@ const TicketCongratulations = () => {
     (item) => item?.pricingTierName,
   );
   const uniqueTicketTiers = [...new Set(ticketTiers)];
-  const formattedStartDate = dayjs.utc(eventStartDate).format('ddd');
-  const formattedEndDate = dayjs.utc(eventEndDate).format('ddd');
   let tickets = attendeeDetail.attendees;
   if (!attendeeDetail.ticketedEvent.isAllAttedeeInformationRequired) {
     tickets = [
@@ -173,7 +173,7 @@ const TicketCongratulations = () => {
                 <ul className="order-items-list">
                   <li className="order-item">
                     <FaTicket className="fa fa-ticket" />{' '}
-                    <span>Ticket Type: </span>
+                    <span>Ticket Tiers: </span>
                     {uniqueTicketTiers?.join(', ')}
                   </li>
                   <li className="order-item">
@@ -193,38 +193,46 @@ const TicketCongratulations = () => {
                 </div>
               </div>
 
-              <h2 className="section-title">
-                <FaList className="fa fa-list-alt" /> Ticket Information
-              </h2>
-              <div className="tickets-accepted">
-                {tickets.map((item, index) => {
-                  return (
-                    <div
-                      className="ticket-box"
-                      key={item.attendeeRecordExternalId}
-                    >
-                      <div className="ticket-header">
-                        <div className="ticket-title">
-                          TICKET HOLDER{' '}
-                          {tickets.length > 1 ? `#${index + 1}` : ''}
+              {tickets?.length > 0 && (
+                <>
+                  <h2 className="section-title">
+                    <FaList className="fa fa-list-alt" /> Ticket Information
+                  </h2>
+                  <div className="tickets-accepted">
+                    {tickets.map((item, index) => {
+                      return (
+                        <div
+                          className="ticket-box"
+                          key={item.attendeeRecordExternalId}
+                        >
+                          <div className="ticket-header">
+                            <div className="ticket-title">
+                              TICKET HOLDER{' '}
+                              {tickets.length > 1 ? `#${index + 1}` : ''}
+                            </div>
+                            <div className="ticket-type">
+                              {attendeeDetail.ticketedEvent
+                                .isAllAttedeeInformationRequired &&
+                                item.pricingTierName}
+                            </div>
+                          </div>
+                          <div className="ticket-body">
+                            <div className="ticket-holder-name">
+                              {item.name}
+                            </div>
+                            <div className="ticket-holder-email">
+                              {item.email}
+                            </div>
+                            <div className="ticket-holder-mobile">
+                              {item.contactPhone}
+                            </div>
+                          </div>
                         </div>
-                        <div className="ticket-type">
-                          {attendeeDetail.ticketedEvent
-                            .isAllAttedeeInformationRequired &&
-                            item.pricingTierName}
-                        </div>
-                      </div>
-                      <div className="ticket-body">
-                        <div className="ticket-holder-name">{item.name}</div>
-                        <div className="ticket-holder-email">{item.email}</div>
-                        <div className="ticket-holder-mobile">
-                          {item.contactPhone}
-                        </div>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
+                      );
+                    })}
+                  </div>
+                </>
+              )}
             </div>
             <div className="col-12 col-lg-4 borderLeft">
               <div className="sidebar-banner">
@@ -255,35 +263,77 @@ const TicketCongratulations = () => {
                   </li>
                   <li className="event-item">
                     <i className="fa fa-sun-o" aria-hidden="true"></i>{' '}
-                    <span>Day: </span>{' '}
+                    <span>Date: </span>{' '}
                     {eventStartDate === eventEndDate
-                      ? dayjs.utc(eventStartDate).format('dddd')
-                      : `${formattedStartDate} - ${formattedEndDate}`}
+                      ? dayjs.utc(eventStartDate).format('MMM DD, YYYY')
+                      : `${dayjs.utc(eventStartDate).format('MMM DD')}-${dayjs
+                          .utc(eventEndDate)
+                          .format('DD, YYYY')}`}
                   </li>
-                  <li className="event-item">
-                    <i className="fa fa-calendar" aria-hidden="true"></i>{' '}
-                    <span>Start Date: </span>
-                    {dayjs.utc(eventStartDate).format('MMM D, YYYY')}
-                  </li>
-                  <li className="event-item">
-                    <i className="fa fa-calendar" aria-hidden="true"></i>{' '}
-                    <span>End Date: </span>
-                    {dayjs.utc(eventEndDate).format('MMM D, YYYY')}
-                  </li>
+
                   <li className="event-item">
                     <i className="fa fa-clock" aria-hidden="true"></i>{' '}
-                    <span>Time: </span>
+                    <span>Timing: </span>
                     {timings &&
                       timings.map((time) => {
                         return (
                           <div className="info-item" key={time.startDate}>
                             <span className="p2">
+                              {dayjs.utc(time.startDate).format('dd')}{' '}
                               {tConvert(time.startTime)}-
-                              {tConvert(time.endTime)}{' '}
+                              {tConvert(time.endTime)} {ABBRS[time.timeZone]}
                             </span>
                           </div>
                         );
                       })}
+                  </li>
+                  <li className="event-item">
+                    <i className="fa fa-calendar" aria-hidden="true"></i>{' '}
+                    <span>Instructors: </span>
+                    {concatenateStrings([primaryTeacherName, coTeacher1Name])}
+                  </li>
+                  <li className="event-item">
+                    <i className="fa fa-map-marker" aria-hidden="true"></i>{' '}
+                    <span>Location: </span>
+                    {mode === COURSE_MODES.ONLINE.value
+                      ? mode
+                      : (mode === COURSE_MODES.IN_PERSON.value ||
+                          mode === COURSE_MODES.DESTINATION_RETREATS.value) && (
+                          <>
+                            {!isLocationEmpty && (
+                              <a
+                                href={`https://www.google.com/maps/search/?api=1&query=${
+                                  locationStreet || ''
+                                }, ${locationCity}, ${locationProvince} ${locationPostalCode} ${locationCountry}`}
+                                target="_blank"
+                                rel="noreferrer"
+                              >
+                                {locationStreet && `${locationStreet}, `}
+                                {locationCity || ''}
+                                {', '}
+                                {locationProvince || ''}{' '}
+                                {locationPostalCode || ''}
+                              </a>
+                            )}
+                            {isLocationEmpty && (
+                              <a
+                                href={`https://www.google.com/maps/search/?api=1&query=${
+                                  streetAddress1 || ''
+                                },${
+                                  streetAddress2 || ''
+                                } ${city} ${state} ${zip} ${country}`}
+                                target="_blank"
+                                rel="noreferrer"
+                              >
+                                {streetAddress1 && streetAddress1}
+                                {streetAddress2 && streetAddress2}
+                                {city || ''}
+                                {', '}
+                                {state || ''} {zip || ''}
+                              </a>
+                            )}
+                          </>
+                        )}
                   </li>
                 </ul>
                 <div className="contact-info">
@@ -306,50 +356,6 @@ const TicketCongratulations = () => {
                       <i className="fa fa-map-marker" aria-hidden="true"></i>{' '}
                       <span>Email: </span>
                       {email}
-                    </li>
-                    <li className="event-item">
-                      <i className="fa fa-map-marker" aria-hidden="true"></i>{' '}
-                      <span>Location: </span>
-                      {mode === COURSE_MODES.ONLINE.value
-                        ? mode
-                        : (mode === COURSE_MODES.IN_PERSON.value ||
-                            mode ===
-                              COURSE_MODES.DESTINATION_RETREATS.value) && (
-                            <>
-                              {!isLocationEmpty && (
-                                <a
-                                  href={`https://www.google.com/maps/search/?api=1&query=${
-                                    locationStreet || ''
-                                  }, ${locationCity}, ${locationProvince} ${locationPostalCode} ${locationCountry}`}
-                                  target="_blank"
-                                  rel="noreferrer"
-                                >
-                                  {locationStreet && `${locationStreet}, `}
-                                  {locationCity || ''}
-                                  {', '}
-                                  {locationProvince || ''}{' '}
-                                  {locationPostalCode || ''}
-                                </a>
-                              )}
-                              {isLocationEmpty && (
-                                <a
-                                  href={`https://www.google.com/maps/search/?api=1&query=${
-                                    streetAddress1 || ''
-                                  },${
-                                    streetAddress2 || ''
-                                  } ${city} ${state} ${zip} ${country}`}
-                                  target="_blank"
-                                  rel="noreferrer"
-                                >
-                                  {streetAddress1 && streetAddress1}
-                                  {streetAddress2 && streetAddress2}
-                                  {city || ''}
-                                  {', '}
-                                  {state || ''} {zip || ''}
-                                </a>
-                              )}
-                            </>
-                          )}
                     </li>
                   </ul>
                 </div>

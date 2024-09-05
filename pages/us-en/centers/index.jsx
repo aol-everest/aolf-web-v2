@@ -1,7 +1,7 @@
 /* eslint-disable react/no-unescaped-entities */
 /* eslint-disable no-inline-styles/no-inline-styles */
 import React, { useEffect, useState } from 'react';
-import { PageLoading } from '@components';
+import classNames from 'classnames';
 import { useQuery } from '@tanstack/react-query';
 import ErrorPage from 'next/error';
 import { api, createCompleteAddress, joinPhoneNumbers } from '@utils';
@@ -382,17 +382,29 @@ const Centers = ({ initialLocation = null, initialCenters }) => {
         <div className="center-search-box" id="mobile-handler">
           <div className="mobile-handler"></div>
           <div className="search-input-wrap">
-            <input
-              id="search-field"
-              className="search-input"
-              value={location.address}
-              onChange={(evt) => {
-                getPlacePredictions({ input: evt.target.value });
-                handleChange(evt.target.value);
-              }}
-              placeholder={placeholder}
-              loading={isPlacePredictionsLoading}
-            />
+            {location.latitude ? (
+              <span
+                className={classNames(
+                  'schedule-location-input scheduling-address',
+                )}
+              >
+                <span className={classNames('schedule-location-value')}>
+                  {location.address}
+                </span>
+              </span>
+            ) : (
+              <input
+                id="search-field"
+                className="search-input"
+                value={location.address}
+                onChange={(evt) => {
+                  getPlacePredictions({ input: evt.target.value });
+                  handleChange(evt.target.value);
+                }}
+                placeholder={placeholder}
+                loading={isPlacePredictionsLoading}
+              />
+            )}
             {location.address && (
               <button className="search-clear" onClick={clearSearch}>
                 <svg
