@@ -63,6 +63,9 @@ const Checkout = () => {
   const [campaignid] = useQueryString('campaignid', {
     defaultValue: null,
   });
+  const [sourceBundle] = useQueryString('source-bundle', {
+    defaultValue: null,
+  });
   const [mbsy] = useQueryString('mbsy', {
     defaultValue: null,
   });
@@ -251,10 +254,17 @@ const Checkout = () => {
       if (e) e.preventDefault();
       hideAlert();
       if (firstPreRequisiteFailedReason.actionButtonLink) {
-        pushRouteWithUTMQuery(
-          router,
-          firstPreRequisiteFailedReason.actionButtonLink,
-        );
+        if (sourceBundle) {
+          pushRouteWithUTMQuery(
+            router,
+            `/us-en/bundle/courses/${sourceBundle}?course-type=art-of-living-part-1`,
+          );
+        } else {
+          pushRouteWithUTMQuery(
+            router,
+            firstPreRequisiteFailedReason.actionButtonLink,
+          );
+        }
       }
     };
 

@@ -186,6 +186,7 @@ const ItemLoaderTile = () => {
 
 const CourseTile = ({ data, isAuthenticated }) => {
   const router = useRouter();
+  const { id: bundleSfid } = router.query;
   const { track } = useAnalytics();
   const { showModal } = useGlobalModalContext();
   const {
@@ -224,12 +225,13 @@ const CourseTile = ({ data, isAuthenticated }) => {
         query: {
           ctype: productTypeId,
           page: 'c-o',
+          'source-bundle': bundleSfid,
         },
       });
     } else {
       navigateToLogin(
         router,
-        `/us-en/course/checkout/${sfid}?ctype=${productTypeId}&page=c-o&${queryString.stringify(
+        `/us-en/course/checkout/${sfid}?ctype=${productTypeId}&page=c-o&source-bundle=${bundleSfid}&${queryString.stringify(
           router.query,
         )}`,
       );
