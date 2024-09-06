@@ -23,6 +23,7 @@ import { pushRouteWithUTMQuery, replaceRouteWithUTMQuery } from '@service';
 import { useGlobalAlertContext } from '@contexts';
 import { Loader } from '@components';
 import WorkshopSelectModal from '@components/scheduleWorkshopModal/ScheduleWorkshopModal';
+import { usePageTriggers } from '@hooks';
 
 const advancedFormat = require('dayjs/plugin/advancedFormat');
 dayjs.extend(advancedFormat);
@@ -82,6 +83,34 @@ export async function getServerSideProps(context) {
 }
 
 const Scheduling = ({ initialLocation }) => {
+  const handleTimeTrigger = () => {
+    console.log('Triggered after 180 seconds');
+  };
+
+  const handleInactivityTrigger = () => {
+    console.log('Inactivity detected after 40 seconds');
+  };
+
+  const handleScrollSpeedTrigger = (speed) => {
+    //console.log(`Scroll speed trigger: ${speed}px/s`);
+  };
+
+  const handleScrollDepthTrigger = (percentage) => {
+    console.log(`Scrolled ${Math.round(percentage * 100)}% of the page`);
+  };
+
+  const handleVisibilityChange = (isVisible) => {
+    if (!isVisible) {
+      console.log('User left the page (tab change)');
+    }
+  };
+  const { ref } = usePageTriggers({
+    onTimeTrigger: handleTimeTrigger,
+    onInactivityTrigger: handleInactivityTrigger,
+    onScrollSpeedTrigger: handleScrollSpeedTrigger,
+    onScrollDepthTrigger: handleScrollDepthTrigger,
+    onVisibilityChange: handleVisibilityChange,
+  });
   const fp = useRef(null);
   const { track, page } = useAnalytics();
   const { showAlert } = useGlobalAlertContext();
@@ -725,7 +754,7 @@ const Scheduling = ({ initialLocation }) => {
   return (
     <>
       {(loading || isLoading) && <Loader />}
-      <main className="scheduling-page calendar-online">
+      <main ref={ref} className="scheduling-page calendar-online">
         <section className="scheduling-top">
           {(!attendeeId || activeWorkshop?.id) && (
             <div className="container">
