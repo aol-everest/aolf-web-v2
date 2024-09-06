@@ -411,7 +411,6 @@ const Course = ({ bundle, allowCourseTypes, defaultCourseType }) => {
     'course-type',
     parseCourseType(COURSE_TYPES_OPTIONS),
   );
-  const [courseModeFilter, setCourseModeFilter] = useQueryState('mode');
   const [onlyWeekend, setOnlyWeekend] = useQueryState(
     'onlyWeekend',
     parseAsBoolean.withDefault(false),
@@ -461,7 +460,6 @@ const Course = ({ bundle, allowCourseTypes, defaultCourseType }) => {
             bundleSfid,
             filterStartEndDate,
             timeZoneFilter,
-            courseModeFilter,
             onlyWeekend,
             cityFilter,
           },
@@ -472,13 +470,6 @@ const Course = ({ bundle, allowCourseTypes, defaultCourseType }) => {
             size: 12,
             timingsRequired: true,
           };
-
-          if (courseModeFilter && COURSE_MODES[courseModeFilter]) {
-            param = {
-              ...param,
-              mode: COURSE_MODES[courseModeFilter].value,
-            };
-          }
 
           if (courseTypeFilter) {
             param = {
@@ -582,7 +573,6 @@ const Course = ({ bundle, allowCourseTypes, defaultCourseType }) => {
   if (!router.isReady) return <PageLoading />;
 
   const onClearAllFilter = () => {
-    setCourseModeFilter(null);
     setOnlyWeekend(null);
     setLocationFilter(null);
     setTimeZoneFilter(null);
@@ -594,9 +584,6 @@ const Course = ({ bundle, allowCourseTypes, defaultCourseType }) => {
     switch (field) {
       case 'courseTypeFilter':
         setCourseTypeFilter(value?.slug);
-        break;
-      case 'courseModeFilter':
-        setCourseModeFilter(value);
         break;
       case 'onlyWeekend':
         setOnlyWeekend(value);
@@ -620,9 +607,6 @@ const Course = ({ bundle, allowCourseTypes, defaultCourseType }) => {
       case 'courseTypeFilter':
         setCourseTypeFilter(null);
         break;
-      case 'courseModeFilter':
-        setCourseModeFilter(null);
-        break;
       case 'onlyWeekend':
         setOnlyWeekend(null);
         break;
@@ -640,9 +624,6 @@ const Course = ({ bundle, allowCourseTypes, defaultCourseType }) => {
     switch (field) {
       case 'courseTypeFilter':
         setCourseTypeFilter(value.slug);
-        break;
-      case 'courseModeFilter':
-        setCourseModeFilter(value);
         break;
       case 'onlyWeekend':
         setOnlyWeekend(value);
@@ -690,9 +671,6 @@ const Course = ({ bundle, allowCourseTypes, defaultCourseType }) => {
 
   let filterCount = 0;
   if (locationFilter) {
-    filterCount++;
-  }
-  if (courseModeFilter) {
     filterCount++;
   }
   if (onlyWeekend) {
@@ -825,33 +803,6 @@ const Course = ({ bundle, allowCourseTypes, defaultCourseType }) => {
                     closeHandler={closeHandler}
                     placeholder="Search for Location"
                   />
-                )}
-              </Popup>
-              <Popup
-                tabIndex="2"
-                value={COURSE_MODES[courseModeFilter] && courseModeFilter}
-                buttonText={
-                  courseModeFilter && COURSE_MODES[courseModeFilter]
-                    ? COURSE_MODES[courseModeFilter].name
-                    : null
-                }
-                closeEvent={onFilterChange('courseModeFilter')}
-                label="Course Format"
-              >
-                {({ closeHandler }) => (
-                  <>
-                    {orgConfig.courseModes.map((courseMode, index) => {
-                      return (
-                        <li
-                          key={index}
-                          className="courses-filter__list-item"
-                          onClick={closeHandler(courseMode)}
-                        >
-                          {COURSE_MODES[courseMode].name}
-                        </li>
-                      );
-                    })}
-                  </>
                 )}
               </Popup>
               <Popup
@@ -1043,15 +994,6 @@ const Course = ({ bundle, allowCourseTypes, defaultCourseType }) => {
                         </div>
                       )}
 
-                      {courseModeFilter && COURSE_MODES[courseModeFilter] && (
-                        <div
-                          className="selected-filter-item"
-                          onClick={onFilterClearEvent('courseModeFilter')}
-                        >
-                          {COURSE_MODES[courseModeFilter].value}
-                        </div>
-                      )}
-
                       {filterStartEndDateStr && (
                         <div
                           className="selected-filter-item"
@@ -1101,45 +1043,7 @@ const Course = ({ bundle, allowCourseTypes, defaultCourseType }) => {
                         placeholder="Search for Location"
                       />
                     </MobileFilterModal>
-                    <MobileFilterModal
-                      label="Course format"
-                      value={
-                        courseModeFilter && COURSE_MODES[courseModeFilter]
-                          ? COURSE_MODES[courseModeFilter].name
-                          : null
-                      }
-                      closeEvent={onFilterClearEvent('courseModeFilter')}
-                    >
-                      <div className="dropdown">
-                        <SmartDropDown
-                          value={courseModeFilter}
-                          buttonText={
-                            courseModeFilter && COURSE_MODES[courseModeFilter]
-                              ? COURSE_MODES[courseModeFilter].name
-                              : null
-                          }
-                          closeEvent={onFilterChange('courseModeFilter')}
-                        >
-                          {({ closeHandler }) => (
-                            <>
-                              {orgConfig.courseModes.map(
-                                (courseMode, index) => {
-                                  return (
-                                    <li
-                                      key={index}
-                                      className="dropdown-item"
-                                      onClick={closeHandler(courseMode)}
-                                    >
-                                      {COURSE_MODES[courseMode].name}
-                                    </li>
-                                  );
-                                },
-                              )}
-                            </>
-                          )}
-                        </SmartDropDown>
-                      </div>
-                    </MobileFilterModal>
+
                     <MobileFilterModal
                       label="Course Type"
                       value={
@@ -1354,15 +1258,6 @@ const Course = ({ bundle, allowCourseTypes, defaultCourseType }) => {
                   onClick={onFilterClearEvent('locationFilter')}
                 >
                   {locationFilter.locationName}
-                </div>
-              )}
-
-              {courseModeFilter && COURSE_MODES[courseModeFilter] && (
-                <div
-                  className="selected-filter-item"
-                  onClick={onFilterClearEvent('courseModeFilter')}
-                >
-                  {COURSE_MODES[courseModeFilter].value}
                 </div>
               )}
 
