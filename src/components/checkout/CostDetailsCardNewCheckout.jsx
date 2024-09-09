@@ -245,12 +245,14 @@ export const CostDetailsCardNewCheckout = ({
   return (
     <>
       <div className="offer-box">
-        <h2 className="title">
-          <span className="icon-wrap">
-            <img src="/img/stars-02.svg" width="20" height="20" alt="" />
-          </span>
-          Limited time offer
-        </h2>
+        {!isUsableCreditAvailable && (
+          <h2 className="title">
+            <span className="icon-wrap">
+              <img src="/img/stars-02.svg" width="20" height="20" alt="" />
+            </span>
+            Limited time offer
+          </h2>
+        )}
 
         {!isJourneyPremium && !isJourneyPlus && (
           <>

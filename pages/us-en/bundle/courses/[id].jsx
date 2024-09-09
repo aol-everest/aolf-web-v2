@@ -405,7 +405,9 @@ const Course = ({ bundle, allowCourseTypes, defaultCourseType }) => {
     threshold: 0.1,
   });
   const seed = useUIDSeed();
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, profile, passwordLess } = useAuth();
+  const { signOut } = passwordLess;
+  const { first_name, last_name } = profile || {};
   const router = useRouter();
   const { id: bundleSfid } = router.query;
 
@@ -416,10 +418,6 @@ const Course = ({ bundle, allowCourseTypes, defaultCourseType }) => {
   const [onlyWeekend, setOnlyWeekend] = useQueryState(
     'onlyWeekend',
     parseAsBoolean.withDefault(false),
-  );
-  const [locationFilter, setLocationFilter] = useQueryState(
-    'location',
-    parseAsJson(),
   );
   const [filterStartEndDate, setFilterStartEndDate] = useQueryState(
     'startEndDate',
@@ -458,7 +456,6 @@ const Course = ({ bundle, allowCourseTypes, defaultCourseType }) => {
           'getBundleWorkshopsOnly',
           {
             courseTypeFilter,
-            locationFilter,
             bundleSfid,
             filterStartEndDate,
             timeZoneFilter,
@@ -499,14 +496,6 @@ const Course = ({ bundle, allowCourseTypes, defaultCourseType }) => {
               ...param,
               sdate: startDate,
               edate: endDate,
-            };
-          }
-          if (locationFilter) {
-            const { lat, lng } = locationFilter;
-            param = {
-              ...param,
-              lat,
-              lng,
             };
           }
 
@@ -576,7 +565,6 @@ const Course = ({ bundle, allowCourseTypes, defaultCourseType }) => {
 
   const onClearAllFilter = () => {
     setOnlyWeekend(null);
-    setLocationFilter(null);
     setTimeZoneFilter(null);
     setFilterStartEndDate(null);
     setCourseTypeFilter(null);
@@ -590,13 +578,7 @@ const Course = ({ bundle, allowCourseTypes, defaultCourseType }) => {
       case 'onlyWeekend':
         setOnlyWeekend(value);
         break;
-      case 'locationFilter':
-        if (value) {
-          setLocationFilter(value);
-        } else {
-          setLocationFilter(null);
-        }
-        break;
+
       case 'timeZoneFilter':
         setTimeZoneFilter(value);
         break;
@@ -612,9 +594,7 @@ const Course = ({ bundle, allowCourseTypes, defaultCourseType }) => {
       case 'onlyWeekend':
         setOnlyWeekend(null);
         break;
-      case 'locationFilter':
-        setLocationFilter(null);
-        break;
+
       case 'timeZoneFilter':
         setTimeZoneFilter(null);
         break;
@@ -630,13 +610,7 @@ const Course = ({ bundle, allowCourseTypes, defaultCourseType }) => {
       case 'onlyWeekend':
         setOnlyWeekend(value);
         break;
-      case 'locationFilter':
-        if (value) {
-          setLocationFilter(value);
-        } else {
-          setLocationFilter(null);
-        }
-        break;
+
       case 'timeZoneFilter':
         setTimeZoneFilter(value);
         break;
@@ -671,10 +645,17 @@ const Course = ({ bundle, allowCourseTypes, defaultCourseType }) => {
     setShowFilterModal((showFilterModal) => !showFilterModal);
   };
 
+  const logout = async (e) => {
+    if (e) e.preventDefault();
+    await signOut();
+    pushRouteWithUTMQuery(
+      router,
+      `/us-en/signin?next=${encodeURIComponent(location.pathname + location.search)}`,
+    );
+  };
+
   let filterCount = 0;
-  if (locationFilter) {
-    filterCount++;
-  }
+
   if (onlyWeekend) {
     filterCount++;
   }
@@ -783,7 +764,16 @@ const Course = ({ bundle, allowCourseTypes, defaultCourseType }) => {
           </section>
         </>
       )}
-      <section className="section-course-find">
+      <section className="section-course-find !tw-pt-[60px]">
+        <div className="container tw-pb-4">
+          <div class="user_detail">
+            Welcome {first_name}! (
+            <a href="#" class="link" onClick={logout}>
+              logout
+            </a>
+            )
+          </div>
+        </div>
         <div className="container">
           <div className="course-filter-wrap">
             <div
@@ -791,22 +781,7 @@ const Course = ({ bundle, allowCourseTypes, defaultCourseType }) => {
               className="course-filter-listing search-form col-12 d-flex align-items-center"
             >
               <button className="filter-save-button">Save Changes</button>
-              <Popup
-                tabIndex="1"
-                value={locationFilter}
-                buttonText={
-                  locationFilter ? `${locationFilter.locationName}` : null
-                }
-                closeEvent={onFilterChange('locationFilter')}
-                label="Location"
-              >
-                {({ closeHandler }) => (
-                  <AddressSearch
-                    closeHandler={closeHandler}
-                    placeholder="Search for Location"
-                  />
-                )}
-              </Popup>
+
               <Popup
                 tabIndex="3"
                 value={courseTypeFilter}
@@ -987,14 +962,6 @@ const Course = ({ bundle, allowCourseTypes, defaultCourseType }) => {
                           {courseTypeFilter.name}
                         </div>
                       )}
-                      {locationFilter && (
-                        <div
-                          className="selected-filter-item"
-                          onClick={onFilterClearEvent('locationFilter')}
-                        >
-                          {locationFilter.locationName}
-                        </div>
-                      )}
 
                       {filterStartEndDateStr && (
                         <div
@@ -1032,19 +999,6 @@ const Course = ({ bundle, allowCourseTypes, defaultCourseType }) => {
                         </div>
                       )}
                     </div>
-
-                    <MobileFilterModal
-                      label="Location"
-                      value={
-                        locationFilter ? `${locationFilter.locationName}` : null
-                      }
-                      clearEvent={onFilterClearEvent('locationFilter')}
-                    >
-                      <AddressSearch
-                        closeHandler={onFilterChange('locationFilter')}
-                        placeholder="Search for Location"
-                      />
-                    </MobileFilterModal>
 
                     <MobileFilterModal
                       label="Course Type"
@@ -1252,14 +1206,6 @@ const Course = ({ bundle, allowCourseTypes, defaultCourseType }) => {
                   onClick={onFilterClearEvent('courseTypeFilter')}
                 >
                   {courseTypeFilter.name}
-                </div>
-              )}
-              {locationFilter && (
-                <div
-                  className="selected-filter-item"
-                  onClick={onFilterClearEvent('locationFilter')}
-                >
-                  {locationFilter.locationName}
                 </div>
               )}
 

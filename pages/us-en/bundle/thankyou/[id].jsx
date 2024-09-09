@@ -327,14 +327,19 @@ const Thankyou = () => {
                   Congratulations on signing up for the <b>{title}</b>.
                 </p>
                 <p className="welcome__description v1">
-                  You will receive an email with details, next steps and link to
-                  start scheduling your courses. You may schedule your first
-                  course now or later at your convenience.
+                  <b>
+                    You will receive an email with details, next steps and link
+                    to start scheduling your courses.
+                  </b>{' '}
+                  You may schedule your first course now or later at your
+                  convenience.
                 </p>
                 <p className="welcome__description v1">
-                  We`ve created your account and your user name and the
-                  temporary password have been sent to you via email. You will
-                  need this to schedule your courses.
+                  <b>
+                    We`ve created your account and your user name and the
+                    temporary password have been sent to you via email.
+                  </b>{' '}
+                  You will need this to schedule your courses.
                 </p>
                 <p className="welcome__description v1">
                   We highly recommend that you <b>start your journey</b> with
