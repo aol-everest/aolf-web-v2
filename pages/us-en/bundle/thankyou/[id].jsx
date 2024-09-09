@@ -338,8 +338,7 @@ const Thankyou = () => {
                   <b className="tw-text-orange-500">
                     You will be prompted to log into your account to start
                     scheduling your courses.
-                  </b>{' '}
-                  You will need this to schedule your courses.
+                  </b>
                 </p>
                 <p className="welcome__description v1">
                   We highly recommend that you <b>start your journey</b> with
