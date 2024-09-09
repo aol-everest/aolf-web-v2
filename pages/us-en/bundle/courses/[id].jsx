@@ -1252,5 +1252,6 @@ const Course = ({ bundle, allowCourseTypes, defaultCourseType }) => {
 
 Course.requiresAuth = true;
 Course.hideHeader = true;
+Course.hideFooter = true;
 
-export default withAuth(Course, { hideHeader: true });
+export default withAuth(Course, { hideHeader: true, hideFooter: true });

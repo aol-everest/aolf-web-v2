@@ -241,7 +241,6 @@ export const CostDetailsCardNewCheckout = ({
       </>
     );
   }
-
   return (
     <>
       <div className="offer-box">
@@ -269,12 +268,22 @@ export const CostDetailsCardNewCheckout = ({
                     onChange={formikProps.handleChange('priceType')}
                   />
                 )}
-                <label htmlFor="payment-lg-regular-card">
-                  <span className="radio-text">Regular Tuition:</span>
-                  <span className="radio-value">
-                    {delfee && <s>${delfee}</s>} {`$${fee}`}
-                  </span>
-                </label>
+                {!isUsableCreditAvailable && (
+                  <label htmlFor="payment-lg-regular-card">
+                    <span className="radio-text">Regular Tuition:</span>
+                    <span className="radio-value">
+                      {delfee && <s>${delfee}</s>} {`$${fee}`}
+                    </span>
+                  </label>
+                )}
+                {isUsableCreditAvailable && (
+                  <label htmlFor="payment-lg-regular-card">
+                    <span className="radio-text">Tuition:</span>
+                    <span className="radio-value">
+                      <s>${fee}</s> {`$0`}
+                    </span>
+                  </label>
+                )}
               </div>
             </div>
             {expenseAddOn?.unitPrice && (
