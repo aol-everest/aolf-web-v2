@@ -327,14 +327,18 @@ const Thankyou = () => {
                   Congratulations on signing up for the <b>{title}</b>.
                 </p>
                 <p className="welcome__description v1">
-                  You will receive an email with details, next steps and link to
-                  start scheduling your courses. You may schedule your first
-                  course now or later at your convenience.
+                  <b className="tw-text-orange-500">
+                    You will receive an email with details, next steps and link
+                    to start scheduling your courses.
+                  </b>{' '}
+                  You may schedule your first course now or later at your
+                  convenience.
                 </p>
                 <p className="welcome__description v1">
-                  We`ve created your account and your user name and the
-                  temporary password have been sent to you via email. You will
-                  need this to schedule your courses.
+                  <b className="tw-text-orange-500">
+                    You will be prompted to log into your account to start
+                    scheduling your courses.
+                  </b>
                 </p>
                 <p className="welcome__description v1">
                   We highly recommend that you <b>start your journey</b> with
@@ -350,11 +354,10 @@ const Thankyou = () => {
                   </a>
                 </div>
                 <p className="welcome__description v1 tw-pt-10">
-                  We are with you on your journey..every step of the way!
+                  We are here to support you every step of the way. If you have
+                  any questions, feel free to reach out to us
                 </p>
-                <p className="welcome__description v1">
-                  If you have any questions, feel free to reach out to us
-                </p>
+
                 <p className="welcome__description v1">
                   <ul>
                     <li>
@@ -367,6 +370,9 @@ const Thankyou = () => {
                       Phone: <a href="tel:+1 (855) 202-4400">(855) 202-4400</a>
                     </li>
                   </ul>
+                </p>
+                <p className="welcome__description v1">
+                  With you on your Journey!{' '}
                 </p>
               </div>
 
