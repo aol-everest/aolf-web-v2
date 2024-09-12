@@ -25,6 +25,7 @@ export const GlobalAlert = ({ children }) => {
       ...store,
       alertType,
       alertProps,
+      autoHideMS,
     });
     if (autoHideMS) {
       setTimeout(() => {
