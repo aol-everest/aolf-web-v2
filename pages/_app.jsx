@@ -83,7 +83,6 @@ Amplify.configure({
 });
 
 function App({ Component, pageProps }) {
-  console.log(Component);
   const router = useRouter();
   const [user, setUser] = useState({ isAuthenticated: false, profile: {} });
   const [loading, setLoading] = useState(true);
