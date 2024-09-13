@@ -185,6 +185,7 @@ const AddCenterModel = ({
     address: initialLocation.locationName,
     latitude: initialLocation?.lat,
     longitude: initialLocation?.lng,
+    isInputAllowed: true,
   });
 
   const placeholder = location.address || 'Search...';
@@ -214,6 +215,7 @@ const AddCenterModel = ({
       address: '',
       latitude: null,
       longitude: null,
+      isInputAllowed: true,
     });
   };
   const { data: allCenters, isLoading } = useQuery({
@@ -300,6 +302,7 @@ const AddCenterModel = ({
             latitude: placeDetails.geometry.location.lat(),
             longitude: placeDetails.geometry.location.lng(),
             address: item.description,
+            isInputAllowed: false,
           });
         },
       );
@@ -308,7 +311,14 @@ const AddCenterModel = ({
     }
   };
 
-  console.log('location', location);
+  const handleAddressClick = () => {
+    if (!location.isInputAllowed) {
+      setLocation({
+        ...location,
+        isInputAllowed: true,
+      });
+    }
+  };
 
   return (
     <div
@@ -336,11 +346,12 @@ const AddCenterModel = ({
           </div>
           <div className="input-search-wrap">
             <div className="search-input-wrap">
-              {location.latitude ? (
+              {!location.isInputAllowed ? (
                 <span
                   className={classNames(
                     'schedule-location-input scheduling-address',
                   )}
+                  onClick={handleAddressClick}
                 >
                   <span className={classNames('schedule-location-value')}>
                     {location.address}

@@ -1,16 +1,13 @@
 /* eslint-disable no-inline-styles/no-inline-styles */
-import { useEffect, useRef, useState } from 'react';
+import { useState } from 'react';
 import usePlacesService from 'react-google-autocomplete/lib/usePlacesAutocompleteService';
 export const AddressSearch = ({
   filter,
   closeHandler,
   placeholder,
   parentClass = '',
-  listClassName = '',
-  isDefaultLocation = false,
+  value,
 }) => {
-  const inputRef = useRef(null);
-
   const {
     placesService,
     placePredictions,
@@ -23,15 +20,13 @@ export const AddressSearch = ({
       componentRestrictions: { country: 'us' },
     },
   });
-  const [address, setAddress] = useState('');
+  const [address, setAddress] = useState(value?.locationName || '');
   const [isReadyForSelection, setReadyForSelection] = useState(true);
 
   const handleChange = (address) => {
     setReadyForSelection(true);
     setAddress(address);
   };
-
-  const handleSelect = async (selected) => {};
 
   const renderItem = (placePrediction) => {
     const { structured_formatting } = placePrediction;
