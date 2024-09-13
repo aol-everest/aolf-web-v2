@@ -24,6 +24,7 @@ import { useGlobalAlertContext } from '@contexts';
 import { Loader } from '@components';
 import WorkshopSelectModal from '@components/scheduleWorkshopModal/ScheduleWorkshopModal';
 import { usePageTriggers } from '@hooks';
+import { PopVariation2 } from '@components/inactivePopup';
 
 const advancedFormat = require('dayjs/plugin/advancedFormat');
 dayjs.extend(advancedFormat);
@@ -83,12 +84,29 @@ export async function getServerSideProps(context) {
 }
 
 const Scheduling = ({ initialLocation }) => {
+  const [isPopupVariationVisible, setPopupVariationVisible] = useState(false);
+  const [isPopupVariationExecuted, setPopupVariationExecuted] = useState(false);
+
+  const showPopupVariation = () => {
+    if (!isPopupVariationExecuted) {
+      setPopupVariationVisible(true);
+      setPopupVariationExecuted(true);
+    }
+  };
+
+  const closePopupVariation = (state) => (e) => {
+    if (e) e.preventDefault();
+    state(false);
+  };
+
   const handleTimeTrigger = () => {
     console.log('Triggered after 180 seconds');
+    showPopupVariation();
   };
 
   const handleInactivityTrigger = () => {
     console.log('Inactivity detected after 40 seconds');
+    showPopupVariation();
   };
 
   const handleScrollSpeedTrigger = (speed) => {
@@ -102,6 +120,7 @@ const Scheduling = ({ initialLocation }) => {
   const handleVisibilityChange = (isVisible) => {
     if (!isVisible) {
       console.log('User left the page (tab change)');
+      showPopupVariation();
     }
   };
   const { ref } = usePageTriggers({
@@ -1452,6 +1471,12 @@ const Scheduling = ({ initialLocation }) => {
           handleAutoScrollForMobile={handleAutoScrollForMobile}
           slug={slug}
         />
+
+        {isPopupVariationVisible && (
+          <PopVariation2
+            closeAction={closePopupVariation(setPopupVariationVisible)}
+          ></PopVariation2>
+        )}
       </main>
     </>
   );

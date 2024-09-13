@@ -1,0 +1,300 @@
+.inactive-popup {
+  @media screen and (max-width: 720px) {
+    padding: 66px 0 0 0 !important;
+  }
+  .modal-dialog {
+    max-width: 980px;
+    @media screen and (max-width: 720px) {
+      align-items: flex-end;
+      margin-bottom: 0;
+      margin-top: auto;
+    }
+    .modal-header {
+      button.close {
+        right: 16px;
+        top: 16px;
+        height: 22px;
+        width: 22px;
+        border-radius: 5px;
+        background: #fff url(/img/x.webp) center no-repeat;
+        background-size: 22px 22px;
+        z-index: 1;
+        span {
+          display: none;
+        }
+        &:focus {
+          outline: none;
+        }
+      }
+    }
+  }
+  .modal-content {
+    padding: 0;
+    border-radius: 32px;
+    @media screen and (max-width: 720px) {
+      border-radius: 26px 26px 0 0;
+    }
+  }
+  .modal-body {
+    display: flex;
+    margin: 0 !important;
+    .section-left {
+      flex: 1;
+    }
+    .section-right {
+      width: 476px;
+      @media screen and (max-width: 720px) {
+        width: 100%;
+      }
+    }
+  }
+  .section-left {
+    position: relative;
+    padding: 20px 20px 51px;
+    display: flex;
+    justify-content: center;
+    @media screen and (max-width: 720px) {
+      display: none;
+    }
+    img.cover-image {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+      border-radius: 32px 0 0 32px;
+      top: 0;
+      left: 0;
+    }
+    .review-rating-box {
+      position: relative;
+      margin-top: auto;
+      width: 274px;
+      padding: 16px 12px 12px;
+      border-radius: 32px;
+      background-color: rgba(255, 255, 255, 0.8);
+      backdrop-filter: blur(5px);
+      .reviewers {
+        display: flex;
+        justify-content: center;
+        img {
+          width: 42px;
+          height: 42px;
+          border-radius: 100%;
+          border: #fff 3px solid;
+          + img {
+            margin-left: -12px;
+          }
+        }
+      }
+      .review-text {
+        padding: 16px 0;
+        font-size: 16px;
+        line-height: 26px;
+        text-align: center;
+        font-weight: 500;
+      }
+      .rating-wrap {
+        text-align: center;
+        margin-bottom: 6px;
+      }
+      .trustpilot-text {
+        font-size: 13px;
+        font-weight: 400;
+        line-height: 20px;
+        color: #6f7283;
+        text-align: center;
+        strong {
+          font-weight: 600;
+          color: #31364e;
+        }
+      }
+    }
+  }
+  .section-right {
+    padding: 19px 24px;
+    .review-rating-box {
+      display: flex;
+      gap: 8px;
+      margin-top: 17px;
+      @media screen and (min-width: 721px) {
+        display: none;
+      }
+      .reviewers {
+        display: flex;
+        justify-content: center;
+        img {
+          width: 38px;
+          height: 38px;
+          border-radius: 100%;
+          border: #fff 2px solid;
+          + img {
+            margin-left: -10px;
+          }
+        }
+      }
+      .review-text {
+        font-size: 12px;
+        font-weight: 500;
+        line-height: 20px;
+      }
+      & + h2.title {
+        @media screen and (max-width: 720px) {
+          margin-top: 8px;
+        }
+      }
+    }
+    h2.title {
+      font-size: 32px;
+      line-height: 42px;
+      margin: 36px 0 16px;
+      font-weight: 500;
+      @media screen and (max-width: 720px) {
+        margin: 25px 0 12px;
+        font-size: 28px;
+        line-height: 36px;
+      }
+    }
+    .section-desc {
+      font-size: 16px;
+      line-height: 24px;
+      font-weight: 400;
+      strong {
+        font-weight: 500;
+        color: #ff7e00;
+      }
+    }
+    .course-features,
+    .course-bonus {
+      margin-top: 16px;
+      padding: 0 12px;
+      @media screen and (max-width: 720px) {
+        margin-top: 12px;
+        padding: 0px;
+      }
+      h4 {
+        color: #ff7e00;
+        font-size: 14px;
+        line-height: 20px;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        font-weight: 600;
+        margin-bottom: 12px;
+      }
+      ul {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        li {
+          display: flex;
+          gap: 16px;
+          padding: 0;
+          margin: 0;
+          font-size: 16px;
+          font-weight: 500;
+          line-height: 26px;
+          align-items: center;
+          @media screen and (max-width: 720px) {
+            gap: 12px;
+            font-size: 14px;
+            line-height: 24px;
+          }
+          &::before {
+            content: '';
+            background: #fff2e4 url(/img/right-tick-bold.svg) no-repeat center;
+            width: 24px;
+            height: 24px;
+            border-radius: 4px;
+            display: block;
+            position: unset;
+            @media screen and (max-width: 720px) {
+              background-size: 10px auto;
+            }
+          }
+        }
+      }
+    }
+    .course-bonus {
+      background: #fff2e5;
+      margin-top: 16px;
+      border-radius: 16px;
+      padding: 18px 16px;
+      @media screen and (max-width: 720px) {
+        margin-top: 12px;
+        padding: 12px;
+      }
+      h4 {
+        color: #31364e;
+        @media screen and (max-width: 720px) {
+          font-size: 12px;
+          line-height: 20px;
+        }
+      }
+      ul {
+        li {
+          &::before {
+            background: #fff url(/img/gift-icon.svg) no-repeat center;
+            @media screen and (max-width: 720px) {
+              background-size: 11px auto;
+            }
+          }
+        }
+      }
+    }
+    .note {
+      color: #3d8be8;
+      font-size: 14px;
+      font-weight: 600;
+      line-height: 20px;
+      letter-spacing: 1px;
+      text-align: center;
+      margin: 16px 0;
+      text-transform: uppercase;
+      @media screen and (max-width: 720px) {
+        margin: 12px 0;
+        font-family: Work Sans;
+        font-size: 12px;
+        line-height: 20px;
+      }
+    }
+    .popup-actions {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+      padding-bottom: 24px;
+      button.btn-primary {
+        width: 100%;
+        height: 60px;
+        border-radius: 100px;
+        background: #ff7e00;
+        color: #fff;
+        font-size: 20px;
+        font-weight: 600;
+        line-height: 30px;
+        text-align: center;
+        padding: 0;
+        @media screen and (max-width: 720px) {
+          height: 52px;
+          font-family: Work Sans;
+          font-size: 18px;
+          line-height: 26px;
+        }
+      }
+      a.maybe-link {
+        font-size: 20px;
+        line-height: 30px;
+        font-weight: 600;
+        text-align: center;
+        color: #ff7e00;
+        @media screen and (max-width: 720px) {
+          font-size: 18px;
+          line-height: 26px;
+        }
+      }
+    }
+  }
+}
