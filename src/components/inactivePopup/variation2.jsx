@@ -2,9 +2,9 @@
 import React from 'react';
 import Popup from './popup';
 
-export function PopVariation2() {
+export function PopVariation2({ closeAction, acceptAction, show }) {
   return (
-    <Popup>
+    <Popup closeAction={closeAction} show={show}>
       <div class="section-left">
         <img src="/img/popup-cover2.webp" alt="Gurudev" class="cover-image" />
         <div class="review-rating-box">
@@ -60,10 +60,12 @@ export function PopVariation2() {
         </div>
         <div class="note">Limited Spots Available! Secure yours now.</div>
         <div class="popup-actions">
-          <button class="btn btn-primary" type="button">
+          <button class="btn btn-primary" type="button" onClick={acceptAction}>
             Continue
           </button>
-          <a class="maybe-link">Maybe later</a>
+          <a class="maybe-link" onClick={closeAction}>
+            Maybe later
+          </a>
         </div>
       </div>
     </Popup>

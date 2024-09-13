@@ -23,6 +23,8 @@ import { useRouter } from 'next/router';
 import 'flatpickr/dist/flatpickr.min.css';
 import { pushRouteWithUTMQuery } from '@service';
 import Modal from 'react-bootstrap/Modal';
+import { usePageTriggers } from '@hooks';
+import { PopVariation2 } from '@components/inactivePopup';
 
 const advancedFormat = require('dayjs/plugin/advancedFormat');
 dayjs.extend(advancedFormat);
@@ -454,6 +456,64 @@ const Scheduling = ({ initialLocation = null }) => {
   );
 
   const [teacherFilter] = useQueryState('teacher');
+  const [utmMedium, setUtmMedium] = useQueryState('utm_medium');
+  const [isPopupVariationVisible, setPopupVariationVisible] = useState(false);
+  const [isPopupVariationExecuted, setPopupVariationExecuted] = useState(false);
+
+  const showPopupVariation = () => {
+    console.log(
+      'Triggered showPopupVariation',
+      `Selected Dates count : ${selectedDates ? selectedDates.length : 0}`,
+      `is popup variation executed previously : ${isPopupVariationExecuted}`,
+    );
+    if (!isPopupVariationExecuted && selectedDates?.length > 0) {
+      setPopupVariationVisible(true);
+      setPopupVariationExecuted(true);
+    }
+  };
+
+  const closePopupVariation = (state) => (e) => {
+    if (e) e.preventDefault();
+    state(false);
+  };
+
+  const acceptPopupVariationOffer = (e) => {
+    setUtmMedium('sys');
+    setPopupVariationVisible(false);
+  };
+
+  const handleTimeTrigger = () => {
+    console.log('Triggered after 180 seconds');
+    showPopupVariation();
+  };
+
+  const handleInactivityTrigger = () => {
+    console.log('Inactivity detected after 40 seconds');
+    showPopupVariation();
+  };
+
+  const handleScrollSpeedTrigger = (speed) => {
+    //console.log(`Scroll speed trigger: ${speed}px/s`);
+  };
+
+  const handleScrollDepthTrigger = (percentage) => {
+    console.log(`Scrolled ${Math.round(percentage * 100)}% of the page`);
+  };
+
+  const handleVisibilityChange = (isVisible) => {
+    if (!isVisible) {
+      console.log('User left the page (tab change)');
+      showPopupVariation();
+    }
+  };
+
+  const { ref } = usePageTriggers({
+    onTimeTrigger: handleTimeTrigger,
+    onInactivityTrigger: handleInactivityTrigger,
+    onScrollSpeedTrigger: handleScrollSpeedTrigger,
+    onScrollDepthTrigger: handleScrollDepthTrigger,
+    onVisibilityChange: handleVisibilityChange,
+  });
 
   const {
     phone1,
@@ -1023,7 +1083,7 @@ const Scheduling = ({ initialLocation = null }) => {
   return (
     <>
       {(loading || isLoading) && <div className="cover-spin"></div>}
-      <main className="in-person-course-page">
+      <main ref={ref} className="in-person-course-page">
         <section className="top-section">
           <div className="container">
             <h1 className="page-title">{workshopMaster?.title}</h1>
@@ -1723,6 +1783,11 @@ const Scheduling = ({ initialLocation = null }) => {
           handleAutoScrollForMobile={handleAutoScrollForMobile}
           slug={slug}
         />
+        <PopVariation2
+          show={isPopupVariationVisible}
+          closeAction={closePopupVariation(setPopupVariationVisible)}
+          acceptAction={acceptPopupVariationOffer}
+        ></PopVariation2>
       </main>
     </>
   );
