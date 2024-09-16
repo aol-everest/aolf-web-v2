@@ -249,6 +249,7 @@ const WorkshopSelectModal = React.memo(
                     >
                       <div className="slot-type">
                         <div className="slot-info">
+                          <span class="icon-aol iconaol-profile-users"></span>
                           {workshop?.mode === COURSE_MODES.ONLINE.value ? (
                             workshop.mode
                           ) : workshop.isLocationEmpty ? (
@@ -281,6 +282,15 @@ const WorkshopSelectModal = React.memo(
                             }
                             checked={localSelectedWorkshop?.id === workshop.id}
                           />
+                        </div>
+                      </div>
+                      <div className="slot-price">
+                        <div className="price-total">Total: $395</div>
+                        <div className="price-pm">
+                          <div>
+                            $36/<span className="month">month</span>
+                          </div>
+                          <div className="for-months">for 12 months</div>
                         </div>
                       </div>
                       {workshop.timings.map((timing, index) => {
