@@ -458,9 +458,9 @@ function LoginPage() {
         <button className="google-icon" onClick={googleLogin}>
           <img src="/img/google-icon.svg" />
         </button>
-        <button className="facebook-icon" onClick={fbLogin}>
+        {/* <button className="facebook-icon" onClick={fbLogin}>
           <img src="/img/facebook-icon.svg" />
-        </button>
+        </button> */}
         {/* <button className="apple-icon">
           <img src="/img/apple-icon.svg" />
         </button> */}
