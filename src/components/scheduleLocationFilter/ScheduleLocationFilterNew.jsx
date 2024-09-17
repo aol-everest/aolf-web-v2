@@ -1,6 +1,6 @@
+import React, { useEffect, useState } from 'react';
 import classNames from 'classnames';
 import { AddressSearch } from '..';
-import { useState } from 'react';
 
 export const ScheduleLocationFilterNew = ({
   handleLocationChange,
@@ -10,22 +10,17 @@ export const ScheduleLocationFilterNew = ({
 }) => {
   const [isInputAllowed, setIsInputAllowed] = useState(true);
 
+  useEffect(() => {
+    setIsInputAllowed(!value);
+  }, [value]);
+
   const removeLocation = (e) => {
     if (e) e.preventDefault();
     handleLocationChange(null);
-    setIsInputAllowed(true);
   };
 
   const handleLocationFilterChange = (value) => () => {
-    console.log('value', value);
     handleLocationChange(value);
-    setIsInputAllowed(false);
-  };
-
-  const handleAddressClick = () => {
-    if (!isInputAllowed) {
-      setIsInputAllowed(true);
-    }
   };
 
   return (
@@ -36,7 +31,7 @@ export const ScheduleLocationFilterNew = ({
       {!isInputAllowed ? (
         <span
           className={classNames('schedule-location-input scheduling-address')}
-          onClick={handleAddressClick}
+          onClick={removeLocation}
         >
           {value?.locationName && (
             <>
