@@ -99,6 +99,7 @@ const WorkshopSelectModal = React.memo(
     setActiveWorkshop,
     handleAutoScrollForMobile,
     slug,
+    workshopMaster,
   }) => {
     const { track } = useAnalytics();
     const [localSelectedWorkshop, setLocalSelectedWorkshop] = useState(null);
@@ -249,6 +250,11 @@ const WorkshopSelectModal = React.memo(
                     >
                       <div className="slot-type">
                         <div className="slot-info">
+                          {workshop?.mode === COURSE_MODES.ONLINE.value ? (
+                            <span className="icon-aol iconaol-monitor-mobile"></span>
+                          ) : (
+                            <span className="icon-aol iconaol-profile-users"></span>
+                          )}
                           <span class="icon-aol iconaol-profile-users"></span>
                           {workshop?.mode === COURSE_MODES.ONLINE.value ? (
                             workshop.mode
@@ -285,10 +291,18 @@ const WorkshopSelectModal = React.memo(
                         </div>
                       </div>
                       <div className="slot-price">
-                        <div className="price-total">Total: $395</div>
+                        <div className="price-total">
+                          Total: $
+                          {`${
+                            workshop.unitPrice
+                              ? workshop.unitPrice.toFixed(2) || '0'.toFixed(2)
+                              : workshopMaster.unitPrice
+                          }`}
+                        </div>
                         <div className="price-pm">
                           <div>
-                            $36/<span className="month">month</span>
+                            ${workshop?.instalmentAmount}/
+                            <span className="month">month</span>
                           </div>
                           <div className="for-months">for 12 months</div>
                         </div>
@@ -1792,6 +1806,7 @@ const Scheduling = ({ initialLocation = null }) => {
           setActiveWorkshop={setActiveWorkshop}
           handleAutoScrollForMobile={handleAutoScrollForMobile}
           slug={slug}
+          workshopMaster={workshopMaster}
         />
         <PopVariation2
           show={isPopupVariationVisible}

@@ -1482,6 +1482,7 @@ const Scheduling = ({ initialLocation }) => {
           setActiveWorkshop={setActiveWorkshop}
           handleAutoScrollForMobile={handleAutoScrollForMobile}
           slug={slug}
+          workshopMaster={workshopMaster}
         />
 
         <PopVariation2
