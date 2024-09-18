@@ -26,6 +26,7 @@ import { Amplify } from 'aws-amplify';
 import { Passwordless } from '@components/passwordLessAuth/passwordless';
 import { Hub } from 'aws-amplify/utils';
 import { useRouter } from 'next/router';
+import { clearInflightOAuth } from '@passwordLess/storage.js';
 // import { SurveyRequest } from "@components/surveyRequest";
 
 // import TopProgressBar from "@components/topProgressBar";
@@ -101,37 +102,13 @@ function App({ Component, pageProps }) {
   });
 
   useEffect(() => {
+    clearInflightOAuth();
     const unsubscribe = Hub.listen('auth', ({ payload }) => {
       switch (payload.event) {
-        case 'signedIn':
-          console.log('user have been signedIn successfully.');
-          fetchProfile();
-          break;
-        case 'signedOut':
-          console.log('user have been signedOut successfully.');
-          setUser({ isAuthenticated: false });
-          break;
-        case 'tokenRefresh':
-          console.log('auth tokens have been refreshed.');
-          break;
-        case 'tokenRefresh_failure':
-          console.log('failure while refreshing auth tokens.');
-          break;
-        case 'signInWithRedirect':
-          console.log('signInWithRedirect API has successfully been resolved.');
-          fetchProfile();
-          break;
-        case 'signInWithRedirect_failure':
-          // setError('An error has occurred during the Oauth flow.');
-          console.log(
-            'failure while trying to resolve signInWithRedirect API.',
-          );
-          break;
         case 'customOAuthState':
-          // eslint-disable-next-line no-case-declarations
-          const state = payload.data; // this will be customState provided on signInWithRedirect function
-          console.log(state);
-          console.info('custom state returned from CognitoHosted UI');
+          if (payload.data && payload.data !== '') {
+            router.push(payload.data);
+          }
           break;
       }
     });
