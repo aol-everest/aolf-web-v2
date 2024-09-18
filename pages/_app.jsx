@@ -103,10 +103,35 @@ function App({ Component, pageProps }) {
   useEffect(() => {
     const unsubscribe = Hub.listen('auth', ({ payload }) => {
       switch (payload.event) {
+        case 'signedIn':
+          console.log('user have been signedIn successfully.');
+          fetchProfile();
+          break;
+        case 'signedOut':
+          console.log('user have been signedOut successfully.');
+          setUser({ isAuthenticated: false });
+          break;
+        case 'tokenRefresh':
+          console.log('auth tokens have been refreshed.');
+          break;
+        case 'tokenRefresh_failure':
+          console.log('failure while refreshing auth tokens.');
+          break;
+        case 'signInWithRedirect':
+          console.log('signInWithRedirect API has successfully been resolved.');
+          fetchProfile();
+          break;
+        case 'signInWithRedirect_failure':
+          // setError('An error has occurred during the Oauth flow.');
+          console.log(
+            'failure while trying to resolve signInWithRedirect API.',
+          );
+          break;
         case 'customOAuthState':
-          if (payload.data && payload.data !== '') {
-            router.push(payload.data);
-          }
+          // eslint-disable-next-line no-case-declarations
+          const state = payload.data; // this will be customState provided on signInWithRedirect function
+          console.log(state);
+          console.info('custom state returned from CognitoHosted UI');
           break;
       }
     });
