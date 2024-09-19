@@ -5,7 +5,7 @@ import { useScrollPercentage } from 'react-scroll-percentage';
 
 export const usePageTriggers = ({
   onTimeTrigger,
-  timeLimit = 10000, // 180 seconds
+  timeLimit = 180000, // 180 seconds
   onInactivityTrigger,
   inactivityLimit = 40000, // 40 seconds
   onScrollSpeedTrigger,
