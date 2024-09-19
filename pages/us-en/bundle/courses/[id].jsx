@@ -178,7 +178,7 @@ const ItemLoaderTile = () => {
   );
 };
 
-const CourseTile = ({ data, isAuthenticated }) => {
+const CourseTile = ({ data, isAuthenticated, courseTypeFilter }) => {
   const router = useRouter();
   const { id: bundleSfid } = router.query;
   const { track } = useAnalytics();
@@ -186,9 +186,6 @@ const CourseTile = ({ data, isAuthenticated }) => {
     mode,
     primaryTeacherName,
     productTypeId,
-    eventStartDate,
-    eventEndDate,
-    eventTimeZone,
     sfid,
     locationPostalCode,
     locationCity,
@@ -205,11 +202,11 @@ const CourseTile = ({ data, isAuthenticated }) => {
   } = data || {};
 
   const enrollAction = () => {
-    track('allcourses_enroll_click', {
-      course_format: data?.productTypeId,
-      course_name: data?.title,
-      course_id: data?.sfid,
-      course_price: data?.unitPrice,
+    track('click_button', {
+      screen_name: 'bundle_course_search_scheduling',
+      event_target: 'register_button',
+      course_type: courseTypeFilter || '',
+      location_type: mode,
     });
     if (isGuestCheckoutEnabled || isAuthenticated) {
       pushRouteWithUTMQuery(router, {
@@ -231,11 +228,11 @@ const CourseTile = ({ data, isAuthenticated }) => {
   };
 
   const detailAction = () => {
-    track('allcourses_details_click', {
-      course_format: data?.productTypeId,
-      course_name: data?.title,
-      course_id: data?.sfid,
-      course_price: data?.unitPrice,
+    track('click_button', {
+      screen_name: 'bundle_course_search_scheduling',
+      event_target: 'details_button',
+      course_type: courseTypeFilter || '',
+      location_type: mode,
     });
     pushRouteWithUTMQuery(router, {
       pathname: `/us-en/course/${sfid}`,
@@ -244,27 +241,6 @@ const CourseTile = ({ data, isAuthenticated }) => {
       },
     });
   };
-
-  // const getCourseDeration = () => {
-  //   if (dayjs.utc(eventStartDate).isSame(dayjs.utc(eventEndDate), 'month')) {
-  //     return (
-  //       <>
-  //         {`${dayjs.utc(eventStartDate).format('MMMM DD')}-${dayjs
-  //           .utc(eventEndDate)
-  //           .format('DD, YYYY')}`}
-  //         {' ' + ABBRS[eventTimeZone]}
-  //       </>
-  //     );
-  //   }
-  //   return (
-  //     <>
-  //       {`${dayjs.utc(eventStartDate).format('MMMM DD')}-${dayjs
-  //         .utc(eventEndDate)
-  //         .format('MMMM DD, YYYY')}`}
-  //       {' ' + ABBRS[eventTimeZone]}
-  //     </>
-  //   );
-  // };
 
   const { usableCredit } = data;
 
@@ -537,15 +513,15 @@ const Course = ({ bundle, allowCourseTypes }) => {
     if (!router.isReady) return;
     page({
       category: 'course_registration',
-      name: 'course_search',
-    });
-    track('Product List Viewed', {
-      category: 'Course',
+      name: 'bundle_course_search_scheduling',
+      course_type: courseTypeFilter || '',
     });
     if (orgConfig.name === 'AOL' && !timeZoneFilter) {
       setTimeZoneFilter(fillDefaultTimeZone());
     }
   }, [router.isReady]);
+
+  // analytics.page("course_registration","bundle_course_search_scheduling",{"course_type": "<course-type> filter on the page"});
 
   if (!router.isReady) return <PageLoading />;
 
@@ -694,6 +670,7 @@ const Course = ({ bundle, allowCourseTypes }) => {
                   data={course}
                   isAuthenticated={isAuthenticated}
                   bundleSfid={bundleSfid}
+                  courseTypeFilter={courseTypeFilter}
                 />
               ))}
             </React.Fragment>
