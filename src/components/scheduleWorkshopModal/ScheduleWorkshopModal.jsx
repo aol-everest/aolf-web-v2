@@ -26,11 +26,18 @@ const WorkshopSelectModal = React.memo(
     loading,
     setActiveWorkshop,
     handleAutoScrollForMobile,
-    slug,
+    workshopMaster,
   }) => {
     const { track } = useAnalytics();
     const [localSelectedWorkshop, setLocalSelectedWorkshop] = useState(null);
     const [backPressed, setBackPressed] = useState(false);
+
+    useEffect(() => {
+      if (workshops?.length === 1) {
+        handleWorkshopSelect(workshops[0]);
+      }
+    }, [workshops]);
+
     const handleWorkshopSelect = async (workshop) => {
       setLocalSelectedWorkshop(workshop);
       track('cmodal_course_select');
@@ -139,7 +146,7 @@ const WorkshopSelectModal = React.memo(
         className="available-time modal fade bd-example-modal-lg"
         dialogClassName="modal-dialog modal-dialog-centered modal-lg"
       >
-        <Modal.Header closeButton>Available Time</Modal.Header>
+        <Modal.Header closeButton>Available Times</Modal.Header>
         <Modal.Body>
           <div className="time-slot-changer">
             <button
@@ -172,6 +179,11 @@ const WorkshopSelectModal = React.memo(
                       <div className="slot-type">
                         <div className="slot-info">
                           {workshop?.mode === COURSE_MODES.ONLINE.value ? (
+                            <span className="icon-aol iconaol-monitor-mobile"></span>
+                          ) : (
+                            <span className="icon-aol iconaol-profile-users"></span>
+                          )}
+                          {workshop?.mode === COURSE_MODES.ONLINE.value ? (
                             workshop.mode
                           ) : workshop.isLocationEmpty ? (
                             <>
@@ -203,6 +215,23 @@ const WorkshopSelectModal = React.memo(
                             }
                             checked={localSelectedWorkshop?.id === workshop.id}
                           />
+                        </div>
+                      </div>
+                      <div className="slot-price">
+                        <div className="price-total">
+                          Total: $
+                          {`${
+                            workshop.unitPrice
+                              ? workshop.unitPrice.toFixed(2) || '0'.toFixed(2)
+                              : workshopMaster.unitPrice
+                          }`}
+                        </div>
+                        <div className="price-pm">
+                          <div>
+                            ${workshop?.instalmentAmount}/
+                            <span className="month">month</span>
+                          </div>
+                          <div className="for-months">for 12 months</div>
                         </div>
                       </div>
                       {workshop.timings.map((timing, index) => {
@@ -324,7 +353,7 @@ const WorkshopSelectModal = React.memo(
                   </div>
                 )}
           </div>
-          <div className="event-type-pills">
+          {/*<div className="event-type-pills">
             <div className="online">
               <span className="icon-aol iconaol-monitor-mobile"></span>
               Online
@@ -357,11 +386,11 @@ const WorkshopSelectModal = React.memo(
                 </p>
               </div>
             </div>
-          </div>
-          <div className="specific-teacher-text">
+          </div>*/}
+          {/*<div className="specific-teacher-text">
             Are you looking for a course with a specific teacher?{' '}
             <a href={`/us-en/courses/${slug}`}>Click here</a>
-          </div>
+                  </div>*/}
           <div className="slot-action">
             <button
               type="button"
@@ -371,6 +400,10 @@ const WorkshopSelectModal = React.memo(
             >
               Continue
             </button>
+          </div>
+          <div className="additionalInfo">
+            <span className="icon-aol iconaol-info-circle"></span> Flexible
+            rescheduling at no additional cost
           </div>
         </Modal.Body>
       </Modal>

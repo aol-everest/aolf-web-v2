@@ -1,5 +1,4 @@
 /* eslint-disable no-inline-styles/no-inline-styles */
-import { ScheduleLocationFilterNew } from '@components/scheduleLocationFilter/ScheduleLocationFilterNew';
 import { useQueryState, parseAsString, parseAsJson } from 'nuqs';
 import moment from 'moment';
 import {
@@ -10,17 +9,14 @@ import {
   tConvert,
 } from '@utils';
 import React, { useEffect, useRef, useState } from 'react';
-import { StripeExpressCheckoutElement } from '@components/checkout/StripeExpressCheckoutElement';
 import dayjs from 'dayjs';
-import { sortBy } from 'lodash';
 import Flatpickr from 'react-flatpickr';
 import { ABBRS, COURSE_MODES, COURSE_TYPES, ALERT_TYPES } from '@constants';
 import { useAnalytics } from 'use-analytics';
-import { useEffectOnce } from 'react-use';
 import { useQuery } from '@tanstack/react-query';
 import { useRouter } from 'next/router';
 import 'flatpickr/dist/flatpickr.min.css';
-import { pushRouteWithUTMQuery, replaceRouteWithUTMQuery } from '@service';
+import { replaceRouteWithUTMQuery } from '@service';
 import { useGlobalAlertContext } from '@contexts';
 import ErrorPage from 'next/error';
 import { PageLoading } from '@components';
@@ -52,6 +48,13 @@ const WorkshopSelectModal = React.memo(
     const { track } = useAnalytics();
     const [localSelectedWorkshop, setLocalSelectedWorkshop] = useState(null);
     const [backPressed, setBackPressed] = useState(false);
+
+    useEffect(() => {
+      if (workshops?.length === 1) {
+        handleWorkshopSelect(workshops[0]);
+      }
+    }, [workshops]);
+
     const handleWorkshopSelect = async (workshop) => {
       setLocalSelectedWorkshop(workshop);
       track('cmodal_course_select');
@@ -159,7 +162,7 @@ const WorkshopSelectModal = React.memo(
         className="available-time modal fade bd-example-modal-lg"
         dialogClassName="modal-dialog modal-dialog-centered modal-lg"
       >
-        <Modal.Header closeButton>Available Time</Modal.Header>
+        <Modal.Header closeButton>Available Times</Modal.Header>
         <Modal.Body>
           <div className="time-slot-changer">
             <button
@@ -192,6 +195,11 @@ const WorkshopSelectModal = React.memo(
                       <div className="slot-type">
                         <div className="slot-info">
                           {workshop?.mode === COURSE_MODES.ONLINE.value ? (
+                            <span className="icon-aol iconaol-monitor-mobile"></span>
+                          ) : (
+                            <span className="icon-aol iconaol-profile-users"></span>
+                          )}
+                          {workshop?.mode === COURSE_MODES.ONLINE.value ? (
                             workshop.mode
                           ) : workshop.isLocationEmpty ? (
                             <>
@@ -223,6 +231,23 @@ const WorkshopSelectModal = React.memo(
                             }
                             checked={localSelectedWorkshop?.id === workshop.id}
                           />
+                        </div>
+                      </div>
+                      <div className="slot-price">
+                        <div className="price-total">
+                          Total: $
+                          {`${
+                            (workshop.unitPrice &&
+                              workshop.unitPrice.toFixed(2)) ||
+                            '0'.toFixed(2)
+                          }`}
+                        </div>
+                        <div className="price-pm">
+                          <div>
+                            ${workshop?.instalmentAmount}/
+                            <span className="month">month</span>
+                          </div>
+                          <div className="for-months">for 12 months</div>
                         </div>
                       </div>
                       {workshop.timings.map((timing, index) => {

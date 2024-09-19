@@ -16,3 +16,19 @@ export const fetchContentfulDataDetails = async (entryId) => {
     return null;
   }
 };
+
+export const fetchContentfulBannerDetails = async (entryId) => {
+  try {
+    const entries = await client.getEntries({
+      content_type: 'banner', // Replace 'banner' with your actual content type ID
+      limit: 10, // You can adjust the limit based on your needs
+    });
+
+    return entries.items.map((entry) => ({
+      ...entry.fields,
+    }));
+  } catch (error) {
+    console.error('Error fetching banners:', error);
+    return [];
+  }
+};

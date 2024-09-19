@@ -185,6 +185,7 @@ const AddCenterModel = ({
     address: initialLocation.locationName,
     latitude: initialLocation?.lat,
     longitude: initialLocation?.lng,
+    isInputAllowed: true,
   });
 
   const placeholder = location.address || 'Search...';
@@ -214,6 +215,7 @@ const AddCenterModel = ({
       address: '',
       latitude: null,
       longitude: null,
+      isInputAllowed: true,
     });
   };
   const { data: allCenters, isLoading } = useQuery({
@@ -300,11 +302,21 @@ const AddCenterModel = ({
             latitude: placeDetails.geometry.location.lat(),
             longitude: placeDetails.geometry.location.lng(),
             address: item.description,
+            isInputAllowed: false,
           });
         },
       );
     } catch (error) {
       console.log(error); // eslint-disable-line no-console
+    }
+  };
+
+  const handleAddressClick = () => {
+    if (!location.isInputAllowed) {
+      setLocation({
+        ...location,
+        isInputAllowed: true,
+      });
     }
   };
 
@@ -334,17 +346,32 @@ const AddCenterModel = ({
           </div>
           <div className="input-search-wrap">
             <div className="search-input-wrap">
-              <input
-                id="search-field"
-                className="search-input"
-                value={location.address}
-                onChange={(evt) => {
-                  getPlacePredictions({ input: evt.target.value });
-                  handleChange(evt.target.value);
-                }}
-                placeholder={placeholder}
-                loading={isPlacePredictionsLoading}
-              />
+              {!location.isInputAllowed ? (
+                <span
+                  className={classNames(
+                    'schedule-location-input scheduling-address',
+                  )}
+                  onClick={handleAddressClick}
+                >
+                  <span className={classNames('schedule-location-value')}>
+                    {location.address}
+                  </span>
+                </span>
+              ) : (
+                <input
+                  id="search-field"
+                  className="search-input"
+                  value={location.address}
+                  onChange={(evt) => {
+                    getPlacePredictions({ input: evt.target.value });
+                    handleChange(evt.target.value);
+                  }}
+                  onSelect={(ev) => console.log('seeeee', ev)}
+                  placeholder={placeholder}
+                  loading={isPlacePredictionsLoading}
+                />
+              )}
+
               {location.address && (
                 <button className="search-clear" onClick={clearSearch}>
                   <svg

@@ -1,3 +1,4 @@
+import React, { useEffect, useState } from 'react';
 import classNames from 'classnames';
 import { AddressSearch } from '..';
 
@@ -7,6 +8,12 @@ export const ScheduleLocationFilterNew = ({
   containerClass = '',
   listClassName = '',
 }) => {
+  const [isInputAllowed, setIsInputAllowed] = useState(true);
+
+  useEffect(() => {
+    setIsInputAllowed(!value);
+  }, [value]);
+
   const removeLocation = (e) => {
     if (e) e.preventDefault();
     handleLocationChange(null);
@@ -21,20 +28,24 @@ export const ScheduleLocationFilterNew = ({
       <label className={classNames(`${containerClass}`, {})}>
         Enter a zip code or city
       </label>
-      {value?.locationName ? (
+      {!isInputAllowed ? (
         <span
           className={classNames('schedule-location-input scheduling-address')}
+          onClick={removeLocation}
         >
-          <span className={classNames('schedule-location-value')}>
-            {value.locationName}
-          </span>
-          {value.locationName && (
-            <a
-              className={classNames('react-tag-remove')}
-              onClick={removeLocation}
-            >
-              ×
-            </a>
+          {value?.locationName && (
+            <>
+              <span className={classNames('schedule-location-value')}>
+                {value.locationName}
+              </span>
+
+              <a
+                className={classNames('react-tag-remove')}
+                onClick={removeLocation}
+              >
+                ×
+              </a>
+            </>
           )}
         </span>
       ) : (

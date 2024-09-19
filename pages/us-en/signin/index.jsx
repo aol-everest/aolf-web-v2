@@ -299,7 +299,7 @@ function LoginPage() {
           {
             children: <TemporaryPasswordMessage />,
           },
-          2000,
+          // 2000,
         );
       }
     } catch (error) {
@@ -355,7 +355,7 @@ function LoginPage() {
           {
             children: <VerificationCodeMessage />,
           },
-          2000,
+          // 2000,
         );
         setMode(RESET_PASSWORD_REQUEST);
         // Collect the confirmation code from the user and pass to confirmResetPassword.

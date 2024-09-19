@@ -694,6 +694,7 @@ main.all-courses-find {
         font-weight: 600;
         line-height: 28px;
       }
+      .course-university,
       .course-instructors,
       .course-location {
         margin-bottom: 14px;
@@ -718,6 +719,18 @@ main.all-courses-find {
           flex-shrink: 0;
           margin-left: 4px;
           margin-right: 12px;
+        }
+      }
+      .course-university {
+        border-bottom: none;
+        margin-bottom: 0;
+        padding-bottom: 0;
+        &::before {
+          content: '\e94d';
+          font-size: 20px;
+        }
+        & + .course-location {
+          border-top: none;
         }
       }
       .course-location {

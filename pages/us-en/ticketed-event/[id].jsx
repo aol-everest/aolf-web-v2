@@ -115,6 +115,10 @@ function TicketedEvent() {
     zip,
     maxTicketsWithOneOrder,
     timings,
+    contactName,
+    phone1,
+    email,
+    notes,
   } = event || {};
 
   useEffect(() => {
@@ -244,9 +248,6 @@ function TicketedEvent() {
     );
   };
 
-  const formattedStartDate = dayjs.utc(eventStartDate).format('MMM DD, YYYY');
-  const formattedEndDate = dayjs.utc(eventEndDate).format('MMM DD, YYYY');
-
   return (
     <Formik
       initialValues={{
@@ -321,6 +322,19 @@ function TicketedEvent() {
                                 )}
                           </span>
                         </div>
+
+                        <div className="info-item contact-person">
+                          <span className="icon-aol iconaol-call-calling"></span>
+                          <span className="p2">
+                            {contactName}
+                            <br />
+                            <span className="contact-detail">
+                              {phone1}{' '}
+                            </span>{' '}
+                            <span>|</span>{' '}
+                            <span className="contact-detail">{email}</span>
+                          </span>
+                        </div>
                       </div>
 
                       <div className="tickets-modal__list">
@@ -353,6 +367,21 @@ function TicketedEvent() {
                       <div className="tickets-modal__cart">
                         {renderSummary()}
                       </div>
+
+                      {notes && (
+                        <div className="tickets-modal__cart">
+                          <div className="tickets-container">
+                            <div className="tickets notes">
+                              <div className="label">Notes</div>
+                              <div
+                                className="value"
+                                dangerouslySetInnerHTML={{ __html: notes }}
+                              />
+                            </div>
+                          </div>
+                        </div>
+                      )}
+
                       <div className="tickets-modal__footer">
                         {false && event && total > 0 && (
                           <div className="tickets-modal__footer-button-link">

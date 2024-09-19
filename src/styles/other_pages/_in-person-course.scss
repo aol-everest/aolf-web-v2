@@ -1083,16 +1083,6 @@
             }
           }
         }
-        .slot-listing {
-          order: 2;
-        }
-        .specific-teacher-text {
-          order: 5;
-          font-size: 14px;
-        }
-        .slot-action {
-          order: 4;
-        }
       }
     }
     .form-item {
@@ -1224,21 +1214,76 @@
         background: #f7f7f7;
         padding: 12px;
         border-radius: 16px;
-        height: 100%;
+        &:has(.slot-price) .slot-type {
+          border-bottom: none;
+        }
       }
       .slot-type {
         display: flex;
         justify-content: space-between;
-        border-bottom: #e9e9e9 1px solid;
         margin-bottom: 10px;
         padding-bottom: 10px;
         gap: 20px;
+        border-bottom: #e9e9e9 1px solid;
       }
       .slot-info {
-        font-family: Lora;
         font-size: 16px;
-        font-weight: 600;
-        line-height: 21px;
+        font-weight: 500;
+        line-height: 20px;
+        display: flex;
+        gap: 6px;
+        align-items: center;
+        .icon-aol {
+          width: 36px;
+          height: 36px;
+          flex-shrink: 0;
+          border-radius: 100%;
+          background: linear-gradient(
+            102.78deg,
+            #ffd16f -37.89%,
+            #ff865b 100.28%
+          );
+          color: white;
+          font-size: 20px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          &.iconaol-profile-users {
+            background: linear-gradient(
+              102.78deg,
+              #3d8be8 -37.89%,
+              #89beec 100.28%
+            );
+          }
+        }
+      }
+      .slot-price {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: #e9e9e9 1px solid;
+        padding-bottom: 10px;
+        margin-bottom: 10px;
+        .price-total {
+          font-size: 18px;
+          font-weight: 600;
+          line-height: 24px;
+        }
+        .price-pm {
+          font-size: 18px;
+          font-weight: 600;
+          line-height: 24px;
+          text-align: right;
+          span {
+            font-weight: 500;
+          }
+          .for-months {
+            font-size: 12px;
+            font-weight: 400;
+            line-height: 14px;
+            color: #6f7283;
+          }
+        }
       }
       .slot-select {
         margin: 0 !important;

@@ -1,16 +1,13 @@
 /* eslint-disable no-inline-styles/no-inline-styles */
-import { useEffect, useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import usePlacesService from 'react-google-autocomplete/lib/usePlacesAutocompleteService';
 export const AddressSearch = ({
   filter,
   closeHandler,
   placeholder,
   parentClass = '',
-  listClassName = '',
-  isDefaultLocation = false,
+  value,
 }) => {
-  const inputRef = useRef(null);
-
   const {
     placesService,
     placePredictions,
@@ -23,19 +20,23 @@ export const AddressSearch = ({
       componentRestrictions: { country: 'us' },
     },
   });
-  const [address, setAddress] = useState('');
+  const [address, setAddress] = useState(value?.locationName || '');
   const [isReadyForSelection, setReadyForSelection] = useState(true);
+  const inputRef = useRef(null);
+
+  useEffect(() => {
+    if (inputRef.current) {
+      inputRef.current.focus();
+    }
+  }, []);
 
   const handleChange = (address) => {
     setReadyForSelection(true);
     setAddress(address);
   };
 
-  const handleSelect = async (selected) => {};
-
   const renderItem = (placePrediction) => {
     const { structured_formatting } = placePrediction;
-    console.log(placePrediction);
     return (
       <>
         <div
@@ -76,6 +77,7 @@ export const AddressSearch = ({
     <>
       <div className="smart-input">
         <input
+          ref={inputRef}
           className={[`custom-input tw-mx-auto tw-mb-0 tw-mt-1 ${parentClass}`]}
           value={address}
           onChange={(evt) => {
