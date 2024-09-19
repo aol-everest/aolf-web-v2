@@ -102,7 +102,15 @@ function App({ Component, pageProps }) {
   });
 
   useEffect(() => {
-    clearInflightOAuth();
+    const timer = setTimeout(() => {
+      clearInflightOAuth();
+    }, 5000); // 5000ms = 5 seconds
+
+    // Cleanup the timeout when the component unmounts or when useEffect re-runs
+    return () => clearTimeout(timer);
+  }, []);
+
+  useEffect(() => {
     const unsubscribe = Hub.listen('auth', ({ payload }) => {
       switch (payload.event) {
         case 'customOAuthState':
