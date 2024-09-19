@@ -339,6 +339,10 @@ const Thankyou = () => {
                     You will be prompted to log into your account to start
                     scheduling your courses.
                   </b>
+                  If you are a new user, you should receive a separate email
+                  with username and temporary password for your account. In case
+                  you cannot find the email, please use the ‘Forgot Password’
+                  link on the Login page.
                 </p>
                 <p className="welcome__description v1">
                   We highly recommend that you <b>start your journey</b> with
