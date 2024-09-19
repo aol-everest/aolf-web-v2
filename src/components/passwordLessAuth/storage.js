@@ -15,6 +15,16 @@
 import { parseJwtPayload } from './util.js';
 import { configure } from './config.js';
 
+export async function clearInflightOAuth() {
+  const { clientId, storage } = configure();
+  const amplifyKeyPrefix = `CognitoIdentityServiceProvider.${clientId}`;
+  const inflightOAuth = storage.getItem(`${amplifyKeyPrefix}.inflightOAuth`);
+  if (inflightOAuth === 'true') {
+    console.log('Clearing stale inflightOAuth...');
+    storage.removeItem(`${amplifyKeyPrefix}.inflightOAuth`);
+  }
+}
+
 export async function storeTokens(tokens) {
   const { clientId, storage } = configure();
   const {

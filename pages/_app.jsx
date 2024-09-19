@@ -26,6 +26,7 @@ import { Amplify } from 'aws-amplify';
 import { Passwordless } from '@components/passwordLessAuth/passwordless';
 import { Hub } from 'aws-amplify/utils';
 import { useRouter } from 'next/router';
+import { clearInflightOAuth } from '@passwordLess/storage.js';
 // import { SurveyRequest } from "@components/surveyRequest";
 
 // import TopProgressBar from "@components/topProgressBar";
@@ -99,6 +100,15 @@ function App({ Component, pageProps }) {
       },
     },
   });
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      clearInflightOAuth();
+    }, 5000); // 5000ms = 5 seconds
+
+    // Cleanup the timeout when the component unmounts or when useEffect re-runs
+    return () => clearTimeout(timer);
+  }, []);
 
   useEffect(() => {
     const unsubscribe = Hub.listen('auth', ({ payload }) => {

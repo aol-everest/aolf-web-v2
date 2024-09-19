@@ -170,7 +170,6 @@ const WorkshopSelectModal = React.memo(
           <div className="slot-listing">
             {workshops.length > 0
               ? workshops.map((workshop) => {
-                  console.log('workshop', workshop);
                   return (
                     <div
                       className="slot-item"
