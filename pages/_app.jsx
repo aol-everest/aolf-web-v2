@@ -26,6 +26,7 @@ import { Amplify } from 'aws-amplify';
 import { Passwordless } from '@components/passwordLessAuth/passwordless';
 import { Hub } from 'aws-amplify/utils';
 import { useRouter } from 'next/router';
+import { clearInflightOAuth } from '@passwordLess/storage.js';
 // import { SurveyRequest } from "@components/surveyRequest";
 
 // import TopProgressBar from "@components/topProgressBar";
@@ -101,6 +102,7 @@ function App({ Component, pageProps }) {
   });
 
   useEffect(() => {
+    clearInflightOAuth();
     const unsubscribe = Hub.listen('auth', ({ payload }) => {
       switch (payload.event) {
         case 'customOAuthState':

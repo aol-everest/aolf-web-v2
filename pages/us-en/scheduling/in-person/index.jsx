@@ -23,6 +23,8 @@ import { useRouter } from 'next/router';
 import 'flatpickr/dist/flatpickr.min.css';
 import { pushRouteWithUTMQuery } from '@service';
 import Modal from 'react-bootstrap/Modal';
+import { usePageTriggers } from '@hooks';
+import { PopVariation2 } from '@components/inactivePopup';
 
 const advancedFormat = require('dayjs/plugin/advancedFormat');
 dayjs.extend(advancedFormat);
@@ -97,6 +99,7 @@ const WorkshopSelectModal = React.memo(
     setActiveWorkshop,
     handleAutoScrollForMobile,
     slug,
+    workshopMaster,
   }) => {
     const { track } = useAnalytics();
     const [localSelectedWorkshop, setLocalSelectedWorkshop] = useState(null);
@@ -248,6 +251,12 @@ const WorkshopSelectModal = React.memo(
                       <div className="slot-type">
                         <div className="slot-info">
                           {workshop?.mode === COURSE_MODES.ONLINE.value ? (
+                            <span className="icon-aol iconaol-monitor-mobile"></span>
+                          ) : (
+                            <span className="icon-aol iconaol-profile-users"></span>
+                          )}
+                          <span class="icon-aol iconaol-profile-users"></span>
+                          {workshop?.mode === COURSE_MODES.ONLINE.value ? (
                             workshop.mode
                           ) : workshop.isLocationEmpty ? (
                             <>
@@ -279,6 +288,23 @@ const WorkshopSelectModal = React.memo(
                             }
                             checked={localSelectedWorkshop?.id === workshop.id}
                           />
+                        </div>
+                      </div>
+                      <div className="slot-price">
+                        <div className="price-total">
+                          Total: $
+                          {`${
+                            workshop.unitPrice
+                              ? workshop.unitPrice.toFixed(2) || '0'.toFixed(2)
+                              : workshopMaster.unitPrice
+                          }`}
+                        </div>
+                        <div className="price-pm">
+                          <div>
+                            ${workshop?.instalmentAmount}/
+                            <span className="month">month</span>
+                          </div>
+                          <div className="for-months">for 12 months</div>
                         </div>
                       </div>
                       {workshop.timings.map((timing, index) => {
@@ -454,6 +480,64 @@ const Scheduling = ({ initialLocation = null }) => {
   );
 
   const [teacherFilter] = useQueryState('teacher');
+  const [utmMedium, setUtmMedium] = useQueryState('utm_medium');
+  const [isPopupVariationVisible, setPopupVariationVisible] = useState(false);
+  const [isPopupVariationExecuted, setPopupVariationExecuted] = useState(false);
+
+  const showPopupVariation = () => {
+    console.log(
+      'Triggered showPopupVariation',
+      `Selected Dates count : ${selectedDates ? selectedDates.length : 0}`,
+      `is popup variation executed previously : ${isPopupVariationExecuted}`,
+    );
+    if (!isPopupVariationExecuted && selectedDates?.length > 0) {
+      setPopupVariationVisible(true);
+      setPopupVariationExecuted(true);
+    }
+  };
+
+  const closePopupVariation = (state) => (e) => {
+    if (e) e.preventDefault();
+    state(false);
+  };
+
+  const acceptPopupVariationOffer = (e) => {
+    setUtmMedium('sys');
+    setPopupVariationVisible(false);
+  };
+
+  const handleTimeTrigger = () => {
+    console.log('Triggered after 180 seconds');
+    showPopupVariation();
+  };
+
+  const handleInactivityTrigger = () => {
+    console.log('Inactivity detected after 40 seconds');
+    showPopupVariation();
+  };
+
+  const handleScrollSpeedTrigger = (speed) => {
+    //console.log(`Scroll speed trigger: ${speed}px/s`);
+  };
+
+  const handleScrollDepthTrigger = (percentage) => {
+    console.log(`Scrolled ${Math.round(percentage * 100)}% of the page`);
+  };
+
+  const handleVisibilityChange = (isVisible) => {
+    if (!isVisible) {
+      console.log('User left the page (tab change)');
+      showPopupVariation();
+    }
+  };
+
+  const { ref } = usePageTriggers({
+    onTimeTrigger: handleTimeTrigger,
+    onInactivityTrigger: handleInactivityTrigger,
+    onScrollSpeedTrigger: handleScrollSpeedTrigger,
+    onScrollDepthTrigger: handleScrollDepthTrigger,
+    onVisibilityChange: handleVisibilityChange,
+  });
 
   const {
     phone1,
@@ -1023,7 +1107,7 @@ const Scheduling = ({ initialLocation = null }) => {
   return (
     <>
       {(loading || isLoading) && <div className="cover-spin"></div>}
-      <main className="in-person-course-page">
+      <main ref={ref} className="in-person-course-page">
         <section className="top-section">
           <div className="container">
             <h1 className="page-title">{workshopMaster?.title}</h1>
@@ -1722,7 +1806,13 @@ const Scheduling = ({ initialLocation = null }) => {
           setActiveWorkshop={setActiveWorkshop}
           handleAutoScrollForMobile={handleAutoScrollForMobile}
           slug={slug}
+          workshopMaster={workshopMaster}
         />
+        <PopVariation2
+          show={isPopupVariationVisible}
+          closeAction={closePopupVariation(setPopupVariationVisible)}
+          acceptAction={acceptPopupVariationOffer}
+        ></PopVariation2>
       </main>
     </>
   );

@@ -17,11 +17,9 @@ import {
   COURSE_MODES,
   COURSE_TYPES,
   TIME_ZONE,
-  MODAL_TYPES,
   COURSE_TYPES_MASTER,
   COURSE_MODES_MAP,
 } from '@constants';
-import { useGlobalModalContext } from '@contexts';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import { useRouter } from 'next/router';
@@ -119,7 +117,6 @@ const ItemLoaderTile = () => {
 const CourseTile = ({ data, isAuthenticated }) => {
   const router = useRouter();
   const { track } = useAnalytics();
-  const { showModal } = useGlobalModalContext();
   const {
     mode,
     primaryTeacherName,
@@ -140,6 +137,7 @@ const CourseTile = ({ data, isAuthenticated }) => {
     isEventFull,
     isPurchased,
     category,
+    corporateName,
   } = data || {};
 
   const enrollAction = () => {
@@ -270,6 +268,7 @@ const CourseTile = ({ data, isAuthenticated }) => {
           </>
         )}
       </div>
+      {corporateName && <div class="course-university">{corporateName}</div>}
       {mode !== 'Online' && locationCity && (
         <div className="course-location">
           {concatenateStrings([

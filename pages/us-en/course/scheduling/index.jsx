@@ -24,6 +24,7 @@ import { useGlobalAlertContext } from '@contexts';
 import { Loader } from '@components';
 import WorkshopSelectModal from '@components/scheduleWorkshopModal/ScheduleWorkshopModal';
 import { usePageTriggers } from '@hooks';
+import { PopVariation2 } from '@components/inactivePopup';
 
 const advancedFormat = require('dayjs/plugin/advancedFormat');
 dayjs.extend(advancedFormat);
@@ -83,34 +84,6 @@ export async function getServerSideProps(context) {
 }
 
 const Scheduling = ({ initialLocation }) => {
-  const handleTimeTrigger = () => {
-    console.log('Triggered after 180 seconds');
-  };
-
-  const handleInactivityTrigger = () => {
-    console.log('Inactivity detected after 40 seconds');
-  };
-
-  const handleScrollSpeedTrigger = (speed) => {
-    //console.log(`Scroll speed trigger: ${speed}px/s`);
-  };
-
-  const handleScrollDepthTrigger = (percentage) => {
-    console.log(`Scrolled ${Math.round(percentage * 100)}% of the page`);
-  };
-
-  const handleVisibilityChange = (isVisible) => {
-    if (!isVisible) {
-      console.log('User left the page (tab change)');
-    }
-  };
-  const { ref } = usePageTriggers({
-    onTimeTrigger: handleTimeTrigger,
-    onInactivityTrigger: handleInactivityTrigger,
-    onScrollSpeedTrigger: handleScrollSpeedTrigger,
-    onScrollDepthTrigger: handleScrollDepthTrigger,
-    onVisibilityChange: handleVisibilityChange,
-  });
   const fp = useRef(null);
   const { track, page } = useAnalytics();
   const { showAlert } = useGlobalAlertContext();
@@ -147,6 +120,64 @@ const Scheduling = ({ initialLocation }) => {
 
   const [teacherFilter] = useQueryState('teacher');
   const [cityFilter, setCityFilter] = useQueryState('city');
+  const [utmMedium, setUtmMedium] = useQueryState('utm_medium');
+  const [isPopupVariationVisible, setPopupVariationVisible] = useState(false);
+  const [isPopupVariationExecuted, setPopupVariationExecuted] = useState(false);
+
+  const showPopupVariation = () => {
+    console.log(
+      'Triggered showPopupVariation',
+      `Selected Dates count : ${selectedDates ? selectedDates.length : 0}`,
+      `is popup variation executed previously : ${isPopupVariationExecuted}`,
+    );
+    if (!isPopupVariationExecuted && selectedDates?.length > 0) {
+      setPopupVariationVisible(true);
+      setPopupVariationExecuted(true);
+    }
+  };
+
+  const closePopupVariation = (state) => (e) => {
+    if (e) e.preventDefault();
+    state(false);
+  };
+
+  const acceptPopupVariationOffer = (e) => {
+    setUtmMedium('sys');
+    setPopupVariationVisible(false);
+  };
+
+  const handleTimeTrigger = () => {
+    console.log('Triggered after 180 seconds');
+    showPopupVariation();
+  };
+
+  const handleInactivityTrigger = () => {
+    console.log('Inactivity detected after 40 seconds');
+    showPopupVariation();
+  };
+
+  const handleScrollSpeedTrigger = (speed) => {
+    //console.log(`Scroll speed trigger: ${speed}px/s`);
+  };
+
+  const handleScrollDepthTrigger = (percentage) => {
+    console.log(`Scrolled ${Math.round(percentage * 100)}% of the page`);
+  };
+
+  const handleVisibilityChange = (isVisible) => {
+    if (!isVisible) {
+      console.log('User left the page (tab change)');
+      showPopupVariation();
+    }
+  };
+
+  const { ref } = usePageTriggers({
+    onTimeTrigger: handleTimeTrigger,
+    onInactivityTrigger: handleInactivityTrigger,
+    onScrollSpeedTrigger: handleScrollSpeedTrigger,
+    onScrollDepthTrigger: handleScrollDepthTrigger,
+    onVisibilityChange: handleVisibilityChange,
+  });
 
   const {
     phone1,
@@ -1451,7 +1482,14 @@ const Scheduling = ({ initialLocation }) => {
           setActiveWorkshop={setActiveWorkshop}
           handleAutoScrollForMobile={handleAutoScrollForMobile}
           slug={slug}
+          workshopMaster={workshopMaster}
         />
+
+        <PopVariation2
+          show={isPopupVariationVisible}
+          closeAction={closePopupVariation(setPopupVariationVisible)}
+          acceptAction={acceptPopupVariationOffer}
+        ></PopVariation2>
       </main>
     </>
   );
