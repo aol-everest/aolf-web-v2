@@ -223,6 +223,16 @@ export const PaymentFormNew = ({
     }
   }
 
+  let validateDiscount;
+
+  if (UpdatedFeeAfterCredits === 0) {
+    validateDiscount = false;
+  } else if (workshop.unitPrice === 0) {
+    validateDiscount = false;
+  } else {
+    validateDiscount = true;
+  }
+
   const logout = async (e) => {
     if (e) e.preventDefault();
     await signOut();
@@ -1067,6 +1077,7 @@ export const PaymentFormNew = ({
       >
         {(formikProps) => {
           const { values } = formikProps;
+          console.log('values-34343434', workshop);
           formikOnChange(values);
           const addOnFee = addOnProducts.reduce(
             (
@@ -1796,18 +1807,20 @@ export const PaymentFormNew = ({
                         </div>
                         <div className="section-box confirm-submit">
                           <div className="section__body">
-                            <div className="form-item required">
-                              <DiscountInputNew
-                                formikProps={formikProps}
-                                placeholder="Discount"
-                                formikKey="couponCode"
-                                product={productId}
-                                applyDiscount={applyDiscount}
-                                addOnProducts={addOnProducts}
-                                containerClass={`tickets-modal__input-label tickets-modal__input-label--top`}
-                                label="Discount Code"
-                              ></DiscountInputNew>
-                            </div>
+                            {validateDiscount && (
+                              <div className="form-item required">
+                                <DiscountInputNew
+                                  formikProps={formikProps}
+                                  placeholder="Discount"
+                                  formikKey="couponCode"
+                                  product={productId}
+                                  applyDiscount={applyDiscount}
+                                  addOnProducts={addOnProducts}
+                                  containerClass={`tickets-modal__input-label tickets-modal__input-label--top`}
+                                  label="Discount Code"
+                                ></DiscountInputNew>
+                              </div>
+                            )}
                             <ScheduleAgreementForm
                               formikProps={formikProps}
                               complianceQuestionnaire={complianceQuestionnaire}
