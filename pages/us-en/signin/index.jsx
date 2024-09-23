@@ -135,6 +135,8 @@ function LoginPage() {
   // const { identify } = useAnalytics();
   const { showAlert } = useGlobalAlertContext();
 
+  const [timeLeft, setTimeLeft] = useState(20);
+  const [enableAutoRedirect, setEnableAutoRedirect] = useState(false);
   const [promiseHolder, setPromiseHolder] = useState(null);
   const [loading, setLoading] = useState(false);
   const [isHolding, setHolding] = useState(false);
@@ -146,6 +148,26 @@ function LoginPage() {
   );
   const [navigateTo] = useQueryState('next');
   const [username, setUsername] = useState(null);
+
+  useEffect(() => {
+    if (enableAutoRedirect) {
+      // Set up the countdown interval
+      const interval = setInterval(() => {
+        setTimeLeft((prevTime) => prevTime - 1);
+      }, 1000);
+
+      // Set up the redirection after 20 seconds
+      const timer = setTimeout(() => {
+        router.push('/target-page'); // Replace '/target-page' with your desired redirect path
+      }, 20000);
+
+      // Clear both timeout and interval when the component unmounts
+      return () => {
+        clearInterval(interval);
+        clearTimeout(timer);
+      };
+    }
+  }, [enableAutoRedirect]);
 
   const switchView = (view) => (e) => {
     if (e) e.preventDefault();
