@@ -223,15 +223,9 @@ export const PaymentFormNew = ({
     }
   }
 
-  let validateDiscount;
-
-  if (UpdatedFeeAfterCredits === 0) {
-    validateDiscount = false;
-  } else if (workshop.unitPrice === 0) {
-    validateDiscount = false;
-  } else {
-    validateDiscount = true;
-  }
+  const validateDiscount = !(
+    UpdatedFeeAfterCredits === 0 || workshop?.unitPrice === 0
+  );
 
   const logout = async (e) => {
     if (e) e.preventDefault();
@@ -1077,7 +1071,6 @@ export const PaymentFormNew = ({
       >
         {(formikProps) => {
           const { values } = formikProps;
-          console.log('values-34343434', workshop);
           formikOnChange(values);
           const addOnFee = addOnProducts.reduce(
             (
