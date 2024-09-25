@@ -21,7 +21,7 @@ const Container = (props) => {
   return (
     <section className="section-login-register">
       <div className="container">
-        <h1 className="page-title">Log in to your account</h1>
+        {/* <h1 className="page-title">Log in to your account</h1> */}
         {props.children}
       </div>
     </section>
@@ -287,13 +287,14 @@ export const SigninForm = ({
     //if (children) return <>{children}</>;
     return (
       <Container>
+        <h1 className="page-title">Success, you are now logged in</h1>
         <div className="page-description">
           You&apos;re currently signed-in as:{' '}
           <span className="tw-font-semibold">{authObj?.profile.email}</span>
         </div>
         <div className="form-action">
           <button className="submit-btn" onClick={backToFlowAction}>
-            Back to flow
+            Continue where you left off
           </button>
         </div>
         <div className="form-other-info">
@@ -360,6 +361,7 @@ export const SigninForm = ({
     if (step === 0) {
       return (
         <>
+          <h1 className="page-title">Log in to your account</h1>
           {signInStatus === 'NOT_SIGNED_IN' && user && (
             <>
               <div className="page-description">

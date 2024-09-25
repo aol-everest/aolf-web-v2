@@ -21,7 +21,6 @@ import {
   COURSE_TYPES_MASTER,
   COURSE_MODES_MAP,
 } from '@constants';
-import { useGlobalModalContext } from '@contexts';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import { useRouter } from 'next/router';
@@ -33,7 +32,6 @@ import { PageLoading } from '@components';
 import classNames from 'classnames';
 import { orgConfig } from '@org';
 import DateRangePicker from 'rsuite/DateRangePicker';
-import dynamic from 'next/dynamic';
 import { navigateToLogin, isEmpty } from '@utils';
 import { NextSeo } from 'next-seo';
 import { SmartInput, SmartDropDown, Popup } from '@components';
@@ -93,10 +91,6 @@ const getCourseTypes = (comboDetails, onlyMain = false) => {
     return accumulator;
   }, {});
 };
-
-const AddressSearch = dynamic(() =>
-  import('@components').then((mod) => mod.AddressSearch),
-);
 
 dayjs.extend(utc);
 
@@ -184,18 +178,14 @@ const ItemLoaderTile = () => {
   );
 };
 
-const CourseTile = ({ data, isAuthenticated }) => {
+const CourseTile = ({ data, isAuthenticated, courseTypeFilter }) => {
   const router = useRouter();
   const { id: bundleSfid } = router.query;
   const { track } = useAnalytics();
-  const { showModal } = useGlobalModalContext();
   const {
     mode,
     primaryTeacherName,
     productTypeId,
-    eventStartDate,
-    eventEndDate,
-    eventTimeZone,
     sfid,
     locationPostalCode,
     locationCity,
@@ -208,16 +198,15 @@ const CourseTile = ({ data, isAuthenticated }) => {
     listPrice,
     isEventFull,
     isPurchased,
-    category,
     title,
   } = data || {};
 
   const enrollAction = () => {
-    track('allcourses_enroll_click', {
-      course_format: data?.productTypeId,
-      course_name: data?.title,
-      course_id: data?.sfid,
-      course_price: data?.unitPrice,
+    track('click_button', {
+      screen_name: 'bundle_course_search_scheduling',
+      event_target: 'register_button',
+      course_type: courseTypeFilter || '',
+      location_type: mode,
     });
     if (isGuestCheckoutEnabled || isAuthenticated) {
       pushRouteWithUTMQuery(router, {
@@ -236,16 +225,14 @@ const CourseTile = ({ data, isAuthenticated }) => {
         )}`,
       );
     }
-
-    // showAlert(ALERT_TYPES.SUCCESS_ALERT, { title: "Success" });
   };
 
   const detailAction = () => {
-    track('allcourses_details_click', {
-      course_format: data?.productTypeId,
-      course_name: data?.title,
-      course_id: data?.sfid,
-      course_price: data?.unitPrice,
+    track('click_button', {
+      screen_name: 'bundle_course_search_scheduling',
+      event_target: 'details_button',
+      course_type: courseTypeFilter || '',
+      location_type: mode,
     });
     pushRouteWithUTMQuery(router, {
       pathname: `/us-en/course/${sfid}`,
@@ -253,27 +240,6 @@ const CourseTile = ({ data, isAuthenticated }) => {
         ctype: productTypeId,
       },
     });
-  };
-
-  const getCourseDeration = () => {
-    if (dayjs.utc(eventStartDate).isSame(dayjs.utc(eventEndDate), 'month')) {
-      return (
-        <>
-          {`${dayjs.utc(eventStartDate).format('MMMM DD')}-${dayjs
-            .utc(eventEndDate)
-            .format('DD, YYYY')}`}
-          {' ' + ABBRS[eventTimeZone]}
-        </>
-      );
-    }
-    return (
-      <>
-        {`${dayjs.utc(eventStartDate).format('MMMM DD')}-${dayjs
-          .utc(eventEndDate)
-          .format('MMMM DD, YYYY')}`}
-        {' ' + ABBRS[eventTimeZone]}
-      </>
-    );
   };
 
   const { usableCredit } = data;
@@ -398,7 +364,7 @@ const COURSE_TYPES_OPTIONS = COURSE_TYPES_MASTER[orgConfig.name].reduce(
   {},
 );
 
-const Course = ({ bundle, allowCourseTypes, defaultCourseType }) => {
+const Course = ({ bundle, allowCourseTypes }) => {
   const { track, page } = useAnalytics();
   const { ref, inView } = useInView({
     /* Optional options */
@@ -407,7 +373,7 @@ const Course = ({ bundle, allowCourseTypes, defaultCourseType }) => {
   const seed = useUIDSeed();
   const { isAuthenticated, profile, passwordLess } = useAuth();
   const { signOut } = passwordLess;
-  const { first_name, last_name } = profile || {};
+  const { first_name } = profile || {};
   const router = useRouter();
   const { id: bundleSfid } = router.query;
 
@@ -424,113 +390,109 @@ const Course = ({ bundle, allowCourseTypes, defaultCourseType }) => {
     parseAsStartEndDate,
   );
   const [timeZoneFilter, setTimeZoneFilter] = useQueryState('timeZone');
+  const [instructorFilter, setInstructorFilter] = useQueryState(
+    'instructor',
+    parseAsJson(),
+  );
 
   const [cityFilter] = useQueryState('city');
   const [searchKey, setSearchKey] = useState('');
   const [showFilterModal, setShowFilterModal] = useState(false);
 
   const {
-    mainProductCtypeIds,
-    isPartialPaymentAllowedOnBundle,
-    minimumPartialPaymentOnBundle,
-    remainPartialPaymentDateCap,
-    comboSfid,
     comboName,
     comboDescription,
-    comboIsActive,
     comboUnitPrice: unitPrice,
     comboListPrice: listPrice,
     comboProductSfid: productTypeId,
-    comboDetails,
-    masterPriceBookId,
-    masterPriceBookEntryId,
-    otherPaymentOptionAvailable,
-    showSecondCourseButton,
-    isOnlyBundleCheckout,
   } = bundle || {};
 
   const { isSuccess, data, isFetchingNextPage, fetchNextPage, hasNextPage } =
-    useInfiniteQuery(
-      {
-        queryKey: [
-          'getBundleWorkshopsOnly',
-          {
-            courseTypeFilter,
-            bundleSfid,
-            filterStartEndDate,
-            timeZoneFilter,
-            onlyWeekend,
-            cityFilter,
-          },
-        ],
-        queryFn: async ({ pageParam = 1 }) => {
-          let param = {
-            page: pageParam,
-            size: 12,
-            timingsRequired: true,
+    useInfiniteQuery({
+      queryKey: [
+        'getBundleWorkshopsOnly',
+        {
+          courseTypeFilter,
+          bundleSfid,
+          filterStartEndDate,
+          timeZoneFilter,
+          instructorFilter,
+          onlyWeekend,
+          cityFilter,
+        },
+      ],
+      queryFn: async ({ pageParam = 1 }) => {
+        let param = {
+          page: pageParam,
+          size: 12,
+          timingsRequired: true,
+        };
+
+        if (courseTypeFilter) {
+          param = {
+            ...param,
+            ctype: courseTypeFilter.value,
           };
+        }
 
-          if (courseTypeFilter) {
-            param = {
-              ...param,
-              ctype: courseTypeFilter.value,
-            };
-          }
+        if (bundleSfid) {
+          param = {
+            ...param,
+            bundleSfid,
+          };
+        }
+        if (timeZoneFilter && TIME_ZONE[timeZoneFilter]) {
+          param = {
+            ...param,
+            timeZone: TIME_ZONE[timeZoneFilter].value,
+          };
+        }
 
-          if (bundleSfid) {
-            param = {
-              ...param,
-              bundleSfid,
-            };
-          }
-          if (timeZoneFilter && TIME_ZONE[timeZoneFilter]) {
-            param = {
-              ...param,
-              timeZone: TIME_ZONE[timeZoneFilter].value,
-            };
-          }
+        if (instructorFilter && instructorFilter.value) {
+          param = {
+            ...param,
+            teacherId: instructorFilter.value,
+          };
+        }
 
-          if (filterStartEndDate) {
-            const [startDate, endDate] = filterStartEndDate;
-            param = {
-              ...param,
-              sdate: startDate,
-              edate: endDate,
-            };
-          }
+        if (filterStartEndDate) {
+          const [startDate, endDate] = filterStartEndDate;
+          param = {
+            ...param,
+            sdate: startDate,
+            edate: endDate,
+          };
+        }
 
-          if (onlyWeekend) {
-            param = {
-              ...param,
-              onlyWeekend: onlyWeekend,
-            };
-          }
-          if (cityFilter) {
-            param = {
-              ...param,
-              city: cityFilter,
-            };
-          }
+        if (onlyWeekend) {
+          param = {
+            ...param,
+            onlyWeekend: onlyWeekend,
+          };
+        }
+        if (cityFilter) {
+          param = {
+            ...param,
+            city: cityFilter,
+          };
+        }
 
-          if (!bundleSfid) {
-            return { data: null };
-          }
+        if (!bundleSfid) {
+          return { data: null };
+        }
 
-          const res = await api.get({
-            path: 'getBundleWorkshopsOnly',
-            param,
-          });
-          return res;
-        },
-        getNextPageParam: (page) => {
-          return page.currectPage >= page.lastPage
-            ? undefined
-            : page.currectPage + 1;
-        },
+        const res = await api.get({
+          path: 'getBundleWorkshopsOnly',
+          param,
+        });
+        return res;
       },
-      // { initialData: workshops },
-    );
-  //console.log(data.pages[0]);
+      getNextPageParam: (page) => {
+        return page.currectPage >= page.lastPage
+          ? undefined
+          : page.currectPage + 1;
+      },
+    });
 
   let instructorResult = useQuery({
     queryKey: ['instructor', searchKey],
@@ -551,15 +513,15 @@ const Course = ({ bundle, allowCourseTypes, defaultCourseType }) => {
     if (!router.isReady) return;
     page({
       category: 'course_registration',
-      name: 'course_search',
-    });
-    track('Product List Viewed', {
-      category: 'Course',
+      name: 'bundle_course_search_scheduling',
+      course_type: courseTypeFilter || '',
     });
     if (orgConfig.name === 'AOL' && !timeZoneFilter) {
       setTimeZoneFilter(fillDefaultTimeZone());
     }
   }, [router.isReady]);
+
+  // analytics.page("course_registration","bundle_course_search_scheduling",{"course_type": "<course-type> filter on the page"});
 
   if (!router.isReady) return <PageLoading />;
 
@@ -568,6 +530,7 @@ const Course = ({ bundle, allowCourseTypes, defaultCourseType }) => {
     setTimeZoneFilter(null);
     setFilterStartEndDate(null);
     setCourseTypeFilter(null);
+    setInstructorFilter(null);
   };
 
   const onFilterChange = (field) => async (value) => {
@@ -582,6 +545,13 @@ const Course = ({ bundle, allowCourseTypes, defaultCourseType }) => {
       case 'timeZoneFilter':
         setTimeZoneFilter(value);
         break;
+      case 'instructorFilter':
+        if (value) {
+          setInstructorFilter(value);
+        } else {
+          setInstructorFilter(null);
+        }
+        break;
     }
   };
 
@@ -594,9 +564,11 @@ const Course = ({ bundle, allowCourseTypes, defaultCourseType }) => {
       case 'onlyWeekend':
         setOnlyWeekend(null);
         break;
-
       case 'timeZoneFilter':
         setTimeZoneFilter(null);
+        break;
+      case 'instructorFilter':
+        setInstructorFilter(null);
         break;
     }
   };
@@ -610,26 +582,17 @@ const Course = ({ bundle, allowCourseTypes, defaultCourseType }) => {
       case 'onlyWeekend':
         setOnlyWeekend(value);
         break;
-
       case 'timeZoneFilter':
         setTimeZoneFilter(value);
         break;
+      case 'instructorFilter':
+        if (value) {
+          setInstructorFilter(value);
+        } else {
+          setInstructorFilter(null);
+        }
+        break;
     }
-  };
-
-  const changeCourseType = (courseType) => {
-    const { slug, ...rest } = router.query;
-    router.push(
-      {
-        ...router,
-        query: {
-          slug: courseType.slug,
-          ...rest,
-        },
-      },
-      undefined,
-      { shallow: true },
-    );
   };
 
   const onDatesChange = async (date) => {
@@ -665,6 +628,9 @@ const Course = ({ bundle, allowCourseTypes, defaultCourseType }) => {
   if (timeZoneFilter) {
     filterCount++;
   }
+  if (instructorFilter) {
+    filterCount++;
+  }
   if (courseTypeFilter) {
     filterCount++;
   }
@@ -685,31 +651,6 @@ const Course = ({ bundle, allowCourseTypes, defaultCourseType }) => {
       : null;
 
   const renderCourseList = () => {
-    /* if (
-      courseTypeFilter.isAvailableInPersonOnly &&
-      courseModeFilter &&
-      courseModeFilter !== 'IN_PERSON'
-    ) {
-      return (
-        <div className="no-course-found-wrap">
-          <h2 className="tw-text-center">
-            The {courseTypeFilter.name} is not available online, it is offered
-            In-Person only.
-          </h2>
-          <p>
-            Please check out our{' '}
-            <a
-              href="#"
-              className="link v2"
-              onClick={onFilterChangeEvent('courseModeFilter')('IN_PERSON')}
-            >
-              in-person offerings
-            </a>
-            .
-          </p>
-        </div>
-      );
-    } */
     if (isSuccess && data?.pages[0].data?.length === 0 && !isFetchingNextPage) {
       return (
         <div className="no-course-found-wrap">
@@ -729,6 +670,7 @@ const Course = ({ bundle, allowCourseTypes, defaultCourseType }) => {
                   data={course}
                   isAuthenticated={isAuthenticated}
                   bundleSfid={bundleSfid}
+                  courseTypeFilter={courseTypeFilter}
                 />
               ))}
             </React.Fragment>
@@ -774,6 +716,7 @@ const Course = ({ bundle, allowCourseTypes, defaultCourseType }) => {
             )
           </div>
         </div>
+
         <div className="container">
           <div className="course-filter-wrap">
             <div
@@ -934,6 +877,23 @@ const Course = ({ bundle, allowCourseTypes, defaultCourseType }) => {
                   </>
                 )}
               </Popup>
+              <Popup
+                tabIndex="5"
+                value={instructorFilter ? instructorFilter.label : null}
+                buttonText={instructorFilter ? instructorFilter.label : null}
+                closeEvent={onFilterChange('instructorFilter')}
+                label="Instructor"
+                parentClassName="upward"
+              >
+                {({ closeHandler }) => (
+                  <SmartInput
+                    onSearchKeyChange={(value) => setSearchKey(value)}
+                    dataList={instructorList}
+                    closeHandler={closeHandler}
+                    value={searchKey}
+                  ></SmartInput>
+                )}
+              </Popup>
             </div>
             <div className="search_course_form_mobile d-lg-none d-block">
               <div>
@@ -987,6 +947,15 @@ const Course = ({ bundle, allowCourseTypes, defaultCourseType }) => {
                           onClick={onFilterClearEvent('timeZoneFilter')}
                         >
                           {TIME_ZONE[timeZoneFilter].name}
+                        </div>
+                      )}
+
+                      {instructorFilter && (
+                        <div
+                          className="selected-filter-item"
+                          onClick={onFilterClearEvent('instructorFilter')}
+                        >
+                          {instructorFilter.label}
                         </div>
                       )}
 
@@ -1187,6 +1156,20 @@ const Course = ({ bundle, allowCourseTypes, defaultCourseType }) => {
                         </SmartDropDown>
                       </div>
                     </MobileFilterModal>
+                    <MobileFilterModal
+                      label="Instructor"
+                      value={instructorFilter ? instructorFilter.label : null}
+                      clearEvent={onFilterClearEvent('instructorFilter')}
+                    >
+                      <SmartInput
+                        containerClassName="smart-input-mobile"
+                        placeholder="Search Instructor"
+                        value={searchKey}
+                        onSearchKeyChange={(value) => setSearchKey(value)}
+                        dataList={instructorList}
+                        closeHandler={onFilterChangeEvent('instructorFilter')}
+                      ></SmartInput>
+                    </MobileFilterModal>
                   </div>
                 )}
                 {showFilterModal && (
@@ -1230,6 +1213,15 @@ const Course = ({ bundle, allowCourseTypes, defaultCourseType }) => {
                   onClick={onFilterClearEvent('timeZoneFilter')}
                 >
                   {TIME_ZONE[timeZoneFilter].name}
+                </div>
+              )}
+
+              {instructorFilter && (
+                <div
+                  className="selected-filter-item"
+                  onClick={onFilterClearEvent('instructorFilter')}
+                >
+                  {instructorFilter.label}
                 </div>
               )}
 

@@ -1,7 +1,7 @@
 import { Loader, PageLoading } from '@components';
 import { useAuth } from '@contexts';
 import { useQueryString } from '@hooks';
-import { pushRouteWithUTMQuery, replaceRouteWithUTMQuery } from '@service';
+import { replaceRouteWithUTMQuery } from '@service';
 import { Elements } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
 import { api, convertToUpperCaseAndReplaceSpacesForURL } from '@utils';
@@ -14,7 +14,6 @@ import queryString from 'query-string';
 import { useAnalytics } from 'use-analytics';
 import { filterAllowedParams, removeNull } from '@utils/utmParam';
 import { PaymentFormBundle } from '@components/paymentFormBundle';
-import { orgConfig } from '@org';
 import { navigateToLogin } from '@utils';
 
 const Checkout = () => {
@@ -53,27 +52,7 @@ const Checkout = () => {
     enabled: !!bundleId,
   });
 
-  const {
-    mainProductCtypeIds,
-    isPartialPaymentAllowedOnBundle,
-    minimumPartialPaymentOnBundle,
-    remainPartialPaymentDateCap,
-    comboSfid,
-    comboName: title,
-    comboDescription: description,
-    comboIsActive,
-    comboUnitPrice: unitPrice,
-    comboListPrice: listPrice,
-    comboProductSfid: productTypeId,
-    comboDetails,
-    masterPriceBookId,
-    masterPriceBookEntryId,
-    otherPaymentOptionAvailable,
-    showSecondCourseButton,
-    isOnlyBundleCheckout,
-  } = bundle || {};
-
-  console.log(bundle);
+  const { comboName: title, comboProductSfid: productTypeId } = bundle || {};
 
   useEffect(() => {
     setTimeout(() => {
@@ -81,92 +60,91 @@ const Checkout = () => {
     }, 2000);
     if (!bundle) return;
 
-    const products = [
-      {
-        id: name,
-        name: title,
-        category: 'bundle',
-        ctype: productTypeId,
-        variant: 'N/A',
-        brand: 'Art of Living Foundation',
-        quantity: 1,
-        currencyCode: 'USD',
-        price: unitPrice,
-      },
-    ];
+    // const products = [
+    //   {
+    //     id: name,
+    //     name: title,
+    //     category: 'bundle',
+    //     ctype: productTypeId,
+    //     variant: 'N/A',
+    //     brand: 'Art of Living Foundation',
+    //     quantity: 1,
+    //     currencyCode: 'USD',
+    //     price: unitPrice,
+    //   },
+    // ];
 
     page({
       category: 'course_registration',
-      name: 'course_checkout',
-      title: title,
-      ctype: productTypeId,
-      amount: unitPrice,
-      requestType: 'Detail',
-      hitType: 'paymentpage',
-      user: profile?.id,
+      name: 'bundle_checkout',
     });
 
-    track('eec.checkout', {
-      page: `Art of Living ${title} workshop registration page`,
-      viewType: 'workshop',
-      title: title,
-      ctype: productTypeId,
-      amount: unitPrice,
-      requestType: 'Detail',
-      hitType: 'paymentpage',
-      user: profile?.id,
-      ecommerce: {
-        checkout: {
-          actionField: {
-            step: 1,
-          },
-          products: products,
-        },
-      },
-    });
+    // track('eec.checkout', {
+    //   page: `Art of Living ${title} workshop registration page`,
+    //   viewType: 'workshop',
+    //   title: title,
+    //   ctype: productTypeId,
+    //   amount: unitPrice,
+    //   requestType: 'Detail',
+    //   hitType: 'paymentpage',
+    //   user: profile?.id,
+    //   ecommerce: {
+    //     checkout: {
+    //       actionField: {
+    //         step: 1,
+    //       },
+    //       products: products,
+    //     },
+    //   },
+    // });
 
-    track(
-      'begin_checkout',
-      {
-        ecommerce: {
-          currency: 'USD',
-          value: bundle?.unitPrice,
-          course_format: bundle?.productTypeId,
-          course_name: bundle?.title,
-          items: [
-            {
-              item_id: bundle?.id,
-              item_name: bundle?.title,
-              affiliation: 'NA',
-              coupon: '',
-              discount: 0.0,
-              index: 0,
-              item_brand: bundle?.businessOrg,
-              item_category: bundle?.title,
-              item_category2: bundle?.mode,
-              item_category3: 'paid',
-              item_category4: 'NA',
-              item_category5: 'NA',
-              item_list_id: bundle?.productTypeId,
-              item_list_name: bundle?.title,
-              item_variant: bundle?.workshopTotalHours,
-              location_id: bundle?.locationCity,
-              price: bundle?.unitPrice,
-              quantity: 1,
-            },
-          ],
-        },
-      },
-      {
-        plugins: {
-          all: false,
-          'gtm-ecommerce-plugin': true,
-        },
-      },
-    );
+    // track(
+    //   'begin_checkout',
+    //   {
+    //     ecommerce: {
+    //       currency: 'USD',
+    //       value: bundle?.unitPrice,
+    //       course_format: bundle?.productTypeId,
+    //       course_name: bundle?.title,
+    //       items: [
+    //         {
+    //           item_id: bundle?.id,
+    //           item_name: bundle?.title,
+    //           affiliation: 'NA',
+    //           coupon: '',
+    //           discount: 0.0,
+    //           index: 0,
+    //           item_brand: bundle?.businessOrg,
+    //           item_category: bundle?.title,
+    //           item_category2: bundle?.mode,
+    //           item_category3: 'paid',
+    //           item_category4: 'NA',
+    //           item_category5: 'NA',
+    //           item_list_id: bundle?.productTypeId,
+    //           item_list_name: bundle?.title,
+    //           item_variant: bundle?.workshopTotalHours,
+    //           location_id: bundle?.locationCity,
+    //           price: bundle?.unitPrice,
+    //           quantity: 1,
+    //         },
+    //       ],
+    //     },
+    //   },
+    //   {
+    //     plugins: {
+    //       all: false,
+    //       'gtm-ecommerce-plugin': true,
+    //     },
+    //   },
+    // );
   }, [profile, bundle]);
 
   const enrollmentCompletionAction = ({ orderId }) => {
+    track('click_button', {
+      screen_name: 'bundle_checkout',
+      event_target: 'register_button',
+    });
+
     const title = convertToUpperCaseAndReplaceSpacesForURL(bundle.comboName);
     replaceRouteWithUTMQuery(router, {
       pathname: `/us-en/bundle/thankyou/${orderId}`,
@@ -257,8 +235,6 @@ const Checkout = () => {
       },
     },
   };
-
-  const { email } = profile || {};
 
   return (
     <>
