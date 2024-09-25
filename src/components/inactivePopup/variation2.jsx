@@ -53,7 +53,7 @@ export function PopVariation2({ closeAction, acceptAction, show }) {
         <div class="course-bonus">
           <h4>Bonus</h4>
           <ul>
-            <li>Freedom from Stress Masterclass</li>
+            <li>Access to 6 day #SleepBetter Challenge</li>
             <li>Extra guided meditation from Gurudev</li>
             <li>Inspirational Quotes E-book</li>
           </ul>
