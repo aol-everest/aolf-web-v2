@@ -638,12 +638,6 @@ const Course = ({ centerDetail }) => {
             ))}
           </>
         )}
-        <div ref={ref} style={{ flex: '0 0 100%' }}></div>
-        {isSuccess && !hasNextPage && data.pages[0].data.length > 0 && (
-          <div className="no-course-found-wrap">
-            <p></p>
-          </div>
-        )}
       </>
     );
   };
