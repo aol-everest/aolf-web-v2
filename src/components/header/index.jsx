@@ -206,6 +206,14 @@ const AOL_MENU = [
         name: 'Connect Locally',
         link: '/us-en/centers',
       },
+      {
+        name: 'Los Angeles',
+        link: 'https://artoflivingla.org',
+      },
+      {
+        name: 'Washington DC',
+        link: 'https://dc.artofliving.org',
+      },
     ],
   },
   {
