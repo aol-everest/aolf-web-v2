@@ -209,10 +209,12 @@ const AOL_MENU = [
       {
         name: 'Los Angeles',
         link: 'https://artoflivingla.org',
+        props: { target: '_blank' },
       },
       {
         name: 'Washington DC',
         link: 'https://dc.artofliving.org',
+        props: { target: '_blank' },
       },
     ],
   },
@@ -494,6 +496,7 @@ export const Header = () => {
                   href={submenu.link}
                   key={submenu.name}
                   as={Link}
+                  {...submenu.props}
                 >
                   {submenu.name}
                 </NavDropdown.Item>
