@@ -22,10 +22,7 @@ import {
 import { meditatePlayEvent, pushRouteWithUTMQuery } from '@service';
 import HubSpotForm from '@components/hubSpotForm';
 import { useRouter } from 'next/router';
-import {
-  fetchContentfulBannerDetails,
-  fetchContentfulDataDetails,
-} from '@components/contentful';
+import { fetchContentfulDataDetails } from '@service';
 import AudioPlayerOnScreen from '@components/audioPlayer/AudioPlayerOnScreen';
 
 const swiperOption = {
@@ -79,9 +76,6 @@ const GuidedMeditation = (props) => {
         randomMeditateData?.contentfulId || '',
       );
       setRandomMeditate({ ...randomMeditateData, ...audioVideoDetails });
-
-      // const banners = await fetchContentfulBannerDetails();
-      // console.log(banners);
     };
 
     getContentfulData();
@@ -234,7 +228,7 @@ const GuidedMeditation = (props) => {
       {loading && <Loader />}
       <section className="banner-section">
         <div className="container">
-          <div className="banner-title">{`Your Guide 
+          <div className="banner-title">{`Your Guide
           to Meditation`}</div>
           <div className="banner-desc">
             Meditation is the delicate art of doing nothing and letting go of
@@ -662,9 +656,9 @@ const GuidedMeditation = (props) => {
                 data-parent="#accordion"
               >
                 <div className="card-body">
-                  {`Yes! Everyone benefits from meditation. It is accessible to everyone. 
+                  {`Yes! Everyone benefits from meditation. It is accessible to everyone.
 
-                    There are so many reasons people start meditating—the benefits support all aspects of life, wherever you are. 
+                    There are so many reasons people start meditating—the benefits support all aspects of life, wherever you are.
 
                     Experience is the best way to discover just how profound the practice is.`}
                 </div>
