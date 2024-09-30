@@ -8,3 +8,4 @@ export {
   useLocalUserCache,
   PasswordlessContextProvider,
 } from './usePasswordless';
+export { usePageTriggers } from './usePageTriggers';

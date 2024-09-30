@@ -373,7 +373,10 @@ function TicketedEvent() {
                           <div className="tickets-container">
                             <div className="tickets notes">
                               <div className="label">Notes</div>
-                              <div className="value">{notes || '-'}</div>
+                              <div
+                                className="value"
+                                dangerouslySetInnerHTML={{ __html: notes }}
+                              />
                             </div>
                           </div>
                         </div>

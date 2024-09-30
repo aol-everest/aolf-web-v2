@@ -1,7 +1,7 @@
 /* eslint-disable react/no-unescaped-entities */
 /* eslint-disable no-inline-styles/no-inline-styles */
-import React, { useEffect, useState } from 'react';
-import { PageLoading } from '@components';
+import React, { useState } from 'react';
+import classNames from 'classnames';
 import { useQuery } from '@tanstack/react-query';
 import ErrorPage from 'next/error';
 import { api, createCompleteAddress, joinPhoneNumbers } from '@utils';
@@ -65,7 +65,6 @@ function convertUndefinedToNull(obj) {
   if (obj && typeof obj === 'object') {
     // Iterate over each key in the object
     for (const key in obj) {
-      console.log(key, obj[key]);
       if (obj[key] === undefined) {
         // Convert undefined to null
         obj[key] = null;
@@ -275,6 +274,7 @@ const Centers = ({ initialLocation = null, initialCenters }) => {
     address: initialLocation.locationName,
     latitude: initialLocation?.lat,
     longitude: initialLocation?.lng,
+    isInputAllowed: true,
   });
 
   const placeholder = location.address || 'location';
@@ -289,7 +289,6 @@ const Centers = ({ initialLocation = null, initialCenters }) => {
 
   const renderItem = (placePrediction) => {
     const { structured_formatting } = placePrediction;
-    console.log(placePrediction);
     return (
       <>
         <div
@@ -317,6 +316,7 @@ const Centers = ({ initialLocation = null, initialCenters }) => {
             latitude: placeDetails.geometry.location.lat(),
             longitude: placeDetails.geometry.location.lng(),
             address: item.description,
+            isInputAllowed: false,
           });
         },
       );
@@ -331,7 +331,17 @@ const Centers = ({ initialLocation = null, initialCenters }) => {
       address: '',
       latitude: initialLocation?.lat,
       longitude: initialLocation?.lng,
+      isInputAllowed: true,
     });
+  };
+
+  const handleAddressClick = () => {
+    if (!location.isInputAllowed) {
+      setLocation({
+        ...location,
+        isInputAllowed: true,
+      });
+    }
   };
 
   const {
@@ -382,17 +392,30 @@ const Centers = ({ initialLocation = null, initialCenters }) => {
         <div className="center-search-box" id="mobile-handler">
           <div className="mobile-handler"></div>
           <div className="search-input-wrap">
-            <input
-              id="search-field"
-              className="search-input"
-              value={location.address}
-              onChange={(evt) => {
-                getPlacePredictions({ input: evt.target.value });
-                handleChange(evt.target.value);
-              }}
-              placeholder={placeholder}
-              loading={isPlacePredictionsLoading}
-            />
+            {!location.isInputAllowed ? (
+              <span
+                className={classNames(
+                  'schedule-location-input scheduling-address',
+                )}
+                onClick={handleAddressClick}
+              >
+                <span className={classNames('schedule-location-value')}>
+                  {location.address}
+                </span>
+              </span>
+            ) : (
+              <input
+                id="search-field"
+                className="search-input"
+                value={location.address}
+                onChange={(evt) => {
+                  getPlacePredictions({ input: evt.target.value });
+                  handleChange(evt.target.value);
+                }}
+                placeholder={placeholder}
+                loading={isPlacePredictionsLoading}
+              />
+            )}
             {location.address && (
               <button className="search-clear" onClick={clearSearch}>
                 <svg

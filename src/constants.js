@@ -289,9 +289,9 @@ export const COURSE_TYPES = {
     description:
       'Discover SKY Breath Meditation, an evidence-based technique that quickly reduces stress, balances emotions, and restores calm.',
     subTypes: {
-      Online: process.env.NEXT_PUBLIC_SKY_BREATH_MEDITATION_ONLINE_CTYPE,
+      Online: process.env.NEXT_PUBLIC_SKY_BREATH_MEDITATION_ONLINE_CTYPE || '',
       'In Person':
-        process.env.NEXT_PUBLIC_SKY_BREATH_MEDITATION_IN_PERSON_CTYPE,
+        process.env.NEXT_PUBLIC_SKY_BREATH_MEDITATION_IN_PERSON_CTYPE || '',
     },
   },
   SILENT_RETREAT: {
@@ -310,8 +310,8 @@ export const COURSE_TYPES = {
     description:
       'Learn how to let go of worries and enjoy deep rest with this practical, effective, and effortless meditation practice.',
     subTypes: {
-      Online: process.env.NEXT_PUBLIC_SAHAJ_SAMADHI_ONLINE_CTYPE,
-      'In Person': process.env.NEXT_PUBLIC_SAHAJ_SAMADHI_IN_PERSON_CTYPE,
+      Online: process.env.NEXT_PUBLIC_SAHAJ_SAMADHI_ONLINE_CTYPE || '',
+      'In Person': process.env.NEXT_PUBLIC_SAHAJ_SAMADHI_IN_PERSON_CTYPE || '',
     },
   },
   SRI_SRI_YOGA_MEDITATION: {
