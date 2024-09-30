@@ -8,6 +8,7 @@ import 'swiper/css/pagination';
 import 'swiper/css/scrollbar';
 import { useAuth } from '@contexts';
 import { useEffect } from 'react';
+import { useRouter } from 'next/router';
 import {
   api,
   concatenateStrings,
@@ -17,21 +18,34 @@ import {
 import { useQuery } from '@tanstack/react-query';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
+import { withAuth } from '@hoc';
 
-import { fetchContentfulBannerDetails } from '@service';
+import { fetchContentfulBannerDetails, pushRouteWithUTMQuery } from '@service';
 import { ABBRS, COURSE_MODES } from '@constants';
 
 dayjs.extend(utc);
 
-const BannerSlide = () => {};
+const getCourseDuration = (eventStartDate, eventEndDate, eventTimeZone) => {
+  const startDate = dayjs.utc(eventStartDate);
+  const endDate = dayjs.utc(eventEndDate);
+
+  // Check if the start and end dates are in the same month
+  const sameMonth = startDate.isSame(endDate, 'month');
+
+  const formattedDate = sameMonth
+    ? `${startDate.format('MMM DD')}-${endDate.format('DD, YYYY')}` // Same month, show "MMM DD-DD, YYYY"
+    : `${startDate.format('MMM DD')}-${endDate.format('MMM DD, YYYY')}`; // Different months, show "MMM DD-MMM DD, YYYY"
+
+  return (
+    <>
+      {formattedDate} {' ' + ABBRS[eventTimeZone]}
+    </>
+  );
+};
 
 const ProfileLanding = () => {
-  const upcomingCourseRef = useRef(null);
-  const recommendedCourseRef = useRef(null);
-  const activitiesRef = useRef(null);
-  const bannerRef = useRef(null);
-
   const { profile } = useAuth();
+  const router = useRouter();
 
   const [banners, setBanners] = useState([]);
 
@@ -101,55 +115,55 @@ const ProfileLanding = () => {
     },
   });
 
+  const { data: preferredEvents = {} } = useQuery({
+    queryKey: 'preferredEvents',
+    queryFn: async () => {
+      const response = await api.get({
+        path: 'preferredEvents',
+      });
+      return response;
+    },
+  });
+
+  const {
+    meetups = [],
+    ticketdEvents = [],
+    workshops = [],
+  } = {
+    meetups: preferredEvents.meetups?.data,
+    ticketdEvents: preferredEvents.ticketdEvents?.data,
+    workshops: preferredEvents.workshops?.data,
+  };
+
+  const enrollMeetupAction = (item) => () => {
+    pushRouteWithUTMQuery(router, {
+      pathname: `/us-en/meetup/checkout/${item.sfid}`,
+      query: {
+        ctype: item.productTypeId,
+        page: 'c-o',
+      },
+    });
+  };
+
+  const enrollWorkshopAction = (item) => () => {
+    pushRouteWithUTMQuery(router, {
+      pathname: `/us-en/course/checkout/${item.sfid}`,
+      query: {
+        ctype: item.productTypeId,
+        page: 'c-o',
+      },
+    });
+  };
+  const enrollEventAction = (item) => () => {
+    pushRouteWithUTMQuery(router, {
+      pathname: `/us-en/ticketed-event/${item.sfid}`,
+      query: {
+        ctype: item.productTypeId,
+      },
+    });
+  };
+
   const upcomingEvents = [...(data?.workshops || []), ...(data?.meetups || [])];
-
-  const handlePrev = () => {
-    if (upcomingCourseRef.current && upcomingCourseRef.current.swiper) {
-      upcomingCourseRef.current.swiper.slidePrev();
-    }
-  };
-
-  const handleNext = () => {
-    if (upcomingCourseRef.current && upcomingCourseRef.current.swiper) {
-      upcomingCourseRef.current.swiper.slideNext();
-    }
-  };
-
-  const handleRecommendedPrev = () => {
-    if (recommendedCourseRef.current && recommendedCourseRef.current.swiper) {
-      recommendedCourseRef.current.swiper.slidePrev();
-    }
-  };
-
-  const handleRecommendedNext = () => {
-    if (recommendedCourseRef.current && recommendedCourseRef.current.swiper) {
-      recommendedCourseRef.current.swiper.slideNext();
-    }
-  };
-
-  const handleActivitiesPrev = () => {
-    if (activitiesRef.current && activitiesRef.current.swiper) {
-      activitiesRef.current.swiper.slidePrev();
-    }
-  };
-
-  const handleActivitiesNext = () => {
-    if (activitiesRef.current && activitiesRef.current.swiper) {
-      activitiesRef.current.swiper.slideNext();
-    }
-  };
-
-  const handleBannerPrev = () => {
-    if (bannerRef.current && bannerRef.current.swiper) {
-      bannerRef.current.swiper.slidePrev();
-    }
-  };
-
-  const handleBannerNext = () => {
-    if (bannerRef.current && bannerRef.current.swiper) {
-      bannerRef.current.swiper.slideNext();
-    }
-  };
 
   const getMeetupDuration = (item, updateMeetupDuration) => {
     const { meetupStartDate, meetupTimeZone, meetupStartTime } = item;
@@ -181,7 +195,6 @@ const ProfileLanding = () => {
               nextEl: '.slide-button-banner-next',
             }}
             onInit={(swiper) => {
-              console.log(swiper);
               swiper.params.navigation.prevEl = '.slide-button-banner-prev';
               swiper.params.navigation.nextEl = '.slide-button-banner-next';
               swiper.navigation.update();
@@ -248,16 +261,10 @@ const ProfileLanding = () => {
                   Your upcoming courses, meetups and events
                 </div>
                 <div className="top-picks-actions">
-                  <div
-                    className="slide-button-prev slide-button"
-                    onClick={handlePrev}
-                  >
+                  <div className="slide-button-prev slide-button">
                     <span className="icon-aol iconaol-arrow-long-left"></span>
                   </div>
-                  <div
-                    className="slide-button-next slide-button"
-                    onClick={handleNext}
-                  >
+                  <div className="slide-button-next slide-button">
                     <span className="icon-aol iconaol-arrow-long-right"></span>
                   </div>
                 </div>
@@ -283,7 +290,7 @@ const ProfileLanding = () => {
                 } = item || {};
                 const isWorkshop = eventType === 'Workshop';
                 const isMeetup = eventType === 'Meetup';
-                const isOnline = mode === COURSE_MODES.ONLINE;
+                const isOnline = mode === COURSE_MODES.ONLINE.value;
                 const updateMeetupDuration = meetupDuration?.replace(
                   /Minutes/g,
                   'Min',
@@ -432,20 +439,15 @@ const ProfileLanding = () => {
               <div slot="container-start" className="top-picks-header">
                 <div className="top-picks-title">Recommended Courses</div>
                 <div className="top-picks-actions">
-                  <div
-                    className="slide-button-recom-prev slide-button"
-                    onClick={handleRecommendedPrev}
-                  >
+                  <div className="slide-button-recom-prev slide-button">
                     <span className="icon-aol iconaol-arrow-long-left"></span>
                   </div>
-                  <div
-                    className="slide-button-recom-next slide-button"
-                    onClick={handleRecommendedNext}
-                  >
+                  <div className="slide-button-recom-next slide-button">
                     <span className="icon-aol iconaol-arrow-long-right"></span>
                   </div>
                 </div>
               </div>
+
               <SwiperSlide>
                 <div className="swiper-slide">
                   <div className="course-item">
@@ -693,20 +695,262 @@ const ProfileLanding = () => {
                   Activities happening at your preferred center
                 </div>
                 <div className="top-picks-actions">
-                  <div
-                    className="slide-button-activities-prev slide-button"
-                    onClick={handleActivitiesPrev}
-                  >
+                  <div className="slide-button-activities-prev slide-button">
                     <span className="icon-aol iconaol-arrow-long-left"></span>
                   </div>
-                  <div
-                    className="slide-button-activities-next slide-button"
-                    onClick={handleActivitiesNext}
-                  >
+                  <div className="slide-button-activities-next slide-button">
                     <span className="icon-aol iconaol-arrow-long-right"></span>
                   </div>
                 </div>
               </div>
+              {meetups.map((item) => {
+                const {
+                  sfid,
+                  meetupTitle,
+                  mode,
+                  locationPostalCode,
+                  locationCity,
+                  locationProvince,
+                  locationStreet,
+                  eventStartDate,
+                  eventEndDate,
+                  eventTimeZone,
+                  primaryTeacherName,
+                  coTeacher1Name,
+                  meetupDuration,
+                } = item || {};
+                const updateMeetupDuration = meetupDuration?.replace(
+                  /Minutes/g,
+                  'Min',
+                );
+                const isOnline = mode === COURSE_MODES.ONLINE.value;
+
+                return (
+                  <SwiperSlide key={sfid}>
+                    <div className="course-item">
+                      <div className="course-item-header">
+                        <div className="course-title-duration">
+                          <div className="course-title">{meetupTitle}</div>
+                          <div
+                            className={`course-type ${isOnline ? 'online' : 'in-person'}`}
+                          >
+                            {mode}
+                          </div>
+                          <div className="course-type duration">
+                            {getCourseDuration(
+                              eventStartDate,
+                              eventEndDate,
+                              eventTimeZone,
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                      {mode !== 'Online' && locationCity && (
+                        <div className="course-location">
+                          {concatenateStrings([
+                            locationStreet,
+                            locationCity,
+                            locationProvince,
+                            locationPostalCode,
+                          ])}
+                        </div>
+                      )}
+                      <div class="course-instructors">
+                        {concatenateStrings([
+                          primaryTeacherName,
+                          coTeacher1Name,
+                        ])}
+                      </div>
+                      <div className="course-timings">
+                        <div className="course-timing">
+                          {getMeetupDuration(item, updateMeetupDuration)}
+                        </div>
+                      </div>
+
+                      <div className="course-actions">
+                        <button
+                          className="btn-primary"
+                          onClick={enrollMeetupAction(item)}
+                        >
+                          Enroll
+                        </button>
+                      </div>
+                    </div>
+                  </SwiperSlide>
+                );
+              })}
+              {workshops.map((item) => {
+                const {
+                  sfid,
+                  title,
+                  mode,
+                  locationPostalCode,
+                  locationCity,
+                  locationProvince,
+                  locationStreet,
+                  timings,
+                  eventStartDate,
+                  eventEndDate,
+                  eventTimeZone,
+                  primaryTeacherName,
+                  coTeacher1Name,
+                } = item || {};
+                const isOnline = mode === COURSE_MODES.ONLINE.value;
+
+                return (
+                  <SwiperSlide key={sfid}>
+                    <div className="course-item">
+                      <div className="course-item-header">
+                        <div className="course-title-duration">
+                          <div className="course-title">{title}</div>
+                          <div
+                            className={`course-type ${isOnline ? 'online' : 'in-person'}`}
+                          >
+                            {mode}
+                          </div>
+                          <div className="course-type duration">
+                            {getCourseDuration(
+                              eventStartDate,
+                              eventEndDate,
+                              eventTimeZone,
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                      {mode !== 'Online' && locationCity && (
+                        <div className="course-location">
+                          {concatenateStrings([
+                            locationStreet,
+                            locationCity,
+                            locationProvince,
+                            locationPostalCode,
+                          ])}
+                        </div>
+                      )}
+                      <div class="course-instructors">
+                        {concatenateStrings([
+                          primaryTeacherName,
+                          coTeacher1Name,
+                        ])}
+                      </div>
+                      {timings?.length > 0 && (
+                        <div class="course-timings">
+                          {timings.map((time, i) => {
+                            return (
+                              <div className="course-timing" key={i}>
+                                <span>
+                                  {dayjs.utc(time.startDate).format('M/D ddd')}
+                                </span>
+                                {`, ${tConvert(time.startTime)} - ${tConvert(time.endTime)} ${
+                                  ABBRS[time.timeZone]
+                                }`}
+                              </div>
+                            );
+                          })}
+                        </div>
+                      )}
+
+                      <div className="course-actions">
+                        <button
+                          className="btn-primary"
+                          onClick={enrollWorkshopAction(item)}
+                        >
+                          Enroll
+                        </button>
+                      </div>
+                    </div>
+                  </SwiperSlide>
+                );
+              })}
+              {ticketdEvents.map((item) => {
+                const {
+                  sfid,
+                  title,
+                  mode,
+                  locationPostalCode,
+                  locationCity,
+                  locationProvince,
+                  locationStreet,
+                  timings,
+                  eventStartDate,
+                  eventEndDate,
+                  eventTimeZone,
+                  primaryTeacherName,
+                  coTeacher1Name,
+                } = item || {};
+                const isOnline = mode === COURSE_MODES.ONLINE.value;
+
+                return (
+                  <SwiperSlide key={sfid}>
+                    <div className="course-item">
+                      <div className="course-item-header">
+                        <div className="course-title-duration">
+                          <div className="course-title">{title}</div>
+                          <div
+                            className={`course-type ${isOnline ? 'online' : 'in-person'}`}
+                          >
+                            {mode}
+                          </div>
+                          <div className="course-type duration">
+                            {getCourseDuration(
+                              eventStartDate,
+                              eventEndDate,
+                              eventTimeZone,
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                      {mode !== 'Online' && locationCity && (
+                        <div className="course-location">
+                          {concatenateStrings([
+                            locationStreet,
+                            locationCity,
+                            locationProvince,
+                            locationPostalCode,
+                          ])}
+                        </div>
+                      )}
+                      <div class="course-instructors">
+                        {concatenateStrings([
+                          primaryTeacherName,
+                          coTeacher1Name,
+                        ])}
+                      </div>
+
+                      {timings?.length > 0 && (
+                        <div class="course-timings">
+                          {timings.map((time, i) => {
+                            return (
+                              <div className="course-timing" key={i}>
+                                <span>
+                                  {dayjs.utc(time.startDate).format('M/D ddd')}
+                                </span>
+                                {`, ${tConvert(time.startTime)} - ${tConvert(time.endTime)} ${
+                                  ABBRS[time.timeZone]
+                                }`}
+                              </div>
+                            );
+                          })}
+                        </div>
+                      )}
+
+                      <div className="course-actions">
+                        <button
+                          className="btn-primary"
+                          onClick={enrollEventAction(item)}
+                        >
+                          Enroll
+                        </button>
+                      </div>
+                      <div className="event-categories">
+                        <div className="cat-item">Silver</div>
+                        <div className="cat-item">General</div>
+                        <div className="cat-item">General</div>
+                      </div>
+                    </div>
+                  </SwiperSlide>
+                );
+              })}
               <SwiperSlide>
                 <div className="swiper-slide">
                   <div className="course-item">
@@ -892,4 +1136,4 @@ const ProfileLanding = () => {
   );
 };
 
-export default ProfileLanding;
+export default withAuth(ProfileLanding);
