@@ -75,6 +75,7 @@ export const PaymentFormNew = ({
   handleCouseSelection = () => {},
   login = () => {},
   isLoggedUser = false,
+  onValidateDiscount,
 }) => {
   const formRef = useRef();
   const { showAlert } = useGlobalAlertContext();
@@ -226,6 +227,10 @@ export const PaymentFormNew = ({
   const validateDiscount = !(
     UpdatedFeeAfterCredits === 0 || workshop?.unitPrice === 0
   );
+
+  useEffect(() => {
+    onValidateDiscount(validateDiscount);
+  }, [validateDiscount, onValidateDiscount]);
 
   const logout = async (e) => {
     if (e) e.preventDefault();
