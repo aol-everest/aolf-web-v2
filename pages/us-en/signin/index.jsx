@@ -148,7 +148,6 @@ function LoginPage() {
   };
 
   const getActualMessage = (message) => {
-    console.log(message);
     if (!message) {
       return null;
     }
