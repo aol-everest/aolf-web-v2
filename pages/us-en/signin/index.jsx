@@ -156,7 +156,7 @@ function LoginPage() {
       message ===
       'Temporary password has expired and must be reset by an administrator.'
     ) {
-      return 'Temporary password has expired and Please use the Reset Password link.';
+      return 'Temporary password has expired. Please use the ‘Reset Password’ link.';
     }
     const matches = message.match(/\[(.*?)\]/);
     if (matches) {
