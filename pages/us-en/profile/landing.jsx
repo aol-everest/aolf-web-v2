@@ -43,9 +43,232 @@ const getCourseDuration = (eventStartDate, eventEndDate, eventTimeZone) => {
   );
 };
 
+const getMeetupDuration = (item, updateMeetupDuration) => {
+  const { meetupStartDate, meetupTimeZone, meetupStartTime } = item;
+  return (
+    <>
+      {`${dayjs.utc(meetupStartDate).format('MM/DD dddd')}, `}
+      {`${tConvert(meetupStartTime)} ${ABBRS[meetupTimeZone]}, `}
+      {`${updateMeetupDuration} Mins`}
+    </>
+  );
+};
+
+const PreferredCenterComp = ({ item }) => {
+  const router = useRouter();
+
+  const enrollMeetupAction = (item) => () => {
+    pushRouteWithUTMQuery(router, {
+      pathname: `/us-en/meetup/checkout/${item.sfid}`,
+      query: {
+        ctype: item.productTypeId,
+        page: 'c-o',
+      },
+    });
+  };
+
+  const enrollWorkshopAction = (item) => () => {
+    pushRouteWithUTMQuery(router, {
+      pathname: `/us-en/course/checkout/${item.sfid}`,
+      query: {
+        ctype: item.productTypeId,
+        page: 'c-o',
+      },
+    });
+  };
+  const enrollEventAction = (item) => () => {
+    pushRouteWithUTMQuery(router, {
+      pathname: `/us-en/ticketed-event/${item.sfid}`,
+      query: {
+        ctype: item.productTypeId,
+      },
+    });
+  };
+  const {
+    sfid,
+    meetupTitle,
+    title,
+    mode,
+    locationPostalCode,
+    locationCity,
+    locationProvince,
+    locationStreet,
+    eventStartDate,
+    eventEndDate,
+    eventTimeZone,
+    primaryTeacherName,
+    coTeacher1Name,
+    meetupDuration,
+    meetupTimeZone,
+    type,
+    timings,
+  } = item || {};
+  const updateMeetupDuration = meetupDuration?.replace(/Minutes/g, 'Min');
+  const isOnline = mode === COURSE_MODES.ONLINE.value;
+
+  switch (type) {
+    case 'workshop':
+      return (
+        <div className="course-item">
+          <div className="course-item-header">
+            <div className="course-title-duration">
+              <div className="course-title">{title}</div>
+              <div
+                className={`course-type ${isOnline ? 'online' : 'in-person'}`}
+              >
+                {mode}
+              </div>
+              <div className="course-type duration">
+                {getCourseDuration(eventStartDate, eventEndDate, eventTimeZone)}
+              </div>
+            </div>
+          </div>
+          {mode !== 'Online' && locationCity && (
+            <div className="course-location">
+              {concatenateStrings([
+                locationStreet,
+                locationCity,
+                locationProvince,
+                locationPostalCode,
+              ])}
+            </div>
+          )}
+          <div class="course-instructors">
+            {concatenateStrings([primaryTeacherName, coTeacher1Name])}
+          </div>
+          {timings?.length > 0 && (
+            <div class="course-timings">
+              {timings.map((time, i) => {
+                return (
+                  <div className="course-timing" key={i}>
+                    <span>{dayjs.utc(time.startDate).format('M/D ddd')}</span>
+                    {`, ${tConvert(time.startTime)} - ${tConvert(time.endTime)} ${
+                      ABBRS[time.timeZone]
+                    }`}
+                  </div>
+                );
+              })}
+            </div>
+          )}
+
+          <div className="course-actions">
+            <button
+              className="btn-primary"
+              onClick={enrollWorkshopAction(item)}
+            >
+              Enroll
+            </button>
+          </div>
+        </div>
+      );
+    case 'meetup':
+      return (
+        <div className="course-item">
+          <div className="course-item-header">
+            <div className="course-title-duration">
+              <div className="course-title">{meetupTitle}</div>
+              <div
+                className={`course-type ${isOnline ? 'online' : 'in-person'}`}
+              >
+                {mode}
+              </div>
+              <div className="course-type duration">
+                {getCourseDuration(
+                  eventStartDate,
+                  eventEndDate,
+                  meetupTimeZone,
+                )}
+              </div>
+            </div>
+          </div>
+          {mode !== 'Online' && locationCity && (
+            <div className="course-location">
+              {concatenateStrings([
+                locationStreet,
+                locationCity,
+                locationProvince,
+                locationPostalCode,
+              ])}
+            </div>
+          )}
+          <div class="course-instructors">
+            {concatenateStrings([primaryTeacherName, coTeacher1Name])}
+          </div>
+          <div className="course-timings">
+            <div className="course-timing">
+              {getMeetupDuration(item, updateMeetupDuration)}
+            </div>
+          </div>
+
+          <div className="course-actions">
+            <button className="btn-primary" onClick={enrollMeetupAction(item)}>
+              Enroll
+            </button>
+          </div>
+        </div>
+      );
+    case 'ticketedEvent':
+      return (
+        <div className="course-item">
+          <div className="course-item-header">
+            <div className="course-title-duration">
+              <div className="course-title">{title}</div>
+              <div
+                className={`course-type ${isOnline ? 'online' : 'in-person'}`}
+              >
+                {mode}
+              </div>
+              <div className="course-type duration">
+                {getCourseDuration(eventStartDate, eventEndDate, eventTimeZone)}
+              </div>
+            </div>
+          </div>
+          {mode !== 'Online' && locationCity && (
+            <div className="course-location">
+              {concatenateStrings([
+                locationStreet,
+                locationCity,
+                locationProvince,
+                locationPostalCode,
+              ])}
+            </div>
+          )}
+          <div class="course-instructors">
+            {concatenateStrings([primaryTeacherName, coTeacher1Name])}
+          </div>
+
+          {timings?.length > 0 && (
+            <div class="course-timings">
+              {timings.map((time, i) => {
+                return (
+                  <div className="course-timing" key={i}>
+                    <span>{dayjs.utc(time.startDate).format('M/D ddd')}</span>
+                    {`, ${tConvert(time.startTime)} - ${tConvert(time.endTime)} ${
+                      ABBRS[time.timeZone]
+                    }`}
+                  </div>
+                );
+              })}
+            </div>
+          )}
+
+          <div className="course-actions">
+            <button className="btn-primary" onClick={enrollEventAction(item)}>
+              Enroll
+            </button>
+          </div>
+          {/* <div className="event-categories">
+            <div className="cat-item">Silver</div>
+            <div className="cat-item">General</div>
+            <div className="cat-item">General</div>
+          </div> */}
+        </div>
+      );
+  }
+};
+
 const ProfileLanding = () => {
   const { profile } = useAuth();
-  const router = useRouter();
 
   const [banners, setBanners] = useState([]);
 
@@ -75,23 +298,15 @@ const ProfileLanding = () => {
 
   const bannerSwiperOption = {
     modules: [Navigation, Scrollbar, A11y, Pagination],
-    slidesPerView: 1.2,
-    allowTouchMove: true,
-    spaceBetween: 10,
+    slidesPerView: 'auto',
+    centeredSlides: true,
+    spaceBetween: 16,
     loop: true,
-    loopedSlides: 1,
-    pagination: { clickable: true, el: false },
+    loopedSlides: 2,
+    watchSlidesVisibility: true,
+    pagination: { clickable: true, el: '.swiper-pagination' },
     breakpoints: {
-      640: {
-        slidesPerView: 1.2,
-        spaceBetween: 20,
-      },
-      768: {
-        slidesPerView: 1.2,
-        spaceBetween: 30,
-      },
       1024: {
-        slidesPerView: 1.2,
         spaceBetween: 30,
       },
     },
@@ -115,66 +330,17 @@ const ProfileLanding = () => {
     },
   });
 
-  const { data: preferredEvents = {} } = useQuery({
+  const { data: preferredEvents = [] } = useQuery({
     queryKey: 'preferredEvents',
     queryFn: async () => {
       const response = await api.get({
         path: 'preferredEvents',
       });
-      return response;
+      return response.events;
     },
   });
 
-  const {
-    meetups = [],
-    ticketdEvents = [],
-    workshops = [],
-  } = {
-    meetups: preferredEvents.meetups?.data,
-    ticketdEvents: preferredEvents.ticketdEvents?.data,
-    workshops: preferredEvents.workshops?.data,
-  };
-
-  const enrollMeetupAction = (item) => () => {
-    pushRouteWithUTMQuery(router, {
-      pathname: `/us-en/meetup/checkout/${item.sfid}`,
-      query: {
-        ctype: item.productTypeId,
-        page: 'c-o',
-      },
-    });
-  };
-
-  const enrollWorkshopAction = (item) => () => {
-    pushRouteWithUTMQuery(router, {
-      pathname: `/us-en/course/checkout/${item.sfid}`,
-      query: {
-        ctype: item.productTypeId,
-        page: 'c-o',
-      },
-    });
-  };
-  const enrollEventAction = (item) => () => {
-    pushRouteWithUTMQuery(router, {
-      pathname: `/us-en/ticketed-event/${item.sfid}`,
-      query: {
-        ctype: item.productTypeId,
-      },
-    });
-  };
-
   const upcomingEvents = [...(data?.workshops || []), ...(data?.meetups || [])];
-
-  const getMeetupDuration = (item, updateMeetupDuration) => {
-    const { meetupStartDate, meetupTimeZone, meetupStartTime } = item;
-    return (
-      <>
-        {`${dayjs.utc(meetupStartDate).format('MM/DD dddd')}, `}
-        {`${tConvert(meetupStartTime)} ${ABBRS[meetupTimeZone]}, `}
-        {`${updateMeetupDuration} Mins`}
-      </>
-    );
-  };
 
   const handleBannerButtonClick = () => {};
 
@@ -194,7 +360,7 @@ const ProfileLanding = () => {
               prevEl: '.slide-button-banner-prev',
               nextEl: '.slide-button-banner-next',
             }}
-            onInit={(swiper) => {
+            onAfterInit={(swiper) => {
               swiper.params.navigation.prevEl = '.slide-button-banner-prev';
               swiper.params.navigation.nextEl = '.slide-button-banner-next';
               swiper.navigation.update();
@@ -299,116 +465,114 @@ const ProfileLanding = () => {
 
                 return (
                   <SwiperSlide key={sfid}>
-                    <div className="swiper-slide">
-                      <div className="flip-card">
-                        <div className="flip-card-inner">
-                          <div className="flip-card-front">
-                            <div className="ds-course-item">
-                              <div className="ds-image-wrap">
-                                <img
-                                  src={
-                                    isMeetup
-                                      ? `/img/silent-retreat-bg@2x.png`
-                                      : `/img/courses/${slug}.webp`
-                                  }
-                                  alt="course"
-                                />
+                    <div className="flip-card">
+                      <div className="flip-card-inner">
+                        <div className="flip-card-front">
+                          <div className="ds-course-item">
+                            <div className="ds-image-wrap">
+                              <img
+                                src={
+                                  isMeetup
+                                    ? `/img/silent-retreat-bg@2x.png`
+                                    : `/img/courses/${slug}.webp`
+                                }
+                                alt="course"
+                              />
+                            </div>
+                            <div className="ds-course-header">
+                              <div className="play-time">
+                                {isWorkshop
+                                  ? 'Course'
+                                  : isMeetup
+                                    ? 'Meetup'
+                                    : 'Event'}
                               </div>
-                              <div className="ds-course-header">
-                                <div className="play-time">
-                                  {isWorkshop
-                                    ? 'Course'
-                                    : isMeetup
-                                      ? 'Meetup'
-                                      : 'Event'}
-                                </div>
-                              </div>
-                              <div className="ds-course-info">
-                                <div className="ds-course-title">
-                                  {isMeetup ? meetupTitle : title}
-                                </div>
+                            </div>
+                            <div className="ds-course-info">
+                              <div className="ds-course-title">
+                                {isMeetup ? meetupTitle : title}
                               </div>
                             </div>
                           </div>
-                          <div className="flip-card-back">
-                            <div className="course-item">
-                              <div className="course-item-header">
-                                <div className="course-title-duration">
-                                  <div className="course-title">
-                                    {isMeetup ? meetupTitle : title}
-                                  </div>
-                                  <div
-                                    className={`course-type ${isOnline ? 'online' : 'in-person'}`}
-                                  >
-                                    {mode}
-                                  </div>
+                        </div>
+                        <div className="flip-card-back">
+                          <div className="course-item">
+                            <div className="course-item-header">
+                              <div className="course-title-duration">
+                                <div className="course-title">
+                                  {isMeetup ? meetupTitle : title}
+                                </div>
+                                <div
+                                  className={`course-type ${isOnline ? 'online' : 'in-person'}`}
+                                >
+                                  {mode}
                                 </div>
                               </div>
-                              {isMeetup ? (
-                                <div className="course-location">
-                                  {isOnlineMeetup ? (
-                                    'Live Streaming from' + ' ' + centerName
-                                  ) : (
-                                    <>
-                                      {locationCity
-                                        ? concatenateStrings([
-                                            locationCity,
-                                            locationProvince,
-                                            locationPostalCode,
-                                          ])
-                                        : centerName}
-                                    </>
-                                  )}
-                                </div>
-                              ) : (
-                                <>
-                                  {mode !== 'Online' && locationCity && (
-                                    <div className="course-location">
-                                      {concatenateStrings([
-                                        locationStreet,
-                                        locationCity,
-                                        locationProvince,
-                                        locationPostalCode,
-                                      ])}
-                                    </div>
-                                  )}
-                                </>
-                              )}
-
-                              <div className="course-instructors">
-                                {concatenateStrings([
-                                  primaryTeacherName,
-                                  coTeacher1Name,
-                                ])}
-                              </div>
-                              {timings?.length > 0 ? (
-                                <div className="course-timings">
-                                  {timings.map((time, i) => {
-                                    return (
-                                      <div className="course-timing" key={i}>
-                                        <span>
-                                          {dayjs
-                                            .utc(time.startDate)
-                                            .format('MM/DD dddd')}
-                                        </span>
-                                        {`, ${tConvert(time.startTime)} - ${tConvert(time.endTime)} ${
-                                          ABBRS[time.timeZone]
-                                        }`}
-                                      </div>
-                                    );
-                                  })}
-                                </div>
-                              ) : (
-                                <div className="course-timings">
-                                  <div className="course-timing">
-                                    {getMeetupDuration(
-                                      item,
-                                      updateMeetupDuration,
-                                    )}
-                                  </div>
-                                </div>
-                              )}
                             </div>
+                            {isMeetup ? (
+                              <div className="course-location">
+                                {isOnlineMeetup ? (
+                                  'Live Streaming from' + ' ' + centerName
+                                ) : (
+                                  <>
+                                    {locationCity
+                                      ? concatenateStrings([
+                                          locationCity,
+                                          locationProvince,
+                                          locationPostalCode,
+                                        ])
+                                      : centerName}
+                                  </>
+                                )}
+                              </div>
+                            ) : (
+                              <>
+                                {mode !== 'Online' && locationCity && (
+                                  <div className="course-location">
+                                    {concatenateStrings([
+                                      locationStreet,
+                                      locationCity,
+                                      locationProvince,
+                                      locationPostalCode,
+                                    ])}
+                                  </div>
+                                )}
+                              </>
+                            )}
+
+                            <div className="course-instructors">
+                              {concatenateStrings([
+                                primaryTeacherName,
+                                coTeacher1Name,
+                              ])}
+                            </div>
+                            {timings?.length > 0 ? (
+                              <div className="course-timings">
+                                {timings.map((time, i) => {
+                                  return (
+                                    <div className="course-timing" key={i}>
+                                      <span>
+                                        {dayjs
+                                          .utc(time.startDate)
+                                          .format('MM/DD dddd')}
+                                      </span>
+                                      {`, ${tConvert(time.startTime)} - ${tConvert(time.endTime)} ${
+                                        ABBRS[time.timeZone]
+                                      }`}
+                                    </div>
+                                  );
+                                })}
+                              </div>
+                            ) : (
+                              <div className="course-timings">
+                                <div className="course-timing">
+                                  {getMeetupDuration(
+                                    item,
+                                    updateMeetupDuration,
+                                  )}
+                                </div>
+                              </div>
+                            )}
                           </div>
                         </div>
                       </div>
@@ -430,7 +594,7 @@ const ProfileLanding = () => {
                 prevEl: '.slide-button-recom-prev',
                 nextEl: '.slide-button-recom-next',
               }}
-              onInit={(swiper) => {
+              onAfterInit={(swiper) => {
                 swiper.params.navigation.prevEl = '.slide-button-recom-prev';
                 swiper.params.navigation.nextEl = '.slide-button-recom-next';
                 swiper.navigation.update();
@@ -449,222 +613,210 @@ const ProfileLanding = () => {
               </div>
 
               <SwiperSlide>
-                <div className="swiper-slide">
-                  <div className="course-item">
-                    <div className="course-item-header">
-                      <div className="course-title-duration">
-                        <div className="course-title">Blessings Course</div>
-                        <div className="course-type in-person">In Person</div>
-                        <div className="course-type online">Online</div>
-                      </div>
-                      <div className="course-price">
-                        <span>$100</span>
-                      </div>
+                <div className="course-item">
+                  <div className="course-item-header">
+                    <div className="course-title-duration">
+                      <div className="course-title">Blessings Course</div>
+                      <div className="course-type in-person">In Person</div>
+                      <div className="course-type online">Online</div>
                     </div>
-                    <div className="course-location">
-                      1901 Thornridge Cir. Shiloh, Hawaii 81063
+                    <div className="course-price">
+                      <span>$100</span>
                     </div>
-                    <div className="course-instructors">
-                      Cameron Williamson, Cameron Williamson
+                  </div>
+                  <div className="course-location">
+                    1901 Thornridge Cir. Shiloh, Hawaii 81063
+                  </div>
+                  <div className="course-instructors">
+                    Cameron Williamson, Cameron Williamson
+                  </div>
+                  <div className="course-timings">
+                    <div className="course-timing">
+                      1/18, Monday, 12pm - 2:30 pm ET
                     </div>
-                    <div className="course-timings">
-                      <div className="course-timing">
-                        1/18, Monday, 12pm - 2:30 pm ET
-                      </div>
-                      <div className="course-timing">
-                        1/19, Tuesdauy, 12pm - 2:30 pm ET
-                      </div>
-                      <div className="course-timing">
-                        1/20, Wednesday, 12pm - 2:30pm ET
-                      </div>
+                    <div className="course-timing">
+                      1/19, Tuesdauy, 12pm - 2:30 pm ET
                     </div>
-                    <div className="course-actions">
-                      <button className="btn-secondary">Details</button>
-                      <button className="btn-primary">Register</button>
+                    <div className="course-timing">
+                      1/20, Wednesday, 12pm - 2:30pm ET
                     </div>
+                  </div>
+                  <div className="course-actions">
+                    <button className="btn-secondary">Details</button>
+                    <button className="btn-primary">Register</button>
                   </div>
                 </div>
               </SwiperSlide>
               <SwiperSlide>
-                <div className="swiper-slide">
-                  <div className="course-item">
-                    <div className="course-item-header">
-                      <div className="course-title-duration">
-                        <div className="course-title">DSN Course</div>
-                        <div className="course-type online">Online</div>
-                      </div>
-                      <div className="course-price">
-                        <span>$100</span>
-                      </div>
+                <div className="course-item">
+                  <div className="course-item-header">
+                    <div className="course-title-duration">
+                      <div className="course-title">DSN Course</div>
+                      <div className="course-type online">Online</div>
                     </div>
-                    <div className="course-location">
-                      1901 Thornridge Cir. Shiloh, Hawaii 81063
+                    <div className="course-price">
+                      <span>$100</span>
                     </div>
-                    <div className="course-instructors">
-                      Cameron Williamson, Cameron Williamson
+                  </div>
+                  <div className="course-location">
+                    1901 Thornridge Cir. Shiloh, Hawaii 81063
+                  </div>
+                  <div className="course-instructors">
+                    Cameron Williamson, Cameron Williamson
+                  </div>
+                  <div className="course-timings">
+                    <div className="course-timing">
+                      1/18, Monday, 12pm - 2:30 pm ET
                     </div>
-                    <div className="course-timings">
-                      <div className="course-timing">
-                        1/18, Monday, 12pm - 2:30 pm ET
-                      </div>
-                      <div className="course-timing">
-                        1/19, Tuesdauy, 12pm - 2:30 pm ET
-                      </div>
-                      <div className="course-timing">
-                        1/20, Wednesday, 12pm - 2:30pm ET
-                      </div>
+                    <div className="course-timing">
+                      1/19, Tuesdauy, 12pm - 2:30 pm ET
                     </div>
-                    <div className="course-actions">
-                      <button className="btn-secondary">Details</button>
-                      <button className="btn-primary">Register</button>
+                    <div className="course-timing">
+                      1/20, Wednesday, 12pm - 2:30pm ET
                     </div>
+                  </div>
+                  <div className="course-actions">
+                    <button className="btn-secondary">Details</button>
+                    <button className="btn-primary">Register</button>
                   </div>
                 </div>
               </SwiperSlide>
               <SwiperSlide>
-                <div className="swiper-slide">
-                  <div className="course-item">
-                    <div className="course-item-header">
-                      <div className="course-title-duration">
-                        <div className="course-title">Chakra Kriya</div>
-                        <div className="course-type in-person">In Person</div>
-                        <div className="course-type online">Online</div>
-                      </div>
-                      <div className="course-price">
-                        <span>$100</span>
-                      </div>
+                <div className="course-item">
+                  <div className="course-item-header">
+                    <div className="course-title-duration">
+                      <div className="course-title">Chakra Kriya</div>
+                      <div className="course-type in-person">In Person</div>
+                      <div className="course-type online">Online</div>
                     </div>
-                    <div className="course-location">
-                      1901 Thornridge Cir. Shiloh, Hawaii 81063
+                    <div className="course-price">
+                      <span>$100</span>
                     </div>
-                    <div className="course-instructors">
-                      Cameron Williamson, Cameron Williamson
+                  </div>
+                  <div className="course-location">
+                    1901 Thornridge Cir. Shiloh, Hawaii 81063
+                  </div>
+                  <div className="course-instructors">
+                    Cameron Williamson, Cameron Williamson
+                  </div>
+                  <div className="course-timings">
+                    <div className="course-timing">
+                      1/18, Monday, 12pm - 2:30 pm ET
                     </div>
-                    <div className="course-timings">
-                      <div className="course-timing">
-                        1/18, Monday, 12pm - 2:30 pm ET
-                      </div>
-                      <div className="course-timing">
-                        1/19, Tuesdauy, 12pm - 2:30 pm ET
-                      </div>
-                      <div className="course-timing">
-                        1/20, Wednesday, 12pm - 2:30pm ET
-                      </div>
+                    <div className="course-timing">
+                      1/19, Tuesdauy, 12pm - 2:30 pm ET
                     </div>
-                    <div className="course-actions">
-                      <button className="btn-secondary">Details</button>
-                      <button className="btn-primary">Register</button>
+                    <div className="course-timing">
+                      1/20, Wednesday, 12pm - 2:30pm ET
                     </div>
+                  </div>
+                  <div className="course-actions">
+                    <button className="btn-secondary">Details</button>
+                    <button className="btn-primary">Register</button>
                   </div>
                 </div>
               </SwiperSlide>
               <SwiperSlide>
-                <div className="swiper-slide">
-                  <div className="course-item">
-                    <div className="course-item-header">
-                      <div className="course-title-duration">
-                        <div className="course-title">Chakra Kriya</div>
-                        <div className="course-type in-person">In Person</div>
-                        <div className="course-type online">Online</div>
-                      </div>
-                      <div className="course-price">
-                        <span>$100</span>
-                      </div>
+                <div className="course-item">
+                  <div className="course-item-header">
+                    <div className="course-title-duration">
+                      <div className="course-title">Chakra Kriya</div>
+                      <div className="course-type in-person">In Person</div>
+                      <div className="course-type online">Online</div>
                     </div>
-                    <div className="course-location">
-                      1901 Thornridge Cir. Shiloh, Hawaii 81063
+                    <div className="course-price">
+                      <span>$100</span>
                     </div>
-                    <div className="course-instructors">
-                      Cameron Williamson, Cameron Williamson
+                  </div>
+                  <div className="course-location">
+                    1901 Thornridge Cir. Shiloh, Hawaii 81063
+                  </div>
+                  <div className="course-instructors">
+                    Cameron Williamson, Cameron Williamson
+                  </div>
+                  <div className="course-timings">
+                    <div className="course-timing">
+                      1/18, Monday, 12pm - 2:30 pm ET
                     </div>
-                    <div className="course-timings">
-                      <div className="course-timing">
-                        1/18, Monday, 12pm - 2:30 pm ET
-                      </div>
-                      <div className="course-timing">
-                        1/19, Tuesdauy, 12pm - 2:30 pm ET
-                      </div>
-                      <div className="course-timing">
-                        1/20, Wednesday, 12pm - 2:30pm ET
-                      </div>
+                    <div className="course-timing">
+                      1/19, Tuesdauy, 12pm - 2:30 pm ET
                     </div>
-                    <div className="course-actions">
-                      <button className="btn-secondary">Details</button>
-                      <button className="btn-primary">Register</button>
+                    <div className="course-timing">
+                      1/20, Wednesday, 12pm - 2:30pm ET
                     </div>
+                  </div>
+                  <div className="course-actions">
+                    <button className="btn-secondary">Details</button>
+                    <button className="btn-primary">Register</button>
                   </div>
                 </div>
               </SwiperSlide>
               <SwiperSlide>
-                <div className="swiper-slide">
-                  <div className="course-item">
-                    <div className="course-item-header">
-                      <div className="course-title-duration">
-                        <div className="course-title">Blessings Course</div>
-                        <div className="course-type in-person">In Person</div>
-                      </div>
-                      <div className="course-price">
-                        <span>$100</span>
-                      </div>
+                <div className="course-item">
+                  <div className="course-item-header">
+                    <div className="course-title-duration">
+                      <div className="course-title">Blessings Course</div>
+                      <div className="course-type in-person">In Person</div>
                     </div>
-                    <div className="course-location">
-                      1901 Thornridge Cir. Shiloh, Hawaii 81063
+                    <div className="course-price">
+                      <span>$100</span>
                     </div>
-                    <div className="course-instructors">
-                      Cameron Williamson, Cameron Williamson
+                  </div>
+                  <div className="course-location">
+                    1901 Thornridge Cir. Shiloh, Hawaii 81063
+                  </div>
+                  <div className="course-instructors">
+                    Cameron Williamson, Cameron Williamson
+                  </div>
+                  <div className="course-timings">
+                    <div className="course-timing">
+                      1/18, Monday, 12pm - 2:30 pm ET
                     </div>
-                    <div className="course-timings">
-                      <div className="course-timing">
-                        1/18, Monday, 12pm - 2:30 pm ET
-                      </div>
-                      <div className="course-timing">
-                        1/19, Tuesdauy, 12pm - 2:30 pm ET
-                      </div>
-                      <div className="course-timing">
-                        1/20, Wednesday, 12pm - 2:30pm ET
-                      </div>
+                    <div className="course-timing">
+                      1/19, Tuesdauy, 12pm - 2:30 pm ET
                     </div>
-                    <div className="course-actions">
-                      <button className="btn-secondary">Details</button>
-                      <button className="btn-primary">Register</button>
+                    <div className="course-timing">
+                      1/20, Wednesday, 12pm - 2:30pm ET
                     </div>
+                  </div>
+                  <div className="course-actions">
+                    <button className="btn-secondary">Details</button>
+                    <button className="btn-primary">Register</button>
                   </div>
                 </div>
               </SwiperSlide>
               <SwiperSlide>
-                <div className="swiper-slide">
-                  <div className="course-item">
-                    <div className="course-item-header">
-                      <div className="course-title-duration">
-                        <div className="course-title">Chakra Kriya</div>
-                        <div className="course-type in-person">In Person</div>
-                        <div className="course-type online">Online</div>
-                      </div>
-                      <div className="course-price">
-                        <span>$100</span>
-                      </div>
+                <div className="course-item">
+                  <div className="course-item-header">
+                    <div className="course-title-duration">
+                      <div className="course-title">Chakra Kriya</div>
+                      <div className="course-type in-person">In Person</div>
+                      <div className="course-type online">Online</div>
                     </div>
-                    <div className="course-location">
-                      1901 Thornridge Cir. Shiloh, Hawaii 81063
+                    <div className="course-price">
+                      <span>$100</span>
                     </div>
-                    <div className="course-instructors">
-                      Cameron Williamson, Cameron Williamson
+                  </div>
+                  <div className="course-location">
+                    1901 Thornridge Cir. Shiloh, Hawaii 81063
+                  </div>
+                  <div className="course-instructors">
+                    Cameron Williamson, Cameron Williamson
+                  </div>
+                  <div className="course-timings">
+                    <div className="course-timing">
+                      1/18, Monday, 12pm - 2:30 pm ET
                     </div>
-                    <div className="course-timings">
-                      <div className="course-timing">
-                        1/18, Monday, 12pm - 2:30 pm ET
-                      </div>
-                      <div className="course-timing">
-                        1/19, Tuesdauy, 12pm - 2:30 pm ET
-                      </div>
-                      <div className="course-timing">
-                        1/20, Wednesday, 12pm - 2:30pm ET
-                      </div>
+                    <div className="course-timing">
+                      1/19, Tuesdauy, 12pm - 2:30 pm ET
                     </div>
-                    <div className="course-actions">
-                      <button className="btn-secondary">Details</button>
-                      <button className="btn-primary">Register</button>
+                    <div className="course-timing">
+                      1/20, Wednesday, 12pm - 2:30pm ET
                     </div>
+                  </div>
+                  <div className="course-actions">
+                    <button className="btn-secondary">Details</button>
+                    <button className="btn-primary">Register</button>
                   </div>
                 </div>
               </SwiperSlide>
@@ -682,7 +834,7 @@ const ProfileLanding = () => {
                 prevEl: '.slide-button-activities-prev',
                 nextEl: '.slide-button-activities-next',
               }}
-              onInit={(swiper) => {
+              onAfterInit={(swiper) => {
                 swiper.params.navigation.prevEl =
                   '.slide-button-activities-prev';
                 swiper.params.navigation.nextEl =
@@ -703,431 +855,13 @@ const ProfileLanding = () => {
                   </div>
                 </div>
               </div>
-              {meetups.map((item) => {
-                const {
-                  sfid,
-                  meetupTitle,
-                  mode,
-                  locationPostalCode,
-                  locationCity,
-                  locationProvince,
-                  locationStreet,
-                  eventStartDate,
-                  eventEndDate,
-                  eventTimeZone,
-                  primaryTeacherName,
-                  coTeacher1Name,
-                  meetupDuration,
-                } = item || {};
-                const updateMeetupDuration = meetupDuration?.replace(
-                  /Minutes/g,
-                  'Min',
-                );
-                const isOnline = mode === COURSE_MODES.ONLINE.value;
-
+              {preferredEvents.map((item) => {
                 return (
-                  <SwiperSlide key={sfid}>
-                    <div className="course-item">
-                      <div className="course-item-header">
-                        <div className="course-title-duration">
-                          <div className="course-title">{meetupTitle}</div>
-                          <div
-                            className={`course-type ${isOnline ? 'online' : 'in-person'}`}
-                          >
-                            {mode}
-                          </div>
-                          <div className="course-type duration">
-                            {getCourseDuration(
-                              eventStartDate,
-                              eventEndDate,
-                              eventTimeZone,
-                            )}
-                          </div>
-                        </div>
-                      </div>
-                      {mode !== 'Online' && locationCity && (
-                        <div className="course-location">
-                          {concatenateStrings([
-                            locationStreet,
-                            locationCity,
-                            locationProvince,
-                            locationPostalCode,
-                          ])}
-                        </div>
-                      )}
-                      <div class="course-instructors">
-                        {concatenateStrings([
-                          primaryTeacherName,
-                          coTeacher1Name,
-                        ])}
-                      </div>
-                      <div className="course-timings">
-                        <div className="course-timing">
-                          {getMeetupDuration(item, updateMeetupDuration)}
-                        </div>
-                      </div>
-
-                      <div className="course-actions">
-                        <button
-                          className="btn-primary"
-                          onClick={enrollMeetupAction(item)}
-                        >
-                          Enroll
-                        </button>
-                      </div>
-                    </div>
+                  <SwiperSlide key={item.id}>
+                    <PreferredCenterComp item={item} />
                   </SwiperSlide>
                 );
               })}
-              {workshops.map((item) => {
-                const {
-                  sfid,
-                  title,
-                  mode,
-                  locationPostalCode,
-                  locationCity,
-                  locationProvince,
-                  locationStreet,
-                  timings,
-                  eventStartDate,
-                  eventEndDate,
-                  eventTimeZone,
-                  primaryTeacherName,
-                  coTeacher1Name,
-                } = item || {};
-                const isOnline = mode === COURSE_MODES.ONLINE.value;
-
-                return (
-                  <SwiperSlide key={sfid}>
-                    <div className="course-item">
-                      <div className="course-item-header">
-                        <div className="course-title-duration">
-                          <div className="course-title">{title}</div>
-                          <div
-                            className={`course-type ${isOnline ? 'online' : 'in-person'}`}
-                          >
-                            {mode}
-                          </div>
-                          <div className="course-type duration">
-                            {getCourseDuration(
-                              eventStartDate,
-                              eventEndDate,
-                              eventTimeZone,
-                            )}
-                          </div>
-                        </div>
-                      </div>
-                      {mode !== 'Online' && locationCity && (
-                        <div className="course-location">
-                          {concatenateStrings([
-                            locationStreet,
-                            locationCity,
-                            locationProvince,
-                            locationPostalCode,
-                          ])}
-                        </div>
-                      )}
-                      <div class="course-instructors">
-                        {concatenateStrings([
-                          primaryTeacherName,
-                          coTeacher1Name,
-                        ])}
-                      </div>
-                      {timings?.length > 0 && (
-                        <div class="course-timings">
-                          {timings.map((time, i) => {
-                            return (
-                              <div className="course-timing" key={i}>
-                                <span>
-                                  {dayjs.utc(time.startDate).format('M/D ddd')}
-                                </span>
-                                {`, ${tConvert(time.startTime)} - ${tConvert(time.endTime)} ${
-                                  ABBRS[time.timeZone]
-                                }`}
-                              </div>
-                            );
-                          })}
-                        </div>
-                      )}
-
-                      <div className="course-actions">
-                        <button
-                          className="btn-primary"
-                          onClick={enrollWorkshopAction(item)}
-                        >
-                          Enroll
-                        </button>
-                      </div>
-                    </div>
-                  </SwiperSlide>
-                );
-              })}
-              {ticketdEvents.map((item) => {
-                const {
-                  sfid,
-                  title,
-                  mode,
-                  locationPostalCode,
-                  locationCity,
-                  locationProvince,
-                  locationStreet,
-                  timings,
-                  eventStartDate,
-                  eventEndDate,
-                  eventTimeZone,
-                  primaryTeacherName,
-                  coTeacher1Name,
-                } = item || {};
-                const isOnline = mode === COURSE_MODES.ONLINE.value;
-
-                return (
-                  <SwiperSlide key={sfid}>
-                    <div className="course-item">
-                      <div className="course-item-header">
-                        <div className="course-title-duration">
-                          <div className="course-title">{title}</div>
-                          <div
-                            className={`course-type ${isOnline ? 'online' : 'in-person'}`}
-                          >
-                            {mode}
-                          </div>
-                          <div className="course-type duration">
-                            {getCourseDuration(
-                              eventStartDate,
-                              eventEndDate,
-                              eventTimeZone,
-                            )}
-                          </div>
-                        </div>
-                      </div>
-                      {mode !== 'Online' && locationCity && (
-                        <div className="course-location">
-                          {concatenateStrings([
-                            locationStreet,
-                            locationCity,
-                            locationProvince,
-                            locationPostalCode,
-                          ])}
-                        </div>
-                      )}
-                      <div class="course-instructors">
-                        {concatenateStrings([
-                          primaryTeacherName,
-                          coTeacher1Name,
-                        ])}
-                      </div>
-
-                      {timings?.length > 0 && (
-                        <div class="course-timings">
-                          {timings.map((time, i) => {
-                            return (
-                              <div className="course-timing" key={i}>
-                                <span>
-                                  {dayjs.utc(time.startDate).format('M/D ddd')}
-                                </span>
-                                {`, ${tConvert(time.startTime)} - ${tConvert(time.endTime)} ${
-                                  ABBRS[time.timeZone]
-                                }`}
-                              </div>
-                            );
-                          })}
-                        </div>
-                      )}
-
-                      <div className="course-actions">
-                        <button
-                          className="btn-primary"
-                          onClick={enrollEventAction(item)}
-                        >
-                          Enroll
-                        </button>
-                      </div>
-                      <div className="event-categories">
-                        <div className="cat-item">Silver</div>
-                        <div className="cat-item">General</div>
-                        <div className="cat-item">General</div>
-                      </div>
-                    </div>
-                  </SwiperSlide>
-                );
-              })}
-              <SwiperSlide>
-                <div className="swiper-slide">
-                  <div className="course-item">
-                    <div className="course-item-header">
-                      <div className="course-title-duration">
-                        <div className="course-title">Community Meditation</div>
-                        <div className="course-type in-person">In Person</div>
-                        <div className="course-type duration">
-                          Feb 07, 6:30 PM ET, 75 Min
-                        </div>
-                      </div>
-                    </div>
-                    <div className="course-location">
-                      1901 Thornridge Cir. Shiloh, Hawaii 81063
-                    </div>
-                    <div className="course-date">
-                      Mon, May 13, 2024 - Mon, May 13, 2024
-                    </div>
-                    <div className="course-time">
-                      Mon, May 13, 2024 - Mon, May 13, 2024
-                    </div>
-                    <div className="course-actions">
-                      <button className="btn-primary">Enroll</button>
-                    </div>
-                  </div>
-                </div>
-              </SwiperSlide>
-              <SwiperSlide>
-                <div className="swiper-slide">
-                  <div className="course-item">
-                    <div className="course-item-header">
-                      <div className="course-title-duration">
-                        <div className="course-title">Community Meditation</div>
-                        <div className="course-type in-person">In Person</div>
-                        <div className="course-type duration">
-                          Feb 07, 6:30 PM ET, 75 Min
-                        </div>
-                      </div>
-                    </div>
-                    <div className="course-location">
-                      1901 Thornridge Cir. Shiloh, Hawaii 81063
-                    </div>
-                    <div className="course-date">
-                      Mon, May 13, 2024 - Mon, May 13, 2024
-                    </div>
-                    <div className="course-time">
-                      Mon, May 13, 2024 - Mon, May 13, 2024
-                    </div>
-                    <div className="course-actions">
-                      <button className="btn-primary">Enroll</button>
-                    </div>
-                  </div>
-                </div>
-              </SwiperSlide>
-              <SwiperSlide>
-                <div className="swiper-slide">
-                  <div className="course-item">
-                    <div className="course-item-header">
-                      <div className="course-title-duration">
-                        <div className="course-title">Community Meditation</div>
-                        <div className="course-type in-person">In Person</div>
-                        <div className="course-type duration">
-                          Feb 07, 6:30 PM ET, 75 Min
-                        </div>
-                      </div>
-                    </div>
-                    <div className="course-location">
-                      1901 Thornridge Cir. Shiloh, Hawaii 81063
-                    </div>
-                    <div className="course-date">
-                      Mon, May 13, 2024 - Mon, May 13, 2024
-                    </div>
-                    <div className="course-time">
-                      Mon, May 13, 2024 - Mon, May 13, 2024
-                    </div>
-                    <div className="course-actions">
-                      <button className="btn-primary">Enroll</button>
-                    </div>
-                  </div>
-                </div>
-              </SwiperSlide>
-              <SwiperSlide>
-                <div className="swiper-slide">
-                  <div className="course-item">
-                    <div className="course-item-header">
-                      <div className="course-title-duration">
-                        <div className="course-title">Community Meditation</div>
-                        <div className="course-type in-person">In Person</div>
-                        <div className="course-type duration">
-                          Feb 07, 6:30 PM ET, 75 Min
-                        </div>
-                      </div>
-                    </div>
-                    <div className="course-location">
-                      1901 Thornridge Cir. Shiloh, Hawaii 81063
-                    </div>
-                    <div className="course-date">
-                      Mon, May 13, 2024 - Mon, May 13, 2024
-                    </div>
-                    <div className="course-time">
-                      Mon, May 13, 2024 - Mon, May 13, 2024
-                    </div>
-                    <div className="event-categories">
-                      <div className="cat-item">Silver</div>
-                      <div className="cat-item">General</div>
-                      <div className="cat-item">General</div>
-                    </div>
-                    <div className="course-actions">
-                      <button className="btn-primary">Enroll</button>
-                    </div>
-                  </div>
-                </div>
-              </SwiperSlide>
-              <SwiperSlide>
-                <div className="swiper-slide">
-                  <div className="course-item">
-                    <div className="course-item-header">
-                      <div className="course-title-duration">
-                        <div className="course-title">Community Meditation</div>
-                        <div className="course-type in-person">In Person</div>
-                        <div className="course-type duration">
-                          Feb 07, 6:30 PM ET, 75 Min
-                        </div>
-                      </div>
-                    </div>
-                    <div className="course-location">
-                      1901 Thornridge Cir. Shiloh, Hawaii 81063
-                    </div>
-                    <div className="course-date">
-                      Mon, May 13, 2024 - Mon, May 13, 2024
-                    </div>
-                    <div className="course-time">
-                      Mon, May 13, 2024 - Mon, May 13, 2024
-                    </div>
-                    <div className="event-categories">
-                      <div className="cat-item">Silver</div>
-                      <div className="cat-item">General</div>
-                      <div className="cat-item">General</div>
-                    </div>
-                    <div className="course-actions">
-                      <button className="btn-primary">Enroll</button>
-                    </div>
-                  </div>
-                </div>
-              </SwiperSlide>
-              <SwiperSlide>
-                <div className="swiper-slide">
-                  <div className="course-item">
-                    <div className="course-item-header">
-                      <div className="course-title-duration">
-                        <div className="course-title">Community Meditation</div>
-                        <div className="course-type in-person">In Person</div>
-                        <div className="course-type duration">
-                          Feb 07, 6:30 PM ET, 75 Min
-                        </div>
-                      </div>
-                    </div>
-                    <div className="course-location">
-                      1901 Thornridge Cir. Shiloh, Hawaii 81063
-                    </div>
-                    <div className="course-date">
-                      Mon, May 13, 2024 - Mon, May 13, 2024
-                    </div>
-                    <div className="course-time">
-                      Mon, May 13, 2024 - Mon, May 13, 2024
-                    </div>
-                    <div className="event-categories">
-                      <div className="cat-item">Silver</div>
-                      <div className="cat-item">General</div>
-                      <div className="cat-item">General</div>
-                    </div>
-                    <div className="course-actions">
-                      <button className="btn-primary">Enroll</button>
-                    </div>
-                  </div>
-                </div>
-              </SwiperSlide>
             </Swiper>
           </div>
         </div>
