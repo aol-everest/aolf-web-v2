@@ -13,8 +13,6 @@ import {
   PAYMENT_TYPES,
 } from '@constants';
 import { useAuth, useGlobalAlertContext } from '@contexts';
-import { useQueryString } from '@hooks';
-import { PayPalButtons, PayPalScriptProvider } from '@paypal/react-paypal-js';
 import { pushRouteWithUTMQuery } from '@service';
 import {
   PaymentElement,
@@ -34,12 +32,11 @@ import { Formik } from 'formik';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import * as Yup from 'yup';
-import { DiscountInputNew } from '@components/discountInputNew';
 import { ScheduleAgreementForm } from '@components/scheduleAgreementForm';
 import { useRef } from 'react';
-import { PayWithNewCheckout } from '@components/checkout/PayWithNewCheckout';
 import CostDetailsCardNewCheckout from '@components/checkout/CostDetailsCardNewCheckout';
 import { Loader } from '@components';
+import { DropdownNewCheckout } from '@components/checkout/DropdownNewCheckout';
 
 const advancedFormat = require('dayjs/plugin/advancedFormat');
 dayjs.extend(advancedFormat);
@@ -103,7 +100,20 @@ export const PaymentFormBundle = ({
     otherPaymentOptionAvailable,
     showSecondCourseButton,
     isOnlyBundleCheckout,
+    whereDidYouHear,
   } = bundle || {};
+
+  // Split the string by ';'
+  const whereDidYouHearItems = (whereDidYouHear || '').split(';');
+
+  const whereDidYouHearOptions = whereDidYouHearItems.map((item) => {
+    const [label] = item.split(' : '); // Split once and use the first part for both label and value
+
+    return {
+      label: label.trim(), // Ensure the label is trimmed
+      value: label.trim(), // Use the same trimmed label for value
+    };
+  });
 
   const {
     first_name,
@@ -151,6 +161,8 @@ export const PaymentFormBundle = ({
       firstName,
       lastName,
       email,
+      whereDidYouHearAnswer,
+      whereDidYouHearAnswerOther,
     } = values;
 
     try {
@@ -163,6 +175,7 @@ export const PaymentFormBundle = ({
 
       let payLoad = {
         shoppingRequest: {
+          whereDidYouHear: whereDidYouHearAnswer,
           couponCode: '',
           contactAddress: {
             contactPhone,
@@ -195,6 +208,10 @@ export const PaymentFormBundle = ({
             email: email,
           },
         };
+      }
+
+      if (whereDidYouHearAnswer === 'Other') {
+        payLoad.shoppingRequest.whereDidYouHear = whereDidYouHearAnswerOther;
       }
 
       //token.saveCardForFuture = true;
@@ -270,6 +287,14 @@ export const PaymentFormBundle = ({
         'Please check the box in order to continue.',
         (value) => value === true,
       ),
+    whereDidYouHearAnswer: Yup.string().required(
+      'Where did you hear is required',
+    ),
+    whereDidYouHearAnswerOther: Yup.string().when('whereDidYouHearAnswer', {
+      is: 'Other',
+      then: Yup.string().required('Other is required'),
+      otherwise: Yup.string().notRequired(),
+    }),
   });
 
   const paymentElementOptions = {
@@ -385,6 +410,55 @@ export const PaymentFormBundle = ({
                               formikProps={formikProps}
                               isLoggedUser={isLoggedUser}
                             />
+                            <div className="form-inputs">
+                              <DropdownNewCheckout
+                                label="How did you find out about this program?"
+                                formikProps={formikProps}
+                                formikKey="whereDidYouHearAnswer"
+                                options={whereDidYouHearOptions}
+                                containerClass="form-item required"
+                              ></DropdownNewCheckout>
+
+                              <div className="form-item required">
+                                {formikProps.values.whereDidYouHearAnswer ===
+                                  'Other' && (
+                                  <>
+                                    <label for="other" className="opacity-0">
+                                      Other
+                                    </label>
+                                    <input
+                                      type="text"
+                                      name="whereDidYouHearAnswerOther"
+                                      className={
+                                        formikProps.errors
+                                          .whereDidYouHearAnswerOther &&
+                                        formikProps.touched
+                                          .whereDidYouHearAnswerOther
+                                          ? 'error'
+                                          : ''
+                                      }
+                                      value={
+                                        formikProps.values
+                                          .whereDidYouHearAnswerOther
+                                      }
+                                      onChange={formikProps.handleChange}
+                                      onBlur={formikProps.handleBlur}
+                                    />
+                                    {formikProps.errors
+                                      .whereDidYouHearAnswerOther &&
+                                      formikProps.touched
+                                        .whereDidYouHearAnswerOther && (
+                                        <div className="validation-input">
+                                          {
+                                            formikProps.errors
+                                              .whereDidYouHearAnswerOther
+                                          }
+                                        </div>
+                                      )}
+                                  </>
+                                )}
+                              </div>
+                            </div>
                           </form>
                         </div>
                       </div>
