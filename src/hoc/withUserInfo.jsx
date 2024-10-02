@@ -124,7 +124,7 @@ export const withUserInfo = (WrappedComponent) => {
       { href: CARD_DETAILS, label: 'Payment' },
       { href: CHANGE_PASSWORD, label: 'Change Password' },
       { href: PAST_COURSES, label: 'Past Courses' },
-      { href: UPCOMING_EVENTS, label: 'Upcoming Courses' },
+      { href: UPCOMING_EVENTS, label: 'Upcoming Events' },
       { href: PREFERENCES, label: 'Preferences' },
       // { href: REFER_A_FRIEND, label: 'Refer a Friend' },
     ];
