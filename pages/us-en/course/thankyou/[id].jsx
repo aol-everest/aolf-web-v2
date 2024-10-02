@@ -106,7 +106,19 @@ function getLastElement(arr) {
   }
 }
 
-const Thankyou = () => {
+export async function getServerSideProps({ req }) {
+  const protocol = req.headers['x-forwarded-proto'] || 'http';
+  const host = req.headers.host;
+  const currentHost = `${protocol}://${host}`;
+
+  return {
+    props: {
+      currentHost,
+    },
+  };
+}
+
+const Thankyou = ({ currentHost }) => {
   const router = useRouter();
   const { showAlert, hideAlert } = useGlobalAlertContext();
   const { track, page, identify } = useAnalytics();
@@ -262,6 +274,9 @@ const Thankyou = () => {
         coupon_code: isTalkableCoupon ? couponCode || '' : '', // Coupon code that was used at checkout (pass multiple as an array). Example: 'SAVE20'
         shipping_address: '',
         shipping_zip: '',
+        sku: productTypeId, // Product ID unique identifier
+        title: workshop?.title, // Title of the product
+        url: `${currentHost}/us-en/course/${courseId}`,
       },
       {
         email: userEmail,

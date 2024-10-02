@@ -223,6 +223,10 @@ export const PaymentFormNew = ({
     }
   }
 
+  const validateDiscount = !(
+    UpdatedFeeAfterCredits === 0 || workshop?.unitPrice === 0
+  );
+
   const logout = async (e) => {
     if (e) e.preventDefault();
     await signOut();
@@ -1796,18 +1800,20 @@ export const PaymentFormNew = ({
                         </div>
                         <div className="section-box confirm-submit">
                           <div className="section__body">
-                            <div className="form-item required">
-                              <DiscountInputNew
-                                formikProps={formikProps}
-                                placeholder="Discount"
-                                formikKey="couponCode"
-                                product={productId}
-                                applyDiscount={applyDiscount}
-                                addOnProducts={addOnProducts}
-                                containerClass={`tickets-modal__input-label tickets-modal__input-label--top`}
-                                label="Discount Code"
-                              ></DiscountInputNew>
-                            </div>
+                            {validateDiscount && (
+                              <div className="form-item required">
+                                <DiscountInputNew
+                                  formikProps={formikProps}
+                                  placeholder="Discount"
+                                  formikKey="couponCode"
+                                  product={productId}
+                                  applyDiscount={applyDiscount}
+                                  addOnProducts={addOnProducts}
+                                  containerClass={`tickets-modal__input-label tickets-modal__input-label--top`}
+                                  label="Discount Code"
+                                ></DiscountInputNew>
+                              </div>
+                            )}
                             <ScheduleAgreementForm
                               formikProps={formikProps}
                               complianceQuestionnaire={complianceQuestionnaire}
