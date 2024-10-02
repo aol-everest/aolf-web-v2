@@ -19,7 +19,6 @@ function convertUndefinedToNull(obj) {
   if (obj && typeof obj === 'object') {
     // Iterate over each key in the object
     for (const key in obj) {
-      console.log(key, obj[key]);
       if (obj[key] === undefined) {
         // Convert undefined to null
         obj[key] = null;
