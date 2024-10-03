@@ -57,6 +57,29 @@
       font-size: 18px;
     }
 
+    &__description.course-highlights-info-box {
+      ul {
+        margin-bottom: 1rem;
+        > li {
+          position: relative;
+          padding: 0px 0px 10px 20px;
+          &::before {
+            position: absolute;
+            top: 0px;
+            margin: 0px 0 0 -32px;
+            content: '';
+            vertical-align: middle;
+            display: inline-block;
+            background: rgb(249 115 22) url(/img/checkicon-css.svg) no-repeat
+              center;
+            width: 20px;
+            height: 20px;
+            border-radius: 4px;
+          }
+        }
+      }
+    }
+
     &__btn-course {
       border-radius: 8px;
       height: 52px;
