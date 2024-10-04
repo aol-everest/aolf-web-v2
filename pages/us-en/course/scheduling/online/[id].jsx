@@ -468,7 +468,7 @@ const SchedulingOnlineFlow = () => {
           }}
         >
           {(formikProps) => {
-            const { values, setTouched, setErrors } = formikProps;
+            const { values, setTouched, setErrors, errors } = formikProps;
             formikOnChange(values);
             return (
               <main className="scheduling-page">
@@ -542,7 +542,7 @@ const SchedulingOnlineFlow = () => {
                         </div>
                         <div className="checkout-course-info-box">
                           <div className="info-box-icon">
-                            <span className="icon-aol iconaol-clock"></span>
+                            <span className="icon-aol iconaol-calendar "></span>
                           </div>
                           <div className="info-box-details">
                             <div className="info-box-title">Date:</div>
@@ -563,14 +563,14 @@ const SchedulingOnlineFlow = () => {
                             </div>
                             <div className="info-link">
                               <a href="#" onClick={handleChangeDates}>
-                                Switch cohort
+                                Change Dates
                               </a>
                             </div>
                           </div>
                         </div>
                         <div className="checkout-course-info-box">
                           <div className="info-box-icon">
-                            <span className="icon-aol iconaol-calendar"></span>
+                            <span className="icon-aol iconaol-clock"></span>
                           </div>
                           <div className="info-box-details">
                             <div className="info-box-title">Timing:</div>
@@ -718,7 +718,9 @@ const SchedulingOnlineFlow = () => {
                               <button
                                 className="submit-btn"
                                 type="button"
-                                disabled={loading || !values.email}
+                                disabled={
+                                  loading || !values.email || errors.email
+                                }
                                 onClick={(e) => {
                                   e.preventDefault();
                                   setEmailAddressAdded(true);
@@ -731,8 +733,14 @@ const SchedulingOnlineFlow = () => {
                             )}
                           </div>
                           <div className="checkout-tnc">
-                            By continuing, you agree to <a href="#">Terms</a>{' '}
-                            and <a href="#">Privacy Policy</a>
+                            By continuing, you agree to{' '}
+                            <a href="https://www.artofliving.org/us-en/terms-of-use?_gl=1*uug117*_gcl_au*NzgyODQ2MzUyLjE3MjUzODUxMTk.*_ga*MTM4MjM1NDQ1Ny4xNzA5NTc3NjY4*_ga_53SWQFSBV0*MTcyNzg4MzE0NC43MC4xLjE3Mjc4ODUxMTYuNTguMC4w">
+                              Terms
+                            </a>{' '}
+                            and{' '}
+                            <a href="https://www.artofliving.org/us-en/privacy-policy?_gl=1*ndkz6k*_gcl_au*NzgyODQ2MzUyLjE3MjUzODUxMTk.*_ga*MTM4MjM1NDQ1Ny4xNzA5NTc3NjY4*_ga_53SWQFSBV0*MTcyNzg4MzE0NC43MC4xLjE3Mjc4ODUxMjAuNTQuMC4w">
+                              Privacy Policy
+                            </a>
                           </div>
                         </div>
                       </div>
