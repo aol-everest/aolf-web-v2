@@ -52,7 +52,7 @@
     "@uidotdev/usehooks": "^2.4.1",
     "amazon-cognito-auth-js": "^1.3.3",
     "amazon-cognito-identity-js": "^6.3.12",
-    "amazon-cognito-passwordless-auth": "^0.13.2",
+    "amazon-cognito-passwordless-auth": "^0.14.2",
     "analytics": "^0.8.11",
     "append-query": "^2.1.1",
     "aws-amplify": "^6.3.0",
