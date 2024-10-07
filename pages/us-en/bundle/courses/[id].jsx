@@ -63,6 +63,21 @@ export async function getServerSideProps(context) {
         defaultCourseType = value;
       }
     }
+    if (bundle.package) {
+      const slug = bundle.package.packageMasterTitle
+        .toLowerCase()
+        .replace(/\s+/g, '-');
+
+      allowCourseTypes = {
+        ...allowCourseTypes,
+        [slug]: {
+          slug: slug, // Slug in lowercase and without spaces
+          name: bundle.package.packageMasterTitle,
+          value: bundle.package.packageMasterCtypeId,
+          description: bundle.package.packageMasterCalenderViewDescription,
+        },
+      };
+    }
   } catch (error) {
     console.error('Failed to fetch ZIP code by IP');
   }
@@ -81,7 +96,7 @@ const getCourseTypes = (comboDetails, onlyMain = false) => {
           for (const courseKey in COURSE_TYPES) {
             const course = COURSE_TYPES[courseKey];
             if (course.value.includes(productTypeId)) {
-              accumulator[courseKey] = course;
+              accumulator[course.slug] = course;
             }
           }
         });
@@ -344,26 +359,6 @@ const CourseTile = ({ data, isAuthenticated, courseTypeFilter }) => {
   );
 };
 
-const COURSE_TYPES_OPTIONS = COURSE_TYPES_MASTER[orgConfig.name].reduce(
-  (accumulator, currentValue) => {
-    const courseTypes = Object.entries(currentValue.courseTypes).reduce(
-      (courseTypes, [key, value]) => {
-        if (COURSE_TYPES[key]) {
-          return {
-            ...courseTypes,
-            [COURSE_TYPES[key].slug]: { ...COURSE_TYPES[key], ...value },
-          };
-        } else {
-          return courseTypes;
-        }
-      },
-      {},
-    );
-    return { ...accumulator, ...courseTypes };
-  },
-  {},
-);
-
 const Course = ({ bundle, allowCourseTypes }) => {
   const { track, page } = useAnalytics();
   const { ref, inView } = useInView({
@@ -379,7 +374,7 @@ const Course = ({ bundle, allowCourseTypes }) => {
 
   const [courseTypeFilter, setCourseTypeFilter] = useQueryState(
     'course-type',
-    parseCourseType(COURSE_TYPES_OPTIONS),
+    parseCourseType(allowCourseTypes),
   );
   const [onlyWeekend, setOnlyWeekend] = useQueryState(
     'onlyWeekend',
