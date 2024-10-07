@@ -851,7 +851,7 @@ const Thankyou = ({ currentHost }) => {
                               >
                                 {workshop.locationStreet && (
                                   <li className="tw-truncate tw-text-sm tw-tracking-tighter !tw-text-[#3d8be8]">
-                                    {workshop.locationStreet}
+                                    {`${workshop.locationStreet}, `}
                                   </li>
                                 )}
                                 <li className="tw-truncate tw-text-sm tw-tracking-tighter !tw-text-[#3d8be8]">

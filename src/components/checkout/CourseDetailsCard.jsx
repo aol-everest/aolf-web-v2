@@ -160,7 +160,7 @@ export const CourseDetailsCard = ({ workshop, ...rest }) => {
                   >
                     {workshop.locationStreet && (
                       <li className="tw-truncate tw-text-sm tw-tracking-tighter">
-                        {workshop.locationStreet}
+                        {`${workshop.locationStreet}, `}
                       </li>
                     )}
                     <li className="tw-truncate tw-text-sm tw-tracking-tighter">

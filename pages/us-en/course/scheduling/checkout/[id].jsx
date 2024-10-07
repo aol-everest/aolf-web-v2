@@ -1157,7 +1157,7 @@ const SchedulingPaymentForm = ({
                                             rel="noreferrer"
                                           >
                                             {workshop.locationStreet &&
-                                              workshop.locationStreet}
+                                              `${workshop.locationStreet}, `}
                                             {workshop.locationCity || ''}
                                             {', '}
                                             {workshop.locationProvince ||

@@ -267,6 +267,261 @@ const PreferredCenterComp = ({ item }) => {
   }
 };
 
+const UpcomingEventsComp = ({ item }) => {
+  const {
+    sfid,
+    title,
+    meetupTitle,
+    mode,
+    primaryTeacherName,
+    eventType,
+    meetupDuration,
+    locationPostalCode,
+    isOnlineMeetup,
+    locationCity,
+    locationProvince,
+    locationStreet,
+    centerName,
+    coTeacher1Name,
+    timings,
+    productTypeId,
+    eventImageUrl,
+    streetAddress1,
+    streetAddress2,
+    city,
+    state,
+    zip,
+  } = item || {};
+  const isOnline = mode === COURSE_MODES.ONLINE.value;
+  const updateMeetupDuration = meetupDuration?.replace(/Minutes/g, 'Min');
+  const slug = findSlugByProductTypeId(productTypeId);
+
+  switch (eventType) {
+    case 'Event':
+      return (
+        <div className="flip-card">
+          <div className="flip-card-inner">
+            <div className="flip-card-front">
+              <div className="ds-course-item">
+                <div className="ds-image-wrap">
+                  <img
+                    src={eventImageUrl || '/img/silent-retreat-bg@2x.png'}
+                    alt="course"
+                  />
+                </div>
+                <div className="ds-course-header">
+                  <div className="play-time">Event</div>
+                </div>
+                <div className="ds-course-info">
+                  <div className="ds-course-title">{title}</div>
+                </div>
+              </div>
+            </div>
+            <div className="flip-card-back">
+              <div className="course-item">
+                <div className="course-item-header">
+                  <div className="course-title-duration">
+                    <div className="course-title">{title}</div>
+                    <div
+                      className={`course-type ${isOnline ? 'online' : 'in-person'}`}
+                    >
+                      {mode}
+                    </div>
+                  </div>
+                </div>
+                {mode === COURSE_MODES.ONLINE.value
+                  ? mode
+                  : (mode === COURSE_MODES.IN_PERSON.value ||
+                      mode === COURSE_MODES.DESTINATION_RETREATS.value) && (
+                      <span>
+                        {streetAddress1 && `${streetAddress1}, `}
+                        {streetAddress2 && `${streetAddress2}, `}
+                        {city || ''}
+                        {', '}
+                        {state || ''} {zip || ''}
+                      </span>
+                    )}
+
+                <div className="course-instructors">
+                  {concatenateStrings([primaryTeacherName, coTeacher1Name])}
+                </div>
+                {timings?.length > 0 ? (
+                  <div className="course-timings">
+                    {timings.map((time, i) => {
+                      return (
+                        <div className="course-timing" key={i}>
+                          <span>
+                            {dayjs.utc(time.startDate).format('MM/DD dddd')}
+                          </span>
+                          {`, ${tConvert(time.startTime)} - ${tConvert(time.endTime)} ${
+                            ABBRS[time.timeZone]
+                          }`}
+                        </div>
+                      );
+                    })}
+                  </div>
+                ) : (
+                  <div className="course-timings">
+                    <div className="course-timing">
+                      {getMeetupDuration(item, updateMeetupDuration)}
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      );
+    case 'Meetup':
+      return (
+        <div className="flip-card">
+          <div className="flip-card-inner">
+            <div className="flip-card-front">
+              <div className="ds-course-item">
+                <div className="ds-image-wrap">
+                  <img src={`/img/silent-retreat-bg@2x.png`} alt="course" />
+                </div>
+                <div className="ds-course-header">
+                  <div className="play-time">Meetup</div>
+                </div>
+                <div className="ds-course-info">
+                  <div className="ds-course-title">{meetupTitle}</div>
+                </div>
+              </div>
+            </div>
+            <div className="flip-card-back">
+              <div className="course-item">
+                <div className="course-item-header">
+                  <div className="course-title-duration">
+                    <div className="course-title">{meetupTitle}</div>
+                    <div
+                      className={`course-type ${isOnline ? 'online' : 'in-person'}`}
+                    >
+                      {mode}
+                    </div>
+                  </div>
+                </div>
+
+                <div className="course-location">
+                  {isOnlineMeetup ? (
+                    'Live Streaming from' + ' ' + centerName
+                  ) : (
+                    <>
+                      {locationCity
+                        ? concatenateStrings([
+                            locationCity,
+                            locationProvince,
+                            locationPostalCode,
+                          ])
+                        : centerName}
+                    </>
+                  )}
+                </div>
+
+                <div className="course-instructors">
+                  {concatenateStrings([primaryTeacherName, coTeacher1Name])}
+                </div>
+                {timings?.length > 0 ? (
+                  <div className="course-timings">
+                    {timings.map((time, i) => {
+                      return (
+                        <div className="course-timing" key={i}>
+                          <span>
+                            {dayjs.utc(time.startDate).format('MM/DD dddd')}
+                          </span>
+                          {`, ${tConvert(time.startTime)} - ${tConvert(time.endTime)} ${
+                            ABBRS[time.timeZone]
+                          }`}
+                        </div>
+                      );
+                    })}
+                  </div>
+                ) : (
+                  <div className="course-timings">
+                    <div className="course-timing">
+                      {getMeetupDuration(item, updateMeetupDuration)}
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      );
+    case 'Workshop':
+      return (
+        <div className="flip-card">
+          <div className="flip-card-inner">
+            <div className="flip-card-front">
+              <div className="ds-course-item">
+                <div className="ds-image-wrap">
+                  <img src={`/img/courses/${slug}.webp`} alt="course" />
+                </div>
+                <div className="ds-course-header">
+                  <div className="play-time">Course</div>
+                </div>
+                <div className="ds-course-info">
+                  <div className="ds-course-title">{title}</div>
+                </div>
+              </div>
+            </div>
+            <div className="flip-card-back">
+              <div className="course-item">
+                <div className="course-item-header">
+                  <div className="course-title-duration">
+                    <div className="course-title">{title}</div>
+                    <div
+                      className={`course-type ${isOnline ? 'online' : 'in-person'}`}
+                    >
+                      {mode}
+                    </div>
+                  </div>
+                </div>
+
+                {mode !== 'Online' && locationCity && (
+                  <div className="course-location">
+                    {concatenateStrings([
+                      locationStreet,
+                      locationCity,
+                      locationProvince,
+                      locationPostalCode,
+                    ])}
+                  </div>
+                )}
+
+                <div className="course-instructors">
+                  {concatenateStrings([primaryTeacherName, coTeacher1Name])}
+                </div>
+                {timings?.length > 0 ? (
+                  <div className="course-timings">
+                    {timings.map((time, i) => {
+                      return (
+                        <div className="course-timing" key={i}>
+                          <span>
+                            {dayjs.utc(time.startDate).format('MM/DD dddd')}
+                          </span>
+                          {`, ${tConvert(time.startTime)} - ${tConvert(time.endTime)} ${
+                            ABBRS[time.timeZone]
+                          }`}
+                        </div>
+                      );
+                    })}
+                  </div>
+                ) : (
+                  <div className="course-timings">
+                    <div className="course-timing">
+                      {getMeetupDuration(item, updateMeetupDuration)}
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      );
+  }
+};
+
 const ProfileLanding = () => {
   const { profile } = useAuth();
 
@@ -340,7 +595,11 @@ const ProfileLanding = () => {
     },
   });
 
-  const upcomingEvents = [...(data?.workshops || []), ...(data?.meetups || [])];
+  const upcomingEvents = [
+    ...(data?.workshops || []),
+    ...(data?.meetups || []),
+    ...(data?.ticketdEvents || []),
+  ];
 
   const handleBannerButtonClick = () => {};
 
@@ -436,147 +695,9 @@ const ProfileLanding = () => {
                 </div>
               </div>
               {upcomingEvents.map((item) => {
-                const {
-                  sfid,
-                  title,
-                  meetupTitle,
-                  mode,
-                  primaryTeacherName,
-                  eventType,
-                  meetupDuration,
-                  locationPostalCode,
-                  isOnlineMeetup,
-                  locationCity,
-                  locationProvince,
-                  locationStreet,
-                  centerName,
-                  coTeacher1Name,
-                  timings,
-                  productTypeId,
-                } = item || {};
-                const isWorkshop = eventType === 'Workshop';
-                const isMeetup = eventType === 'Meetup';
-                const isOnline = mode === COURSE_MODES.ONLINE.value;
-                const updateMeetupDuration = meetupDuration?.replace(
-                  /Minutes/g,
-                  'Min',
-                );
-                const slug = findSlugByProductTypeId(productTypeId);
-
                 return (
-                  <SwiperSlide key={sfid}>
-                    <div className="flip-card">
-                      <div className="flip-card-inner">
-                        <div className="flip-card-front">
-                          <div className="ds-course-item">
-                            <div className="ds-image-wrap">
-                              <img
-                                src={
-                                  isMeetup
-                                    ? `/img/silent-retreat-bg@2x.png`
-                                    : `/img/courses/${slug}.webp`
-                                }
-                                alt="course"
-                              />
-                            </div>
-                            <div className="ds-course-header">
-                              <div className="play-time">
-                                {isWorkshop
-                                  ? 'Course'
-                                  : isMeetup
-                                    ? 'Meetup'
-                                    : 'Event'}
-                              </div>
-                            </div>
-                            <div className="ds-course-info">
-                              <div className="ds-course-title">
-                                {isMeetup ? meetupTitle : title}
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                        <div className="flip-card-back">
-                          <div className="course-item">
-                            <div className="course-item-header">
-                              <div className="course-title-duration">
-                                <div className="course-title">
-                                  {isMeetup ? meetupTitle : title}
-                                </div>
-                                <div
-                                  className={`course-type ${isOnline ? 'online' : 'in-person'}`}
-                                >
-                                  {mode}
-                                </div>
-                              </div>
-                            </div>
-                            {isMeetup ? (
-                              <div className="course-location">
-                                {isOnlineMeetup ? (
-                                  'Live Streaming from' + ' ' + centerName
-                                ) : (
-                                  <>
-                                    {locationCity
-                                      ? concatenateStrings([
-                                          locationCity,
-                                          locationProvince,
-                                          locationPostalCode,
-                                        ])
-                                      : centerName}
-                                  </>
-                                )}
-                              </div>
-                            ) : (
-                              <>
-                                {mode !== 'Online' && locationCity && (
-                                  <div className="course-location">
-                                    {concatenateStrings([
-                                      locationStreet,
-                                      locationCity,
-                                      locationProvince,
-                                      locationPostalCode,
-                                    ])}
-                                  </div>
-                                )}
-                              </>
-                            )}
-
-                            <div className="course-instructors">
-                              {concatenateStrings([
-                                primaryTeacherName,
-                                coTeacher1Name,
-                              ])}
-                            </div>
-                            {timings?.length > 0 ? (
-                              <div className="course-timings">
-                                {timings.map((time, i) => {
-                                  return (
-                                    <div className="course-timing" key={i}>
-                                      <span>
-                                        {dayjs
-                                          .utc(time.startDate)
-                                          .format('MM/DD dddd')}
-                                      </span>
-                                      {`, ${tConvert(time.startTime)} - ${tConvert(time.endTime)} ${
-                                        ABBRS[time.timeZone]
-                                      }`}
-                                    </div>
-                                  );
-                                })}
-                              </div>
-                            ) : (
-                              <div className="course-timings">
-                                <div className="course-timing">
-                                  {getMeetupDuration(
-                                    item,
-                                    updateMeetupDuration,
-                                  )}
-                                </div>
-                              </div>
-                            )}
-                          </div>
-                        </div>
-                      </div>
-                    </div>
+                  <SwiperSlide key={item.sfid}>
+                    <UpcomingEventsComp item={item} />
                   </SwiperSlide>
                 );
               })}
