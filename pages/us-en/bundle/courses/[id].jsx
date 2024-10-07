@@ -74,7 +74,7 @@ export async function getServerSideProps(context) {
           slug: slug, // Slug in lowercase and without spaces
           name: bundle.package.packageMasterTitle,
           value: bundle.package.packageMasterCtypeId,
-          description: bundle.package.packageMasterCalenderViewDescription,
+          description: bundle.package.packageMasterDescription,
         },
       };
     }

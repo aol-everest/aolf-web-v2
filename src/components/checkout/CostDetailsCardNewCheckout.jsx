@@ -35,7 +35,7 @@ export const CostDetailsCardNewCheckout = ({
     instalmentGap,
     availableBundles,
     subscriptionDetails,
-    afterCreditPricMessage,
+    afterCreditPriceMessage,
   } = workshop || {};
 
   const expenseAddOn = addOnProducts.find((product) => product.isExpenseAddOn);
@@ -243,7 +243,7 @@ export const CostDetailsCardNewCheckout = ({
   return (
     <>
       <div className="offer-box">
-        {!afterCreditPricMessage && (
+        {!afterCreditPriceMessage && (
           <h2 className="title">
             <span className="icon-wrap">
               <img src="/img/stars-02.svg" width="20" height="20" alt="" />
@@ -291,7 +291,7 @@ export const CostDetailsCardNewCheckout = ({
             {expenseAddOn?.unitPrice && !hasGroupedAddOnProducts && (
               <div className="note">Note: *Expense includes meals</div>
             )}
-            {!afterCreditPricMessage && isSilentRetreatType && (
+            {!afterCreditPriceMessage && isSilentRetreatType && (
               <div className="offer-type">
                 <div className="form-item radio">
                   <input
@@ -325,16 +325,16 @@ export const CostDetailsCardNewCheckout = ({
                 </div>
               </div>
             )}
-            {afterCreditPricMessage && (
+            {afterCreditPriceMessage && (
               <div className="credit-text">
-                {afterCreditPricMessage} ${fee}.
+                {afterCreditPriceMessage} ${fee}.
               </div>
             )}
 
             {!isJourneyPremium &&
               !isBasicMember &&
               !isJourneyPlus &&
-              !afterCreditPricMessage &&
+              !afterCreditPriceMessage &&
               isSilentRetreatType && (
                 <div className="offer-action">
                   <button
@@ -356,7 +356,7 @@ export const CostDetailsCardNewCheckout = ({
               <div className="form-item radio">
                 <label htmlFor="payment-lg-regular">
                   <span className="radio-text">
-                    {!afterCreditPricMessage && !isSilentRetreatType
+                    {!afterCreditPriceMessage && !isSilentRetreatType
                       ? 'Regular Tuition'
                       : 'Premium/Journey+ Tuition'}
                     :
@@ -368,7 +368,7 @@ export const CostDetailsCardNewCheckout = ({
                         {(addOnProducts?.length > 0 ||
                           hasGroupedAddOnProducts) &&
                           `$${discount.newPrice} ${
-                            afterCreditPricMessage &&
+                            afterCreditPriceMessage &&
                             isSilentRetreatType &&
                             '+expenses'
                           }`}
@@ -393,9 +393,9 @@ export const CostDetailsCardNewCheckout = ({
             {hasGroupedAddOnProducts && (
               <div className="note">Note: *Expense includes meals</div>
             )}
-            {afterCreditPricMessage && (
+            {afterCreditPriceMessage && (
               <div className="credit-text">
-                {afterCreditPricMessage} ${fee}.
+                {afterCreditPriceMessage} ${fee}.
               </div>
             )}
           </>
