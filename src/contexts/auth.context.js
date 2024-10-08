@@ -36,7 +36,12 @@ const LocalUserCacheContext = createContext();
 export const useAuth = () => useContext(AuthContext);
 
 // AuthProvider component
-export const AuthProvider = ({ userInfo, enableLocalUserCache, children }) => {
+export const AuthProvider = ({
+  userInfo,
+  checkUserPendingAction,
+  enableLocalUserCache,
+  children,
+}) => {
   const [currentUser, setCurrentUser] = useState(userInfo);
   const [error, setError] = useState(null);
 
@@ -44,6 +49,9 @@ export const AuthProvider = ({ userInfo, enableLocalUserCache, children }) => {
     try {
       const userInfo = await Auth.fetchUserProfile();
       setCurrentUser(userInfo);
+      if (checkUserPendingAction) {
+        await checkUserPendingAction(userInfo);
+      }
     } catch (error) {
       setCurrentUser({ isAuthenticated: false });
       console.log('Error fetching current user:', error);
