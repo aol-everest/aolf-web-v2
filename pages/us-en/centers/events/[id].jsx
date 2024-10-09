@@ -1,27 +1,14 @@
 /* eslint-disable react/no-unescaped-entities */
 /* eslint-disable no-inline-styles/no-inline-styles */
-import {
-  api,
-  getUserTimeZoneAbbreviation,
-  concatenateStrings,
-  tConvert,
-} from '@utils';
+import { api, concatenateStrings, tConvert } from '@utils';
 import ContentLoader from 'react-content-loader';
 import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
-import React, { useEffect, useState, useRef } from 'react';
-import { useQueryState, parseAsBoolean, parseAsJson, createParser } from 'nuqs';
+import React, { useEffect, useState } from 'react';
+import { useQueryState, parseAsBoolean, createParser } from 'nuqs';
 import { useUIDSeed } from 'react-uid';
 import { useAuth } from '@contexts';
 import { withCenterInfo } from '@hoc';
-import {
-  ABBRS,
-  COURSE_MODES,
-  COURSE_TYPES,
-  TIME_ZONE,
-  MODAL_TYPES,
-  COURSE_TYPES_MASTER,
-  COURSE_MODES_MAP,
-} from '@constants';
+import { ABBRS, COURSE_MODES, TIME_ZONE, COURSE_MODES_MAP } from '@constants';
 import { useGlobalModalContext } from '@contexts';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
@@ -33,7 +20,6 @@ import { useInView } from 'react-intersection-observer';
 import classNames from 'classnames';
 import { orgConfig } from '@org';
 import DateRangePicker from 'rsuite/DateRangePicker';
-import dynamic from 'next/dynamic';
 import { navigateToLogin } from '@utils';
 import { NextSeo } from 'next-seo';
 import { SmartInput, SmartDropDown, Popup } from '@components';
@@ -41,10 +27,6 @@ import { MobileFilterModal } from '@components/filterComps/mobileFilterModal';
 
 // (Optional) Import component styles. If you are using Less, import the `index.less` file.
 import 'rsuite/DateRangePicker/styles/index.css';
-
-const AddressSearch = dynamic(() =>
-  import('@components').then((mod) => mod.AddressSearch),
-);
 
 dayjs.extend(utc);
 
@@ -138,11 +120,8 @@ const EventTile = ({ data, isAuthenticated }) => {
     isGuestCheckoutEnabled = false,
     coTeacher1Name,
     timings,
-    unitPrice,
-    listPrice,
     isEventFull,
     isPurchased,
-    category,
   } = data || {};
 
   const enrollAction = () => {
@@ -212,7 +191,12 @@ const EventTile = ({ data, isAuthenticated }) => {
           ])}
         </div>
       )}
-      <div className="course-date">{getCourseDeration()}</div>
+      {(primaryTeacherName || coTeacher1Name) && (
+        <div className="course-instructors">
+          {concatenateStrings([primaryTeacherName, coTeacher1Name])}
+        </div>
+      )}
+
       {timings?.length > 0 &&
         timings.map((time, i) => {
           return (
