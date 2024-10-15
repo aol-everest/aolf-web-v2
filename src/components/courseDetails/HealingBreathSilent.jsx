@@ -67,7 +67,8 @@ export const HealingBreathSilent = ({
               <div className="banner-description">
                 Give yourself a true vacation for body, mind, and spirit
               </div>
-              <div className="banner-description">
+              <br />
+              <div className="banner-description-detail">
                 Earn up to 40 CME credits while deepening your well-being at our
                 Silence Retreat.
               </div>
