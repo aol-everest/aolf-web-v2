@@ -201,6 +201,7 @@ const AOL_MENU = [
       {
         name: 'Art of Living Boone Retreat',
         link: '/us-en/lp/theartoflivingretreatcenter',
+        props: { target: '_blank' },
       },
       {
         name: 'Connect Locally',
