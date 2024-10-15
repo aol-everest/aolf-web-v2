@@ -1731,9 +1731,9 @@ export const PaymentFormNew = ({
                                             rel="noreferrer"
                                           >
                                             {workshop.streetAddress1 &&
-                                              workshop.streetAddress1}
+                                              `${workshop.streetAddress1}, `}
                                             {workshop.streetAddress2 &&
-                                              workshop.streetAddress2}
+                                              `${workshop.streetAddress2}, `}
                                             {workshop.city || ''}
                                             {', '}
                                             {workshop.state || ''}{' '}

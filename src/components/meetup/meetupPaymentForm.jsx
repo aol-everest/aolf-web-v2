@@ -985,11 +985,11 @@ export const MeetupPaymentForm = ({
                                 rel="noreferrer"
                               >
                                 {meetup.locationStreet && (
-                                  <li>{meetup.locationStreet}</li>
+                                  <li>{`${meetup.locationStreet}, `}</li>
                                 )}
                                 <li>
-                                  {meetup.locationCity || ''}
-                                  {', '}
+                                  {meetup.locationCity &&
+                                    `${meetup.locationCity}, `}
                                   {meetup.locationProvince || ''}{' '}
                                   {meetup.locationPostalCode || ''}
                                 </li>
@@ -1011,10 +1011,10 @@ export const MeetupPaymentForm = ({
                                 rel="noreferrer"
                               >
                                 {meetup.streetAddress1 && (
-                                  <li>{meetup.streetAddress1}</li>
+                                  <li>{`${meetup.streetAddress1}, `}</li>
                                 )}
                                 {meetup.streetAddress2 && (
-                                  <li>{meetup.streetAddress2}</li>
+                                  <li>{`${meetup.streetAddress2}, `}</li>
                                 )}
                                 <li>
                                   {meetup.city || ''}

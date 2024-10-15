@@ -796,9 +796,8 @@ const SchedulingInPersonFlow = () => {
                                       target="_blank"
                                       rel="noreferrer"
                                     >
-                                      {locationStreet && locationStreet}
-                                      {locationCity || ''}
-                                      {', '}
+                                      {locationStreet && `${locationStreet}, `}
+                                      {locationCity && `${locationCity}, `}
                                       {locationProvince || ''}{' '}
                                       {locationPostalCode || ''}
                                     </a>
