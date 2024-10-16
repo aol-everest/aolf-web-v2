@@ -155,6 +155,9 @@ function MembershipCheckout() {
 
     const [activeSubscription] = subsciption.activeSubscriptions;
 
+    if (!activeSubscription) {
+      return;
+    }
     const products = subsciption.activeSubscriptions.map(
       (activeSubscription) => ({
         id: activeSubscription.sfid,
@@ -213,6 +216,14 @@ function MembershipCheckout() {
   if (isLoading || !router.isReady) return <PageLoading />;
 
   const [activeSubscription] = subsciption.activeSubscriptions;
+
+  if (!activeSubscription)
+    return (
+      <ErrorPage
+        statusCode={500}
+        title={`System Error: No active subscription found in ${subsciption.name}. Please contact administrator`}
+      />
+    );
 
   const { name, sfid } = subsciption || {};
 
