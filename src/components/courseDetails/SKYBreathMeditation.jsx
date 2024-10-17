@@ -316,8 +316,8 @@ export const SKYBreathMeditation = ({
                       <span className="title">Pranayama</span>
                       <br />
                       <span className="content">
-                        Improve your energy levels and reduce stress through
-                        breathing exercises
+                        Breathing exercise to improve your energy levels and
+                        reduce stress
                       </span>
                     </div>
                   </div>
@@ -356,8 +356,7 @@ export const SKYBreathMeditation = ({
                       <span className="title">5 Keys to a Joyful Life</span>
                       <br />
                       <span className="content">
-                        Simple, yet powerful principles to help you navigate
-                        life joyfully
+                        Simple toolkit to help you navigate life joyfully
                       </span>
                     </div>
                   </div>
@@ -505,7 +504,7 @@ export const SKYBreathMeditation = ({
               <Card>
                 <Card.Header>
                   <ContextAwareToggle eventKey="1">
-                    What are the benefits of practicing Sudarshan Kriya™?
+                    What are the benefits of Sudarshan Kriya™?
                   </ContextAwareToggle>
                 </Card.Header>
                 <Accordion.Collapse eventKey="1">
