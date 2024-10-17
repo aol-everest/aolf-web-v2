@@ -304,7 +304,7 @@ export const MobileCourseDetails = ({
                   rel="noreferrer"
                 >
                   {workshop.locationStreet && (
-                    <span>{workshop.locationStreet}</span>
+                    <span> {`${workshop.locationStreet}, `}</span>
                   )}
                   <span>
                     {workshop.locationCity || ''}

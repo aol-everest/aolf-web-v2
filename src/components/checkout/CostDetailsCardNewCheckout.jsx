@@ -14,8 +14,6 @@ export const CostDetailsCardNewCheckout = ({
   isComboDetailAvailable,
   isOfflineExpense,
   openSubscriptionPaywallPage,
-  isUsableCreditAvailable,
-  UpdatedFeeAfterCredits,
   onAccommodationChange,
   paymentOptionChange,
   values,
@@ -37,6 +35,7 @@ export const CostDetailsCardNewCheckout = ({
     instalmentGap,
     availableBundles,
     subscriptionDetails,
+    afterCreditPriceMessage,
   } = workshop || {};
 
   const expenseAddOn = addOnProducts.find((product) => product.isExpenseAddOn);
@@ -244,7 +243,7 @@ export const CostDetailsCardNewCheckout = ({
   return (
     <>
       <div className="offer-box">
-        {!isUsableCreditAvailable && (
+        {!afterCreditPriceMessage && (
           <h2 className="title">
             <span className="icon-wrap">
               <img src="/img/stars-02.svg" width="20" height="20" alt="" />
@@ -268,22 +267,13 @@ export const CostDetailsCardNewCheckout = ({
                     onChange={formikProps.handleChange('priceType')}
                   />
                 )}
-                {!isUsableCreditAvailable && (
-                  <label htmlFor="payment-lg-regular-card">
-                    <span className="radio-text">Regular Tuition:</span>
-                    <span className="radio-value">
-                      {delfee && <s>${delfee}</s>} {`$${fee}`}
-                    </span>
-                  </label>
-                )}
-                {isUsableCreditAvailable && (
-                  <label htmlFor="payment-lg-regular-card">
-                    <span className="radio-text">Tuition:</span>
-                    <span className="radio-value">
-                      <s>${fee}</s> {`$0`}
-                    </span>
-                  </label>
-                )}
+
+                <label htmlFor="payment-lg-regular-card">
+                  <span className="radio-text">Regular Tuition:</span>
+                  <span className="radio-value">
+                    {delfee && <s>${delfee}</s>} {`$${fee}`}
+                  </span>
+                </label>
               </div>
             </div>
             {expenseAddOn?.unitPrice && (
@@ -301,7 +291,7 @@ export const CostDetailsCardNewCheckout = ({
             {expenseAddOn?.unitPrice && !hasGroupedAddOnProducts && (
               <div className="note">Note: *Expense includes meals</div>
             )}
-            {!isUsableCreditAvailable && isSilentRetreatType && (
+            {!afterCreditPriceMessage && isSilentRetreatType && (
               <div className="offer-type">
                 <div className="form-item radio">
                   <input
@@ -335,16 +325,16 @@ export const CostDetailsCardNewCheckout = ({
                 </div>
               </div>
             )}
-            {isUsableCreditAvailable && (
+            {afterCreditPriceMessage && (
               <div className="credit-text">
-                {usableCredit.message} ${UpdatedFeeAfterCredits}.
+                {afterCreditPriceMessage} ${fee}.
               </div>
             )}
 
             {!isJourneyPremium &&
               !isBasicMember &&
               !isJourneyPlus &&
-              !isUsableCreditAvailable &&
+              !afterCreditPriceMessage &&
               isSilentRetreatType && (
                 <div className="offer-action">
                   <button
@@ -366,7 +356,7 @@ export const CostDetailsCardNewCheckout = ({
               <div className="form-item radio">
                 <label htmlFor="payment-lg-regular">
                   <span className="radio-text">
-                    {!isUsableCreditAvailable && !isSilentRetreatType
+                    {!afterCreditPriceMessage && !isSilentRetreatType
                       ? 'Regular Tuition'
                       : 'Premium/Journey+ Tuition'}
                     :
@@ -378,7 +368,7 @@ export const CostDetailsCardNewCheckout = ({
                         {(addOnProducts?.length > 0 ||
                           hasGroupedAddOnProducts) &&
                           `$${discount.newPrice} ${
-                            isUsableCreditAvailable &&
+                            afterCreditPriceMessage &&
                             isSilentRetreatType &&
                             '+expenses'
                           }`}
@@ -403,9 +393,9 @@ export const CostDetailsCardNewCheckout = ({
             {hasGroupedAddOnProducts && (
               <div className="note">Note: *Expense includes meals</div>
             )}
-            {isUsableCreditAvailable && (
+            {afterCreditPriceMessage && (
               <div className="credit-text">
-                {usableCredit.message} ${UpdatedFeeAfterCredits}.
+                {afterCreditPriceMessage} ${fee}.
               </div>
             )}
           </>

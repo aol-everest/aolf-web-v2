@@ -338,16 +338,40 @@ const Thankyou = () => {
                   <b className="tw-text-orange-500">
                     You will be prompted to log into your account to start
                     scheduling your courses.
-                  </b>
+                  </b>{' '}
                   If you are a new user, you should receive a separate email
                   with username and temporary password for your account. In case
                   you cannot find the email, please use the ‘Forgot Password’
                   link on the Login page.
                 </p>
                 <p className="welcome__description v1">
-                  We highly recommend that you <b>start your journey</b> with
-                  the <b>Art of Living Part 1</b> course.
+                  <b>In what order should I take the courses?</b>
                 </p>
+                <p className="welcome__description v1 course-highlights-info-box">
+                  <ul>
+                    <li>
+                      <b>Option 1:</b> You may choose to do the complete package
+                      of four courses with{' '}
+                      <b>
+                        <i>Rajshree Patel</i>
+                      </b>
+                      , over two weekends.
+                    </li>
+                    <li>
+                      <b>Option 2:</b> Take the courses individually at your own
+                      pace. For best experience we recommend the following
+                      sequence.
+                      <ol>
+                        <li>Art of Living Part 1</li>
+                        <li>Sri Sri Yoga Deep Dive*</li>
+                        <li>Art of Living Part 2 (Silent Retreat)*</li>
+                        <li>Sahaj Samadhi Meditation</li>
+                      </ol>
+                      * Prerequisite: Art of Living Part 1
+                    </li>
+                  </ul>
+                </p>
+
                 <div>
                   <a
                     class="btn-primary"

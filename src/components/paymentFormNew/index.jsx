@@ -75,6 +75,7 @@ export const PaymentFormNew = ({
   handleCouseSelection = () => {},
   login = () => {},
   isLoggedUser = false,
+  onValidateDiscount,
 }) => {
   const formRef = useRef();
   const { showAlert } = useGlobalAlertContext();
@@ -203,29 +204,13 @@ export const PaymentFormNew = ({
 
   const isComboDetailAvailable = availableBundles?.length > 0;
 
-  const isUsableCreditAvailable = usableCredit && !isEmpty(usableCredit);
-
-  let UpdatedFeeAfterCredits;
-  if (
-    isUsableCreditAvailable &&
-    usableCredit.creditMeasureUnit === 'Quantity' &&
-    usableCredit.availableCredit === 1
-  ) {
-    UpdatedFeeAfterCredits = 0;
-  } else if (
-    isUsableCreditAvailable &&
-    usableCredit.creditMeasureUnit === 'Amount'
-  ) {
-    if (usableCredit.availableCredit > fee) {
-      UpdatedFeeAfterCredits = 0;
-    } else {
-      UpdatedFeeAfterCredits = fee - usableCredit.availableCredit;
-    }
-  }
-
   const validateDiscount = !(
-    UpdatedFeeAfterCredits === 0 || workshop?.unitPrice === 0
+    workshop?.afterCreditPrice === 0 || workshop?.unitPrice === 0
   );
+
+  useEffect(() => {
+    onValidateDiscount(validateDiscount);
+  }, [validateDiscount, onValidateDiscount]);
 
   const logout = async (e) => {
     if (e) e.preventDefault();
@@ -998,9 +983,7 @@ export const PaymentFormNew = ({
     const courseFee = isRegularPrice ? fee : premiumRate.unitPrice;
 
     finalPrice =
-      (isUsableCreditAvailable && usableCredit.creditMeasureUnit
-        ? UpdatedFeeAfterCredits
-        : courseFee) +
+      courseFee +
       (values.accommodation?.isExpenseAddOn
         ? expenseAddOn?.unitPrice || 0
         : (values.accommodation?.unitPrice || 0) +
@@ -1110,9 +1093,7 @@ export const PaymentFormNew = ({
           const courseFee = isRegularPrice ? fee : premiumRate.unitPrice;
 
           const totalFee =
-            (isUsableCreditAvailable && usableCredit.creditMeasureUnit
-              ? UpdatedFeeAfterCredits
-              : courseFee) +
+            courseFee +
             (values.accommodation?.isExpenseAddOn
               ? expenseAddOn?.unitPrice || 0
               : (values.accommodation?.unitPrice || 0) +
@@ -1462,8 +1443,6 @@ export const PaymentFormNew = ({
                             openSubscriptionPaywallPage
                           }
                           isComboDetailAvailable={isComboDetailAvailable}
-                          isUsableCreditAvailable={isUsableCreditAvailable}
-                          UpdatedFeeAfterCredits={UpdatedFeeAfterCredits}
                           values={values}
                           onComboDetailChange={handleComboDetailChange}
                           paymentOptionChange={handlePaymentOptionChange}
@@ -1729,7 +1708,7 @@ export const PaymentFormNew = ({
                                             rel="noreferrer"
                                           >
                                             {workshop.locationStreet &&
-                                              workshop.locationStreet}
+                                              `${workshop.locationStreet}, `}
                                             {workshop.locationCity || ''}
                                             {', '}
                                             {workshop.locationProvince ||
@@ -1752,9 +1731,9 @@ export const PaymentFormNew = ({
                                             rel="noreferrer"
                                           >
                                             {workshop.streetAddress1 &&
-                                              workshop.streetAddress1}
+                                              `${workshop.streetAddress1}, `}
                                             {workshop.streetAddress2 &&
-                                              workshop.streetAddress2}
+                                              `${workshop.streetAddress2}, `}
                                             {workshop.city || ''}
                                             {', '}
                                             {workshop.state || ''}{' '}

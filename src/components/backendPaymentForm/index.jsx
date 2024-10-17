@@ -472,14 +472,14 @@ export const BackendPaymentForm = ({
           isBackendRequest: true,
           shoppingRequest: {
             ...shoppingRequest,
-          },
-          attendee: {
-            contactHealthcareOrganisation,
-            contactOtherHealthcareOrganization,
-            contactDegree,
-            claimingType,
-            certificateOfAttendance,
-            contactClaimingTypeOther,
+            attendee: {
+              contactHealthcareOrganisation,
+              contactOtherHealthcareOrganization,
+              contactDegree,
+              claimingType,
+              certificateOfAttendance,
+              contactClaimingTypeOther,
+            },
           },
         };
         payLoad = {

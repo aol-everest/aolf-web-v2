@@ -75,6 +75,11 @@ const Checkout = () => {
   const [loading, setLoading] = useState(true);
   const [comboProductSfid, setComboProductSfid] = useState('');
   const { track, page } = useAnalytics();
+  const [validateDiscount, setValidateDiscount] = useState(false);
+
+  const handleValidateDiscount = (isValid) => {
+    setValidateDiscount(isValid);
+  };
 
   const {
     data: workshop,
@@ -382,6 +387,7 @@ const Checkout = () => {
           handleCouseSelection={handleCouseSelection}
           login={login}
           isLoggedUser={isAuthenticated}
+          onValidateDiscount={handleValidateDiscount}
         />
       </div>
     );
@@ -437,6 +443,7 @@ const Checkout = () => {
     isAuthenticated &&
     validateStudentEmail(email) &&
     workshop.isStudentFeeAllowed &&
+    validateDiscount &&
     (!isStudentVerified ||
       (isStudentVerified &&
         dayjs(new Date()).diff(dayjs(studentVerificationDate), 'y', true) > 1 &&

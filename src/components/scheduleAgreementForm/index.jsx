@@ -11,6 +11,7 @@ export const ScheduleAgreementForm = ({
   isCorporateEvent,
   questionnaireArray,
   workshop,
+  parentClass = 'mt-4',
 }) => {
   const { track, page } = useAnalytics();
   const validateQuestionnaire = (complianceQuestionnaire) => (value) => {
@@ -107,7 +108,7 @@ export const ScheduleAgreementForm = ({
           )}
       </div>
       {complianceQuestionnaire && complianceQuestionnaire.length > 0 && (
-        <div className="health-confirmation mt-4">
+        <div className={`health-confirmation ${parentClass}`}>
           {complianceQuestionnaire.map((compliance) => (
             <div
               className="form-item checkbox mb-2"
@@ -157,7 +158,10 @@ export const ScheduleAgreementForm = ({
                   );
                 }}
               </Field>
-              <label htmlFor={`health${compliance.questionSfid}`}>
+              <label
+                htmlFor={`health${compliance.questionSfid}`}
+                className="events-news"
+              >
                 {compliance.question && (
                   <span
                     dangerouslySetInnerHTML={{ __html: compliance.question }}
