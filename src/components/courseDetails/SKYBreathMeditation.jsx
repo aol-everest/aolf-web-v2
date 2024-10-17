@@ -227,11 +227,11 @@ export const SKYBreathMeditation = ({
               <div class="col-12 px-2 col-lg-12 text-center text-lg-center mb-4">
                 <img src="/img/smallLine.svg" class="separator" />
                 <h2 class="breadth-meditation__title section-title benefits-title text-center">
-                  Impacts of {COURSE_TYPES.SKY_BREATH_MEDITATION.name}
+                  Impacts of Sudarshan Kriya™
                 </h2>
                 <p class="section-desc text-center">
-                  Science-backed benefits of SKY, shown in over 100 independent
-                  studies
+                  Science-backed benefits of Sudarshan Kriya™, shown in over
+                  100 independent studies
                 </p>
               </div>
               <div class="col-12 px-2 col-lg-4 text-left text-lg-left">
@@ -333,9 +333,7 @@ export const SKYBreathMeditation = ({
                       />
                     </div>
                     <div className="key-highlight-content">
-                      <span className="title">
-                        {COURSE_TYPES.SKY_BREATH_MEDITATION.name}
-                      </span>
+                      <span className="title">Sudarshan Kriya™</span>
                       <br />
                       <span className="content">
                         Learn the most powerful breathing technique based on an
@@ -375,31 +373,10 @@ export const SKYBreathMeditation = ({
                       />
                     </div>
                     <div className="key-highlight-content">
-                      <span className="title">Tap Into Community</span>
+                      <span className="title">Lifetime Access</span>
                       <br />
                       <span className="content">
-                        Connect with live teachers and a like-minded community
-                        of people
-                      </span>
-                    </div>
-                  </div>
-                </div>
-                <div className="slide">
-                  <div className="key-highlight-box">
-                    <div className="key-highlight-logo">
-                      <img
-                        src="/img/key-3.webp"
-                        alt="transforming lives"
-                        width="350"
-                        height="233"
-                      />
-                    </div>
-                    <div className="key-highlight-content">
-                      <span className="title">Ongoing Support</span>
-                      <br />
-                      <span className="content">
-                        Continued access to teachers, digital content, and
-                        weekly group practice
+                        Join weekly for in-person or online group SKY practice
                       </span>
                     </div>
                   </div>
@@ -514,44 +491,49 @@ export const SKYBreathMeditation = ({
               <Card>
                 <Card.Header>
                   <ContextAwareToggle eventKey="0">
-                    What is the duration of the {title} workshop?
+                    What is the duration of the {title} course?
                   </ContextAwareToggle>
                 </Card.Header>
                 <Accordion.Collapse eventKey="0">
                   <Card.Body>
-                    You can learn {title} in 3 days with 2.5 hours of live
-                    online sessions each day with a certified instructor.
+                    You can learn the Sudarshan Kriya™ practice taught in the
+                    {title} Course in 3 days with 2.5 hours of live online or
+                    in-person sessions each day with a certified instructor.
                   </Card.Body>
                 </Accordion.Collapse>
               </Card>
               <Card>
                 <Card.Header>
                   <ContextAwareToggle eventKey="1">
-                    What are the benefits of practicing {title}?
+                    What are the benefits of practicing Sudarshan Kriya™?
                   </ContextAwareToggle>
                 </Card.Header>
                 <Accordion.Collapse eventKey="1">
                   <Card.Body>
-                    {title} has been researched in over 100 independent,
-                    peer-reviewed studies and shown significant mind and body
-                    benefits. It lowers stress levels, improves mental clarity,
-                    enhances emotional well-being, contributes to better sleep,
-                    raises energy levels, and provides a greater sense of inner
-                    peace. The physical benefits include boosting immunity,
-                    heart health, and more.
+                    Sudarshan Kriya™ taught in the {title} course has been
+                    researched in over{' '}
+                    <a href="https://www.artofliving.org/us-en/meditation/benefits/research-sudarshan-kriya">
+                      100 independent studies
+                    </a>{' '}
+                    and shown significant mind and body benefits. It lowers
+                    stress levels, improves mental clarity, enhances emotional
+                    well-being, contributes to better sleep, raises energy
+                    levels, and provides a greater sense of inner peace. The
+                    physical benefits include boosting immunity, heart health,
+                    and more.
                   </Card.Body>
                 </Accordion.Collapse>
               </Card>
               <Card>
                 <Card.Header>
                   <ContextAwareToggle eventKey="2">
-                    Can I reschedule my {title} course after my initial
+                    Can I reschedule my {title} Course after my initial
                     registration?
                   </ContextAwareToggle>
                 </Card.Header>
                 <Accordion.Collapse eventKey="2">
                   <Card.Body>
-                    Yes, you can reschedule to a different {title} course if you
+                    Yes, you can reschedule to a different {title} Course if you
                     are unable to attend the original dates selected.
                   </Card.Body>
                 </Accordion.Collapse>
@@ -559,16 +541,19 @@ export const SKYBreathMeditation = ({
               <Card>
                 <Card.Header>
                   <ContextAwareToggle eventKey="3">
-                    Is there an age limit to learn {title}?
+                    Is there an age limit to attend the {title} Course?
                   </ContextAwareToggle>
                 </Card.Header>
                 <Accordion.Collapse eventKey="3">
                   <Card.Body>
-                    Yes, you must be at least 18 years old to learn {title}.{' '}
-                    <br />
-                    The Art of Living offers alternative programs for children
-                    and teens (18 years and under). Contact us at
-                    support@us.artofliving.org to learn more.
+                    Yes, you must be at least 18 years old to attend. The Art of
+                    Living offers alternative programs for{' '}
+                    <a href="http://skyforkids.org">kids and teens</a> (18 years
+                    and under). Contact us at{' '}
+                    <a href="mailto:youthprograms@iahv.org">
+                      youthprograms@iahv.org
+                    </a>{' '}
+                    to learn more.
                   </Card.Body>
                 </Accordion.Collapse>
               </Card>
@@ -580,36 +565,28 @@ export const SKYBreathMeditation = ({
                 </Card.Header>
                 <Accordion.Collapse eventKey="4">
                   <Card.Body>
-                    <p>The online {title} course is $295*</p>
-                    <p>What’s included:</p>
+                    <p>
+                      The {title} course is available in two formats: a 3-day
+                      online course for $295 and an in-person course for $395.
+                      <br />
+                      <br />
+                    </p>
+                    <p class="mb-2">What’s included:</p>
                     <ul>
-                      <li>
-                        <strong>&bull;</strong> 2.5 hour daily live sessions
-                      </li>
-                      <li>
-                        <strong>&bull;</strong> certified expert instruction
-                      </li>
-                      <li>
-                        <strong>&bull;</strong> guided techniques with Q&A
-                      </li>
-                      <li>
-                        <strong>&bull;</strong> real-time support
-                      </li>
-                      <li>
-                        <strong>&bull;</strong> interactive wisdom sessions
-                      </li>
-                      <li>
-                        <strong>&bull;</strong> small group size
-                      </li>
+                      <li>2.5 hour daily live sessions</li>
+                      <li>certified expert instruction</li>
+                      <li>guided techniques with Q&A</li>
+                      <li>real-time support</li>
+                      <li>interactive wisdom sessions</li>
+                      <li>small group size</li>
                     </ul>
                     <p>
                       You’ll gain a life-transforming breathwork technique
-                      backed by over 100+ independent studies you can practice
-                      anytime you need.
-                    </p>
-                    <p>
-                      *A one-time payment for a LIVE course, and not a
-                      subscription.
+                      backed by over{' '}
+                      <a href="https://www.artofliving.org/us-en/meditation/benefits/research-sudarshan-kriya">
+                        100 independent studies
+                      </a>{' '}
+                      you can practice anytime you need.
                     </p>
                   </Card.Body>
                 </Accordion.Collapse>
