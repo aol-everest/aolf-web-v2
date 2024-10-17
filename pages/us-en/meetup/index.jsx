@@ -127,7 +127,7 @@ const MeetupTile = ({ data }) => {
   const {
     mode,
     primaryTeacherName,
-    eventTimeZone,
+    meetupTimeZone,
     locationPostalCode,
     locationCity,
     locationProvince,
@@ -368,7 +368,7 @@ const MeetupTile = ({ data }) => {
     return (
       <>
         {`${dayjs.utc(meetupStartDate).format('MMM DD')}, `}
-        {`${tConvert(meetupStartTime)} ${ABBRS[eventTimeZone]}, `}
+        {`${tConvert(meetupStartTime)} ${ABBRS[meetupTimeZone]}, `}
         {`${updateMeetupDuration}`}
       </>
     );
