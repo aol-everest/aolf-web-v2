@@ -24,10 +24,8 @@ export const ScheduleLocationFilterNew = ({
   };
 
   return (
-    <div className="form-item">
-      <label className={classNames(`${containerClass}`, {})}>
-        Enter a zip code or city
-      </label>
+    <div className={classNames(`${containerClass} form-item`, {})}>
+      <label>Enter a zip code or city</label>
       {!isInputAllowed ? (
         <span
           className={classNames('schedule-location-input scheduling-address')}

@@ -14,6 +14,19 @@
     }
   }
 
+  .location-container {
+    position: relative;
+    width: 100%;
+    // margin-top: 10px;
+
+    .result-list {
+      position: absolute;
+      top: 58px;
+      background-color: #fff;
+      width: 100%;
+    }
+  }
+
   .scheduling-modal__content-wrapper {
     background-color: transparent;
     .scheduling-modal__content-wrapper-form-checkbox label {
@@ -112,6 +125,7 @@
     padding-bottom: 3.75rem;
     border-radius: 20px;
     border: 1px solid #fff9ed;
+
     .section-title {
       font-family: 'Work Sans';
       font-size: 16px;
@@ -452,52 +466,6 @@
         }
       }
       .scheduling-types__location {
-        .location-container {
-          position: relative;
-          width: 100%;
-          margin-top: 10px;
-          .custom-input {
-            width: 100% !important;
-            border-radius: 8px;
-            border: 1px solid rgba(255, 146, 0, 0.5019607843);
-            font-family: Work Sans;
-            font-size: 14px;
-            font-weight: 600;
-            background: #fff9ed;
-          }
-          .result-list {
-            position: absolute;
-            top: 58px;
-            background-color: #fff;
-            width: 100%;
-          }
-          .schedule-location-input {
-            border-radius: 8px;
-            border: 1px solid rgba(255, 146, 0, 0.5019607843);
-            font-family: Work Sans;
-            font-size: 14px;
-            font-weight: 600;
-            background: #fff9ed;
-            padding: 13px 15px;
-            transition: all 0.3s ease-in-out;
-            width: 100% !important;
-            margin: 0px;
-            display: block;
-            .schedule-location-value {
-              padding: 5px;
-              display: inline-block;
-            }
-            .react-tag-remove {
-              color: rgba(255, 146, 0, 1);
-              text-decoration: none;
-              padding-right: 10px;
-              right: 0px;
-              position: absolute;
-              top: 6px;
-              font-size: 29px;
-            }
-          }
-        }
       }
       .date_selection {
         .scheduling-modal__content-ranges-title {
