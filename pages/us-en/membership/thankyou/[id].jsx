@@ -110,8 +110,14 @@ const MembershipThankyou = () => {
     defaultValue: 'detail',
   });
   const [courseCType] = useQueryString('ctype');
-  const { afterBuyMessageBody, afterBuyMessageHeader, subscriptionMasterSfid } =
-    order || {};
+  const {
+    afterBuyMessageBody,
+    afterBuyMessageHeader,
+    subscriptionMasterSfid,
+    subscriptionType,
+  } = order || {};
+
+  console.log(subscriptionType, MEMBERSHIP_TYPES.JOURNEY_PLUS.name);
 
   const { data: workshopDetail = [] } = useQuery({
     queryKey: 'workshopDetail',
@@ -146,10 +152,7 @@ const MembershipThankyou = () => {
 
   const searchSilentRetreatsAction = () => {
     pushRouteWithUTMQuery(router, {
-      pathname: '/us-en',
-      query: {
-        courseType: 'SILENT_RETREAT',
-      },
+      pathname: `/us-en/courses/${COURSE_TYPES.SILENT_RETREAT.slug}`,
     });
   };
 
@@ -334,6 +337,7 @@ const MembershipThankyou = () => {
                       automatically redirected, please click the button below.
                     </p>
                   )}
+
                   <div
                     className={
                       isDigitalMembership
@@ -341,8 +345,8 @@ const MembershipThankyou = () => {
                         : 'journey-confirmation__info_bottom'
                     }
                   >
-                    {subscriptionMasterSfid ===
-                      MEMBERSHIP_TYPES.JOURNEY_PLUS.value && (
+                    {subscriptionType ===
+                      MEMBERSHIP_TYPES.JOURNEY_PLUS.name && (
                       <>
                         {courseId && isSilentRetreatType && (
                           <button
@@ -360,10 +364,18 @@ const MembershipThankyou = () => {
                             Finish Registration
                           </button>
                         )}
+                        {!courseId && !meetupId && (
+                          <button
+                            className="btn-secondary"
+                            onClick={searchSilentRetreatsAction}
+                          >
+                            {COURSE_TYPES.SILENT_RETREAT.name}
+                          </button>
+                        )}
                       </>
                     )}
-                    {subscriptionMasterSfid ===
-                      MEMBERSHIP_TYPES.DIGITAL_MEMBERSHIP.value && (
+                    {subscriptionType ===
+                      MEMBERSHIP_TYPES.DIGITAL_MEMBERSHIP.name && (
                       <>
                         <button
                           onClick={handleiOSAppClick}
