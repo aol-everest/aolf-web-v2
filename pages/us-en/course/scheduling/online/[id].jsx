@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useQueryState, parseAsInteger } from 'nuqs';
 import { useRouter } from 'next/router';
 import queryString from 'query-string';
@@ -424,6 +424,16 @@ const SchedulingOnlineFlow = () => {
         formRef.current.submitForm();
       }
     };
+
+    useEffect(() => {
+      const paymentBox = document.querySelector('.payment-box');
+      if (paymentBox) {
+        window.scrollTo({
+          top: document.documentElement.scrollHeight, // Scroll to the bottom
+          behavior: 'smooth',
+        });
+      }
+    }, []); // Runs only on component mount (when the pa
 
     const handleTrackEvent = () => {
       track(
