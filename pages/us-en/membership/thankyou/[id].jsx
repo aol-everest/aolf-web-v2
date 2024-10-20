@@ -102,6 +102,12 @@ const MembershipThankyou = () => {
   useEffect(() => {
     if (!isAuthenticated || !order) return;
     reloadProfile();
+
+    if (courseId || meetupId) {
+      setTimeout(() => {
+        finishRegistrationAction();
+      }, 5000);
+    }
   }, [isAuthenticated, order]);
 
   const [courseId] = useQueryString('cid');
@@ -348,15 +354,7 @@ const MembershipThankyou = () => {
                     {subscriptionType ===
                       MEMBERSHIP_TYPES.JOURNEY_PLUS.name && (
                       <>
-                        {courseId && isSilentRetreatType && (
-                          <button
-                            className="btn-secondary"
-                            onClick={searchSilentRetreatsAction}
-                          >
-                            {COURSE_TYPES.SILENT_RETREAT.name}
-                          </button>
-                        )}
-                        {(courseId || meetupId) && !isSilentRetreatType && (
+                        {(courseId || meetupId) && (
                           <button
                             className="btn-secondary"
                             onClick={finishRegistrationAction}
@@ -364,6 +362,7 @@ const MembershipThankyou = () => {
                             Finish Registration
                           </button>
                         )}
+
                         {!courseId && !meetupId && (
                           <button
                             className="btn-secondary"
@@ -508,7 +507,7 @@ const MembershipThankyou = () => {
                   className="journey-confirmation_mobile__button btn-secondary v2"
                   onClick={finishRegistrationAction}
                 >
-                  Finish Registration
+                  Finish Registration 1
                 </button>
               </div>
             </div>
