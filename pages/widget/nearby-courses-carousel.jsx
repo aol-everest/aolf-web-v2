@@ -179,6 +179,12 @@ const NearbyCoursesCarousel = ({ initialLocation = null }) => {
       });
     }
   };
+
+  const moreDatesAction = () => {
+    window.parent.location.href =
+      'https://members.us.artofliving.org/us-en/courses/art-of-living-part-1';
+  };
+
   return (
     <section class="courses-nearby">
       <div class="container">
@@ -296,7 +302,9 @@ const NearbyCoursesCarousel = ({ initialLocation = null }) => {
         </Slider>
 
         <div class="courses-nearby-actions">
-          <button class="btn-primary">More Dates</button>
+          <button class="btn-primary" onClick={moreDatesAction}>
+            More Dates
+          </button>
         </div>
       </div>
     </section>
