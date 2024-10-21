@@ -7,6 +7,8 @@ export const ScheduleLocationFilterNew = ({
   value = {},
   containerClass = '',
   listClassName = '',
+  placeholder = 'Zip code or city',
+  label = 'Enter a zip code or city',
 }) => {
   const [isInputAllowed, setIsInputAllowed] = useState(true);
 
@@ -25,7 +27,7 @@ export const ScheduleLocationFilterNew = ({
 
   return (
     <div className={classNames(`${containerClass} form-item`, {})}>
-      <label>Enter a zip code or city</label>
+      <label>{label}</label>
       {!isInputAllowed ? (
         <span
           className={classNames('schedule-location-input scheduling-address')}
@@ -49,7 +51,7 @@ export const ScheduleLocationFilterNew = ({
       ) : (
         <AddressSearch
           closeHandler={handleLocationFilterChange}
-          placeholder="Zip code or city"
+          placeholder={placeholder}
           parentClass="scheduling-address"
           listClassName={listClassName}
           value={value}

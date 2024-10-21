@@ -7,7 +7,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import dayjs from 'dayjs';
 import { sortBy } from 'lodash';
 import Flatpickr from 'react-flatpickr';
-import { COURSE_MODES, COURSE_TYPES, ALERT_TYPES } from '@constants';
+import { COURSE_MODES, COURSE_TYPES } from '@constants';
 import { useAnalytics } from 'use-analytics';
 import { useEffectOnce } from 'react-use';
 import { useQuery } from '@tanstack/react-query';
@@ -585,8 +585,6 @@ const Scheduling = ({ initialLocation }) => {
         query: {
           ...router.query,
           productTypeId: workshopMaster?.productTypeId,
-          title: workshopMaster?.title,
-          desc: workshopMaster?.calenderViewDescription,
         },
       });
     } else {
@@ -595,8 +593,6 @@ const Scheduling = ({ initialLocation }) => {
         query: {
           ...router.query,
           productTypeId: workshopMaster?.productTypeId,
-          title: workshopMaster?.title,
-          desc: workshopMaster?.calenderViewDescription,
           courseType: courseTypeFilter,
           ctype: workshopMaster?.productTypeId,
         },
