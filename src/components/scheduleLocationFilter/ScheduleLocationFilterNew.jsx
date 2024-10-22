@@ -9,6 +9,7 @@ export const ScheduleLocationFilterNew = ({
   listClassName = '',
   placeholder = 'Zip code or city',
   label = 'Enter a zip code or city',
+  showOnlyRegions,
 }) => {
   const [isInputAllowed, setIsInputAllowed] = useState(true);
 
@@ -55,7 +56,7 @@ export const ScheduleLocationFilterNew = ({
           parentClass="scheduling-address"
           listClassName={listClassName}
           value={value}
-          isDefaultLocation
+          showOnlyRegions={showOnlyRegions}
         />
       )}
     </div>

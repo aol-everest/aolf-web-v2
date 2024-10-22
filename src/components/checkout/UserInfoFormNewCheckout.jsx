@@ -46,6 +46,7 @@ export const UserInfoFormNewCheckout = ({
             listClassName="result-list"
             placeholder="Address"
             label="Address"
+            showOnlyRegions={false}
           />
         )}
 
