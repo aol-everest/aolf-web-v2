@@ -948,6 +948,17 @@
     width: calc(50% - 10px);
     text-align: left;
     padding-left: 10px;
+    button {
+      background: linear-gradient(90deg, #ff9800 9.51%, #ff7e00 93.54%);
+      border: 0;
+      border-radius: 2rem;
+      color: #fff;
+      font-weight: 600;
+      height: 68px;
+      margin-top: 2rem;
+      padding: 1rem 4rem;
+      width: 320px;
+    }
     a img {
       width: 35%;
       @media screen and (max-width: 767px) {

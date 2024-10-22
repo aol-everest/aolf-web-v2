@@ -373,6 +373,9 @@
             line-height: 24px;
             color: #9598a6;
           }
+          input:not([type='checkbox'], [type='radio']) {
+            height: unset;
+          }
         }
         .section-box {
           border-top: #e9e9e9 1px solid;
