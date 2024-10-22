@@ -2,7 +2,7 @@
 import React, { useRef, useState, useEffect } from 'react';
 import usePlacesService from 'react-google-autocomplete/lib/usePlacesAutocompleteService';
 export const AddressSearch = ({
-  filter,
+  showOnlyRegions = true,
   closeHandler,
   placeholder,
   parentClass = '',
@@ -16,7 +16,7 @@ export const AddressSearch = ({
   } = usePlacesService({
     apiKey: process.env.NEXT_PUBLIC_GOOGLE_MAP_API_KEY,
     options: {
-      types: ['(regions)'],
+      types: showOnlyRegions ? ['(regions)'] : [],
       componentRestrictions: { country: 'us' },
     },
   });
