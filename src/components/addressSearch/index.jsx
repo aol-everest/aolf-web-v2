@@ -18,6 +18,14 @@ export const AddressSearch = ({
     options: {
       types: showOnlyRegions ? ['(regions)'] : [],
       componentRestrictions: { country: 'us' },
+      fields: [
+        'address_components',
+        'geometry',
+        'icon',
+        'name',
+        'formatted_address',
+      ],
+      strictBounds: false,
     },
   });
   const [address, setAddress] = useState(value?.locationName || '');
@@ -57,14 +65,18 @@ export const AddressSearch = ({
       setAddress(item.description);
       placesService?.getDetails(
         {
-          fields: ['geometry'],
+          fields: showOnlyRegions
+            ? ['geometry']
+            : ['geometry', 'address_components', 'formatted_address'],
           placeId: item.place_id,
         },
         (placeDetails) => {
           closeHandler({
             lat: placeDetails.geometry.location.lat(),
             lng: placeDetails.geometry.location.lng(),
-            locationName: item.description,
+            locationName: showOnlyRegions
+              ? item.description
+              : placeDetails.formatted_address,
           })();
         },
       );
