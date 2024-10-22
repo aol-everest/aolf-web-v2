@@ -64,7 +64,6 @@ export const PostCostDetailsCard = ({
                     <p className="reciept__item reciept__item_main">
                       <span>
                         <img src="/img/ic-timer.svg" alt="timer" />
-                        Limited Time Offer:
                       </span>
                     </p>
                   )}

@@ -712,6 +712,12 @@ const Course = () => {
             ))}
           </>
         )}
+        <div ref={ref} style={{ flex: '0 0 100%' }}></div>
+        {isSuccess && !hasNextPage && data.pages[0].data.length > 0 && (
+          <div class="no-course-found-wrap">
+            <p>That's all folks! No more data left to check out.</p>
+          </div>
+        )}
       </>
     );
   };

@@ -13,7 +13,7 @@ const settings = {
   arrows: true,
   dots: false,
   speed: 300,
-  centerPadding: '0px',
+  centerPadding: '24px',
   infinite: true,
   autoplaySpeed: 5000,
   autoplay: true,
