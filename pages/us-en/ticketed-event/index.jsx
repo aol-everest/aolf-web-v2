@@ -781,6 +781,12 @@ const TicketedEvent = () => {
             ))}
           </>
         )}
+        <div ref={ref} style={{ flex: '0 0 100%' }}></div>
+        {isSuccess && !hasNextPage && data.pages[0].data.length > 0 && (
+          <div class="no-course-found-wrap">
+            <p>No more items to display.</p>
+          </div>
+        )}
       </>
     );
   };
