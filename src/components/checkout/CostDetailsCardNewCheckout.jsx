@@ -55,11 +55,6 @@ export const CostDetailsCardNewCheckout = ({
     return (
       <div className="reciept reciept--box d-none d-lg-block">
         <div className="reciept__header">
-          <h2 className="title">
-            <span className="icon-wrap">
-              <img src="/img/stars-02.svg" width="20" height="20" alt="" />
-            </span>
-          </h2>
           <ul className="reciept__item_list ">
             <li>
               <p className="font-weight-normal">Regular Tuition</p>
@@ -242,14 +237,6 @@ export const CostDetailsCardNewCheckout = ({
   return (
     <>
       <div className="offer-box">
-        {!afterCreditPriceMessage && (
-          <h2 className="title">
-            <span className="icon-wrap">
-              <img src="/img/stars-02.svg" width="20" height="20" alt="" />
-            </span>
-          </h2>
-        )}
-
         {!isJourneyPremium && !isJourneyPlus && (
           <>
             <div className="offer-type">
