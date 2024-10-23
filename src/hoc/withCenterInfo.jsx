@@ -89,7 +89,7 @@ export const withCenterInfo = (WrappedComponent) => {
                 <div className="courses-tabs">
                   <ul className="tab-links">
                     <li>
-                      <Link href={COURSES_PAGE} legacyBehavior>
+                      <Link href={COURSES_PAGE} legacyBehavior scroll={false}>
                         <a
                           className={classNames('profile-tab', {
                             active: pathname === COURSES_PAGE,
@@ -101,7 +101,7 @@ export const withCenterInfo = (WrappedComponent) => {
                       </Link>
                     </li>
                     <li>
-                      <Link href={MEETUPS_PAGE} legacyBehavior>
+                      <Link href={MEETUPS_PAGE} legacyBehavior scroll={false}>
                         <a
                           className={classNames('profile-tab', {
                             active: pathname === MEETUPS_PAGE,
@@ -113,7 +113,7 @@ export const withCenterInfo = (WrappedComponent) => {
                       </Link>
                     </li>
                     <li>
-                      <Link href={EVENTS_PAGE} legacyBehavior>
+                      <Link href={EVENTS_PAGE} legacyBehavior scroll={false}>
                         <a
                           className={classNames('profile-tab', {
                             active: pathname === EVENTS_PAGE,

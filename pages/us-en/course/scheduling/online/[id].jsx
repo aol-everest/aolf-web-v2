@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useQueryState, parseAsInteger } from 'nuqs';
 import { useRouter } from 'next/router';
 import queryString from 'query-string';
@@ -6,7 +6,13 @@ import ErrorPage from 'next/error';
 import { Loader, PageLoading } from '@components';
 import { replaceRouteWithUTMQuery } from '@service';
 import dayjs from 'dayjs';
-import { tConvert, api, phoneRegExp, priceCalculation } from '@utils';
+import {
+  tConvert,
+  api,
+  phoneRegExp,
+  priceCalculation,
+  parsedAddress,
+} from '@utils';
 import { useAuth, useGlobalAlertContext } from '@contexts';
 import { useAnalytics } from 'use-analytics';
 import { ABBRS, ALERT_TYPES } from '@constants';
@@ -28,12 +34,31 @@ import { Formik } from 'formik';
 import { loadStripe } from '@stripe/stripe-js';
 import { filterAllowedParams, removeNull } from '@utils/utmParam';
 
-const SchedulingOnlineFlow = () => {
+export async function getServerSideProps(context) {
+  let response = null;
+
+  try {
+    let param = {
+      ctypeId: process.env.NEXT_PUBLIC_SKY_BREATH_MEDITATION_ONLINE_CTYPE || '',
+    };
+    response = await api.get({
+      path: 'workshopMaster',
+      param,
+    });
+  } catch (error) {
+    console.error('Failed to fetch ZIP code by IP');
+  }
+
+  return {
+    props: { workshopMaster: response?.data || {} },
+  };
+}
+
+const SchedulingOnlineFlow = ({ workshopMaster }) => {
   const router = useRouter();
   const { track } = useAnalytics();
 
   const { id: workshopId } = router.query;
-  const [desc] = useQueryState('desc');
   const [courseType] = useQueryState('courseType');
 
   const {
@@ -60,7 +85,7 @@ const SchedulingOnlineFlow = () => {
   const handleChangeDates = () => {
     replaceRouteWithUTMQuery(router, {
       pathname: `/us-en/course/scheduling`,
-      query: { ...router.query, title: null, desc: null, productTypeId: null },
+      query: { ...router.query, productTypeId: null },
     });
   };
 
@@ -84,6 +109,7 @@ const SchedulingOnlineFlow = () => {
     const stripe = useStripe();
     const elements = useElements();
     const [flowVersion] = useQueryState('fver', parseAsInteger);
+    const [locationFilter, setLocationFilter] = useState(null);
 
     const { showAlert } = useGlobalAlertContext();
 
@@ -425,6 +451,16 @@ const SchedulingOnlineFlow = () => {
       }
     };
 
+    useEffect(() => {
+      const paymentBox = document.querySelector('.payment-box');
+      if (paymentBox) {
+        window.scrollTo({
+          top: document.documentElement.scrollHeight, // Scroll to the bottom
+          behavior: 'smooth',
+        });
+      }
+    }, []); // Runs only on component mount (when the pa
+
     const handleTrackEvent = () => {
       track(
         'begin_checkout',
@@ -467,9 +503,31 @@ const SchedulingOnlineFlow = () => {
       );
     };
 
+    const handleLocationFilterChange = async (value, formikProps) => {
+      const { setFieldValue, setFieldTouched } = formikProps;
+      if (value) {
+        const { street, city, state, zip } = parsedAddress(value?.locationName);
+        setLocationFilter(value);
+
+        setFieldValue('contactCity', city);
+        setFieldTouched('contactCity', true);
+
+        setFieldValue('contactAddress', street);
+        setFieldTouched('contactAddress', true);
+
+        setFieldValue('contactState', state);
+        setFieldTouched('contactState', true);
+
+        setFieldValue('contactZip', zip);
+        setFieldTouched('contactZip', true);
+      } else {
+        setLocationFilter(value);
+      }
+    };
+
     return (
       <>
-        <NextSeo title={title + ' Course Checkout'} />
+        <NextSeo title={workshopMaster?.title + ' Course Checkout'} />
         {loading && <Loader />}
         <Formik
           initialValues={{
@@ -477,6 +535,9 @@ const SchedulingOnlineFlow = () => {
             lastName: '',
             email: '',
             contactAddress: '',
+            contactCity: '',
+            contactState: '',
+            contactZip: '',
             contactPhone: '',
             questionnaire: questionnaireArray,
             ppaAgreement: isReferBySameSite,
@@ -495,7 +556,30 @@ const SchedulingOnlineFlow = () => {
             contactPhone: Yup.string()
               .required('Phone number required')
               .matches(phoneRegExp, 'Phone number is not valid'),
-            contactAddress: Yup.string().required('Address is required'),
+            contactCity: Yup.string().when('locationFilter', {
+              is: (value) => !!value, // Apply validation only when locationFilter is set
+              then: Yup.string().required('City is required'),
+              otherwise: Yup.string().notRequired(),
+            }),
+            contactAddress: Yup.string().when('locationFilter', {
+              is: (value) => !!value,
+              then: Yup.string().required('Address is required'),
+              otherwise: Yup.string().notRequired(),
+            }),
+            contactState: Yup.string().when('locationFilter', {
+              is: (value) => !!value,
+              then: Yup.string().required('State is required'),
+              otherwise: Yup.string().notRequired(),
+            }),
+            contactZip: Yup.string().when('locationFilter', {
+              is: (value) => !!value,
+              then: Yup.string()
+                .required('Zip code is required!')
+                .matches(/^\d+$/, 'Zip is invalid') // Ensures only digits are allowed
+                .min(2, 'Zip must be at least 2 characters')
+                .max(10, 'Zip can be at most 10 characters'),
+              otherwise: Yup.string().notRequired(),
+            }),
             ppaAgreement: Yup.boolean()
               .label('Terms')
               .test(
@@ -510,17 +594,26 @@ const SchedulingOnlineFlow = () => {
           }}
         >
           {(formikProps) => {
-            const { values, setTouched, setErrors, errors } = formikProps;
+            const {
+              values,
+              setTouched,
+              setErrors,
+              errors,
+              setFieldValue,
+              resetForm,
+            } = formikProps;
             formikOnChange(values);
             return (
               <main className="scheduling-page">
                 <section className="scheduling-top">
                   <div className="container">
-                    <h1 className="page-title">{title}</h1>
+                    <h1 className="page-title">
+                      {workshopMaster?.title || title}
+                    </h1>
                     <div
                       className="page-description"
                       dangerouslySetInnerHTML={{
-                        __html: desc,
+                        __html: workshopMaster?.calenderViewDescription,
                       }}
                     ></div>
                   </div>
@@ -675,7 +768,11 @@ const SchedulingOnlineFlow = () => {
                               {values.email}{' '}
                               <a
                                 href="#"
-                                onClick={() => setEmailAddressAdded(false)}
+                                onClick={() => {
+                                  setLocationFilter(null);
+                                  resetForm({});
+                                  setEmailAddressAdded(false);
+                                }}
                               >
                                 not you?
                               </a>
@@ -687,10 +784,15 @@ const SchedulingOnlineFlow = () => {
                               <UserInfoFormNewCheckout
                                 formikProps={formikProps}
                                 showContactEmail={false}
-                                showContactState={false}
-                                showContactCity={false}
-                                showContactZip={false}
-                                addressLabel="Address"
+                                showStreetAddress={!!locationFilter}
+                                showContactCity={!!locationFilter}
+                                showContactZip={!!locationFilter}
+                                showContactState={!!locationFilter}
+                                showLocationSearch={true}
+                                locationFilter={locationFilter}
+                                handleLocationFilterChange={(value) =>
+                                  handleLocationFilterChange(value, formikProps)
+                                }
                               />
 
                               <div className="section-box">

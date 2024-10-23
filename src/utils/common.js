@@ -148,6 +148,53 @@ export const getZipCodeByLatLang = async (lat, lng) => {
   }
 };
 
+export const parsedAddress = (address) => {
+  if (!address) {
+    return {};
+  }
+  // Initialize variables
+  let city = '';
+  let state = '';
+  let zip = '';
+  let country = '';
+  let street = '';
+
+  // Split by comma to get different parts
+  const parts = address.split(',').map((part) => part.trim());
+
+  if (parts.length === 3) {
+    // Case: "City, State ZIP, Country"
+    [city, state] = parts[0].includes(' ') ? [parts[0], parts[1]] : parts;
+    country = parts[2];
+
+    // Separate state and ZIP if ZIP is present
+    const stateZip = state.split(' ');
+    if (stateZip.length === 2) {
+      state = stateZip[0];
+      zip = stateZip[1];
+    }
+  } else if (parts.length === 4) {
+    // Case: "Street, City, State ZIP, Country"
+    [street, city, state] = parts.slice(0, 3);
+    country = parts[3];
+
+    // Separate state and ZIP if ZIP is present
+    const stateZip = state.split(' ');
+    if (stateZip.length === 2) {
+      state = stateZip[0];
+      zip = stateZip[1];
+    }
+  }
+
+  return {
+    street,
+    city,
+    state,
+    zip,
+    country,
+  };
+};
+
 export const getLatLangByZipCode = async (zipCode) => {
   const apiUrl = `https://maps.googleapis.com/maps/api/geocode/json?address=${zipCode}&key=${process.env.NEXT_PUBLIC_GOOGLE_MAP_API_KEY}`;
   const data = await fetch(apiUrl);

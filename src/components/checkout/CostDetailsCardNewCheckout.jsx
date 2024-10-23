@@ -59,7 +59,6 @@ export const CostDetailsCardNewCheckout = ({
             <span className="icon-wrap">
               <img src="/img/stars-02.svg" width="20" height="20" alt="" />
             </span>
-            Limited time offer
           </h2>
           <ul className="reciept__item_list ">
             <li>
@@ -248,7 +247,6 @@ export const CostDetailsCardNewCheckout = ({
             <span className="icon-wrap">
               <img src="/img/stars-02.svg" width="20" height="20" alt="" />
             </span>
-            Limited time offer
           </h2>
         )}
 

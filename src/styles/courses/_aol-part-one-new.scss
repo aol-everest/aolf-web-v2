@@ -420,7 +420,6 @@
       padding-top: 40px;
     }
   }
-
   .key-highlight-section {
     background-color: #ffffff;
     padding-top: 4rem;
@@ -814,6 +813,7 @@
         }
         a {
           color: #010101;
+          text-decoration: underline;
         }
         ul {
           padding: 15px 0 15px 25px;
@@ -951,14 +951,12 @@
     padding-left: 10px;
     button {
       background: linear-gradient(90deg, #ff9800 9.51%, #ff7e00 93.54%);
+      border: 0;
+      border-radius: 2rem;
       color: #fff;
-      border: 0px;
-      border-radius: 50px;
-      padding: 1rem 4rem;
-      white-space: nowrap;
-      @media screen and (max-width: 767px) {
-        padding: 10px 20px;
-      }
+      font-weight: 600;
+      padding: 1rem 1rem;
+      font-size: 20px;
     }
     a img {
       width: 35%;

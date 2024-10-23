@@ -22,7 +22,28 @@ import { useGlobalAlertContext } from '@contexts';
 import { useAnalytics } from 'use-analytics';
 import moment from 'moment';
 
-const SchedulingInPersonFlow = () => {
+export async function getServerSideProps(context) {
+  let response = null;
+
+  try {
+    let param = {
+      ctypeId:
+        process.env.NEXT_PUBLIC_SKY_BREATH_MEDITATION_IN_PERSON_CTYPE || '',
+    };
+    response = await api.get({
+      path: 'workshopMaster',
+      param,
+    });
+  } catch (error) {
+    console.error('Failed to fetch ZIP code by IP');
+  }
+
+  return {
+    props: { workshopMaster: response?.data || {} },
+  };
+}
+
+const SchedulingInPersonFlow = ({ workshopMaster }) => {
   const fp = useRef(null);
   const router = useRouter();
   const { id: workshopId } = router.query;
@@ -31,7 +52,6 @@ const SchedulingInPersonFlow = () => {
 
   const [attendeeId] = useQueryState('aid');
   const [title] = useQueryState('title');
-  const [desc] = useQueryState('desc');
   const [productTypeId] = useQueryState('productTypeId');
   const [mode] = useQueryState('mode', parseAsString.withDefault('both'));
   const [locationFilter] = useQueryState('location', parseAsJson());
@@ -216,7 +236,7 @@ const SchedulingInPersonFlow = () => {
   const handleFlatpickrOnChange = () => {
     replaceRouteWithUTMQuery(router, {
       pathname: `/us-en/course/scheduling`,
-      query: { ...router.query, title: null, desc: null, productTypeId: null },
+      query: { ...router.query, productTypeId: null },
     });
   };
 
@@ -308,11 +328,11 @@ const SchedulingInPersonFlow = () => {
         <section className="scheduling-top">
           {(!attendeeId || activeWorkshop?.id) && (
             <div className="container">
-              <h1 className="page-title">{title}</h1>
+              <h1 className="page-title">{workshopMaster?.title || title}</h1>
               <div
                 className="page-description"
                 dangerouslySetInnerHTML={{
-                  __html: desc,
+                  __html: workshopMaster?.calenderViewDescription,
                 }}
               ></div>
             </div>
