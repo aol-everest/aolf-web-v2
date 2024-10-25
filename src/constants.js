@@ -10,6 +10,7 @@ export const ABBRS = {
   PDT: 'PT',
   HST: 'HT',
   HDT: 'HT',
+  IST: 'IST',
 };
 
 export const TIME_ZONE = {

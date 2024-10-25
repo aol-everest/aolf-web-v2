@@ -57,7 +57,7 @@ export const DropdownNewCheckout = ({
       containerClass={containerClass}
       fullWidth={fullWidth}
     >
-      <label>{placeholder}</label>
+      <label>{label || placeholder}</label>
       <Field
         name={formikKey}
         component={SelectField}

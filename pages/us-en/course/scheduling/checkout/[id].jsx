@@ -1157,11 +1157,10 @@ const SchedulingPaymentForm = ({
                                             rel="noreferrer"
                                           >
                                             {workshop.locationStreet &&
-                                              workshop.locationStreet}
-                                            {workshop.locationCity || ''}
-                                            {', '}
-                                            {workshop.locationProvince ||
-                                              ''}{' '}
+                                              `${workshop.locationStreet}, `}
+                                            {workshop.locationCity &&
+                                              `${workshop.locationCity}, `}
+                                            {workshop.locationProvince || ''}{' '}
                                             {workshop.locationPostalCode || ''}
                                           </a>
                                         )}
@@ -1178,11 +1177,11 @@ const SchedulingPaymentForm = ({
                                             rel="noreferrer"
                                           >
                                             {workshop.streetAddress1 &&
-                                              workshop.streetAddress1}
+                                              `${workshop.streetAddress1}, `}
                                             {workshop.streetAddress2 &&
-                                              workshop.streetAddress2}
-                                            {workshop.city || ''}
-                                            {', '}
+                                              `${workshop.streetAddress2}, `}
+                                            {workshop.city &&
+                                              `${workshop.city}, `}
                                             {workshop.state || ''}{' '}
                                             {workshop.zip || ''}
                                           </a>

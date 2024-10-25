@@ -2,7 +2,7 @@
 import React, { useRef, useState, useEffect } from 'react';
 import usePlacesService from 'react-google-autocomplete/lib/usePlacesAutocompleteService';
 export const AddressSearch = ({
-  filter,
+  showOnlyRegions = true,
   closeHandler,
   placeholder,
   parentClass = '',
@@ -16,8 +16,16 @@ export const AddressSearch = ({
   } = usePlacesService({
     apiKey: process.env.NEXT_PUBLIC_GOOGLE_MAP_API_KEY,
     options: {
-      types: ['(regions)'],
+      types: showOnlyRegions ? ['(regions)'] : [],
       componentRestrictions: { country: 'us' },
+      fields: [
+        'address_components',
+        'geometry',
+        'icon',
+        'name',
+        'formatted_address',
+      ],
+      strictBounds: false,
     },
   });
   const [address, setAddress] = useState(value?.locationName || '');
@@ -57,14 +65,18 @@ export const AddressSearch = ({
       setAddress(item.description);
       placesService?.getDetails(
         {
-          fields: ['geometry'],
+          fields: showOnlyRegions
+            ? ['geometry']
+            : ['geometry', 'address_components', 'formatted_address'],
           placeId: item.place_id,
         },
         (placeDetails) => {
           closeHandler({
             lat: placeDetails.geometry.location.lat(),
             lng: placeDetails.geometry.location.lng(),
-            locationName: item.description,
+            locationName: showOnlyRegions
+              ? item.description
+              : placeDetails.formatted_address,
           })();
         },
       );

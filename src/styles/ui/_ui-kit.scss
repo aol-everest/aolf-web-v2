@@ -54,7 +54,7 @@ a,
   outline: none;
   background: none;
   color: $blue;
-  text-decoration: underline;
+  text-decoration: none;
   transition: all 0.3s ease-in-out;
   padding: 0;
 
@@ -64,6 +64,7 @@ a,
 
   &:hover {
     color: $blue-hover;
+    text-decoration: none;
   }
 
   &:active {

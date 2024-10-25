@@ -29,8 +29,8 @@ export function PopVariation2({ closeAction, acceptAction, show }) {
       <div class="section-right">
         <div class="review-rating-box">
           <div class="reviewers">
-            <img src="./img/1-comments.png" alt="reviewer" />
-            <img src="./img/1-sahaj-comment.png" alt="reviewer" />
+            <img src="/img/1-comments.png" alt="reviewer" />
+            <img src="/img/1-sahaj-comment.png" alt="reviewer" />
           </div>
           <div class="review-text">
             500M+ people have already transformed their lives with ArtOfLiving
@@ -51,11 +51,11 @@ export function PopVariation2({ closeAction, acceptAction, show }) {
           </ul>
         </div>
         <div class="course-bonus">
-          <h4>Bonus</h4>
+          <h4>Bonuses</h4>
           <ul>
-            <li>1-month free access to online yoga studio</li>
+            <li>Access to 6 day #SleepBetter Challenge</li>
             <li>Extra guided meditation from Gurudev</li>
-            <li>Free "5 Keys to a Joyful Life" toolkit</li>
+            <li>Inspirational Quotes E-book</li>
           </ul>
         </div>
         <div class="note">Limited Spots Available! Secure yours now.</div>

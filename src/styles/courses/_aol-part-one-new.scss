@@ -1,0 +1,979 @@
+.aol-part-one {
+  @media screen and (max-width: 991px) {
+    margin-top: 0 !important;
+  }
+  .sky-breath {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: white;
+    box-shadow: inset 0px 0px 89px -60px white;
+    padding-bottom: 100px;
+    padding-top: 108px;
+    position: relative;
+    &::before {
+      background-image: url(/img/aol-p1-hero-bg.webp);
+      background-repeat: no-repeat;
+      background-position: right top;
+      background-size: cover;
+      width: 100%;
+      height: 700px;
+      content: '';
+      display: block;
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 0;
+      @media screen and (max-width: 991px) {
+        background-image: url(/img/aol-p1-hero-bg-mobile.jpg);
+        height: 859px;
+        background-position: center center;
+        background-size: cover;
+      }
+    }
+    .first-section {
+      margin-bottom: 40px;
+      padding-left: 34px;
+      z-index: 1;
+      .banner-title {
+        font-size: 48px;
+        font-family: 'Work Sans';
+        font-weight: 900;
+        font-style: normal;
+        color: rgb(255, 255, 255);
+        margin-bottom: 10px;
+        max-width: 700px;
+        line-height: 62px;
+        span {
+          font-style: italic;
+          font-weight: 600;
+        }
+      }
+      .hero-register-button-wrapper {
+        margin-top: 30px;
+        margin-bottom: 20px;
+        a.hero-register-button {
+          img {
+            width: 320px;
+          }
+        }
+        @media only screen and (max-width: 768px) {
+          text-align: center;
+          margin-top: 30px;
+          margin-bottom: 0;
+          a.hero-register-button {
+            img {
+              width: 222px;
+            }
+          }
+        }
+      }
+      @media only screen and (max-width: 991px) {
+        .banner-title {
+          width: 100%;
+          text-align: center;
+          font-size: 30px;
+          line-height: 34px;
+          margin-bottom: 10px;
+        }
+      }
+      .banner-desc {
+        font-size: 48px;
+        font-family: 'Work Sans';
+        font-weight: 600;
+        font-style: normal;
+        width: 700px;
+        line-height: 43px;
+        color: white;
+        span {
+          font-family: 'museo_sans700';
+        }
+      }
+      @media only screen and (max-width: 991px) {
+        .banner-desc {
+          width: 100%;
+          text-align: center;
+          font-size: 28px;
+          line-height: 30px;
+        }
+      }
+      ul {
+        font-weight: 400;
+        font-family: 'Noto Serif';
+        font-size: 22px;
+        color: rgb(255, 255, 255);
+        font-style: italic;
+        padding-left: 12px;
+        li {
+          line-height: 30px;
+          margin-top: 29px;
+          display: flex;
+          align-items: center;
+          svg,
+          img {
+            margin-right: 18px;
+          }
+        }
+      }
+      @media only screen and (max-width: 991px) {
+        ul {
+          margin-top: auto;
+          margin-left: auto;
+          margin-right: auto;
+          width: 320px;
+          max-width: 100%;
+          font-weight: 400;
+          font-family: Lora;
+          font-size: 20px;
+          font-style: italic;
+          color: #000;
+          li {
+            line-height: 22px;
+            margin-top: 10px;
+            align-items: flex-start;
+            img {
+              height: 23px;
+              width: 23px;
+              margin-right: 8px;
+            }
+          }
+        }
+      }
+    }
+
+    @media only screen and (max-width: 991px) {
+      .first-section {
+        height: 775px;
+        display: flex;
+        flex-direction: column;
+      }
+    }
+  }
+  @media only screen and (max-width: 991px) {
+    .sky-breath {
+      padding: 20px 7px;
+    }
+  }
+  .registration-widget {
+    button.register-button {
+      border-radius: 2rem;
+      .fa-solid {
+        color: #fff;
+      }
+    }
+  }
+  .progress-section {
+    background-color: #fff6ec;
+    padding-top: 100px;
+    .progress_box {
+      display: flex;
+      flex-direction: row;
+      justify-content: flex-start;
+      margin: 1rem 0;
+      align-items: center;
+      .progress_logo {
+        margin-right: 1rem;
+        margin-bottom: 1rem;
+        img {
+          width: 85px;
+          height: 85px;
+        }
+      }
+      .title {
+        font-size: 32px;
+        line-height: 44px !important;
+        strong {
+          font-size: 48px;
+        }
+      }
+      .content {
+        font-size: 32px;
+        line-height: 32px !important;
+        color: #898989;
+        font-weight: 500;
+      }
+    }
+    @media only screen and (max-width: 991px) {
+      .progress_box {
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-start;
+        margin: 1rem 0;
+        align-items: center;
+        .progress_logo {
+          margin-right: 1rem;
+          margin-bottom: 0rem;
+          img {
+            width: 45px;
+            height: 45px;
+          }
+        }
+        .progress_content {
+          line-height: 14px !important;
+        }
+        .title {
+          font-size: 14px !important;
+          line-height: normal !important;
+          strong {
+            font-size: 22px;
+          }
+        }
+        .content {
+          font-size: 14px;
+          line-height: 10px !important;
+          font-family: 'museo_sans500';
+        }
+      }
+    }
+  }
+  @media only screen and (max-width: 991px) {
+    .progress-section {
+      padding-top: 30px;
+      background-color: #f4f4f4;
+      padding-left: 8px;
+      padding-right: 8px;
+      .container {
+        max-width: 300px;
+        padding-top: 5px;
+        border-radius: 16px;
+        background-color: #ffffff;
+      }
+    }
+  }
+
+  .breadth-meditation {
+    background-color: #f7f5f4;
+    padding: 80px 0 0px 0;
+    background-image: url(/img/technique-bg.png);
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    .breadth-meditation_content {
+      @media only screen and (max-width: 991px) {
+        br {
+          display: none;
+        }
+      }
+      .title {
+        height: 90px;
+        display: block;
+        @media only screen and (max-width: 991px) {
+          font-size: 22px;
+          line-height: 24px;
+          height: auto;
+          br {
+            display: none;
+          }
+        }
+      }
+      .stats-desc {
+        height: 100px;
+        display: block;
+        padding-top: 20px;
+        @media only screen and (max-width: 991px) {
+          font-size: 15px;
+          line-height: 18px !important;
+          font-family: 'museo_sans300';
+          height: auto;
+        }
+      }
+    }
+    .breadth-meditation__block {
+      margin-bottom: 2rem;
+      @media only screen and (max-width: 991px) {
+        margin-bottom: 0;
+        .breadth-meditation__title {
+          margin: 0 1rem;
+        }
+        .col-12 {
+          padding-left: 0;
+          padding-right: 0;
+        }
+      }
+      .breadth-meditation__title {
+        margin-bottom: 0rem;
+      }
+      .breadth-meditation_content {
+        margin: 13px 0 0 0px;
+        font-size: 24px;
+        line-height: 28px;
+        .title {
+          height: 100px;
+          display: block;
+        }
+      }
+      @media only screen and (max-width: 991px) {
+        .breadth-meditation_content {
+          margin: 35px 15px;
+          font-size: 15px;
+          line-height: 20px;
+          text-align: center;
+          font-family: 'museo_sans300';
+        }
+      }
+      @media only screen and (max-width: 991px) {
+        .comments__video {
+          margin: 1rem auto;
+          width: 100%;
+          height: 180px;
+          max-width: 320px;
+        }
+      }
+    }
+    .breadth-meditation_box {
+      display: flex;
+      background-color: rgba(255, 255, 255, 0.6);
+      border-radius: 30px;
+      padding: 20px;
+      margin: 30px 0px;
+      min-height: 215px;
+      align-items: flex-start;
+      justify-content: flex-start;
+      .breadth-meditation_logo {
+        margin-right: 1rem;
+        img {
+          width: 57px;
+          padding-top: 10px;
+        }
+      }
+      @media only screen and (max-width: 991px) {
+        max-width: 320px;
+        margin: 6px auto;
+        min-height: unset;
+        .breadth-meditation_logo {
+          img {
+            width: 32px;
+          }
+        }
+      }
+    }
+    .register-button {
+      background: linear-gradient(90deg, #ff9800 9.51%, #ff7e00 93.54%);
+      color: #fff;
+      border: 0px;
+      border-radius: 2rem;
+      padding: 1rem 4rem;
+      margin-top: 2rem;
+      width: 320px;
+      height: 68px;
+      font-weight: 600;
+    }
+    @media only screen and (max-width: 991px) {
+      .register-button {
+        width: 222px;
+        height: 47px;
+        font-size: 16px;
+        padding: 0;
+        font-weight: 600;
+        i {
+          font-size: 12px;
+        }
+      }
+    }
+    .breadth-meditation__title {
+      padding: 0 0 45px;
+      max-width: 600px;
+      margin: auto;
+      &.benefits-title {
+        max-width: 800px;
+      }
+    }
+    @media only screen and (max-width: 991px) {
+      .breadth-meditation__title {
+        margin-top: 2rem;
+        padding: 0 0px 25px;
+      }
+    }
+    .separator {
+      width: 458px;
+      height: 4px;
+      opacity: 0.3;
+      margin-top: 50px;
+      margin-bottom: 100px;
+      @media only screen and (max-width: 991px) {
+        height: 1px;
+        width: 130px;
+        margin-top: 15px;
+        margin-bottom: 20px;
+      }
+    }
+    .section-desc {
+      max-width: 800px;
+      margin-left: auto;
+      margin-right: auto;
+      font-family: 'museo_sans300';
+      @media only screen and (max-width: 991px) {
+        font-size: 15px;
+        line-height: 20px !important;
+      }
+    }
+    .comments__video {
+      width: 400px;
+      height: 225px;
+      margin-left: unset;
+    }
+  }
+  @media only screen and (max-width: 991px) {
+    .breadth-meditation {
+      background-image: url(/img/Breath-meditation-bg-mobile.png);
+      padding-bottom: 30px;
+      padding-top: 40px;
+    }
+  }
+  .key-highlight-section {
+    background-color: #ffffff;
+    padding-top: 4rem;
+    padding-bottom: 4rem;
+    .key-highlight_block {
+      padding-bottom: 2rem;
+      @media only screen and (max-width: 991px) {
+        padding-bottom: 1rem;
+      }
+      .key-highlight_title {
+        max-width: 700px;
+        padding-left: 0;
+        padding-right: 0;
+        margin-left: auto;
+        margin-right: auto;
+      }
+    }
+    .key-highlight-box {
+      margin-bottom: 1rem;
+      margin-left: 10px;
+      margin-right: 10px;
+
+      img {
+        width: 100%;
+      }
+      .key-highlight_title {
+        @media only screen and (max-width: 991px) {
+          padding-left: 0;
+          padding-right: 0;
+        }
+      }
+      .key-highlight-content {
+        background-color: #ffedd9;
+        padding: 35px;
+        @media only screen and (max-width: 991px) {
+          padding: 20px;
+        }
+        .title {
+          font-family: 'museo_sans700';
+          font-size: 29px;
+          line-height: 39px;
+          @media only screen and (max-width: 991px) {
+            font-size: 18px;
+            line-height: 24px;
+          }
+        }
+        .content {
+          display: flex;
+          margin: 0.8rem 0;
+          min-height: 60px;
+          font-family: 'museo_sans300';
+          font-size: 20px;
+          line-height: 29px;
+          @media only screen and (max-width: 991px) {
+            font-size: 15px;
+            line-height: 18px;
+            padding-top: 10px;
+            margin-top: 0;
+          }
+        }
+        @media only screen and (min-width: 992px) {
+          min-height: 270px;
+        }
+      }
+    }
+  }
+  .highlights-slider {
+    padding-bottom: 50px;
+    @media only screen and (max-width: 991px) {
+      padding-bottom: 20px;
+    }
+    .slick-dots {
+      li {
+        margin: 0 4px !important;
+        width: auto !important;
+        button {
+          padding: 0 !important;
+          background: #a6a6a6 !important;
+          height: 8px;
+          width: 8px;
+          border-radius: 8px !important;
+          &::before {
+            display: none;
+          }
+        }
+        &.slick-active {
+          button {
+            background: #ff9732 !important;
+            width: 30px !important;
+            padding: 0 !important;
+          }
+        }
+      }
+
+      :before {
+        font-size: 12px;
+      }
+    }
+  }
+  @media only screen and (max-width: 991px) {
+    .key-highlight-box {
+      background-color: #ffedd9;
+      min-height: 350px;
+    }
+    .key-highlight-section {
+      padding-top: 50px;
+      padding-bottom: 30px;
+      background-color: #fff;
+    }
+  }
+
+  .comments {
+    background-color: #f7f5f4;
+    padding: 122px 0 100px 0;
+    background-image: url(/img/video-thumb-desktop.png);
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position-y: center;
+  }
+  .comments__video {
+    margin-top: 20px;
+    margin-bottom: 0;
+    width: 600px;
+    height: 337px;
+  }
+  .comments__title {
+    font-family: 'museo_sans500';
+    padding-bottom: 50px !important;
+  }
+  @media only screen and (max-width: 991px) {
+    .comments {
+      background-image: url(/img/video-bg-mobile.png) !important;
+      background-position: center;
+      background-size: cover;
+      padding: 50px 30px;
+      .comments__title {
+        padding: 0 !important;
+      }
+      .comments__video {
+        margin-bottom: 0;
+        margin-top: 70px;
+        background: none;
+        height: 180px;
+        width: 100%;
+      }
+    }
+  }
+  .quote-section {
+    background-color: #f7f5f4;
+    padding: 71px 0 100px 0;
+    background-image: url(/img/Quote-dektop.png);
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position-y: center;
+    @media only screen and (max-width: 991px) {
+      padding: 30px 0 20px 0;
+    }
+    .main-area {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      span {
+        font-family: 'Lora', serif;
+        font-size: 46px;
+        line-height: 56px !important;
+        color: #fff;
+        padding: 0 50px;
+        font-weight: 400;
+        margin-bottom: 0.5rem;
+        max-width: 100%;
+        font-style: italic;
+        text-align: center;
+      }
+      @media only screen and (max-width: 991px) {
+        span {
+          font-size: 21px;
+          line-height: 22px !important;
+        }
+      }
+    }
+    .quote-section__text {
+      text-align: center;
+      color: #ffffff;
+      margin-top: 1rem;
+
+      font-size: 36px;
+      line-height: 71px;
+      color: #fff;
+      img {
+        width: 144px;
+        height: 144px;
+        @media only screen and (max-width: 991px) {
+          width: 48px;
+          height: 48px;
+          margin-bottom: 15px;
+        }
+      }
+    }
+    @media only screen and (max-width: 991px) {
+      .quote-section__text {
+        font-size: 15px;
+        line-height: 36px !important;
+      }
+    }
+  }
+  @media only screen and (max-width: 991px) {
+    .comments {
+      background-image: url(/img/quote-bg-mobile.png);
+    }
+  }
+  .feature-section {
+    background-color: #ffffff;
+    padding-top: 4rem;
+    padding-bottom: 4rem;
+    .feature_block {
+      padding-bottom: 2rem;
+    }
+    .feature_box {
+      display: flex;
+      flex-direction: row;
+      padding: 1rem;
+      margin: 1rem 0;
+      min-height: 15rem;
+      text-align: center;
+      border-radius: 20px;
+      .feature_logo {
+        margin-bottom: 1rem;
+        min-height: 4rem;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding-left: 24px;
+        img {
+          width: 180px;
+        }
+      }
+      .feature-content {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-align: left;
+        margin-left: 2rem;
+        font-size: 29px;
+        line-height: 26px;
+        font-family: 'Noto Serif';
+        font-style: italic;
+        line-height: normal;
+      }
+    }
+    @media only screen and (max-width: 991px) {
+      .feature_box {
+        margin: 0 0 11px;
+        border-radius: 20px !important;
+        padding: 40px;
+        height: unset;
+        min-height: unset;
+        flex-direction: row;
+        border-radius: 0;
+        max-width: 320px;
+        margin-left: auto;
+        margin-right: auto;
+        .feature_logo {
+          min-height: unset;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          width: 100px;
+          margin: 0px 0;
+          padding-left: 0;
+          img {
+            max-width: 100px;
+          }
+        }
+        .feature-content {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          text-align: left;
+          margin-left: 15px;
+          font-family: 'lora';
+          font-size: 15px;
+          line-height: 15px;
+        }
+      }
+    }
+    .pinkbox {
+      background: #fef2f2;
+    }
+    .greybox {
+      background: #f5f5f5;
+    }
+  }
+  .faq {
+    //background-color: #f7f5f4;
+    padding: 122px 0 100px 0;
+    max-width: 1077px;
+    margin: auto;
+    @media only screen and (max-width: 991px) {
+      .container {
+        max-width: 350px;
+      }
+    }
+    .accordion {
+      margin: 30px auto;
+    }
+    .section-title {
+      display: flex;
+      justify-content: space-between;
+      padding-left: 50px !important;
+      img {
+        width: 81px;
+        @media only screen and (max-width: 991px) {
+          width: auto;
+          height: 48px;
+          padding-left: 0 !important;
+          padding-right: 0 !important;
+        }
+      }
+      @media only screen and (max-width: 991px) {
+        padding-left: 20px !important;
+      }
+    }
+    .card {
+      border: none;
+      border-bottom: 2px solid #dcdcdc !important;
+      .card-header {
+        background: #ffffff;
+        border: none;
+        padding-left: 50px;
+        @media only screen and (max-width: 991px) {
+          padding: 0;
+        }
+        h5 .btn {
+          font-family: 'museo_sans500';
+          text-align: left;
+
+          font-size: 36px !important;
+          line-height: 36px !important;
+          color: #010101;
+          background: transparent !important;
+          border: none !important;
+          position: relative;
+          padding: 50px 0 40px !important;
+          text-decoration: none;
+          display: block;
+          width: 100%;
+          padding-right: 50px !important;
+          &:after {
+            content: '';
+            font-size: 26px;
+            color: rgba(0, 0, 0, 0.5);
+            position: absolute;
+            top: 60px;
+            right: 10px;
+            display: block;
+            height: 20px;
+            width: 20px;
+            border-top: 3px solid rgba(0, 0, 0, 0.3);
+            border-right: 3px solid rgba(0, 0, 0, 0.3);
+            border-radius: 2px;
+            transform: rotate(137deg);
+            @media only screen and (max-width: 991px) {
+              top: 20px;
+            }
+          }
+          &.collapsed:after {
+            transform: rotate(45deg);
+            transition: all ease 0.5ms;
+          }
+          @media only screen and (max-width: 991px) {
+            font-size: 15px !important;
+            line-height: 18px !important;
+            padding: 20px 30px 20px 20px !important;
+          }
+        }
+      }
+      .card-body {
+        font-size: 24px !important;
+        line-height: 28px !important;
+        color: #010101;
+        font-family: 'museo_sans300';
+        padding-bottom: 50px;
+        padding-top: 0;
+        padding-left: 50px;
+
+        @media only screen and (max-width: 991px) {
+          font-size: 14px !important;
+          line-height: 16px !important;
+          padding: 0 0 20px 20px;
+        }
+        a {
+          color: #010101;
+          text-decoration: underline;
+        }
+        ul {
+          padding: 15px 0 15px 25px;
+          li {
+            padding: 0 0 10px 10px;
+            list-style: inside disc;
+          }
+        }
+      }
+      .collapse {
+      }
+    }
+    @media only screen and (max-width: 991px) {
+      padding-top: 60px;
+      .section-title {
+        padding-bottom: 0;
+      }
+    }
+  }
+  .orange {
+    color: #ff8400;
+  }
+  .no_border {
+    border-top: 0px !important;
+    border-bottom: 0px !important;
+    border-left: 0px !important;
+    border-right: 0px !important;
+  }
+  .section-title {
+    font-family: 'Lora', serif;
+    font-size: 50px;
+    line-height: 50px !important;
+    padding: 0 150px 20px;
+    font-weight: 500;
+    color: #000;
+  }
+  @media only screen and (max-width: 991px) {
+    .section-title {
+      font-size: 24px;
+      line-height: 24px !important;
+      padding: 0 0px 0px;
+      font-weight: 500;
+      br {
+        position: absolute;
+      }
+    }
+  }
+  .benefits-title {
+    padding: 0 150px 80px;
+  }
+  .section-desc {
+    font-size: 28px;
+    line-height: 34px !important;
+    color: #000;
+  }
+  .stats-1 {
+    background: linear-gradient(0deg, #0997ac 0%, #9ee9ac 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+
+    font-size: 29px;
+    line-height: 29px;
+  }
+  .stats-2 {
+    background: linear-gradient(0deg, #0bbafb 0%, #4285ec 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+
+    font-size: 29px;
+    line-height: 29px;
+  }
+  .stats-3 {
+    background: linear-gradient(0deg, #f39459 0%, #6f5ea4 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+
+    font-size: 29px;
+    line-height: 29px;
+  }
+  .stats-desc {
+    font-size: 21px;
+    line-height: 25px;
+    color: #000;
+    padding-top: 35px;
+    letter-spacing: -0.5px;
+    display: inline-block;
+    @media screen and (max-width: 768px) {
+      padding-top: 0;
+    }
+  }
+  .float-bar {
+    position: fixed;
+    width: 100%;
+    bottom: 0;
+    left: 0;
+    background: #fff;
+    padding: 10px 0;
+    z-index: 10;
+  }
+  .float-wrapper {
+    max-width: 1125px;
+    margin: 0 auto;
+    @media screen and (max-width: 768px) {
+      max-width: 320px;
+    }
+  }
+  .bar-left {
+    float: left;
+    width: calc(50% - 10px);
+    text-align: right;
+    padding-right: 10px;
+    @media screen and (max-width: 767px) {
+      width: 50%;
+      padding-right: 0px;
+    }
+    .bar-title {
+      font-family: 'museo_sans500';
+      font-size: 24px;
+      line-height: 63px;
+      @media screen and (max-width: 767px) {
+        font-size: 16px;
+        line-height: 17px;
+        text-align: left;
+        padding: 8px 0 0 10px;
+      }
+    }
+  }
+  .bar-right {
+    float: right;
+    width: calc(50% - 10px);
+    text-align: left;
+    padding-left: 10px;
+    button {
+      background: linear-gradient(90deg, #ff9800 9.51%, #ff7e00 93.54%);
+      border: 0;
+      border-radius: 2rem;
+      color: #fff;
+      font-weight: 600;
+      padding: 1rem 1rem;
+      font-size: 20px;
+    }
+    a img {
+      width: 35%;
+      @media screen and (max-width: 767px) {
+        width: 132px;
+      }
+    }
+  }
+  @media screen and (max-width: 767px) {
+    &::before {
+      background-color: #ffe7cd;
+      height: 200px;
+      content: '';
+      width: 100%;
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+  }
+}

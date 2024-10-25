@@ -126,11 +126,9 @@ export const MeetupEnroll = ({
                       target="_blank"
                       rel="noreferrer"
                     >
-                      {locationStreet && <span>{locationStreet}</span>}
+                      {locationStreet && <span>{`${locationStreet}, `}</span>}
                       <span>
-                        {' '}
-                        {locationCity || ''}
-                        {', '}
+                        {locationCity && `${locationCity}, `}
                         {locationProvince || ''} {locationPostalCode || ''}
                       </span>
                     </a>

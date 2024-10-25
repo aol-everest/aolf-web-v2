@@ -157,7 +157,7 @@ export const RegisterPanel = ({ workshop, handleRegister }) => {
     return (
       <div className="powerful__block powerful__block_bottom">
         <div>
-          <h3>Limited Time Offer</h3>
+          {/* <h3>Limited Time Offer</h3> */}
           <h2>
             {title}: ${fee}
           </h2>
@@ -301,7 +301,7 @@ export const RegisterPanel = ({ workshop, handleRegister }) => {
           </div>
         )}
         <div>
-          <h3>Limited Time Offer</h3>
+          {/* <h3>Limited Time Offer</h3> */}
           <h2>
             {title}: ${fee}
           </h2>
@@ -369,7 +369,7 @@ export const RegisterPanel = ({ workshop, handleRegister }) => {
     return (
       <div className="powerful__block powerful__block_bottom">
         <div>
-          <h6 className="powerful__block-caption_2">Limited Time Offer</h6>
+          {/* <h6 className="powerful__block-caption_2">Limited Time Offer</h6> */}
           {premiumRate && premiumRate.unitPrice != null && (
             <h5 className="powerful__block-title_5 mb-1">
               Premium/Journey+ Tuition:{' '}
@@ -438,7 +438,7 @@ export const RegisterPanel = ({ workshop, handleRegister }) => {
   return (
     <div className="powerful__block powerful__block_bottom">
       <div>
-        <h6 className="powerful__block-caption_2">Limited Time Offer</h6>
+        {/* <h6 className="powerful__block-caption_2">Limited Time Offer</h6> */}
         <h5 className="powerful__block-title_5">
           Regular Tuition:{' '}
           {delfee && <span className="discount">${delfee}</span>} ${fee}

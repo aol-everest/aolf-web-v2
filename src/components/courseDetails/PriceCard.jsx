@@ -50,6 +50,7 @@ export const PriceCard = ({
   courseViewMode,
   showCeuCreditsForHbSilent = false,
   handleRegister,
+  showPriceHeading = true,
 }) => {
   const [filterStartDate, setFilterStartDate] = useState(null);
   const [filterEndDate, setFilterEndDate] = useState(null);
@@ -167,30 +168,56 @@ export const PriceCard = ({
     <div className="container">
       <div className="registration-widget">
         <div className=" row register-content">
-          <div className="col discount-price">
-            <span className="title">Course Fee</span>
-            <br />
-            {isUsableCreditAvailable && (
-              <span className="content">
-                ${UpdatedFeeAfterCredits}&nbsp;
-                {delfee && (
-                  <span className="actual-price">
-                    <strike>${delfee}</strike>
-                  </span>
-                )}
-              </span>
-            )}
-            {!isUsableCreditAvailable && (
-              <span className="content">
-                ${fee}&nbsp;
-                {delfee && (
-                  <span className="actual-price">
-                    <strike>${delfee}</strike>
-                  </span>
-                )}
-              </span>
-            )}
-          </div>
+          {showPriceHeading ? (
+            <div className="col discount-price">
+              <span className="title">Course Fee</span>
+              <br />
+              {isUsableCreditAvailable && (
+                <span className="content">
+                  ${UpdatedFeeAfterCredits}&nbsp;
+                  {delfee && (
+                    <span className="actual-price">
+                      <strike>${delfee}</strike>
+                    </span>
+                  )}
+                </span>
+              )}
+              {!isUsableCreditAvailable && (
+                <span className="content">
+                  ${fee}&nbsp;
+                  {delfee && (
+                    <span className="actual-price">
+                      <strike>${delfee}</strike>
+                    </span>
+                  )}
+                </span>
+              )}
+            </div>
+          ) : (
+            <div className="col discount-price">
+              {isUsableCreditAvailable && (
+                <>
+                  ${UpdatedFeeAfterCredits}
+                  {delfee && (
+                    <span className="actual-price">
+                      <strike>${delfee}</strike>
+                    </span>
+                  )}
+                </>
+              )}
+              {!isUsableCreditAvailable && (
+                <>
+                  ${fee}
+                  {delfee && (
+                    <span className="actual-price">
+                      <strike>${delfee}</strike>
+                    </span>
+                  )}
+                </>
+              )}
+            </div>
+          )}
+
           {roomAndBoardRange && (
             <div className="col dates">
               <span className="title">Expense Type fee</span>

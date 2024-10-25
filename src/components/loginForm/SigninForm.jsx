@@ -133,7 +133,7 @@ const StepInputPassword = ({
         {showMessage && <div className="common-error-message">{message}</div>}
         <div className="form-item">
           <a href="#" className="forgot-pass" onClick={forgotPassword}>
-            Forgot password
+            Reset Password
           </a>
         </div>
         <div className="form-action">

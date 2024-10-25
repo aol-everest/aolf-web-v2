@@ -5,36 +5,34 @@ export const priceCalculation = ({
   discount,
   agreementCMEAccepted,
 }) => {
-  const { listPrice, unitPrice, CMEPricing, showPrice, productTypeId } =
-    workshop || {};
+  const {
+    listPrice,
+    unitPrice,
+    CMEPricing,
+    showPrice,
+    productTypeId,
+    afterCreditPrice,
+  } = workshop || {};
 
-  let fee = unitPrice;
+  let fee = afterCreditPrice || unitPrice;
   let delfee = listPrice;
 
-  if (agreementCMEAccepted) {
+  if (afterCreditPrice != null) {
+    fee = afterCreditPrice;
+  } else if (agreementCMEAccepted && CMEPricing?.unitPrice) {
     fee = CMEPricing.unitPrice;
   } else if (discount) {
     fee = discount.newPrice;
     delfee = discount.oldPrice;
-  } else if (
-    `${COURSE_TYPES.SKY_BREATH_MEDITATION.value}`.includes(productTypeId)
-  ) {
-    fee = unitPrice;
+  } else if (COURSE_TYPES.SKY_BREATH_MEDITATION.value.includes(productTypeId)) {
     delfee = showPrice || listPrice;
   } else if (listPrice === unitPrice) {
-    fee = unitPrice;
     delfee = null;
   }
 
   if (delfee && fee >= delfee) {
-    return {
-      fee,
-      delfee: null,
-    };
-  } else {
-    return {
-      fee,
-      delfee,
-    };
+    delfee = null;
   }
+
+  return { fee, delfee };
 };

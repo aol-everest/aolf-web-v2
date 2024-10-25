@@ -214,7 +214,7 @@ export const SriSriYoga = ({ data, mode: courseViewMode, handleRegister }) => {
               <img src="/img/program-banner.webp" alt="Limited Time Offer" />
             </div>
             <div className="container">
-              <h2 className="program-banner__title">Limited Time Offer</h2>
+              {/* <h2 className="program-banner__title">Limited Time Offer</h2> */}
               <p className="program-banner__subtitle">
                 Sri Sri School of Yoga Foundation Program:
               </p>

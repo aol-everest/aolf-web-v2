@@ -127,7 +127,7 @@ const MeetupTile = ({ data }) => {
   const {
     mode,
     primaryTeacherName,
-    eventTimeZone,
+    meetupTimeZone,
     locationPostalCode,
     locationCity,
     locationProvince,
@@ -368,7 +368,7 @@ const MeetupTile = ({ data }) => {
     return (
       <>
         {`${dayjs.utc(meetupStartDate).format('MMM DD')}, `}
-        {`${tConvert(meetupStartTime)} ${ABBRS[eventTimeZone]}, `}
+        {`${tConvert(meetupStartTime)} ${ABBRS[meetupTimeZone]}, `}
         {`${updateMeetupDuration}`}
       </>
     );
@@ -786,8 +786,8 @@ const Meetup = () => {
         )}
         <div ref={ref} style={{ flex: '0 0 100%' }}></div>
         {isSuccess && !hasNextPage && data.pages[0].data.length > 0 && (
-          <div className="no-course-found-wrap">
-            <p>That's all folks! No more data left to check out.</p>
+          <div class="no-course-found-wrap">
+            <p>No more items to display.</p>
           </div>
         )}
       </>

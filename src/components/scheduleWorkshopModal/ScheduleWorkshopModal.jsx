@@ -12,7 +12,6 @@ dayjs.extend(advancedFormat);
 const WorkshopSelectModal = React.memo(
   ({
     setShowWorkshopSelectModal,
-    getWorkshopDetails,
     setSelectedWorkshopId,
     setSelectedDates,
     setShowLocationModal,
@@ -27,37 +26,76 @@ const WorkshopSelectModal = React.memo(
     setActiveWorkshop,
     handleAutoScrollForMobile,
     workshopMaster,
+    handleNavigateToDetailsPage,
   }) => {
     const { track } = useAnalytics();
     const [localSelectedWorkshop, setLocalSelectedWorkshop] = useState(null);
+    const [localSelectedOnlineCourse, setLocalSelectedOnlineCourse] =
+      useState(null);
+
     const [backPressed, setBackPressed] = useState(false);
 
     useEffect(() => {
       if (workshops?.length === 1) {
-        handleWorkshopSelect(workshops[0]);
+        const isOnlineCourse = workshops[0]?.mode === COURSE_MODES.ONLINE.value;
+        handleWorkshopSelect(workshops[0], isOnlineCourse);
       }
     }, [workshops]);
 
-    const handleWorkshopSelect = async (workshop) => {
+    const handleWorkshopSelect = async (workshop, isOnlineCourse) => {
       setLocalSelectedWorkshop(workshop);
+      setLocalSelectedOnlineCourse(isOnlineCourse);
       track('cmodal_course_select');
     };
 
     const handleWorkshopSelectForCheckout = async () => {
       track('cmodal_course_continue');
+      track(
+        'view_item',
+        {
+          ecommerce: {
+            currency: 'USD',
+            value: workshopMaster?.unitPrice,
+            course_format: workshopMaster?.productTypeId,
+            course_name: workshopMaster?.title,
+            items: [
+              {
+                item_id: 'NA',
+                item_name: workshopMaster?.title,
+                affiliation: 'NA',
+                coupon: '',
+                discount: 0.0,
+                index: 0,
+                item_brand: workshopMaster?.orgnization,
+                item_category: workshopMaster?.title,
+                item_category2: workshopMaster?.mode,
+                item_category3: 'paid',
+                item_category4: 'NA',
+                item_category5: 'NA',
+                item_list_id: workshopMaster?.productTypeId,
+                item_list_name: workshopMaster?.title,
+                item_variant: 'NA',
+                location_id: 'NA',
+                price: workshopMaster?.unitPrice,
+                quantity: 1,
+              },
+            ],
+          },
+        },
+        {
+          plugins: {
+            all: false,
+            'gtm-ecommerce-plugin': true,
+          },
+        },
+      );
       setShowWorkshopSelectModal((prevValue) => !prevValue);
-      const workshopDetail = await getWorkshopDetails(
+      handleAutoScrollForMobile();
+      setSelectedWorkshopId(localSelectedWorkshop?.id);
+      handleNavigateToDetailsPage(
+        localSelectedOnlineCourse,
         localSelectedWorkshop?.id,
       );
-      setSelectedWorkshopId(workshopDetail?.id);
-      track('program_date_button', {
-        program_id: localSelectedWorkshop?.id,
-        program_name: workshopDetail?.title,
-        program_date: workshopDetail?.eventStartDate,
-        program_time: workshopDetail?.eventStartTime,
-        category: 'All',
-      });
-      handleAutoScrollForMobile();
     };
 
     const handleModalToggle = () => {
@@ -170,20 +208,24 @@ const WorkshopSelectModal = React.memo(
           <div className="slot-listing">
             {workshops.length > 0
               ? workshops.map((workshop) => {
+                  const isOnlineCourse =
+                    workshop?.mode === COURSE_MODES.ONLINE.value;
                   return (
                     <div
                       className="slot-item"
-                      onClick={() => handleWorkshopSelect(workshop)}
+                      onClick={() =>
+                        handleWorkshopSelect(workshop, isOnlineCourse)
+                      }
                       key={workshop?.sfid}
                     >
                       <div className="slot-type">
                         <div className="slot-info">
-                          {workshop?.mode === COURSE_MODES.ONLINE.value ? (
+                          {isOnlineCourse ? (
                             <span className="icon-aol iconaol-monitor-mobile"></span>
                           ) : (
                             <span className="icon-aol iconaol-profile-users"></span>
                           )}
-                          {workshop?.mode === COURSE_MODES.ONLINE.value ? (
+                          {isOnlineCourse ? (
                             workshop.mode
                           ) : workshop.isLocationEmpty ? (
                             <>

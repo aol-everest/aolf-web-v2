@@ -347,7 +347,6 @@ export const MobileCourseOptions = ({
               <p className="reciept__item reciept__item_main font-weight-normal">
                 <span>
                   <img src="/img/ic-timer.svg" alt="timer" />
-                  Limited Time Offer
                 </span>
               </p>
               <ul className="reciept__item_list ">
@@ -406,7 +405,6 @@ export const MobileCourseOptions = ({
               <p className="reciept__item reciept__item_main font-weight-normal">
                 <span>
                   <img src="/img/ic-timer.svg" alt="timer" />
-                  Limited Time Offer
                 </span>
               </p>
               <ul className="reciept__item_list ">
@@ -459,7 +457,6 @@ export const MobileCourseOptions = ({
               <p className="reciept__item reciept__item_main">
                 <span>
                   <img src="/img/ic-timer.svg" alt="timer" />
-                  Limited Time Offer:
                 </span>
               </p>
             )}

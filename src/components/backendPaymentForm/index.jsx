@@ -4,7 +4,6 @@ import {
   AttendanceForm,
   DiscountCodeInput,
   Dropdown,
-  PostCostDetailsCard,
 } from '@components/checkout';
 import { ABBRS, ALERT_TYPES, MODAL_TYPES, US_STATES } from '@constants';
 import { useGlobalAlertContext, useGlobalModalContext } from '@contexts';
@@ -70,8 +69,6 @@ export const BackendPaymentForm = ({
   const [workshop, setWorkshop] = useState(useWorkshop);
   const [courseAddOnFee, setCourseAddOnFee] = useState(null);
   const [selectedComboCourseId, setSelectedComboCourseId] = useState(null);
-  const [selectedUnitPrice, setSelectedUnitPrice] = useState(null);
-  const [selectedListPrice, setSelectedListPrice] = useState(null);
   let _cardElement;
 
   const { showAlert } = useGlobalAlertContext();
@@ -99,10 +96,6 @@ export const BackendPaymentForm = ({
 
   const applyDiscount = (discount) => {
     setDiscount(discount);
-  };
-
-  const selectPaymentPlan = (mode) => {
-    setPaymentMode(mode);
   };
 
   const setFormInitialValues = () => {
@@ -260,11 +253,9 @@ export const BackendPaymentForm = ({
       isGenericWorkshop,
       id: productId,
       addOnProducts,
-      product,
     } = workshop;
 
     const {
-      selectedAddOn,
       contactPhone,
       contactAddress,
       contactCity,
@@ -472,14 +463,14 @@ export const BackendPaymentForm = ({
           isBackendRequest: true,
           shoppingRequest: {
             ...shoppingRequest,
-          },
-          attendee: {
-            contactHealthcareOrganisation,
-            contactOtherHealthcareOrganization,
-            contactDegree,
-            claimingType,
-            certificateOfAttendance,
-            contactClaimingTypeOther,
+            attendee: {
+              contactHealthcareOrganisation,
+              contactOtherHealthcareOrganization,
+              contactDegree,
+              claimingType,
+              certificateOfAttendance,
+              contactClaimingTypeOther,
+            },
           },
         };
         payLoad = {
@@ -780,8 +771,6 @@ export const BackendPaymentForm = ({
                   priceBookName={priceBookName}
                   earlyBirdDays={earlyBirdDays}
                   isEarlyBirdAllowed={isEarlyBirdAllowed}
-                  selectedUnitPrice={selectedUnitPrice}
-                  selectedListPrice={selectedListPrice}
                   discount={discount}
                   paymentMode={paymentMode}
                   instalmentAmount={instalmentAmount}
@@ -1992,29 +1981,6 @@ export const BackendPaymentForm = ({
                     <p>Payment Type:</p>
                   </div>
 
-                  {values.selectedPaymentOption === FULL && (
-                    <>
-                      <div className="col-sm-12">
-                        <div className="form-check custom_check">
-                          <input
-                            className="form-check-input"
-                            type="checkbox"
-                            value=""
-                            id="isChequePayment"
-                            name="isChequePayment"
-                            onChange={handleChange}
-                            checked={values.isChequePayment}
-                          />
-                          <label
-                            className="form-check-label"
-                            htmlFor="isChequePayment"
-                          >
-                            Payment by check?
-                          </label>
-                        </div>
-                      </div>
-                    </>
-                  )}
                   {values.selectedPaymentOption !== PARTIAL && (
                     <>
                       {(!values.isChequePayment ||
@@ -2232,27 +2198,7 @@ export const BackendPaymentForm = ({
                       <div className="col-sm-6 heading_info">
                         <p>Second Payment:</p>
                       </div>
-                      {false && (
-                        <div className="col-sm-6">
-                          <div className="form-check custom_check">
-                            <input
-                              className="form-check-input"
-                              type="checkbox"
-                              value=""
-                              id="isSecondChequePayment"
-                              name="isSecondChequePayment"
-                              onChange={handleChange}
-                              checked={values.isSecondChequePayment}
-                            />
-                            <label
-                              className="form-check-label"
-                              htmlFor="isSecondChequePayment"
-                            >
-                              Second Payment by check?
-                            </label>
-                          </div>
-                        </div>
-                      )}
+
                       {!values.isSecondChequePayment && (
                         <div className="col-sm-12">
                           <div

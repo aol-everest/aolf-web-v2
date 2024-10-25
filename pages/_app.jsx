@@ -132,63 +132,66 @@ function App({ Component, pageProps }) {
     try {
       const userInfo = await Auth.fetchUserProfile();
       setUser(userInfo);
-
-      const pendingAgreementRes = await api.get({
-        path: 'getPendingHealthQuestionAgreement',
-      });
-
-      setIsPendingAgreement(
-        pendingAgreementRes && pendingAgreementRes.length > 0,
-      );
-
-      const { subscriptions = [], isCCUpdateRequiredForSubscription } =
-        userInfo.profile;
-      // setPendingSurveyInvite(userInfo.profile.surveyInvite);
-      setIsCCUpdateRequired(isCCUpdateRequiredForSubscription);
-      const reinstateRequiredForSubscription = subscriptions.find(
-        ({ isReinstateRequiredForSubscription }) =>
-          isReinstateRequiredForSubscription,
-      );
-      if (reinstateRequiredForSubscription) {
-        setIsReInstateRequired(true);
-        setReinstateRequiredSubscription(reinstateRequiredForSubscription);
-      }
-      Talkable.authenticate({
-        email: userInfo.profile.email,
-        first_name: userInfo.profile.first_name,
-        last_name: userInfo.profile.last_name,
-      });
-      let userSubscriptions = '';
-      if (userInfo.profile.subscriptions) {
-        userSubscriptions = JSON.stringify(
-          userInfo.profile.subscriptions.map(({ sfid, name }) => {
-            return {
-              id: sfid,
-              name,
-            };
-          }),
-        );
-      }
-      analytics.identify(userInfo.profile.email, {
-        id: userInfo.profile.username,
-        sfid: userInfo.profile.id,
-        email: userInfo.profile.email,
-        name: userInfo.profile.name,
-        first_name: userInfo.profile.first_name,
-        last_name: userInfo.profile.last_name,
-        avatar: userInfo.profile.userProfilePic,
-        state: userInfo.profile.personMailingState, // State
-        country: userInfo.profile.personMailingCountry, // Country
-        subscriptions: userSubscriptions,
-        sky_flag: userInfo.profile.isMandatoryWorkshopAttended,
-        sahaj_flag: userInfo.profile.isSahajGraduate,
-        silence_course_count: userInfo.profile.aosCountTotal,
-      });
+      await checkUserPendingAction(userInfo);
     } catch (ex) {
       console.log(ex);
       await Auth.logout();
     }
     setLoading(false);
+  };
+
+  const checkUserPendingAction = async (userInfo) => {
+    const pendingAgreementRes = await api.get({
+      path: 'getPendingHealthQuestionAgreement',
+    });
+
+    setIsPendingAgreement(
+      pendingAgreementRes && pendingAgreementRes.length > 0,
+    );
+
+    const { subscriptions = [], isCCUpdateRequiredForSubscription } =
+      userInfo.profile;
+    // setPendingSurveyInvite(userInfo.profile.surveyInvite);
+    setIsCCUpdateRequired(isCCUpdateRequiredForSubscription);
+    const reinstateRequiredForSubscription = subscriptions.find(
+      ({ isReinstateRequiredForSubscription }) =>
+        isReinstateRequiredForSubscription,
+    );
+    if (reinstateRequiredForSubscription) {
+      setIsReInstateRequired(true);
+      setReinstateRequiredSubscription(reinstateRequiredForSubscription);
+    }
+    Talkable.authenticate({
+      email: userInfo.profile.email,
+      first_name: userInfo.profile.first_name,
+      last_name: userInfo.profile.last_name,
+    });
+    let userSubscriptions = '';
+    if (userInfo.profile.subscriptions) {
+      userSubscriptions = JSON.stringify(
+        userInfo.profile.subscriptions.map(({ sfid, name }) => {
+          return {
+            id: sfid,
+            name,
+          };
+        }),
+      );
+    }
+    analytics.identify(userInfo.profile.email, {
+      id: userInfo.profile.username,
+      sfid: userInfo.profile.id,
+      email: userInfo.profile.email,
+      name: userInfo.profile.name,
+      first_name: userInfo.profile.first_name,
+      last_name: userInfo.profile.last_name,
+      avatar: userInfo.profile.userProfilePic,
+      state: userInfo.profile.personMailingState, // State
+      country: userInfo.profile.personMailingCountry, // Country
+      subscriptions: userSubscriptions,
+      sky_flag: userInfo.profile.isMandatoryWorkshopAttended,
+      sahaj_flag: userInfo.profile.isSahajGraduate,
+      silence_course_count: userInfo.profile.aosCountTotal,
+    });
   };
 
   if (loading) {
@@ -213,7 +216,11 @@ function App({ Component, pageProps }) {
   return (
     <AnalyticsProvider instance={analytics}>
       <QueryClientProvider client={queryClient}>
-        <AuthProvider userInfo={user} enableLocalUserCache={true}>
+        <AuthProvider
+          checkUserPendingAction={checkUserPendingAction}
+          userInfo={user}
+          enableLocalUserCache={true}
+        >
           <Compose
             components={[
               GlobalModal,
