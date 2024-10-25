@@ -169,6 +169,11 @@ function LoginPage() {
     }
   }, [enableAutoRedirect]);
 
+  const clearMessageAction = () => {
+    setMessage(null);
+    setShowMessage(false);
+  };
+
   const switchView = (view) => (e) => {
     if (e) e.preventDefault();
     setMode(view);
@@ -544,6 +549,7 @@ function LoginPage() {
           setLoading={setLoading}
           loading={loading}
           backToFlowAction={backToFlowAction}
+          clearMessageAction={clearMessageAction}
         >
           {socialLoginRender()}
         </SigninForm>
@@ -594,6 +600,7 @@ function LoginPage() {
             setLoading={setLoading}
             loading={loading}
             backToFlowAction={backToFlowAction}
+            clearMessageAction={clearMessageAction}
           >
             {socialLoginRender()}
           </SigninForm>

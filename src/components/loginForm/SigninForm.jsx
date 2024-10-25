@@ -62,7 +62,7 @@ const StepInputUserName = ({ showMessage, message, children, onSubmit }) => {
               <div className="validation-input">{errors.username.message}</div>
             )}
           </div>
-          {showMessage && <div className="common-error-message">{message}</div>}
+          {/* {showMessage && <div className="common-error-message">{message}</div>} */}
           <div className="form-action">
             <button
               className="submit-btn"
@@ -157,6 +157,7 @@ export const SigninForm = ({
   loading,
   setLoading,
   backToFlowAction,
+  clearMessageAction,
   children,
 }) => {
   const authObj = useAuth();
@@ -356,6 +357,7 @@ export const SigninForm = ({
     if (e) e.preventDefault();
     setShowSignInOptionsForUser('NEW_USER_ENTRY');
     setStep(0);
+    clearMessageAction();
   };
 
   const renderStep = () => {
