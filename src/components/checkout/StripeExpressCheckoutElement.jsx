@@ -276,7 +276,7 @@ const CheckoutPage = ({
                 screen="DESKTOP"
               />
               {showHealthLink && (
-                <div className="rsvp-note">
+                <div className="rsvp-note !tw-py-3">
                   For any health related questions, please contact us at{' '}
                   <a href="mailto:healthinfo@us.artofliving.org">
                     healthinfo@us.artofliving.org
