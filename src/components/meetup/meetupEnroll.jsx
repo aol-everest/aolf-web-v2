@@ -83,11 +83,11 @@ export const MeetupEnroll = ({
               <span aria-hidden="true">&times;</span>
             </button>
           </div>
-          <div className="modal-body">
-            <div
+          <div className="modal-body tw-py-5">
+            {/* <div
               className="modal-main-text"
               dangerouslySetInnerHTML={{ __html: description }}
-            ></div>
+            ></div> */}
             <div className="rsvp-details">
               <div className="rsvp-detail-item">
                 <label>
