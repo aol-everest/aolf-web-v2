@@ -7,7 +7,9 @@ import {
   MODAL_TYPES,
   WORKSHOP_MODE,
   COURSE_MODES_MAP,
+  COURSE_MODES,
 } from '@constants';
+import classNames from 'classnames';
 import {
   useAuth,
   useGlobalAlertContext,
@@ -364,18 +366,24 @@ export const EventList = ({ isPreferredCenter, workshops }) => {
               <div className="course-title-duration">
                 <div className="course-title">
                   {/* <span className="icon-aol iconaol-hindu-temple"></span> */}
-                  {isWorkshop ? mode : meetupTitle}
+                  {isWorkshop ? title : meetupTitle}
                 </div>
-                {isWorkshop ? (
-                  <div className="course-duration">{getCourseDuration()}</div>
-                ) : (
-                  <div className="course-mode-duration">
-                    <div className="course-duration">
-                      {COURSE_MODES_MAP[mode]}{' '}
-                    </div>{' '}
-                    <div className="course-duration">{getMeetupDuration()}</div>
+
+                <div className="course-mode-duration">
+                  <div
+                    class={classNames('course-duration', {
+                      'in-person': mode === COURSE_MODES.IN_PERSON.value,
+                      online: mode === COURSE_MODES.ONLINE.value,
+                    })}
+                  >
+                    {COURSE_MODES_MAP[mode]}
                   </div>
-                )}
+                  {!isWorkshop && (
+                    <div className="course-duration">
+                      {getMeetupDuration()} MIN
+                    </div>
+                  )}
+                </div>
               </div>
               {isWorkshop && isPreferredCenter && (
                 <div className="course-price">

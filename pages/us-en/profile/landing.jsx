@@ -945,48 +945,50 @@ const ProfileLanding = () => {
           </div>
         </div>
       </section>
-      <section className="activities-courses">
-        <div className="container">
-          <div className="top-picks-container">
-            <Swiper
-              {...swiperOption}
-              className="top-picks-content activities-slider"
-              navigation={{
-                prevEl: '.slide-button-activities-prev',
-                nextEl: '.slide-button-activities-next',
-              }}
-              onAfterInit={(swiper) => {
-                swiper.params.navigation.prevEl =
-                  '.slide-button-activities-prev';
-                swiper.params.navigation.nextEl =
-                  '.slide-button-activities-next';
-                swiper.navigation.update();
-              }}
-            >
-              <div slot="container-start" className="top-picks-header">
-                <div className="top-picks-title">
-                  Activities happening at your preferred center
-                </div>
-                <div className="top-picks-actions">
-                  <div className="slide-button-activities-prev slide-button">
-                    <span className="icon-aol iconaol-arrow-long-left"></span>
+      {preferredEvents.length > 0 && (
+        <section className="activities-courses">
+          <div className="container">
+            <div className="top-picks-container">
+              <Swiper
+                {...swiperOption}
+                className="top-picks-content activities-slider"
+                navigation={{
+                  prevEl: '.slide-button-activities-prev',
+                  nextEl: '.slide-button-activities-next',
+                }}
+                onAfterInit={(swiper) => {
+                  swiper.params.navigation.prevEl =
+                    '.slide-button-activities-prev';
+                  swiper.params.navigation.nextEl =
+                    '.slide-button-activities-next';
+                  swiper.navigation.update();
+                }}
+              >
+                <div slot="container-start" className="top-picks-header">
+                  <div className="top-picks-title">
+                    Activities happening at your preferred center
                   </div>
-                  <div className="slide-button-activities-next slide-button">
-                    <span className="icon-aol iconaol-arrow-long-right"></span>
+                  <div className="top-picks-actions">
+                    <div className="slide-button-activities-prev slide-button">
+                      <span className="icon-aol iconaol-arrow-long-left"></span>
+                    </div>
+                    <div className="slide-button-activities-next slide-button">
+                      <span className="icon-aol iconaol-arrow-long-right"></span>
+                    </div>
                   </div>
                 </div>
-              </div>
-              {preferredEvents.map((item) => {
-                return (
-                  <SwiperSlide key={item.id}>
-                    <PreferredCenterComp item={item} />
-                  </SwiperSlide>
-                );
-              })}
-            </Swiper>
+                {preferredEvents.map((item) => {
+                  return (
+                    <SwiperSlide key={item.id}>
+                      <PreferredCenterComp item={item} />
+                    </SwiperSlide>
+                  );
+                })}
+              </Swiper>
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
     </main>
   );
 };
