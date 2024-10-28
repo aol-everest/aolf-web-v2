@@ -243,7 +243,7 @@ export const SKYBreathMeditation = ({
                     <span class="title stats-1">
                       +33%
                       <br />
-                      Immune Cell Count
+                      <span>Immune Cell Count</span>
                     </span>
                     <br />
                     <span class="content stats-desc">
@@ -262,7 +262,7 @@ export const SKYBreathMeditation = ({
                     <span class="title stats-2">
                       21%
                       <br />
-                      Life Satisfaction
+                      <span>Life Satisfaction</span>
                     </span>
                     <br />
                     <span class="content stats-desc">
@@ -280,7 +280,7 @@ export const SKYBreathMeditation = ({
                     <span class="title stats-3">
                       -57%
                       <br />
-                      Stress Hormone
+                      <span>Stress Hormone</span>
                     </span>
                     <br />
                     <span class="content stats-desc">
