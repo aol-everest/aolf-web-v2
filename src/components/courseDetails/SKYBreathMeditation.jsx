@@ -243,7 +243,7 @@ export const SKYBreathMeditation = ({
                     <span class="title stats-1">
                       +33%
                       <br />
-                      <span>Immune Cell Count</span>
+                      Immune Cell Count
                     </span>
                     <br />
                     <span class="content stats-desc">
@@ -262,7 +262,7 @@ export const SKYBreathMeditation = ({
                     <span class="title stats-2">
                       21%
                       <br />
-                      <span>Life Satisfaction</span>
+                      Life Satisfaction
                     </span>
                     <br />
                     <span class="content stats-desc">
@@ -280,7 +280,7 @@ export const SKYBreathMeditation = ({
                     <span class="title stats-3">
                       -57%
                       <br />
-                      <span>Stress Hormone</span>
+                      Stress Hormone
                     </span>
                     <br />
                     <span class="content stats-desc">
@@ -495,7 +495,7 @@ export const SKYBreathMeditation = ({
                 </Card.Header>
                 <Accordion.Collapse eventKey="0">
                   <Card.Body>
-                    You can learn the Sudarshan Kriya™ practice taught in the
+                    You can learn the Sudarshan Kriya™ practice taught in the{' '}
                     {title} Course in 3 days with 2.5 hours of live online or
                     in-person sessions each day with a certified instructor.
                   </Card.Body>

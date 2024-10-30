@@ -115,24 +115,28 @@ const WorkshopSelectModal = React.memo(
     };
 
     const dateIndex = getSelectedAvailabelDate();
-    const currentUserMonth = moment(new Date())?.format('M');
-    const currentSelectedMonth = moment(currentMonthYear, 'YYYY-M')?.format(
-      'M',
+    const currentUserMonth = parseInt(moment(new Date())?.format('M'), 10);
+    const currentSelectedMonth = parseInt(
+      moment(currentMonthYear, 'YYYY-M')?.format('M'),
+      10,
     );
 
     const handelGoBack = () => {
-      const parsedDate = moment(
-        dateAvailable[dateIndex - 1]?.firstDate,
-        'YYYY-M',
-      )?.format('YYYY-M');
+      const targetDate = moment(selectedDates[0]);
+      const currentDate = moment();
+
+      // Convert the formatted months to numbers for comparison
+      const targetYear = parseInt(targetDate.format('YYYY'), 10);
+      const currentYear = parseInt(currentDate.format('YYYY'), 10);
+      const targetMonth = parseInt(targetDate.format('M'), 10);
+      const currentMonth = parseInt(currentDate.format('M'), 10);
+
       if (dateAvailable[dateIndex - 1]?.allDates) {
         setSelectedDates(dateAvailable[dateIndex - 1]?.allDates);
-      } else {
-        setSelectedDates([]);
-        setLocalSelectedWorkshop(null);
-        setWorkshops([]);
-      }
-      if (parsedDate !== currentMonthYear) {
+      } else if (
+        currentYear < targetYear ||
+        (currentYear === targetYear && currentMonth < targetMonth)
+      ) {
         setBackPressed(true);
         handleWorkshopModalCalendarMonthChange(true);
       }
@@ -189,7 +193,7 @@ const WorkshopSelectModal = React.memo(
           <div className="time-slot-changer">
             <button
               className="prev-slot"
-              disabled={currentUserMonth === currentSelectedMonth}
+              // disabled={currentUserMonth > currentSelectedMonth}
               onClick={handelGoBack}
             >
               <img src="/img/chevron-left.svg" />
