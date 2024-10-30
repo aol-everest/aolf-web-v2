@@ -1034,7 +1034,9 @@ const TicketCheckoutForm = ({ event }) => {
                                 form="my-form"
                                 onClick={handleFormSubmit}
                               >
-                                {isZeroDollarPrice ? 'RSVP' : 'Confirm and Pay'}
+                                {isZeroDollarPrice === 0
+                                  ? 'RSVP'
+                                  : 'Confirm and Pay'}
                               </button>
                             </div>
                           </div>
