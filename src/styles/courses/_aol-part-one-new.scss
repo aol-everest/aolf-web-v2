@@ -467,9 +467,11 @@
           font-family: 'museo_sans700';
           font-size: 29px;
           line-height: 39px;
+          color: #000;
           @media only screen and (max-width: 991px) {
             font-size: 18px;
             line-height: 24px;
+            color: #000;
           }
         }
         .content {

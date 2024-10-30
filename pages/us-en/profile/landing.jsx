@@ -601,8 +601,6 @@ const ProfileLanding = () => {
     ...(data?.ticketdEvents || []),
   ];
 
-  const handleBannerButtonClick = () => {};
-
   return (
     <main className="profile-home">
       <section className="welcome-section">
