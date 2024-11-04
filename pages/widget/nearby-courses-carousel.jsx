@@ -24,6 +24,7 @@ const settings = {
   autoplaySpeed: 5000,
   autoplay: true,
   draggable: true,
+  adaptiveHeight: true,
   responsive: [
     {
       breakpoint: 991,
@@ -93,8 +94,8 @@ export async function getServerSideProps(context) {
     const { data } = await api.get({
       path: 'nearbyWorkshops',
       param: {
-        lat: 36.216795,
-        lng: -81.6745517,
+        lat: lat,
+        lng: lng,
         dist: 50,
         size: 20,
         timingsRequired: true,
@@ -147,19 +148,15 @@ const WorkShopTile = ({ workshop }) => {
         <div class="course-item-top">
           <div class="row">
             <div class="course-item-date">{getCourseDeration()}</div>
-            {!isPurchased && (
-              <>
-                <div className="course-item-price">
-                  {listPrice === unitPrice ? (
-                    <span>${unitPrice}</span>
-                  ) : (
-                    <>
-                      <s>${listPrice}</s> <span>${unitPrice}</span>
-                    </>
-                  )}
-                </div>
-              </>
-            )}
+            <div className="course-item-price">
+              {listPrice === unitPrice ? (
+                <span>${unitPrice}</span>
+              ) : (
+                <>
+                  <s>${listPrice}</s> <span>${unitPrice}</span>
+                </>
+              )}
+            </div>
           </div>
           <div class="payment-details">
             <div class="payby">
@@ -244,8 +241,8 @@ const NearbyCoursesCarousel = ({ initialLocation = null, nearbyWorkshops }) => {
     queryKey: ['nearbyWorkshops', location.latitude, location.longitude],
     queryFn: async () => {
       let param = {
-        lat: 36.216795,
-        lng: -81.6745517,
+        lat: location.latitude,
+        lng: location.longitude,
         dist: 50,
         size: 20,
         timingsRequired: true,
