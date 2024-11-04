@@ -48,7 +48,7 @@ const googleShareUrl = ({
 }) =>
   `https://calendar.google.com/calendar/render?action=TEMPLATE&dates=${startDatetime}/${endDatetime}${
     timezone && `&ctz=${timezone}`
-  }&location=${location}&text=${title}&details=${description}&sprop=https://members.us.artofliving.org`;
+  }&location=${location}&text=${title}&details=${description}&sprop=${process.env.NEXT_PUBLIC_BASE_URL}`;
 
 /**
  * Takes an event object and returns a Yahoo Calendar Event URL
