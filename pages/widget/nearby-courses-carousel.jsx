@@ -257,7 +257,7 @@ const NearbyCoursesCarousel = ({ initialLocation = null, nearbyWorkshops }) => {
       });
       return response.data;
     },
-    enabled: true,
+    enabled: !!location.latitude,
     initialData: nearbyWorkshops,
   });
 
@@ -270,8 +270,6 @@ const NearbyCoursesCarousel = ({ initialLocation = null, nearbyWorkshops }) => {
       address: address,
     }));
   };
-
-  console.log(location);
 
   const selectAddressAction = (item) => async () => {
     try {
@@ -315,8 +313,8 @@ const NearbyCoursesCarousel = ({ initialLocation = null, nearbyWorkshops }) => {
     setReadyForSelection(false);
     setLocation({
       address: '',
-      latitude: initialLocation?.lat,
-      longitude: initialLocation?.lng,
+      latitude: null,
+      longitude: null,
       isInputAllowed: true,
     });
   };
