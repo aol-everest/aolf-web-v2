@@ -189,7 +189,9 @@ const CenterListItem = ({ center, search }) => {
             src="/img/map-search-email-icon.svg"
             alt="email"
           />
-          <a href={`mailto:${center.email}`}>{center.email}</a>
+          <a href={`mailto:${center.email}`} data-text={center.email}>
+            {center.email}
+          </a>
         </div>
       )}
       <div className="action-btn">
