@@ -603,6 +603,9 @@ const SchedulingOnlineFlow = ({ workshopMaster }) => {
               resetForm,
             } = formikProps;
             formikOnChange(values);
+            const isNotAllQuestionnaireChecked = values.questionnaire.some(
+              (item) => !item.value,
+            );
             return (
               <main className="scheduling-page">
                 <section className="scheduling-top">
@@ -867,7 +870,11 @@ const SchedulingOnlineFlow = ({ workshopMaster }) => {
                                 className="submit-btn"
                                 type="button"
                                 disabled={
-                                  loading || !values.email || errors.email
+                                  loading ||
+                                  !values.email ||
+                                  errors.email ||
+                                  !values.ppaAgreement ||
+                                  isNotAllQuestionnaireChecked
                                 }
                                 onClick={(e) => {
                                   e.preventDefault();
