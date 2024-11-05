@@ -1,14 +1,15 @@
 /* eslint-disable no-inline-styles/no-inline-styles */
 import React, { useState } from 'react';
 import { api, tConvert, concatenateStrings } from '@utils';
-import 'slick-carousel/slick/slick.css';
-import 'slick-carousel/slick/slick-theme.css';
 import Slider from 'react-slick';
 import usePlacesService from 'react-google-autocomplete/lib/usePlacesAutocompleteService';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import { ABBRS } from '@constants';
 import { useQuery } from '@tanstack/react-query';
+
+import 'slick-carousel/slick/slick.css';
+import 'slick-carousel/slick/slick-theme.css';
 
 dayjs.extend(utc);
 
@@ -97,7 +98,7 @@ export async function getServerSideProps(context) {
         lat: lat,
         lng: lng,
         dist: 50,
-        size: 20,
+        size: 30,
         timingsRequired: true,
       },
     });
@@ -244,7 +245,7 @@ const NearbyCoursesCarousel = ({ initialLocation = null, nearbyWorkshops }) => {
         lat: location.latitude,
         lng: location.longitude,
         dist: 50,
-        size: 20,
+        size: 30,
         timingsRequired: true,
       };
 
