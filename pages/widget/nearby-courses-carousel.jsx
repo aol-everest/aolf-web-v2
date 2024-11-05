@@ -89,7 +89,7 @@ export async function getServerSideProps(context) {
       lat,
       lng,
       postal,
-      locationName: [city, region, country, postal].join(', '),
+      locationName: [city, region, country, postal].filter(Boolean).join(', '),
     };
 
     const { data } = await api.get({
@@ -235,7 +235,7 @@ const NearbyCoursesCarousel = ({ initialLocation = null, nearbyWorkshops }) => {
     address: initialLocation.locationName,
     latitude: initialLocation?.lat,
     longitude: initialLocation?.lng,
-    isInputAllowed: true,
+    isInputAllowed: !initialLocation.locationName,
   });
 
   const { data, isLoading, isError, error } = useQuery({
