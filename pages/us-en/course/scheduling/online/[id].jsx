@@ -129,7 +129,7 @@ const SchedulingOnlineFlow = ({ workshopMaster }) => {
     const questionnaireArray = complianceQuestionnaire
       ? complianceQuestionnaire.map((current) => ({
           key: current.questionSfid,
-          value: isReferBySameSite,
+          value: true,
         }))
       : [];
 
@@ -540,7 +540,7 @@ const SchedulingOnlineFlow = ({ workshopMaster }) => {
             contactZip: '',
             contactPhone: '',
             questionnaire: questionnaireArray,
-            ppaAgreement: isReferBySameSite,
+            ppaAgreement: true,
           }}
           validationSchema={Yup.object().shape({
             firstName: Yup.string()
@@ -827,16 +827,20 @@ const SchedulingOnlineFlow = ({ workshopMaster }) => {
                             </>
                           )}
 
-                          <div class="payment-agreements">
-                            <ScheduleAgreementForm
-                              formikProps={formikProps}
-                              complianceQuestionnaire={complianceQuestionnaire}
-                              isCorporateEvent={false}
-                              questionnaireArray={questionnaireArray}
-                              screen="DESKTOP"
-                              parentClass=""
-                            />
-                          </div>
+                          {!emailAddressAdded && (
+                            <div class="payment-agreements">
+                              <ScheduleAgreementForm
+                                formikProps={formikProps}
+                                complianceQuestionnaire={
+                                  complianceQuestionnaire
+                                }
+                                isCorporateEvent={false}
+                                questionnaireArray={questionnaireArray}
+                                screen="DESKTOP"
+                                parentClass=""
+                              />
+                            </div>
+                          )}
 
                           <div className="note">
                             For any health related questions, please contact us
