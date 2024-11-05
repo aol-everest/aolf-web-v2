@@ -38,7 +38,7 @@ export const UserInfoFormNewCheckout = ({
           label="Last Name"
         ></StyledInputNewCheckout>
 
-        {showLocationSearch && !locationFilter && (
+        {showLocationSearch && (
           <ScheduleLocationFilterNew
             handleLocationChange={handleLocationFilterChange}
             value={locationFilter}
