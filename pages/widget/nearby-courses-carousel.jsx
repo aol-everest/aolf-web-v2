@@ -25,7 +25,7 @@ const settings = {
   autoplaySpeed: 5000,
   autoplay: true,
   draggable: true,
-  adaptiveHeight: true,
+  // adaptiveHeight: true,
   responsive: [
     {
       breakpoint: 991,
