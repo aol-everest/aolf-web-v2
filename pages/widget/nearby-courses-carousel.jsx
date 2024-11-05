@@ -23,17 +23,26 @@ const settings = {
   centerPadding: '24px',
   infinite: true,
   autoplaySpeed: 5000,
-  autoplay: true,
+  autoplay: false,
   draggable: true,
-  // adaptiveHeight: true,
+  //adaptiveHeight: true,
   responsive: [
+    {
+      breakpoint: 1279,
+      settings: {
+        arrows: false,
+        centerMode: true,
+        centerPadding: '20px',
+        slidesToShow: 3,
+      },
+    },
     {
       breakpoint: 991,
       settings: {
         arrows: false,
         centerMode: true,
         centerPadding: '20px',
-        slidesToShow: 3,
+        slidesToShow: 2,
       },
     },
     {
