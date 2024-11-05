@@ -38,7 +38,7 @@ export const UserInfoFormNewCheckout = ({
           label="Last Name"
         ></StyledInputNewCheckout>
 
-        {showLocationSearch && (
+        {showLocationSearch && !locationFilter && (
           <ScheduleLocationFilterNew
             handleLocationChange={handleLocationFilterChange}
             value={locationFilter}
@@ -60,24 +60,24 @@ export const UserInfoFormNewCheckout = ({
           ></StyledInputNewCheckout>
         )}
 
+        {showContactCity && (
+          <StyledInputNewCheckout
+            className="form-item required fullw"
+            placeholder="City"
+            formikProps={formikProps}
+            formikKey="contactCity"
+            label="City"
+          ></StyledInputNewCheckout>
+        )}
+
         {showContactState && (
           <DropdownNewCheckout
             placeholder="State"
             formikProps={formikProps}
             formikKey="contactState"
             options={US_STATES}
-            containerClass="form-item required fullw"
+            containerClass="form-item required"
           ></DropdownNewCheckout>
-        )}
-
-        {showContactCity && (
-          <StyledInputNewCheckout
-            className="form-item required"
-            placeholder="City"
-            formikProps={formikProps}
-            formikKey="contactCity"
-            label="City"
-          ></StyledInputNewCheckout>
         )}
 
         {showContactZip && (
