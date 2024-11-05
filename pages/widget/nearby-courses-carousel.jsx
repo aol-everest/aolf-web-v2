@@ -1,14 +1,15 @@
 /* eslint-disable no-inline-styles/no-inline-styles */
 import React, { useState } from 'react';
 import { api, tConvert, concatenateStrings } from '@utils';
-import 'slick-carousel/slick/slick.css';
-import 'slick-carousel/slick/slick-theme.css';
 import Slider from 'react-slick';
 import usePlacesService from 'react-google-autocomplete/lib/usePlacesAutocompleteService';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import { ABBRS } from '@constants';
 import { useQuery } from '@tanstack/react-query';
+
+import 'slick-carousel/slick/slick.css';
+import 'slick-carousel/slick/slick-theme.css';
 
 dayjs.extend(utc);
 
@@ -22,17 +23,26 @@ const settings = {
   centerPadding: '24px',
   infinite: true,
   autoplaySpeed: 5000,
-  autoplay: true,
+  autoplay: false,
   draggable: true,
-  adaptiveHeight: true,
+  //adaptiveHeight: true,
   responsive: [
+    {
+      breakpoint: 1279,
+      settings: {
+        arrows: false,
+        centerMode: true,
+        centerPadding: '20px',
+        slidesToShow: 3,
+      },
+    },
     {
       breakpoint: 991,
       settings: {
         arrows: false,
         centerMode: true,
         centerPadding: '20px',
-        slidesToShow: 3,
+        slidesToShow: 2,
       },
     },
     {
@@ -88,7 +98,7 @@ export async function getServerSideProps(context) {
       lat,
       lng,
       postal,
-      locationName: [city, region, country, postal].join(', '),
+      locationName: [city, region, country, postal].filter(Boolean).join(', '),
     };
 
     const { data } = await api.get({
@@ -97,7 +107,7 @@ export async function getServerSideProps(context) {
         lat: lat,
         lng: lng,
         dist: 50,
-        size: 20,
+        size: 30,
         timingsRequired: true,
       },
     });
@@ -234,7 +244,7 @@ const NearbyCoursesCarousel = ({ initialLocation = null, nearbyWorkshops }) => {
     address: initialLocation.locationName,
     latitude: initialLocation?.lat,
     longitude: initialLocation?.lng,
-    isInputAllowed: true,
+    isInputAllowed: !initialLocation.locationName,
   });
 
   const { data, isLoading, isError, error } = useQuery({
@@ -244,7 +254,7 @@ const NearbyCoursesCarousel = ({ initialLocation = null, nearbyWorkshops }) => {
         lat: location.latitude,
         lng: location.longitude,
         dist: 50,
-        size: 20,
+        size: 30,
         timingsRequired: true,
       };
 
