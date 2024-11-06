@@ -5,8 +5,10 @@ import Slider from 'react-slick';
 import usePlacesService from 'react-google-autocomplete/lib/usePlacesAutocompleteService';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
-import { ABBRS } from '@constants';
+import { ABBRS, COURSE_TYPES_MASTER, COURSE_TYPES } from '@constants';
 import { useQuery } from '@tanstack/react-query';
+import { useRouter } from 'next/router';
+import { orgConfig } from '@org';
 
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
@@ -74,6 +76,26 @@ function convertUndefinedToNull(obj) {
   return obj;
 }
 
+const COURSE_TYPES_OPTIONS = COURSE_TYPES_MASTER[orgConfig.name].reduce(
+  (accumulator, currentValue) => {
+    const courseTypes = Object.entries(currentValue.courseTypes).reduce(
+      (courseTypes, [key, value]) => {
+        if (COURSE_TYPES[key]) {
+          return {
+            ...courseTypes,
+            [COURSE_TYPES[key].slug]: { ...COURSE_TYPES[key], ...value },
+          };
+        } else {
+          return courseTypes;
+        }
+      },
+      {},
+    );
+    return { ...accumulator, ...courseTypes };
+  },
+  {},
+);
+
 export async function getServerSideProps(context) {
   let initialLocation = {};
   let nearbyWorkshops = [];
@@ -101,6 +123,8 @@ export async function getServerSideProps(context) {
       locationName: [city, region, country, postal].filter(Boolean).join(', '),
     };
 
+    const courseTypeFilter = COURSE_TYPES_OPTIONS[context.params.slug];
+
     const { data } = await api.get({
       path: 'nearbyWorkshops',
       param: {
@@ -109,6 +133,7 @@ export async function getServerSideProps(context) {
         dist: 50,
         size: 30,
         timingsRequired: true,
+        ctype: courseTypeFilter.value,
       },
     });
     nearbyWorkshops = data;
@@ -158,15 +183,7 @@ const WorkShopTile = ({ workshop }) => {
         <div class="course-item-top">
           <div class="row">
             <div class="course-item-date">{getCourseDeration()}</div>
-            <div className="course-item-price">
-              {listPrice === unitPrice ? (
-                <span>${unitPrice}</span>
-              ) : (
-                <>
-                  <s>${listPrice}</s> <span>${unitPrice}</span>
-                </>
-              )}
-            </div>
+            <div className="course-item-price">$ {listPrice}</div>
           </div>
           <div class="payment-details">
             <div class="payby">
@@ -225,7 +242,9 @@ const WorkShopTile = ({ workshop }) => {
 };
 
 const NearbyCoursesCarousel = ({ initialLocation = null, nearbyWorkshops }) => {
-  console.log(nearbyWorkshops);
+  const router = useRouter();
+  const { slug } = router.query;
+  const courseTypeFilter = COURSE_TYPES_OPTIONS[slug];
   const {
     placesService,
     placePredictions,
@@ -248,7 +267,12 @@ const NearbyCoursesCarousel = ({ initialLocation = null, nearbyWorkshops }) => {
   });
 
   const { data, isLoading, isError, error } = useQuery({
-    queryKey: ['nearbyWorkshops', location.latitude, location.longitude],
+    queryKey: [
+      'nearbyWorkshops',
+      location.latitude,
+      location.longitude,
+      courseTypeFilter,
+    ],
     queryFn: async () => {
       let param = {
         lat: location.latitude,
@@ -256,6 +280,7 @@ const NearbyCoursesCarousel = ({ initialLocation = null, nearbyWorkshops }) => {
         dist: 50,
         size: 30,
         timingsRequired: true,
+        ctype: courseTypeFilter.value,
       };
 
       const response = await api.get({
