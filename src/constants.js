@@ -268,7 +268,7 @@ export const COURSE_TYPES_MASTER = {
           slug: 'teacher-training',
           name: 'Teacher Training',
           isExternal: true,
-          link: 'https://members.us.artofliving.org/us-en/lp/teacher-training-course',
+          link: `${process.env.NEXT_PUBLIC_BASE_URL}/us-en/lp/teacher-training-course`,
           description:
             'Experience the joy of transforming lives and become a SKY teacher turbocharged with new skills and leadership development.',
         },

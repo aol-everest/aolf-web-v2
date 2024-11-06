@@ -129,7 +129,7 @@ const SchedulingOnlineFlow = ({ workshopMaster }) => {
     const questionnaireArray = complianceQuestionnaire
       ? complianceQuestionnaire.map((current) => ({
           key: current.questionSfid,
-          value: isReferBySameSite,
+          value: true,
         }))
       : [];
 
@@ -540,7 +540,7 @@ const SchedulingOnlineFlow = ({ workshopMaster }) => {
             contactZip: '',
             contactPhone: '',
             questionnaire: questionnaireArray,
-            ppaAgreement: isReferBySameSite,
+            ppaAgreement: true,
           }}
           validationSchema={Yup.object().shape({
             firstName: Yup.string()
@@ -603,6 +603,9 @@ const SchedulingOnlineFlow = ({ workshopMaster }) => {
               resetForm,
             } = formikProps;
             formikOnChange(values);
+            const isNotAllQuestionnaireChecked = values.questionnaire.some(
+              (item) => !item.value,
+            );
             return (
               <main className="scheduling-page">
                 <section className="scheduling-top">
@@ -827,16 +830,20 @@ const SchedulingOnlineFlow = ({ workshopMaster }) => {
                             </>
                           )}
 
-                          <div class="payment-agreements">
-                            <ScheduleAgreementForm
-                              formikProps={formikProps}
-                              complianceQuestionnaire={complianceQuestionnaire}
-                              isCorporateEvent={false}
-                              questionnaireArray={questionnaireArray}
-                              screen="DESKTOP"
-                              parentClass=""
-                            />
-                          </div>
+                          {!emailAddressAdded && (
+                            <div class="payment-agreements">
+                              <ScheduleAgreementForm
+                                formikProps={formikProps}
+                                complianceQuestionnaire={
+                                  complianceQuestionnaire
+                                }
+                                isCorporateEvent={false}
+                                questionnaireArray={questionnaireArray}
+                                screen="DESKTOP"
+                                parentClass=""
+                              />
+                            </div>
+                          )}
 
                           <div className="note">
                             For any health related questions, please contact us
@@ -863,7 +870,11 @@ const SchedulingOnlineFlow = ({ workshopMaster }) => {
                                 className="submit-btn"
                                 type="button"
                                 disabled={
-                                  loading || !values.email || errors.email
+                                  loading ||
+                                  !values.email ||
+                                  errors.email ||
+                                  !values.ppaAgreement ||
+                                  isNotAllQuestionnaireChecked
                                 }
                                 onClick={(e) => {
                                   e.preventDefault();

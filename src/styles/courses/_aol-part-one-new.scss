@@ -2,6 +2,7 @@
   @media screen and (max-width: 991px) {
     margin-top: 0 !important;
   }
+  color: #000;
   .sky-breath {
     display: flex;
     flex-direction: column;
@@ -182,6 +183,7 @@
       .title {
         font-size: 32px;
         line-height: 44px !important;
+        color: #000;
         strong {
           font-size: 48px;
         }
@@ -257,6 +259,7 @@
       .title {
         height: 90px;
         display: block;
+        font-family: 'museo_sans300';
         @media only screen and (max-width: 991px) {
           font-size: 22px;
           line-height: 24px;
@@ -264,6 +267,9 @@
           br {
             display: none;
           }
+        }
+        span {
+          font-family: 'museo_sans700';
         }
       }
       .stats-desc {
@@ -461,9 +467,11 @@
           font-family: 'museo_sans700';
           font-size: 29px;
           line-height: 39px;
+          color: #000;
           @media only screen and (max-width: 991px) {
             font-size: 18px;
             line-height: 24px;
+            color: #000;
           }
         }
         .content {
@@ -668,6 +676,7 @@
         font-family: 'Noto Serif';
         font-style: italic;
         line-height: normal;
+        color: #2e2e2e;
       }
     }
     @media only screen and (max-width: 991px) {
@@ -870,7 +879,7 @@
     color: #000;
   }
   .stats-1 {
-    background: linear-gradient(0deg, #0997ac 0%, #9ee9ac 100%);
+    background: linear-gradient(90deg, #0997ac 0%, #9ee9ac 100%);
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -879,7 +888,7 @@
     line-height: 29px;
   }
   .stats-2 {
-    background: linear-gradient(0deg, #0bbafb 0%, #4285ec 100%);
+    background: linear-gradient(90deg, #0bbafb 0%, #4285ec 100%);
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -888,7 +897,7 @@
     line-height: 29px;
   }
   .stats-3 {
-    background: linear-gradient(0deg, #f39459 0%, #6f5ea4 100%);
+    background-image: linear-gradient(90deg, #f39459 0%, #6f5ea4 100%);
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;

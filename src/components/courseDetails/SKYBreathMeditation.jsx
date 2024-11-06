@@ -495,7 +495,7 @@ export const SKYBreathMeditation = ({
                 </Card.Header>
                 <Accordion.Collapse eventKey="0">
                   <Card.Body>
-                    You can learn the Sudarshan Kriya™ practice taught in the
+                    You can learn the Sudarshan Kriya™ practice taught in the{' '}
                     {title} Course in 3 days with 2.5 hours of live online or
                     in-person sessions each day with a certified instructor.
                   </Card.Body>

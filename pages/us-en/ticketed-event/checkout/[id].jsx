@@ -520,6 +520,8 @@ const TicketCheckoutForm = ({ event }) => {
   const afterDiscountPrice = totalPrice - totalDiscount;
   const showStreetAddress = afterDiscountPrice > 0;
 
+  const isZeroDollarPrice = totalPrice - totalDiscount;
+
   return (
     <>
       <NextSeo title={'Ticketed Checkout'} />
@@ -1032,7 +1034,9 @@ const TicketCheckoutForm = ({ event }) => {
                                 form="my-form"
                                 onClick={handleFormSubmit}
                               >
-                                Confirm and Pay
+                                {isZeroDollarPrice === 0
+                                  ? 'RSVP'
+                                  : 'Confirm and Pay'}
                               </button>
                             </div>
                           </div>

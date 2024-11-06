@@ -13,7 +13,7 @@ const allOrganizationConfig = [
     seo: {
       image:
         'https://www.artofliving.org/sites/www.artofliving.org/files/images/logo/logo-2x-cropped.png',
-      url: 'https://members.us.artofliving.org',
+      url: process.env.NEXT_PUBLIC_BASE_URL,
       description:
         "You're minutes away from the next step in your journey. Log In Sign Up. facebook. google. or. Don't remember your password?",
     },

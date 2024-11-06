@@ -23,6 +23,8 @@ main.profile-home {
   }
   .banner-section {
     overflow: hidden;
+    z-index: 0;
+    position: relative;
     .container {
       max-width: 100%;
       padding: 0;

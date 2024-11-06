@@ -179,7 +179,7 @@ const CenterListItem = ({ center, search }) => {
             src="/img/map-search-call-icon.svg"
             alt="call"
           />
-          {phoneNumber}
+          <a href={`tel:+1${phoneNumber}`}>{phoneNumber}</a>
         </div>
       )}
       {center.email && (
@@ -189,7 +189,9 @@ const CenterListItem = ({ center, search }) => {
             src="/img/map-search-email-icon.svg"
             alt="email"
           />
-          {center.email}
+          <a href={`mailto:${center.email}`} data-text={center.email}>
+            {center.email}
+          </a>
         </div>
       )}
       <div className="action-btn">

@@ -795,6 +795,11 @@
         font-size: 14px;
         font-weight: 600;
         line-height: 18px;
+        text-transform: uppercase;
+        &.online {
+          background: #fff5eb;
+          color: #ed994e;
+        }
       }
       .course-price {
         background: linear-gradient(94.04deg, #ffa180 3.84%, #ed7347 109.6%);
