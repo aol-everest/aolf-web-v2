@@ -87,16 +87,19 @@ export const PastCourses = ({ pastCourses = {} }) => {
     totalPlaces,
     pastWorkshops = [],
   } = pastCourses;
-  const [currentActiveCourse, setCurrentActiveCourse] = useState(null);
 
-  console.log(pastWorkshops);
   const groupedCourses = groupDataByCourseType(pastWorkshops, COURSE_TYPES);
 
-  console.log(groupedCourses);
+  const [firstGroup] = groupedCourses;
+  const { slug = '' } = firstGroup || {};
 
   return (
-    <>
-      <Accordion className="accordion accordion--past-courses">
+    groupedCourses &&
+    groupedCourses.length > 0 && (
+      <Accordion
+        className="accordion accordion--past-courses"
+        defaultActiveKey={`${slug}`}
+      >
         {groupedCourses.map((group) => {
           return (
             <div class="past-accordion-item" key={group.slug}>
@@ -132,6 +135,6 @@ export const PastCourses = ({ pastCourses = {} }) => {
           );
         })}
       </Accordion>
-    </>
+    )
   );
 };
