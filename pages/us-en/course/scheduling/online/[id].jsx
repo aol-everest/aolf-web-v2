@@ -109,7 +109,6 @@ const SchedulingOnlineFlow = ({ workshopMaster }) => {
     const stripe = useStripe();
     const elements = useElements();
     const [flowVersion] = useQueryState('fver', parseAsInteger);
-    const [locationFilter, setLocationFilter] = useState(null);
 
     const { showAlert } = useGlobalAlertContext();
 
@@ -504,24 +503,20 @@ const SchedulingOnlineFlow = ({ workshopMaster }) => {
     };
 
     const handleLocationFilterChange = async (value, formikProps) => {
-      const { setFieldValue, setFieldTouched } = formikProps;
       if (value) {
         const { street, city, state, zip } = parsedAddress(value?.locationName);
-        setLocationFilter(value);
 
-        setFieldValue('contactCity', city);
-        setFieldTouched('contactCity', true);
-
-        setFieldValue('contactAddress', street);
-        setFieldTouched('contactAddress', true);
-
-        setFieldValue('contactState', state);
-        setFieldTouched('contactState', true);
-
-        setFieldValue('contactZip', zip);
-        setFieldTouched('contactZip', true);
-      } else {
-        setLocationFilter(value);
+        // Batch all updates together to prevent multiple validations
+        formikProps.setValues(
+          {
+            ...formikProps.values,
+            contactAddress: street,
+            contactCity: city,
+            contactState: state,
+            contactZip: zip,
+          },
+          true,
+        ); // true to run validation once after all values are set
       }
     };
 
@@ -556,26 +551,26 @@ const SchedulingOnlineFlow = ({ workshopMaster }) => {
             contactPhone: Yup.string()
               .required('Phone number required')
               .matches(phoneRegExp, 'Phone number is not valid'),
-            contactCity: Yup.string().when('locationFilter', {
-              is: (value) => !!value, // Apply validation only when locationFilter is set
-              then: Yup.string().required('City is required'),
-              otherwise: Yup.string().notRequired(),
-            }),
-            contactAddress: Yup.string().when('locationFilter', {
+            contactAddress: Yup.string().when('email', {
               is: (value) => !!value,
               then: Yup.string().required('Address is required'),
               otherwise: Yup.string().notRequired(),
             }),
-            contactState: Yup.string().when('locationFilter', {
-              is: (value) => !!value,
+            contactCity: Yup.string().when(['contactAddress', 'email'], {
+              is: (address, email) => !!address && !!email,
+              then: Yup.string().required('City is required'),
+              otherwise: Yup.string().notRequired(),
+            }),
+            contactState: Yup.string().when(['contactAddress', 'email'], {
+              is: (address, email) => !!address && !!email,
               then: Yup.string().required('State is required'),
               otherwise: Yup.string().notRequired(),
             }),
-            contactZip: Yup.string().when('locationFilter', {
-              is: (value) => !!value,
+            contactZip: Yup.string().when(['contactAddress', 'email'], {
+              is: (address, email) => !!address && !!email,
               then: Yup.string()
                 .required('Zip code is required!')
-                .matches(/^\d+$/, 'Zip is invalid') // Ensures only digits are allowed
+                .matches(/^\d+$/, 'Zip is invalid')
                 .min(2, 'Zip must be at least 2 characters')
                 .max(10, 'Zip can be at most 10 characters'),
               otherwise: Yup.string().notRequired(),
@@ -772,7 +767,6 @@ const SchedulingOnlineFlow = ({ workshopMaster }) => {
                               <a
                                 href="#"
                                 onClick={() => {
-                                  setLocationFilter(null);
                                   resetForm({});
                                   setEmailAddressAdded(false);
                                 }}
@@ -787,12 +781,12 @@ const SchedulingOnlineFlow = ({ workshopMaster }) => {
                               <UserInfoFormNewCheckout
                                 formikProps={formikProps}
                                 showContactEmail={false}
-                                showStreetAddress={!!locationFilter}
-                                showContactCity={!!locationFilter}
-                                showContactZip={!!locationFilter}
-                                showContactState={!!locationFilter}
+                                showStreetAddress={false}
+                                showContactCity={!!values.contactAddress}
+                                showContactZip={!!values.contactAddress}
+                                showContactState={!!values.contactAddress}
                                 showLocationSearch={true}
-                                locationFilter={locationFilter}
+                                locationValue={values.contactAddress}
                                 handleLocationFilterChange={(value) =>
                                   handleLocationFilterChange(value, formikProps)
                                 }

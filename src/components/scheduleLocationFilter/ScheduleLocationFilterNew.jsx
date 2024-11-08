@@ -10,11 +10,14 @@ export const ScheduleLocationFilterNew = ({
   placeholder = 'Zip code or city',
   label = 'Enter a zip code or city',
   showOnlyRegions,
+  hideInput = true,
 }) => {
   const [isInputAllowed, setIsInputAllowed] = useState(true);
 
   useEffect(() => {
-    setIsInputAllowed(!value);
+    if (hideInput) {
+      setIsInputAllowed(!value);
+    }
   }, [value]);
 
   const removeLocation = (e) => {
