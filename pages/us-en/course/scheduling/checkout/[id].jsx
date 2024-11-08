@@ -650,15 +650,23 @@ const SchedulingPaymentForm = ({
           email: Yup.string()
             .email('Email is invalid!')
             .required('Email is required!')
+            .matches(/\S/, 'String should not contain empty spaces')
             .email(),
           contactPhone: Yup.string()
             .required('Phone number required')
             .matches(phoneRegExp, 'Phone number is not valid'),
-          contactAddress: Yup.string().required('Address is required'),
-          contactCity: Yup.string().required('City is required'),
-          contactState: Yup.string().required('State is required'),
+          contactAddress: Yup.string()
+            .required('Address is required')
+            .matches(/\S/, 'String should not contain empty spaces'),
+          contactCity: Yup.string()
+            .required('City is required')
+            .matches(/\S/, 'String should not contain empty spaces'),
+          contactState: Yup.string()
+            .required('State is required')
+            .matches(/\S/, 'String should not contain empty spaces'),
           contactZip: Yup.string()
             .required('Zip is required!')
+            .matches(/\S/, 'String should not contain empty spaces')
             //.matches(/^[0-9]+$/, { message: 'Zip is invalid' })
             .min(2, 'Zip is invalid')
             .max(10, 'Zip is invalid'),

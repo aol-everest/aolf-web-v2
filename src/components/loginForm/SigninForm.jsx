@@ -32,6 +32,7 @@ const StepInputUserName = ({ showMessage, message, children, onSubmit }) => {
   const {
     register,
     handleSubmit,
+    setValue,
     formState: { errors },
   } = useForm({
     resolver: yupResolver(userNameSchema),
@@ -39,6 +40,9 @@ const StepInputUserName = ({ showMessage, message, children, onSubmit }) => {
       username: '',
     },
   });
+  const trimValue = (name, value) => {
+    setValue(name, value.trim(), { shouldValidate: true });
+  };
   return (
     <>
       <div className="page-description">
@@ -57,6 +61,7 @@ const StepInputUserName = ({ showMessage, message, children, onSubmit }) => {
               })}
               placeholder="Email address"
               {...register('username')}
+              onBlur={(e) => trimValue('username', e.target.value)}
             />
             {errors.username && (
               <div className="validation-input">{errors.username.message}</div>
@@ -87,6 +92,7 @@ const StepInputPassword = ({
   const {
     register,
     handleSubmit,
+    setValue,
     formState: { errors },
   } = useForm({
     resolver: yupResolver(passwordSchema),
@@ -98,6 +104,9 @@ const StepInputPassword = ({
     } else {
       setType('password');
     }
+  };
+  const trimValue = (name, value) => {
+    setValue(name, value.trim(), { shouldValidate: true });
   };
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -118,6 +127,7 @@ const StepInputPassword = ({
             autocapitalize="off"
             autocorrect="off"
             {...register('password')}
+            onBlur={(e) => trimValue('password', e.target.value)}
           />
           <button
             class={classNames('showPassBtn', type)}

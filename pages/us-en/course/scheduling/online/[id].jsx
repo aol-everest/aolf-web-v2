@@ -547,30 +547,37 @@ const SchedulingOnlineFlow = ({ workshopMaster }) => {
             email: Yup.string()
               .email('Email is invalid!')
               .required('Email is required!')
+              .matches(/\S/, 'String should not contain empty spaces')
               .email(),
             contactPhone: Yup.string()
               .required('Phone number required')
               .matches(phoneRegExp, 'Phone number is not valid'),
             contactAddress: Yup.string().when('email', {
               is: (value) => !!value,
-              then: Yup.string().required('Address is required'),
+              then: Yup.string()
+                .required('Address is required')
+                .matches(/\S/, 'String should not contain empty spaces'),
               otherwise: Yup.string().notRequired(),
             }),
             contactCity: Yup.string().when(['contactAddress', 'email'], {
               is: (address, email) => !!address && !!email,
-              then: Yup.string().required('City is required'),
+              then: Yup.string()
+                .required('City is required')
+                .matches(/\S/, 'String should not contain empty spaces'),
               otherwise: Yup.string().notRequired(),
             }),
             contactState: Yup.string().when(['contactAddress', 'email'], {
               is: (address, email) => !!address && !!email,
-              then: Yup.string().required('State is required'),
+              then: Yup.string()
+                .required('State is required')
+                .matches(/\S/, 'String should not contain empty spaces'),
               otherwise: Yup.string().notRequired(),
             }),
             contactZip: Yup.string().when(['contactAddress', 'email'], {
               is: (address, email) => !!address && !!email,
               then: Yup.string()
                 .required('Zip code is required!')
-                .matches(/^\d+$/, 'Zip is invalid')
+                .matches(/\S/, 'String should not contain empty spaces')
                 .min(2, 'Zip must be at least 2 characters')
                 .max(10, 'Zip can be at most 10 characters'),
               otherwise: Yup.string().notRequired(),

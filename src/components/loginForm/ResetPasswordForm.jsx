@@ -43,6 +43,7 @@ export const ResetPasswordForm = ({
     register,
     control,
     handleSubmit,
+    setValue,
     formState: { errors },
   } = useForm({
     resolver: yupResolver(schema),
@@ -102,6 +103,9 @@ export const ResetPasswordForm = ({
       setTypeCPassword('password');
     }
   };
+  const trimValue = (name, value) => {
+    setValue(name, value.trim(), { shouldValidate: true });
+  };
 
   return (
     <form onSubmit={handleSubmit(resetPassword)}>
@@ -117,6 +121,7 @@ export const ResetPasswordForm = ({
               <label for="code">Code</label>
               <input
                 {...register('code')}
+                onBlur={(e) => trimValue('code', e.target.value)}
                 type="text"
                 className={classNames('input-field', {
                   validate: errors.code,
@@ -131,6 +136,7 @@ export const ResetPasswordForm = ({
               <label for="pass">New password</label>
               <input
                 {...register('password')}
+                onBlur={(e) => trimValue('password', e.target.value)}
                 type={type}
                 className={classNames('input-field password', {
                   validate: errors.password,
@@ -159,6 +165,9 @@ export const ResetPasswordForm = ({
               <label for="pass">Confirm password</label>
               <input
                 {...register('passwordConfirmation')}
+                onBlur={(e) =>
+                  trimValue('passwordConfirmation', e.target.value)
+                }
                 type={typeCPassword}
                 className={classNames('input-field password', {
                   validate: errors.passwordConfirmation,
