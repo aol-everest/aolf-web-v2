@@ -538,20 +538,32 @@ const SchedulingOnlineFlow = ({ workshopMaster }) => {
             ppaAgreement: true,
           }}
           validationSchema={Yup.object().shape({
-            firstName: Yup.string()
-              .required('First Name is required')
-              .matches(/\S/, 'String should not contain empty spaces'),
-            lastName: Yup.string()
-              .required('Last Name is required')
-              .matches(/\S/, 'String should not contain empty spaces'),
+            firstName: Yup.string().when('email', {
+              is: (value) => !!value,
+              then: Yup.string()
+                .required('First Name is required')
+                .matches(/\S/, 'String should not contain empty spaces'),
+              otherwise: Yup.string().notRequired(),
+            }),
+            lastName: Yup.string().when('email', {
+              is: (value) => !!value,
+              then: Yup.string()
+                .required('Last Name is required')
+                .matches(/\S/, 'String should not contain empty spaces'),
+              otherwise: Yup.string().notRequired(),
+            }),
+            contactPhone: Yup.string().when('email', {
+              is: (value) => !!value,
+              then: Yup.string()
+                .required('Phone number required')
+                .matches(phoneRegExp, 'Phone number is not valid'),
+              otherwise: Yup.string().notRequired(),
+            }),
             email: Yup.string()
               .email('Email is invalid!')
               .required('Email is required!')
               .matches(/\S/, 'String should not contain empty spaces')
               .email(),
-            contactPhone: Yup.string()
-              .required('Phone number required')
-              .matches(phoneRegExp, 'Phone number is not valid'),
             contactAddress: Yup.string().when('email', {
               is: (value) => !!value,
               then: Yup.string()
@@ -601,13 +613,14 @@ const SchedulingOnlineFlow = ({ workshopMaster }) => {
               setTouched,
               setErrors,
               errors,
-              setFieldValue,
+              setFieldTouched,
               resetForm,
             } = formikProps;
             formikOnChange(values);
             const isNotAllQuestionnaireChecked = values.questionnaire.some(
               (item) => !item.value,
             );
+
             return (
               <main className="scheduling-page">
                 <section className="scheduling-top">
@@ -870,19 +883,23 @@ const SchedulingOnlineFlow = ({ workshopMaster }) => {
                               <button
                                 className="submit-btn"
                                 type="button"
-                                disabled={
-                                  loading ||
-                                  !values.email ||
-                                  errors.email ||
-                                  !values.ppaAgreement ||
-                                  isNotAllQuestionnaireChecked
-                                }
+                                disabled={loading}
                                 onClick={(e) => {
-                                  e.preventDefault();
-                                  setEmailAddressAdded(true);
-                                  setTouched({}, false); // Reset touched fields
-                                  setErrors({});
-                                  handleTrackEvent();
+                                  if (
+                                    !values.email ||
+                                    errors.email ||
+                                    !values.ppaAgreement ||
+                                    isNotAllQuestionnaireChecked
+                                  ) {
+                                    setFieldTouched('ppaAgreement', true);
+                                    setFieldTouched('questionnaire', true);
+                                  } else {
+                                    e.preventDefault();
+                                    setEmailAddressAdded(true);
+                                    setTouched({}, false); // Reset touched fields
+                                    setErrors({});
+                                    handleTrackEvent();
+                                  }
                                 }}
                               >
                                 Continue
