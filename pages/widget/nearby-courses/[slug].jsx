@@ -43,7 +43,7 @@ const settings = {
       settings: {
         arrows: false,
         centerMode: true,
-        centerPadding: '20px',
+        centerPadding: '10px',
         slidesToShow: 2,
       },
     },
@@ -52,7 +52,7 @@ const settings = {
       settings: {
         arrows: false,
         centerMode: true,
-        centerPadding: '20px',
+        centerPadding: '10px',
         slidesToShow: 1,
       },
     },
