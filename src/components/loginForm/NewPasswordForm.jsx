@@ -30,6 +30,7 @@ export const NewPasswordForm = ({
     register,
     control,
     handleSubmit,
+    setValue,
     formState: { errors },
   } = useForm({
     resolver: yupResolver(schema),
@@ -52,6 +53,9 @@ export const NewPasswordForm = ({
       setTypeCPassword('password');
     }
   };
+  const trimValue = (name, value) => {
+    setValue(name, value.trim(), { shouldValidate: true });
+  };
 
   return (
     <form onSubmit={handleSubmit(completeNewPassword)}>
@@ -67,6 +71,7 @@ export const NewPasswordForm = ({
               <label for="pass">New password</label>
               <input
                 {...register('password')}
+                onBlur={(e) => trimValue('password', e.target.value)}
                 type={type}
                 className={classNames('input-field password', {
                   validate: errors.password,
@@ -95,6 +100,9 @@ export const NewPasswordForm = ({
               <label for="pass">Confirm password</label>
               <input
                 {...register('passwordConfirmation')}
+                onBlur={(e) =>
+                  trimValue('passwordConfirmation', e.target.value)
+                }
                 type={typeCPassword}
                 className={classNames('input-field password', {
                   validate: errors.passwordConfirmation,

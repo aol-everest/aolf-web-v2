@@ -54,6 +54,7 @@ export const ScheduleAgreementForm = ({
       category: 'All',
     });
     formikProps.handleChange('ppaAgreement')(e);
+    formikProps.setFieldTouched('ppaAgreement', true);
   };
 
   return (
@@ -152,6 +153,7 @@ export const ScheduleAgreementForm = ({
                           const nextValue = [...otherValues, currentValue];
 
                           form.setFieldValue('questionnaire', nextValue);
+                          formikProps.setFieldTouched('questionnaire', true);
                         }
                       }}
                     />

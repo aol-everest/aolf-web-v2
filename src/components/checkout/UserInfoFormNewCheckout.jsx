@@ -5,7 +5,7 @@ import {
 } from '@components/checkout';
 import { US_STATES } from '@constants';
 import { DropdownNewCheckout } from './DropdownNewCheckout';
-import { ScheduleLocationFilterNew } from '@components/scheduleLocationFilter/ScheduleLocationFilterNew';
+import { ScheduleLocationFilterOnline } from '@components/scheduleLocationFilter/ScheduleLocationFilterOnline';
 
 export const UserInfoFormNewCheckout = ({
   formikProps,
@@ -17,7 +17,7 @@ export const UserInfoFormNewCheckout = ({
   showContactCity = true,
   showContactZip = true,
   handleLocationFilterChange,
-  locationFilter,
+  locationValue,
 }) => {
   return (
     <Fragment>
@@ -39,13 +39,15 @@ export const UserInfoFormNewCheckout = ({
         ></StyledInputNewCheckout>
 
         {showLocationSearch && (
-          <ScheduleLocationFilterNew
+          <ScheduleLocationFilterOnline
             handleLocationChange={handleLocationFilterChange}
-            value={locationFilter}
+            value={locationValue}
             containerClass="required fullw"
             listClassName="result-list"
             placeholder="Address"
             label="Address"
+            formikProps={formikProps}
+            formikKey="contactAddress"
             showOnlyRegions={false}
           />
         )}

@@ -35,6 +35,7 @@ export const SignupForm = ({
     register,
     control,
     handleSubmit,
+    setValue,
     formState: { errors },
   } = useForm({
     resolver: yupResolver(schema),
@@ -46,6 +47,9 @@ export const SignupForm = ({
     } else {
       setType('password');
     }
+  };
+  const trimValue = (name, value) => {
+    setValue(name, value.trim(), { shouldValidate: true });
   };
 
   return (
@@ -59,6 +63,7 @@ export const SignupForm = ({
               <label for="fname">First name</label>
               <input
                 {...register('firstName')}
+                onBlur={(e) => trimValue('firstName', e.target.value)}
                 type="text"
                 className="input-field"
                 placeholder="First name"
@@ -73,6 +78,7 @@ export const SignupForm = ({
               <label for="lname">Last name</label>
               <input
                 {...register('lastName')}
+                onBlur={(e) => trimValue('lastName', e.target.value)}
                 type="text"
                 className="input-field"
                 placeholder="Last name"
@@ -88,6 +94,7 @@ export const SignupForm = ({
               <label for="email">Email address</label>
               <input
                 {...register('username')}
+                onBlur={(e) => trimValue('username', e.target.value)}
                 type="email"
                 className="input-field"
                 placeholder="Email address"
@@ -103,6 +110,7 @@ export const SignupForm = ({
               <label for="pass">Password</label>
               <input
                 {...register('password')}
+                onBlur={(e) => trimValue('password', e.target.value)}
                 type={type}
                 className="input-field password"
                 placeholder="Password"

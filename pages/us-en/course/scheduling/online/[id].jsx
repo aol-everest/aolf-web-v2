@@ -109,7 +109,6 @@ const SchedulingOnlineFlow = ({ workshopMaster }) => {
     const stripe = useStripe();
     const elements = useElements();
     const [flowVersion] = useQueryState('fver', parseAsInteger);
-    const [locationFilter, setLocationFilter] = useState(null);
 
     const { showAlert } = useGlobalAlertContext();
 
@@ -504,24 +503,20 @@ const SchedulingOnlineFlow = ({ workshopMaster }) => {
     };
 
     const handleLocationFilterChange = async (value, formikProps) => {
-      const { setFieldValue, setFieldTouched } = formikProps;
       if (value) {
         const { street, city, state, zip } = parsedAddress(value?.locationName);
-        setLocationFilter(value);
 
-        setFieldValue('contactCity', city);
-        setFieldTouched('contactCity', true);
-
-        setFieldValue('contactAddress', street);
-        setFieldTouched('contactAddress', true);
-
-        setFieldValue('contactState', state);
-        setFieldTouched('contactState', true);
-
-        setFieldValue('contactZip', zip);
-        setFieldTouched('contactZip', true);
-      } else {
-        setLocationFilter(value);
+        // Batch all updates together to prevent multiple validations
+        formikProps.setValues(
+          {
+            ...formikProps.values,
+            contactAddress: street,
+            contactCity: city,
+            contactState: state,
+            contactZip: zip,
+          },
+          true,
+        ); // true to run validation once after all values are set
       }
     };
 
@@ -543,39 +538,58 @@ const SchedulingOnlineFlow = ({ workshopMaster }) => {
             ppaAgreement: true,
           }}
           validationSchema={Yup.object().shape({
-            firstName: Yup.string()
-              .required('First Name is required')
-              .matches(/\S/, 'String should not contain empty spaces'),
-            lastName: Yup.string()
-              .required('Last Name is required')
-              .matches(/\S/, 'String should not contain empty spaces'),
+            firstName: Yup.string().when('email', {
+              is: (value) => !!value,
+              then: Yup.string()
+                .required('First Name is required')
+                .matches(/\S/, 'String should not contain empty spaces'),
+              otherwise: Yup.string().notRequired(),
+            }),
+            lastName: Yup.string().when('email', {
+              is: (value) => !!value,
+              then: Yup.string()
+                .required('Last Name is required')
+                .matches(/\S/, 'String should not contain empty spaces'),
+              otherwise: Yup.string().notRequired(),
+            }),
+            contactPhone: Yup.string().when('email', {
+              is: (value) => !!value,
+              then: Yup.string()
+                .required('Phone number required')
+                .matches(phoneRegExp, 'Phone number is not valid'),
+              otherwise: Yup.string().notRequired(),
+            }),
             email: Yup.string()
               .email('Email is invalid!')
               .required('Email is required!')
+              .matches(/\S/, 'String should not contain empty spaces')
               .email(),
-            contactPhone: Yup.string()
-              .required('Phone number required')
-              .matches(phoneRegExp, 'Phone number is not valid'),
-            contactCity: Yup.string().when('locationFilter', {
-              is: (value) => !!value, // Apply validation only when locationFilter is set
-              then: Yup.string().required('City is required'),
-              otherwise: Yup.string().notRequired(),
-            }),
-            contactAddress: Yup.string().when('locationFilter', {
-              is: (value) => !!value,
-              then: Yup.string().required('Address is required'),
-              otherwise: Yup.string().notRequired(),
-            }),
-            contactState: Yup.string().when('locationFilter', {
-              is: (value) => !!value,
-              then: Yup.string().required('State is required'),
-              otherwise: Yup.string().notRequired(),
-            }),
-            contactZip: Yup.string().when('locationFilter', {
+            contactAddress: Yup.string().when('email', {
               is: (value) => !!value,
               then: Yup.string()
+                .required('Address is required')
+                .matches(/\S/, 'String should not contain empty spaces'),
+              otherwise: Yup.string().notRequired(),
+            }),
+            contactCity: Yup.string().when(['contactAddress', 'email'], {
+              is: (address, email) => !!address && !!email,
+              then: Yup.string()
+                .required('City is required')
+                .matches(/\S/, 'String should not contain empty spaces'),
+              otherwise: Yup.string().notRequired(),
+            }),
+            contactState: Yup.string().when(['contactAddress', 'email'], {
+              is: (address, email) => !!address && !!email,
+              then: Yup.string()
+                .required('State is required')
+                .matches(/\S/, 'String should not contain empty spaces'),
+              otherwise: Yup.string().notRequired(),
+            }),
+            contactZip: Yup.string().when(['contactAddress', 'email'], {
+              is: (address, email) => !!address && !!email,
+              then: Yup.string()
                 .required('Zip code is required!')
-                .matches(/^\d+$/, 'Zip is invalid') // Ensures only digits are allowed
+                .matches(/\S/, 'String should not contain empty spaces')
                 .min(2, 'Zip must be at least 2 characters')
                 .max(10, 'Zip can be at most 10 characters'),
               otherwise: Yup.string().notRequired(),
@@ -599,13 +613,14 @@ const SchedulingOnlineFlow = ({ workshopMaster }) => {
               setTouched,
               setErrors,
               errors,
-              setFieldValue,
+              setFieldTouched,
               resetForm,
             } = formikProps;
             formikOnChange(values);
             const isNotAllQuestionnaireChecked = values.questionnaire.some(
               (item) => !item.value,
             );
+
             return (
               <main className="scheduling-page">
                 <section className="scheduling-top">
@@ -772,7 +787,6 @@ const SchedulingOnlineFlow = ({ workshopMaster }) => {
                               <a
                                 href="#"
                                 onClick={() => {
-                                  setLocationFilter(null);
                                   resetForm({});
                                   setEmailAddressAdded(false);
                                 }}
@@ -787,12 +801,12 @@ const SchedulingOnlineFlow = ({ workshopMaster }) => {
                               <UserInfoFormNewCheckout
                                 formikProps={formikProps}
                                 showContactEmail={false}
-                                showStreetAddress={!!locationFilter}
-                                showContactCity={!!locationFilter}
-                                showContactZip={!!locationFilter}
-                                showContactState={!!locationFilter}
+                                showStreetAddress={false}
+                                showContactCity={!!values.contactAddress}
+                                showContactZip={!!values.contactAddress}
+                                showContactState={!!values.contactAddress}
                                 showLocationSearch={true}
-                                locationFilter={locationFilter}
+                                locationValue={values.contactAddress}
                                 handleLocationFilterChange={(value) =>
                                   handleLocationFilterChange(value, formikProps)
                                 }
@@ -869,19 +883,23 @@ const SchedulingOnlineFlow = ({ workshopMaster }) => {
                               <button
                                 className="submit-btn"
                                 type="button"
-                                disabled={
-                                  loading ||
-                                  !values.email ||
-                                  errors.email ||
-                                  !values.ppaAgreement ||
-                                  isNotAllQuestionnaireChecked
-                                }
+                                disabled={loading}
                                 onClick={(e) => {
-                                  e.preventDefault();
-                                  setEmailAddressAdded(true);
-                                  setTouched({}, false); // Reset touched fields
-                                  setErrors({});
-                                  handleTrackEvent();
+                                  if (
+                                    !values.email ||
+                                    errors.email ||
+                                    !values.ppaAgreement ||
+                                    isNotAllQuestionnaireChecked
+                                  ) {
+                                    setFieldTouched('ppaAgreement', true);
+                                    setFieldTouched('questionnaire', true);
+                                  } else {
+                                    e.preventDefault();
+                                    setEmailAddressAdded(true);
+                                    setTouched({}, false); // Reset touched fields
+                                    setErrors({});
+                                    handleTrackEvent();
+                                  }
                                 }}
                               >
                                 Continue
