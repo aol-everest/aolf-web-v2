@@ -23,7 +23,7 @@ const settings = {
   dots: false,
   speed: 300,
   centerPadding: '24px',
-  infinite: true,
+  infinite: false,
   autoplaySpeed: 5000,
   autoplay: false,
   draggable: true,
