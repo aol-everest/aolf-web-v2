@@ -12,6 +12,7 @@ export const ScheduleAgreementForm = ({
   questionnaireArray,
   workshop,
   parentClass = 'mt-4',
+  hideValidation = false,
 }) => {
   const { track, page } = useAnalytics();
   const validateQuestionnaire = (complianceQuestionnaire) => (value) => {
@@ -95,19 +96,21 @@ export const ScheduleAgreementForm = ({
         </label>
       </div>
 
-      <div className="agreement">
-        {formikProps.errors.ppaAgreement &&
-          formikProps.touched.ppaAgreement && (
-            <div className="agreement__important">
-              <img
-                className="agreement__important-icon"
-                src="/img/warning.svg"
-                alt="warning"
-              />
-              Please check the box in order to continue
-            </div>
-          )}
-      </div>
+      {!hideValidation && (
+        <div className="agreement">
+          {formikProps.errors.ppaAgreement &&
+            formikProps.touched.ppaAgreement && (
+              <div className="agreement__important">
+                <img
+                  className="agreement__important-icon"
+                  src="/img/warning.svg"
+                  alt="warning"
+                />
+                Please check the box in order to continue
+              </div>
+            )}
+        </div>
+      )}
       {complianceQuestionnaire && complianceQuestionnaire.length > 0 && (
         <div className={`health-confirmation ${parentClass}`}>
           {complianceQuestionnaire.map((compliance) => (
@@ -172,17 +175,21 @@ export const ScheduleAgreementForm = ({
               </label>
             </div>
           ))}
-          {formikProps.errors.questionnaire &&
-            formikProps.touched.questionnaire && (
-              <div className="agreement__important">
-                <img
-                  className="agreement__important-icon"
-                  src="/img/warning.svg"
-                  alt="warning"
-                />
-                Please check the box in order to continue
-              </div>
-            )}
+          {!hideValidation && (
+            <>
+              {formikProps.errors.questionnaire &&
+                formikProps.touched.questionnaire && (
+                  <div className="agreement__important">
+                    <img
+                      className="agreement__important-icon"
+                      src="/img/warning.svg"
+                      alt="warning"
+                    />
+                    Please check the box in order to continue
+                  </div>
+                )}
+            </>
+          )}
         </div>
       )}
     </>

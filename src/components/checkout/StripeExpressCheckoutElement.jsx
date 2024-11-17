@@ -274,6 +274,7 @@ const CheckoutPage = ({
                 questionnaireArray={questionnaireArray}
                 workshop={workshop}
                 screen="DESKTOP"
+                hideValidation={true}
               />
               {showHealthLink && (
                 <div className="rsvp-note !tw-py-3">
