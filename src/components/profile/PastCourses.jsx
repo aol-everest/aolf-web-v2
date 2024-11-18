@@ -43,6 +43,15 @@ const EventTile = ({ event, index }) => {
     if (
       dayjs
         .utc(event.eventStartDate)
+        .isSame(dayjs.utc(event.eventEndDate), 'day')
+    ) {
+      return (
+        <>{`${dayjs.utc(event.eventStartDate).format('MMMM DD, YYYY')}`}</>
+      );
+    }
+    if (
+      dayjs
+        .utc(event.eventStartDate)
         .isSame(dayjs.utc(event.eventEndDate), 'month')
     ) {
       return (
