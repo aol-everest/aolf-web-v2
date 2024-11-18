@@ -12,6 +12,7 @@ import { orgConfig } from '@org';
 
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
+import { pushRouteWithUTMQuery } from '@service';
 
 dayjs.extend(utc);
 
@@ -157,13 +158,10 @@ const WorkShopTile = ({ workshop }) => {
     locationProvince,
     locationStreet,
     timings,
-    unitPrice,
     listPrice,
-    isEventFull,
-    isPurchased,
-    category,
     productTypeId,
   } = workshop || {};
+  const router = useRouter();
   const getCourseDeration = () => {
     return (
       <>
@@ -175,7 +173,13 @@ const WorkShopTile = ({ workshop }) => {
   };
 
   const enrollAction = () => {
-    window.parent.location.href = `${process.env.NEXT_PUBLIC_BASE_URL}/us-en/course/checkout/${sfid}?ctype=${productTypeId}`;
+    const isOnline = mode === 'Online';
+    pushRouteWithUTMQuery(router, {
+      pathname: `/us-en/course/checkout/${sfid}`,
+      query: {
+        ctype: productTypeId,
+      },
+    });
   };
   return (
     <div class="slide">
@@ -361,7 +365,9 @@ const NearbyCoursesCarousel = ({ initialLocation = null, nearbyWorkshops }) => {
   };
 
   const moreDatesAction = () => {
-    window.parent.location.href = `${process.env.NEXT_PUBLIC_BASE_URL}/us-en/courses/art-of-living-part-1`;
+    pushRouteWithUTMQuery(router, {
+      pathname: `/us-en/course/scheduling`,
+    });
   };
 
   return (
@@ -389,11 +395,11 @@ const NearbyCoursesCarousel = ({ initialLocation = null, nearbyWorkshops }) => {
                     id="search-field"
                     className="search-input"
                     value={location.address}
+                    autoComplete="off"
                     onChange={(evt) => {
                       getPlacePredictions({ input: evt.target.value });
                       handleChange(evt.target.value);
                     }}
-                    onSelect={(ev) => console.log('seeeee', ev)}
                     placeholder={placeholder}
                     loading={isPlacePredictionsLoading}
                   />
