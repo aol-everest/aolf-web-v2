@@ -264,7 +264,9 @@ const CheckoutPage = ({
         {(formikProps) => {
           const hidePayMessage =
             formikProps?.values?.ppaAgreement &&
-            formikProps?.values?.questionnaire?.some((item) => item.value);
+            (formikProps?.values?.questionnaire?.length === 0 ||
+              formikProps.values.questionnaire.some((item) => item.value));
+
           return (
             <>
               <ScheduleAgreementForm
