@@ -242,17 +242,6 @@ const CheckoutPage = ({
     setShowMessage(true);
   };
 
-  const validate = (values) => {
-    console.log(values);
-    const errors = {};
-    if (!values.ppaAgreement) {
-      errors.ppaAgreement = 'Please check the box in order to continue.';
-    } else {
-      errors.ppaAgreement = null;
-    }
-    return errors;
-  };
-
   return (
     <div>
       <Formik
@@ -267,7 +256,7 @@ const CheckoutPage = ({
             'Please check the box in order to continue.',
           ), // Ensures the value is true
         })}
-        validate={validate}
+        // validate={validate}
         onSubmit={() => {}}
       >
         {(formikProps) => {
@@ -275,11 +264,6 @@ const CheckoutPage = ({
             formikProps?.values?.ppaAgreement &&
             (formikProps?.values?.questionnaire?.length === 0 ||
               formikProps.values.questionnaire.some((item) => item.value));
-          console.log(
-            formikProps.isValid,
-            formikProps.dirty,
-            formikProps.errors,
-          );
           return (
             <>
               <ScheduleAgreementForm
