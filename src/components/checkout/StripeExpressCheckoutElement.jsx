@@ -242,6 +242,14 @@ const CheckoutPage = ({
     setShowMessage(true);
   };
 
+  const validate = (values) => {
+    const errors = {};
+    if (!values.ppaAgreement) {
+      errors.ppaAgreement = 'Please check the box in order to continue.';
+    }
+    return errors;
+  };
+
   return (
     <div>
       <Formik
@@ -251,11 +259,12 @@ const CheckoutPage = ({
           ppaAgreement: false,
         }}
         validationSchema={Yup.object().shape({
-          ppaAgreement: Yup.boolean()
-            .required('You must agree to the terms to continue.') // Ensures the field is required
-            .oneOf([true], 'Please check the box in order to continue.') // Ensures the value is true
-            .label('Terms'),
+          ppaAgreement: Yup.boolean().oneOf(
+            [true],
+            'Please check the box in order to continue.',
+          ), // Ensures the value is true
         })}
+        validate={validate}
         onSubmit={() => {}}
       >
         {(formikProps) => {
@@ -266,6 +275,9 @@ const CheckoutPage = ({
           console.log(formikProps.isValid, formikProps.dirty, formikProps);
           return (
             <>
+              <div>
+                <pre>{JSON.stringify({ formikProps }, null, 2)}</pre>
+              </div>
               <ScheduleAgreementForm
                 formikProps={formikProps}
                 complianceQuestionnaire={workshop.complianceQuestionnaire}
