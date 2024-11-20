@@ -585,6 +585,8 @@ const Scheduling = ({ initialLocation }) => {
         query: {
           ...router.query,
           productTypeId: workshopMaster?.productTypeId,
+          courseType: courseTypeFilter,
+          ctype: workshopMaster?.productTypeId,
         },
       });
     } else {

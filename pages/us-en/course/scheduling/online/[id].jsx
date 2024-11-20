@@ -749,7 +749,7 @@ const SchedulingOnlineFlow = ({ workshopMaster }) => {
                           </div>
                           <div className="info-box-details">
                             <div className="info-box-title">Location:</div>
-                            <div className="info-detail">{mode}</div>
+                            <div className="info-detail">{`${mode} (The instructor will email you the Zoom meeting details prior to course start date)`}</div>
                           </div>
                         </div>
                       </div>
