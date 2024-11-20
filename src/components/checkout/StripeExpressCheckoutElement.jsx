@@ -252,12 +252,9 @@ const CheckoutPage = ({
         }}
         validationSchema={Yup.object().shape({
           ppaAgreement: Yup.boolean()
-            .label('Terms')
-            .test(
-              'is-true',
-              'Please check the box in order to continue.',
-              (value) => value === true,
-            ),
+            .required('You must agree to the terms to continue.') // Ensures the field is required
+            .oneOf([true], 'Please check the box in order to continue.') // Ensures the value is true
+            .label('Terms'),
         })}
         onSubmit={() => {}}
       >
