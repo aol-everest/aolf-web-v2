@@ -243,9 +243,12 @@ const CheckoutPage = ({
   };
 
   const validate = (values) => {
+    console.log(values);
     const errors = {};
     if (!values.ppaAgreement) {
       errors.ppaAgreement = 'Please check the box in order to continue.';
+    } else {
+      errors.ppaAgreement = null;
     }
     return errors;
   };
@@ -272,12 +275,13 @@ const CheckoutPage = ({
             formikProps?.values?.ppaAgreement &&
             (formikProps?.values?.questionnaire?.length === 0 ||
               formikProps.values.questionnaire.some((item) => item.value));
-          console.log(formikProps.isValid, formikProps.dirty, formikProps);
+          console.log(
+            formikProps.isValid,
+            formikProps.dirty,
+            formikProps.errors,
+          );
           return (
             <>
-              <div>
-                <pre>{JSON.stringify({ formikProps }, null, 2)}</pre>
-              </div>
               <ScheduleAgreementForm
                 formikProps={formikProps}
                 complianceQuestionnaire={workshop.complianceQuestionnaire}
