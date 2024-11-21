@@ -69,6 +69,7 @@ export const ScheduleAgreementForm = ({
                   error: meta.touched && meta.error,
                 })}
                 {...field} // Includes `name`, `value`, `checked`, and `onChange`
+                checked={field.value}
                 onChange={(e) => {
                   field.onChange(e); // Formik's default onChange handler
                   onChangeHandler(e); // Custom tracking logic
