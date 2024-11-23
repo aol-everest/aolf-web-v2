@@ -175,7 +175,9 @@ const WorkShopTile = ({ workshop }) => {
   const enrollAction = () => {
     const isOnline = mode === 'Online';
     pushRouteWithUTMQuery(router, {
-      pathname: `/us-en/course/checkout/${sfid}`,
+      pathname: isOnline
+        ? `/us-en/course/scheduling/online/${sfid}`
+        : `/us-en/course/scheduling/in-person/${sfid}`,
       query: {
         ctype: productTypeId,
       },
