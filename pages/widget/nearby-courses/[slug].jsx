@@ -177,7 +177,7 @@ const WorkShopTile = ({ workshop }) => {
     pushRouteWithUTMQuery(router, {
       pathname: isOnline
         ? `/us-en/course/scheduling/online/${sfid}`
-        : `/us-en/course/scheduling/in-person/${sfid}`,
+        : `/us-en/course/scheduling/inPerson/${sfid}`,
       query: {
         ctype: productTypeId,
       },
