@@ -251,14 +251,12 @@ const CheckoutPage = ({
           ppaAgreement: false,
         }}
         validationSchema={Yup.object().shape({
-          ppaAgreement: Yup.boolean()
-            .label('Terms')
-            .test(
-              'is-true',
-              'Please check the box in order to continue.',
-              (value) => value === true,
-            ),
+          ppaAgreement: Yup.boolean().oneOf(
+            [true],
+            'Please check the box in order to continue.',
+          ), // Ensures the value is true
         })}
+        // validate={validate}
         onSubmit={() => {}}
       >
         {(formikProps) => {
@@ -266,7 +264,6 @@ const CheckoutPage = ({
             formikProps?.values?.ppaAgreement &&
             (formikProps?.values?.questionnaire?.length === 0 ||
               formikProps.values.questionnaire.some((item) => item.value));
-
           return (
             <>
               <ScheduleAgreementForm
