@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { useQueryState } from 'nuqs';
+import { useQueryState, parseAsString } from 'nuqs';
 import { useRouter } from 'next/router';
 import queryString from 'query-string';
 import ErrorPage from 'next/error';
@@ -12,10 +12,11 @@ import {
   phoneRegExp,
   priceCalculation,
   parsedAddress,
+  findCourseTypeByKey,
 } from '@utils';
 import { useAuth, useGlobalAlertContext } from '@contexts';
 import { useAnalytics } from 'use-analytics';
-import { ABBRS, ALERT_TYPES } from '@constants';
+import { ABBRS, ALERT_TYPES, COURSE_TYPES } from '@constants';
 import { NextSeo } from 'next-seo';
 import { useQuery } from '@tanstack/react-query';
 import { ScheduleAgreementForm } from '@components/scheduleAgreementForm';
@@ -34,33 +35,44 @@ import { Formik } from 'formik';
 import { loadStripe } from '@stripe/stripe-js';
 import { filterAllowedParams, removeNull } from '@utils/utmParam';
 
-export async function getServerSideProps(context) {
-  let response = null;
-
-  try {
-    let param = {
-      ctypeId:
-        process.env.NEXT_PUBLIC_SKY_BREATH_MEDITATION_IN_PERSON_CTYPE || '',
-    };
-    response = await api.get({
-      path: 'workshopMaster',
-      param,
-    });
-  } catch (error) {
-    console.error('Failed to fetch ZIP code by IP');
-  }
-
-  return {
-    props: { workshopMaster: response?.data || {} },
-  };
-}
-
-const SchedulingInPersonFlow = ({ workshopMaster }) => {
+const SchedulingInPersonFlow = () => {
   const router = useRouter();
   const { track } = useAnalytics();
 
   const { id: workshopId } = router.query;
-  const [courseType] = useQueryState('courseType');
+  const [courseType] = useQueryState(
+    'courseType',
+    parseAsString.withDefault('SKY_BREATH_MEDITATION'),
+  );
+
+  const { data: workshopMaster = {} } = useQuery({
+    queryKey: ['workshopMaster'],
+    queryFn: async () => {
+      const mode = 'In Person';
+      let ctypeId = null;
+      if (
+        findCourseTypeByKey(courseType)?.subTypes &&
+        findCourseTypeByKey(courseType)?.subTypes[mode]
+      ) {
+        ctypeId = findCourseTypeByKey(courseType)?.subTypes[mode];
+      } else {
+        const courseTypeValue =
+          findCourseTypeByKey(courseType)?.value ||
+          COURSE_TYPES.SKY_BREATH_MEDITATION?.value;
+
+        ctypeId = courseTypeValue ? courseTypeValue.split(';')[0] : undefined;
+      }
+
+      let param = {
+        ctypeId,
+      };
+      const response = await api.get({
+        path: 'workshopMaster',
+        param,
+      });
+      return response.data;
+    },
+  });
 
   const {
     data: activeWorkshop,
