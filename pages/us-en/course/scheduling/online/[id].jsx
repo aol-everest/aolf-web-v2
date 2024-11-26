@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { useQueryState, parseAsInteger } from 'nuqs';
+import { useQueryState } from 'nuqs';
 import { useRouter } from 'next/router';
 import queryString from 'query-string';
 import ErrorPage from 'next/error';
@@ -100,7 +100,6 @@ const SchedulingOnlineFlow = ({ workshopMaster }) => {
     router,
     track,
     courseType,
-    isReferBySameSite,
   }) => {
     const { profile = {} } = useAuth();
     const formRef = useRef();
@@ -108,7 +107,6 @@ const SchedulingOnlineFlow = ({ workshopMaster }) => {
     const [emailAddressAdded, setEmailAddressAdded] = useState(false);
     const stripe = useStripe();
     const elements = useElements();
-    const [flowVersion] = useQueryState('fver', parseAsInteger);
 
     const { showAlert } = useGlobalAlertContext();
 
@@ -327,11 +325,7 @@ const SchedulingOnlineFlow = ({ workshopMaster }) => {
               data.attendeeId
             }?${queryString.stringify(filteredParams)}`;
             if (isGenericWorkshop) {
-              if (flowVersion === 2) {
-                returnUrl = `${window.location.origin}/us-en/scheduling/online/course/${data.attendeeId}?${queryString.stringify(filteredParams)}`;
-              } else {
-                returnUrl = `${window.location.origin}/us-en/course/scheduling?aid=${data.attendeeId}&${queryString.stringify(filteredParams)}`;
-              }
+              returnUrl = `${window.location.origin}/us-en/course/scheduling?aid=${data.attendeeId}&${queryString.stringify(filteredParams)}`;
             }
 
             const result = await stripe.confirmPayment({
@@ -348,21 +342,12 @@ const SchedulingOnlineFlow = ({ workshopMaster }) => {
             }
           } else {
             if (isGenericWorkshop) {
-              if (flowVersion === 2) {
-                replaceRouteWithUTMQuery(router, {
-                  pathname: `/us-en/scheduling/online/course/${data.attendeeId}`,
-                  query: {
-                    aid: data.attendeeId,
-                  },
-                });
-              } else {
-                replaceRouteWithUTMQuery(router, {
-                  pathname: `/us-en/course/scheduling/${data.attendeeId}`,
-                  query: {
-                    aid: data.attendeeId,
-                  },
-                });
-              }
+              replaceRouteWithUTMQuery(router, {
+                pathname: `/us-en/course/scheduling/${data.attendeeId}`,
+                query: {
+                  aid: data.attendeeId,
+                },
+              });
             } else {
               replaceRouteWithUTMQuery(router, {
                 pathname: `/us-en/course/thankyou/${data.attendeeId}`,
