@@ -966,6 +966,10 @@
       padding: 25px 25px 30px;
       text-align: right;
       background-color: $orange-opacity;
+
+      button {
+        border-radius: 50px;
+      }
     }
 
     &.digital-member-join_journey {

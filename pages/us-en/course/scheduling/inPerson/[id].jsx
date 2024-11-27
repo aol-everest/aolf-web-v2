@@ -1,916 +1,1042 @@
-/* eslint-disable no-inline-styles/no-inline-styles */
-import React, { useEffect, useState, useRef } from 'react';
-import { useQueryState, parseAsString, parseAsJson } from 'nuqs';
-import { StripeExpressCheckoutElement } from '@components/checkout/StripeExpressCheckoutElement';
-import { ABBRS, COURSE_MODES, COURSE_TYPES, ALERT_TYPES } from '@constants';
-import { ScheduleLocationFilterNew } from '@components/scheduleLocationFilter/ScheduleLocationFilterNew';
+import React, { useState, useRef, useEffect } from 'react';
+import { useQueryState, parseAsString } from 'nuqs';
 import { useRouter } from 'next/router';
-import {
-  api,
-  findCourseTypeByKey,
-  findSlugByProductTypeId,
-  tConvert,
-} from '@utils';
+import queryString from 'query-string';
+import ErrorPage from 'next/error';
+import { Loader, PageLoading } from '@components';
+import { replaceRouteWithUTMQuery } from '@service';
 import dayjs from 'dayjs';
-import { pushRouteWithUTMQuery, replaceRouteWithUTMQuery } from '@service';
-import { useQuery } from '@tanstack/react-query';
-import Flatpickr from 'react-flatpickr';
-import { Loader } from '@components';
-import 'flatpickr/dist/flatpickr.min.css';
-
-import { useGlobalAlertContext } from '@contexts';
+import {
+  tConvert,
+  api,
+  phoneRegExp,
+  priceCalculation,
+  parsedAddress,
+  findCourseTypeByKey,
+} from '@utils';
+import { useAuth, useGlobalAlertContext } from '@contexts';
 import { useAnalytics } from 'use-analytics';
-import moment from 'moment';
+import { ABBRS, ALERT_TYPES, COURSE_TYPES } from '@constants';
+import { NextSeo } from 'next-seo';
+import { useQuery } from '@tanstack/react-query';
+import { ScheduleAgreementForm } from '@components/scheduleAgreementForm';
+import {
+  StyledInputNewCheckout,
+  UserInfoFormNewCheckout,
+} from '@components/checkout';
+import {
+  PaymentElement,
+  useStripe,
+  Elements,
+  useElements,
+} from '@stripe/react-stripe-js';
+import * as Yup from 'yup';
+import { Formik } from 'formik';
+import { loadStripe } from '@stripe/stripe-js';
+import { filterAllowedParams, removeNull } from '@utils/utmParam';
 
-export async function getServerSideProps(context) {
-  let response = null;
-
-  try {
-    let param = {
-      ctypeId:
-        process.env.NEXT_PUBLIC_SKY_BREATH_MEDITATION_IN_PERSON_CTYPE || '',
-    };
-    response = await api.get({
-      path: 'workshopMaster',
-      param,
-    });
-  } catch (error) {
-    console.error('Failed to fetch ZIP code by IP');
-  }
-
-  return {
-    props: { workshopMaster: response?.data || {} },
-  };
-}
-
-const SchedulingInPersonFlow = ({ workshopMaster }) => {
-  const fp = useRef(null);
+const SchedulingInPersonFlow = () => {
   const router = useRouter();
-  const { id: workshopId } = router.query;
-  const { track, page } = useAnalytics();
-  const { showAlert } = useGlobalAlertContext();
+  const { track } = useAnalytics();
 
-  const [attendeeId] = useQueryState('aid');
-  const [title] = useQueryState('title');
-  const [productTypeId] = useQueryState('productTypeId');
-  const [mode] = useQueryState('mode', parseAsString.withDefault('both'));
-  const [locationFilter] = useQueryState('location', parseAsJson());
-  const [currentMonthYear] = useQueryState(
-    'ym',
-    parseAsString.withDefault(`${moment().year()}-${moment().month() + 1}`),
-  );
-  const [selectedDates] = useQueryState('selectedDate', parseAsJson());
-  const [courseTypeFilter] = useQueryState(
+  const { id: workshopId } = router.query;
+  const [courseType] = useQueryState(
     'courseType',
     parseAsString.withDefault('SKY_BREATH_MEDITATION'),
   );
-  const [milesFilter] = useQueryState('miles', parseAsString.withDefault('50'));
-  const [cityFilter] = useQueryState('city');
-  const [teacherFilter] = useQueryState('teacher');
 
-  const [timezoneFilter, setTimezoneFilter] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [activeWorkshop, setActiveWorkshop] = useState({});
-
-  const COURSE_MODES_BOTH = 'both';
-
-  const slug = findSlugByProductTypeId(productTypeId);
-
-  const { data: dateAvailable = [], isLoading } = useQuery({
-    queryKey: [
-      'workshopMonthCalendar',
-      currentMonthYear,
-      courseTypeFilter,
-      timezoneFilter,
-      mode,
-      locationFilter || {},
-    ],
+  const { data: workshopMaster = {} } = useQuery({
+    queryKey: ['workshopMaster'],
     queryFn: async () => {
+      const mode = 'In Person';
+      let ctypeId = null;
+      if (
+        findCourseTypeByKey(courseType)?.subTypes &&
+        findCourseTypeByKey(courseType)?.subTypes[mode]
+      ) {
+        ctypeId = findCourseTypeByKey(courseType)?.subTypes[mode];
+      } else {
+        const courseTypeValue =
+          findCourseTypeByKey(courseType)?.value ||
+          COURSE_TYPES.SKY_BREATH_MEDITATION?.value;
+
+        ctypeId = courseTypeValue ? courseTypeValue.split(';')[0] : undefined;
+      }
+
       let param = {
-        ctype:
-          findCourseTypeByKey(courseTypeFilter)?.value ||
-          COURSE_TYPES.SKY_BREATH_MEDITATION?.value,
-        month: currentMonthYear,
+        ctypeId,
       };
-      if (mode !== COURSE_MODES.IN_PERSON.value) {
-        param = { ...param, timeZone: timezoneFilter };
-      }
-      if (mode && mode !== COURSE_MODES_BOTH) {
-        param = { ...param, mode };
-      }
-      if (milesFilter) {
-        param = { ...param, radius: milesFilter };
-      }
-      if (teacherFilter) {
-        param = { ...param, teacherId: teacherFilter };
-      }
-      if (cityFilter) {
-        param = { ...param, city: cityFilter };
-      }
-      if (locationFilter && !cityFilter) {
-        const { lat, lng } = locationFilter || {};
-        if (lat || lng) {
-          param = {
-            ...param,
-            lat: parseFloat(lat)?.toFixed(4),
-            lng: parseFloat(lng)?.toFixed(4),
-          };
-        }
-      }
-      if (locationFilter?.lat || cityFilter) {
-        const response = await api.get({
-          path: 'workshopMonthCalendar',
-          param,
-        });
-        const defaultDate =
-          response.data.length > 0 ? response.data[0].allDates : [];
-        if (fp?.current?.flatpickr && defaultDate.length > 0) {
-          fp.current.flatpickr.jumpToDate(defaultDate[0], true);
-        }
-        return response.data;
-      }
-      return [];
+      const response = await api.get({
+        path: 'workshopMaster',
+        param,
+      });
+      return response.data;
     },
   });
 
-  useEffect(() => {
-    if (router?.query?.timezone) {
-      setTimezoneFilter(router.query.timezone);
-    }
-  }, [router.query]);
-
-  useEffect(() => {
-    if (workshopId) {
-      getWorkshopDetails();
-    }
-  }, [workshopId]);
-
-  const getWorkshopDetails = async () => {
-    setLoading(true);
-    const response = await await api.get({
-      path: 'workshopDetail',
-      param: {
-        id: workshopId,
-        rp: 'checkout',
-      },
-      isUnauthorized: true,
-    });
-    setLoading(false);
-    if (response?.data) {
-      setActiveWorkshop(response?.data);
-    }
-    track('program_date_button', {
-      program_id: workshopId,
-      program_name: response?.data?.title,
-      program_date: response?.data?.eventStartDate,
-      program_time: response?.data?.eventStartTime,
-      category: 'All',
-    });
-    return response?.data;
-  };
-
-  const handleTransferWorkshopRequest = async () => {
-    //token.saveCardForFuture = true;
-    if (loading) {
-      return null;
-    }
-    setLoading(true);
-    try {
-      const {
-        status,
-        data,
-        error: errorMessage,
-        isError,
-      } = await api.post({
-        path: 'transferWorkshopAttendee',
-        body: { attendeeRecordId: attendeeId, productSfId: activeWorkshop?.id },
-      });
-      if (status === 400 || isError) {
-        throw new Error(errorMessage);
-      }
-      setLoading(false);
-      replaceRouteWithUTMQuery(router, {
-        pathname: `/us-en/course/thankyou/${attendeeId}`,
-        query: {
-          ctype: activeWorkshop.productTypeId,
-          page: 'ty',
-          referral: 'course_scheduling_checkout',
+  const {
+    data: activeWorkshop,
+    isLoading,
+    isError,
+    error,
+  } = useQuery({
+    queryKey: 'workshopDetail',
+    queryFn: async () => {
+      const response = await api.get({
+        path: 'workshopDetail',
+        param: {
+          id: workshopId,
+          rp: 'checkout',
         },
+        isUnauthorized: true,
       });
-    } catch (ex) {
-      console.error(ex);
-      const data = ex.response?.data;
-      const { message, statusCode } = data || {};
-      setLoading(false);
-      showAlert(ALERT_TYPES.ERROR_ALERT, {
-        children: message ? `Error: ${message} (${statusCode})` : ex.message,
-      });
-    }
-  };
+      return response.data;
+    },
+    enabled: !!workshopId,
+  });
 
-  const handleSelectMode = (value) => {
-    track('course_type_change');
-    replaceRouteWithUTMQuery(router, {
-      pathname: `/us-en/course/scheduling`,
-      query: {
-        ym: `${fp.current.flatpickr.currentYear}-${
-          fp.current.flatpickr.currentMonth + 1
-        }`,
-        selectedDate: [],
-        mode: value,
-        location: router.query.location,
-      },
-    });
-  };
-
-  const handleLocationFilterChange = () => {
-    replaceRouteWithUTMQuery(router, {
-      pathname: `/us-en/course/scheduling`,
-      query: {
-        ym: currentMonthYear,
-        selectedDate: [],
-      },
-    });
-  };
-
-  const handleFlatpickrOnChange = () => {
+  const handleChangeDates = () => {
     replaceRouteWithUTMQuery(router, {
       pathname: `/us-en/course/scheduling`,
       query: { ...router.query, productTypeId: null },
     });
   };
 
-  const goToPaymentModal = () => () => {
-    track(
-      'add_to_cart',
-      {
-        ecommerce: {
-          currency: 'USD',
-          value: activeWorkshop?.unitPrice,
-          course_format: activeWorkshop?.productTypeId,
-          course_name: activeWorkshop?.title,
-          items: [
-            {
-              item_id: activeWorkshop?.id,
-              item_name: activeWorkshop?.title,
-              affiliation: 'NA',
-              coupon: '',
-              discount: 0.0,
-              index: 0,
-              item_brand: activeWorkshop?.businessOrg,
-              item_category: activeWorkshop?.title,
-              item_category2: activeWorkshop?.mode,
-              item_category3: 'paid',
-              item_category4: 'NA',
-              item_category5: 'NA',
-              item_list_id: activeWorkshop?.productTypeId,
-              item_list_name: activeWorkshop?.title,
-              item_variant: activeWorkshop?.workshopTotalHours,
-              location_id: activeWorkshop?.locationCity,
-              price: activeWorkshop?.unitPrice,
-              quantity: 1,
+  if (isError) return <ErrorPage statusCode={500} title={error.message} />;
+  if (isLoading || !workshopId) return <PageLoading />;
+
+  const { title: courseTitle } = activeWorkshop || {};
+
+  const SchedulingInPersonPaymentForm = ({
+    workshop,
+    fee,
+    router,
+    track,
+    courseType,
+  }) => {
+    const { profile = {} } = useAuth();
+    const formRef = useRef();
+    const [loading, setLoading] = useState(false);
+    const [emailAddressAdded, setEmailAddressAdded] = useState(false);
+    const stripe = useStripe();
+    const elements = useElements();
+
+    const { showAlert } = useGlobalAlertContext();
+
+    const {
+      complianceQuestionnaire,
+      title,
+      eventEndDate,
+      eventStartDate,
+      primaryTeacherName,
+      mode,
+      timings = [],
+      isGenericWorkshop,
+    } = workshop;
+
+    const { first_name, last_name, email, personMobilePhone } = profile || {};
+
+    const questionnaireArray = complianceQuestionnaire
+      ? complianceQuestionnaire.map((current) => ({
+          key: current.questionSfid,
+          value: true,
+        }))
+      : [];
+
+    const completeEnrollmentAction = async (values) => {
+      const {
+        questionnaire,
+        firstName,
+        lastName,
+        email,
+        couponCode,
+        contactPhone,
+        contactAddress,
+        contactCity,
+        contactState,
+        contactZip,
+      } = values;
+
+      if (loading) {
+        return null;
+      }
+
+      if (!stripe || !elements) {
+        // Stripe.js hasn't yet loaded.
+        // Make sure to disable form submission until Stripe.js has loaded.
+        return;
+      }
+
+      track(
+        'add_payment_info',
+        {
+          ecommerce: {
+            currency: 'USD',
+            value: workshop?.unitPrice,
+            coupon: couponCode || '',
+            payment_type: 'credit_card/gpay/apple_pay',
+            course_format: workshop?.productTypeId,
+            course_name: workshop?.title,
+            items: [
+              {
+                item_id: workshop?.id,
+                item_name: workshop?.title,
+                affiliation: 'NA',
+                coupon: couponCode || '',
+                discount: 0.0,
+                index: 0,
+                item_brand: workshop?.businessOrg,
+                item_category: workshop?.title,
+                item_category2: workshop?.mode,
+                item_category3: 'paid',
+                item_category4: 'NA',
+                item_category5: 'NA',
+                item_list_id: workshop?.productTypeId,
+                item_list_name: workshop?.title,
+                item_variant: workshop?.workshopTotalHours,
+                location_id: workshop?.locationCity,
+                price: workshop?.unitPrice,
+                quantity: 1,
+              },
+            ],
+          },
+        },
+        {
+          plugins: {
+            all: false,
+            'gtm-ecommerce-plugin': true,
+          },
+        },
+      );
+
+      // Trigger form validation and wallet collection
+      const { error: submitError } = await elements.submit();
+      if (submitError) {
+        throw submitError;
+      }
+
+      const { id: productId, addOnProducts, productTypeId } = workshop;
+
+      const complianceQuestionnaire = questionnaire.reduce(
+        (res, current) => ({
+          ...res,
+          [current.key]: current.value ? 'Yes' : 'No',
+        }),
+        {},
+      );
+
+      try {
+        setLoading(true);
+
+        const selectedAddOn = null;
+
+        let addOnProductsList = addOnProducts
+          ? addOnProducts.map((product) => {
+              if (!product.isAddOnSelectionRequired) {
+                const value = values[product.productName];
+                if (value) {
+                  return product.productSfid;
+                } else {
+                  return null;
+                }
+              }
+              return product.productSfid;
+            })
+          : [];
+
+        let AddOnProductIds = [selectedAddOn, ...addOnProductsList];
+
+        AddOnProductIds = AddOnProductIds.filter((AddOn) => AddOn !== null);
+
+        const isRegularOrder = values.comboDetailId
+          ? values.comboDetailId === productId
+          : true;
+
+        const products = isRegularOrder
+          ? {
+              productType: 'workshop',
+              productSfId: productId,
+              AddOnProductIds: AddOnProductIds,
+            }
+          : {
+              productType: 'bundle',
+              productSfId: values.comboDetailId,
+              childProduct: {
+                productType: 'workshop',
+                productSfId: productId,
+                AddOnProductIds: AddOnProductIds,
+                complianceQuestionnaire,
+              },
+            };
+
+        let payLoad = {
+          shoppingRequest: {
+            couponCode: couponCode || '',
+            contactAddress: {
+              contactPhone,
+              contactAddress,
+              contactCity,
+              contactState,
+              contactZip,
             },
-          ],
+            billingAddress: {
+              billingPhone: contactPhone,
+              billingAddress: contactAddress,
+              billingCity: contactCity,
+              billingState: contactState,
+              billingZip: contactZip,
+            },
+            products,
+            complianceQuestionnaire,
+            isInstalmentOpted: false,
+            isStripeIntentPayment: true,
+          },
+          utm: filterAllowedParams(router.query),
+        };
+
+        if (fee <= 0) {
+          payLoad.shoppingRequest.isStripeIntentPayment = false;
+        }
+
+        payLoad = {
+          ...payLoad,
+          user: {
+            lastName: lastName,
+            firstName: firstName,
+            email: email,
+          },
+        };
+
+        //token.saveCardForFuture = true;
+        const {
+          stripeIntentObj,
+          status,
+          data,
+          error: errorMessage,
+          isError,
+        } = await api.post({
+          path: 'createAndPayOrder',
+          body: payLoad,
+          isUnauthorized: true,
+        });
+
+        if (status === 400 || isError) {
+          throw new Error(errorMessage);
+        }
+
+        if (data) {
+          if (data.totalOrderAmount > 0) {
+            let filteredParams = {
+              ctype: productTypeId,
+              page: 'ty',
+              referral: 'course_scheduling_checkout',
+              courseType,
+              ...filterAllowedParams(router.query),
+            };
+            filteredParams = removeNull(filteredParams);
+            let returnUrl = `${window.location.origin}/us-en/course/thankyou/${
+              data.attendeeId
+            }?${queryString.stringify(filteredParams)}`;
+            if (isGenericWorkshop) {
+              returnUrl = `${window.location.origin}/us-en/course/scheduling?aid=${data.attendeeId}&${queryString.stringify(filteredParams)}`;
+            }
+
+            const result = await stripe.confirmPayment({
+              //`Elements` instance that was used to create the Payment Element
+              elements,
+              clientSecret: stripeIntentObj.client_secret,
+              confirmParams: {
+                return_url: returnUrl,
+              },
+            });
+            if (result.error) {
+              // Show error to your customer (for example, payment details incomplete)
+              throw new Error(result.error.message);
+            }
+          } else {
+            if (isGenericWorkshop) {
+              replaceRouteWithUTMQuery(router, {
+                pathname: `/us-en/course/scheduling/${data.attendeeId}`,
+                query: {
+                  aid: data.attendeeId,
+                },
+              });
+            } else {
+              replaceRouteWithUTMQuery(router, {
+                pathname: `/us-en/course/thankyou/${data.attendeeId}`,
+                query: {
+                  ctype: productTypeId,
+                  page: 'ty',
+                  courseType,
+                  referral: 'course_scheduling_checkout',
+                },
+              });
+            }
+          }
+        }
+
+        setLoading(false);
+      } catch (ex) {
+        console.error(ex);
+        const data = ex.response?.data;
+        const { message, statusCode } = data || {};
+        setLoading(false);
+        showAlert(ALERT_TYPES.ERROR_ALERT, {
+          children: message ? `Error: ${message} (${statusCode})` : ex.message,
+        });
+        track('show_error', {
+          screen_name: 'course_scheduling_checkout_error',
+          course_type: courseType,
+          error_message: message
+            ? `Error: ${message} (${statusCode})`
+            : ex.message,
+        });
+      }
+    };
+
+    const formikOnChange = (values) => {
+      if (!stripe || !elements) {
+        return;
+      }
+      let finalPrice = fee;
+      if (values.comboDetailId && values.comboDetailId !== workshop.id) {
+        const selectedBundle = workshop.availableBundles.find(
+          (b) => b.comboProductSfid === values.comboDetailId,
+        );
+        if (selectedBundle) {
+          finalPrice = selectedBundle.comboUnitPrice;
+        }
+      }
+      if (finalPrice > 0) {
+        elements.update({
+          amount: finalPrice * 100,
+        });
+      }
+      const paymentElement = elements.getElement(PaymentElement);
+      if (paymentElement) {
+        paymentElement.update({
+          defaultValues: {
+            billingDetails: {
+              email: values.email,
+              name: (values.firstName || '') + (values.lastName || ''),
+              phone: values.contactPhone,
+            },
+          },
+        });
+      }
+    };
+
+    const paymentElementOptions = {
+      layout: {
+        type: 'accordion',
+        defaultCollapsed: true,
+        radios: true,
+        spacedAccordionItems: false,
+      },
+      defaultValues: {
+        billingDetails: {
+          email: email || '',
+          name: (first_name || '') + (last_name || ''),
+          phone: personMobilePhone || '',
         },
       },
-      {
-        plugins: {
-          all: false,
-          'gtm-ecommerce-plugin': true,
+    };
+
+    const handleFormSubmit = () => {
+      if (formRef.current) {
+        formRef.current.submitForm();
+      }
+    };
+
+    useEffect(() => {
+      const paymentBox = document.querySelector('.payment-box');
+      if (paymentBox) {
+        window.scrollTo({
+          top: document.documentElement.scrollHeight, // Scroll to the bottom
+          behavior: 'smooth',
+        });
+      }
+    }, []); // Runs only on component mount (when the pa
+
+    const handleTrackEvent = () => {
+      track(
+        'begin_checkout',
+        {
+          ecommerce: {
+            currency: 'USD',
+            value: workshop?.unitPrice,
+            course_format: workshop?.productTypeId,
+            course_name: workshop?.title,
+            items: [
+              {
+                item_id: workshop?.id,
+                item_name: workshop?.title,
+                affiliation: 'NA',
+                coupon: '',
+                discount: 0.0,
+                index: 0,
+                item_brand: workshop?.businessOrg,
+                item_category: workshop?.title,
+                item_category2: workshop?.mode,
+                item_category3: 'paid',
+                item_category4: 'NA',
+                item_category5: 'NA',
+                item_list_id: workshop?.productTypeId,
+                item_list_name: workshop?.title,
+                item_variant: workshop?.workshopTotalHours,
+                location_id: workshop?.locationCity,
+                price: workshop?.unitPrice,
+                quantity: 1,
+              },
+            ],
+          },
         },
-      },
+        {
+          plugins: {
+            all: false,
+            'gtm-ecommerce-plugin': true,
+          },
+        },
+      );
+    };
+
+    const handleLocationFilterChange = async (value, formikProps) => {
+      if (value) {
+        const { street, city, state, zip } = parsedAddress(value?.locationName);
+
+        // Batch all updates together to prevent multiple validations
+        formikProps.setValues(
+          {
+            ...formikProps.values,
+            contactAddress: street,
+            contactCity: city,
+            contactState: state,
+            contactZip: zip,
+          },
+          true,
+        ); // true to run validation once after all values are set
+      }
+    };
+
+    return (
+      <>
+        <NextSeo title={workshopMaster?.title + ' Course Checkout'} />
+        {loading && <Loader />}
+        <Formik
+          initialValues={{
+            firstName: '',
+            lastName: '',
+            email: '',
+            contactAddress: '',
+            contactCity: '',
+            contactState: '',
+            contactZip: '',
+            contactPhone: '',
+            questionnaire: questionnaireArray,
+            ppaAgreement: true,
+          }}
+          validationSchema={Yup.object().shape({
+            firstName: Yup.string().when('email', {
+              is: (value) => !!value,
+              then: Yup.string()
+                .required('First Name is required')
+                .matches(/\S/, 'String should not contain empty spaces'),
+              otherwise: Yup.string().notRequired(),
+            }),
+            lastName: Yup.string().when('email', {
+              is: (value) => !!value,
+              then: Yup.string()
+                .required('Last Name is required')
+                .matches(/\S/, 'String should not contain empty spaces'),
+              otherwise: Yup.string().notRequired(),
+            }),
+            contactPhone: Yup.string().when('email', {
+              is: (value) => !!value,
+              then: Yup.string()
+                .required('Phone number required')
+                .matches(phoneRegExp, 'Phone number is not valid'),
+              otherwise: Yup.string().notRequired(),
+            }),
+            email: Yup.string()
+              .email('Email is invalid!')
+              .required('Email is required!')
+              .matches(/\S/, 'String should not contain empty spaces')
+              .email(),
+            contactAddress: Yup.string().when('email', {
+              is: (value) => !!value,
+              then: Yup.string()
+                .required('Address is required')
+                .matches(/\S/, 'String should not contain empty spaces'),
+              otherwise: Yup.string().notRequired(),
+            }),
+            contactCity: Yup.string().when(['contactAddress', 'email'], {
+              is: (address, email) => !!address && !!email,
+              then: Yup.string()
+                .required('City is required')
+                .matches(/\S/, 'String should not contain empty spaces'),
+              otherwise: Yup.string().notRequired(),
+            }),
+            contactState: Yup.string().when(['contactAddress', 'email'], {
+              is: (address, email) => !!address && !!email,
+              then: Yup.string()
+                .required('State is required')
+                .matches(/\S/, 'String should not contain empty spaces'),
+              otherwise: Yup.string().notRequired(),
+            }),
+            contactZip: Yup.string().when(['contactAddress', 'email'], {
+              is: (address, email) => !!address && !!email,
+              then: Yup.string()
+                .required('Zip code is required!')
+                .matches(/\S/, 'String should not contain empty spaces')
+                .min(2, 'Zip must be at least 2 characters')
+                .max(10, 'Zip can be at most 10 characters'),
+              otherwise: Yup.string().notRequired(),
+            }),
+            ppaAgreement: Yup.boolean()
+              .label('Terms')
+              .test(
+                'is-true',
+                'Please check the box in order to continue.',
+                (value) => value === true,
+              ),
+          })}
+          innerRef={formRef}
+          onSubmit={async (values) => {
+            await completeEnrollmentAction(values);
+          }}
+        >
+          {(formikProps) => {
+            const {
+              values,
+              setTouched,
+              setErrors,
+              errors,
+              setFieldTouched,
+              resetForm,
+            } = formikProps;
+            formikOnChange(values);
+            const isNotAllQuestionnaireChecked = values.questionnaire.some(
+              (item) => !item.value,
+            );
+
+            return (
+              <main className="scheduling-page">
+                <section className="scheduling-top">
+                  <div className="container">
+                    <h1 className="page-title">
+                      {workshopMaster?.title || title}
+                    </h1>
+                    <div
+                      className="page-description"
+                      dangerouslySetInnerHTML={{
+                        __html: workshopMaster?.calenderViewDescription,
+                      }}
+                    ></div>
+                  </div>
+                </section>
+                <section className="scheduling-stepper">
+                  <div className="container">
+                    <div className="step-wrapper">
+                      <div className="step completed">
+                        <div className="step-icon">
+                          <span></span>
+                        </div>
+                        <div className="step-text">Select the date</div>
+                      </div>
+                      <div className="step completed">
+                        <div className="step-icon">
+                          <span></span>
+                        </div>
+                        <div className="step-text">Select the course time</div>
+                      </div>
+                      <div className="step active">
+                        <div className="step-icon">
+                          <span></span>
+                        </div>
+                        <div className="step-text">Checkout</div>
+                      </div>
+                    </div>
+                  </div>
+                </section>
+                <section className="checkout-section">
+                  <div className="container">
+                    <div className="checkout-area-wrap">
+                      <div className="first-col">
+                        <div className="checkout-title">{courseTitle}</div>
+                        <div className="checkout-subtitle">
+                          with {primaryTeacherName}
+                        </div>
+                        <div className="payment-box center-one">
+                          <div className="payment-total-box">
+                            <label>Total:</label>
+                            <div className="amount">
+                              {' '}
+                              $
+                              {`${activeWorkshop?.unitPrice?.toFixed(2) || '0.00'}`}
+                            </div>
+                          </div>
+                          <div className="payment-details">
+                            <div className="payby">
+                              Pay As Low As{' '}
+                              <img src="/img/logo-affirm.webp" height="22" />
+                            </div>
+                            <div className="price-breakup">
+                              <div className="price-per-month">
+                                ${activeWorkshop?.instalmentAmount}/
+                                <span>month</span>
+                              </div>
+                              <div className="payment-tenure">
+                                for 12 months
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div className="checkout-course-info-box">
+                          <div className="info-box-icon">
+                            <span className="icon-aol iconaol-calendar "></span>
+                          </div>
+                          <div className="info-box-details">
+                            <div className="info-box-title">Date:</div>
+                            <div className="info-detail">
+                              {' '}
+                              {dayjs
+                                .utc(eventStartDate)
+                                .isSame(dayjs.utc(eventEndDate), 'month') &&
+                                `${dayjs.utc(eventStartDate).format('MMMM DD')}-${dayjs
+                                  .utc(eventEndDate)
+                                  .format('DD, YYYY')}`}
+                              {!dayjs
+                                .utc(eventStartDate)
+                                .isSame(dayjs.utc(eventEndDate), 'month') &&
+                                `${dayjs.utc(eventStartDate).format('MMM DD')}-${dayjs
+                                  .utc(eventEndDate)
+                                  .format('MMM DD, YYYY')}`}
+                            </div>
+                            <div className="info-link">
+                              <a href="#" onClick={handleChangeDates}>
+                                Change Dates
+                              </a>
+                            </div>
+                          </div>
+                        </div>
+                        <div className="checkout-course-info-box">
+                          <div className="info-box-icon">
+                            <span className="icon-aol iconaol-clock"></span>
+                          </div>
+                          <div className="info-box-details">
+                            <div className="info-box-title">Timing:</div>
+                            {timings &&
+                              timings.map((time) => {
+                                return (
+                                  <div
+                                    className="info-detail"
+                                    key={time.startDate}
+                                  >
+                                    {dayjs.utc(time.startDate).format('dd')}:{' '}
+                                    {tConvert(time.startTime)}-
+                                    {tConvert(time.endTime)}{' '}
+                                    {ABBRS[time.timeZone]}
+                                  </div>
+                                );
+                              })}
+                          </div>
+                        </div>
+                        <div className="checkout-course-info-box">
+                          <div className="info-box-icon">
+                            <span className="icon-aol iconaol-location"></span>
+                          </div>
+                          <div className="info-box-details">
+                            <div className="info-box-title">Location:</div>
+                            <div className="info-detail">
+                              {workshop.isLocationEmpty ? (
+                                <>
+                                  {workshop?.city}, {workshop?.state}
+                                </>
+                              ) : (
+                                `${
+                                  workshop.locationStreet
+                                    ? workshop.locationStreet + ','
+                                    : ''
+                                } ${
+                                  workshop.locationCity
+                                    ? workshop.locationCity + ','
+                                    : ''
+                                }
+                              ${
+                                workshop.locationProvince
+                                  ? workshop.locationProvince + ','
+                                  : ''
+                              } ${workshop.locationCountry || ''}`
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="second-col">
+                        <div className="payment-box">
+                          <div
+                            className={`checkout-title ${emailAddressAdded ? 'mb-1 ' : 'mb-3'}`}
+                          >
+                            {emailAddressAdded
+                              ? 'Pay and enroll'
+                              : 'Enter Your Email'}
+                          </div>
+                          {!emailAddressAdded ? (
+                            <StyledInputNewCheckout
+                              type="email"
+                              label="Email Address"
+                              className="form-item required mb-4"
+                              placeholder="Email"
+                              formikProps={formikProps}
+                              formikKey="email"
+                              isReadOnly={false}
+                              onCut={(event) => {
+                                event.preventDefault();
+                              }}
+                              onCopy={(event) => {
+                                event.preventDefault();
+                              }}
+                              onPaste={(event) => {
+                                event.preventDefault();
+                              }}
+                            ></StyledInputNewCheckout>
+                          ) : (
+                            <div class="checkout-user-info">
+                              {values.email}{' '}
+                              <a
+                                href="#"
+                                onClick={() => {
+                                  resetForm({});
+                                  setEmailAddressAdded(false);
+                                }}
+                              >
+                                not you?
+                              </a>
+                            </div>
+                          )}
+
+                          {emailAddressAdded && (
+                            <>
+                              <UserInfoFormNewCheckout
+                                formikProps={formikProps}
+                                showContactEmail={false}
+                                showStreetAddress={false}
+                                showContactCity={!!values.contactAddress}
+                                showContactZip={!!values.contactAddress}
+                                showContactState={!!values.contactAddress}
+                                showLocationSearch={true}
+                                locationValue={values.contactAddress}
+                                handleLocationFilterChange={(value) =>
+                                  handleLocationFilterChange(value, formikProps)
+                                }
+                              />
+
+                              <div className="section-box">
+                                {fee > 0 && (
+                                  <>
+                                    <h2 className="section__title d-flex">
+                                      Payment Method
+                                      <span className="ssl-info">
+                                        <svg
+                                          width="20"
+                                          height="21"
+                                          viewBox="0 0 20 21"
+                                          fill="none"
+                                          xmlns="http://www.w3.org/2000/svg"
+                                        >
+                                          <path
+                                            d="M15.4497 3.93312L10.8663 2.21646C10.3913 2.04146 9.61634 2.04146 9.14134 2.21646L4.55801 3.93312C3.67467 4.26645 2.95801 5.29979 2.95801 6.24145V12.9915C2.95801 13.6665 3.39967 14.5581 3.94134 14.9581L8.52467 18.3831C9.33301 18.9915 10.658 18.9915 11.4663 18.3831L16.0497 14.9581C16.5913 14.5498 17.033 13.6665 17.033 12.9915V6.24145C17.0413 5.29979 16.3247 4.26645 15.4497 3.93312ZM12.8997 8.59979L9.31634 12.1831C9.19134 12.3081 9.03301 12.3665 8.87467 12.3665C8.71634 12.3665 8.55801 12.3081 8.43301 12.1831L7.09967 10.8331C6.85801 10.5915 6.85801 10.1915 7.09967 9.94979C7.34134 9.70812 7.74134 9.70812 7.98301 9.94979L8.88301 10.8498L12.0247 7.70812C12.2663 7.46645 12.6663 7.46645 12.908 7.70812C13.1497 7.94979 13.1497 8.35812 12.8997 8.59979Z"
+                                            fill="#31364E"
+                                          />
+                                        </svg>
+                                        SSL Secured
+                                      </span>
+                                    </h2>
+                                    <div className="section__body">
+                                      <PaymentElement
+                                        options={paymentElementOptions}
+                                      />
+                                    </div>
+                                  </>
+                                )}
+                              </div>
+                            </>
+                          )}
+
+                          {!emailAddressAdded && (
+                            <div class="payment-agreements">
+                              <ScheduleAgreementForm
+                                formikProps={formikProps}
+                                complianceQuestionnaire={
+                                  complianceQuestionnaire
+                                }
+                                isCorporateEvent={false}
+                                questionnaireArray={questionnaireArray}
+                                screen="DESKTOP"
+                                parentClass=""
+                              />
+                            </div>
+                          )}
+
+                          <div className="note">
+                            For any health related questions, please contact us
+                            at{' '}
+                            <a href="mailto:healthinfo@us.artofliving.org">
+                              healthinfo@us.artofliving.org
+                            </a>
+                          </div>
+
+                          <div className="payment-actions">
+                            {emailAddressAdded ? (
+                              <button
+                                className="submit-btn"
+                                id="pay-button"
+                                type="button"
+                                disabled={loading}
+                                form="my-form"
+                                onClick={handleFormSubmit}
+                              >
+                                Pay and enroll
+                              </button>
+                            ) : (
+                              <button
+                                className="submit-btn"
+                                type="button"
+                                disabled={loading}
+                                onClick={(e) => {
+                                  if (
+                                    !values.email ||
+                                    errors.email ||
+                                    !values.ppaAgreement ||
+                                    isNotAllQuestionnaireChecked
+                                  ) {
+                                    setFieldTouched('ppaAgreement', true);
+                                    setFieldTouched('questionnaire', true);
+                                  } else {
+                                    e.preventDefault();
+                                    setEmailAddressAdded(true);
+                                    setTouched({}, false); // Reset touched fields
+                                    setErrors({});
+                                    handleTrackEvent();
+                                  }
+                                }}
+                              >
+                                Continue
+                              </button>
+                            )}
+                          </div>
+                          <div className="checkout-tnc">
+                            By continuing, you agree to{' '}
+                            <a href="https://www.artofliving.org/us-en/terms-of-use?_gl=1*uug117*_gcl_au*NzgyODQ2MzUyLjE3MjUzODUxMTk.*_ga*MTM4MjM1NDQ1Ny4xNzA5NTc3NjY4*_ga_53SWQFSBV0*MTcyNzg4MzE0NC43MC4xLjE3Mjc4ODUxMTYuNTguMC4w">
+                              Terms
+                            </a>{' '}
+                            and{' '}
+                            <a href="https://www.artofliving.org/us-en/privacy-policy?_gl=1*ndkz6k*_gcl_au*NzgyODQ2MzUyLjE3MjUzODUxMTk.*_ga*MTM4MjM1NDQ1Ny4xNzA5NTc3NjY4*_ga_53SWQFSBV0*MTcyNzg4MzE0NC43MC4xLjE3Mjc4ODUxMjAuNTQuMC4w">
+                              Privacy Policy
+                            </a>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </section>
+              </main>
+            );
+          }}
+        </Formik>
+      </>
     );
-    pushRouteWithUTMQuery(router, {
-      pathname: `/us-en/course/scheduling/checkout/${workshopId}`,
-      query: {
-        courseType: courseTypeFilter,
-        ctype: activeWorkshop?.productTypeId,
-        mode,
-      },
-    });
   };
 
-  let enableDates = dateAvailable.map((da) => {
-    return da.firstDate;
+  const stripePromise = loadStripe(activeWorkshop.publishableKey);
+
+  const { fee, delfee } = priceCalculation({
+    workshop: activeWorkshop,
   });
 
-  enableDates = [...enableDates, ...(selectedDates || [])];
-
-  const {
-    phone1,
-    eventEndDate,
-    eventStartDate,
-    primaryTeacherName,
-    coTeacher1Name,
-    coTeacher2Name,
-    phone2,
-    timings = [],
-    email: contactEmail,
-    isLocationEmpty,
-    city,
-    state,
-    locationStreet,
-    locationCity,
-    locationProvince,
-    locationPostalCode,
-    locationCountry,
-    streetAddress1,
-    streetAddress2,
-    zip,
-    country,
-    contactName,
-  } = activeWorkshop || {};
+  const elementsOptions = {
+    mode: 'payment',
+    amount: 1099,
+    currency: 'usd',
+    appearance: {
+      theme: 'stripe',
+      variables: {
+        colorPrimary: '#0570de',
+        colorBackground: '#ffffff',
+        colorText: '#30313d',
+        colorDanger: '#df1b41',
+        fontFamily: '"Work Sans",Ideal Sans, system-ui, sans-serif',
+        spacingUnit: '2px',
+        borderRadius: '16px',
+      },
+      rules: {
+        '.Block': {
+          backgroundColor: 'var(--colorBackground)',
+          boxShadow: 'none',
+          padding: '12px',
+        },
+        '.Input': {
+          padding: '16px',
+          width: '100%',
+          maxHeight: '48px',
+          borderRadius: '16px',
+          border: '1px solid rgba(0, 0, 0, 0.15)',
+        },
+        '.Input:disabled, .Input--invalid:disabled': {
+          color: 'lightgray',
+        },
+        '.Tab': {
+          borderRadius: '16px',
+          border: '1px solid rgba(0, 0, 0, 0.15)',
+          padding: '16px 24px',
+          color: '#FCA248',
+        },
+        '.Tab:hover': {
+          borderRadius: '16px',
+          border: '1px solid #FF9E1B',
+          padding: '16px 24px',
+          color: '#FCA248',
+          boxShadow: 'none',
+        },
+        '.Tab--selected, .Tab--selected:focus, .Tab--selected:hover': {
+          borderRadius: '16px',
+          border: '1px solid #FF9E1B',
+          padding: '16px 24px',
+          color: '#FCA248',
+          boxShadow: 'none',
+        },
+        '.TabIcon--selected, .TabIcon--selected:focus, .TabIcon--selected:hover':
+          {
+            color: '#FCA248',
+            fill: '#FCA248',
+          },
+        '.TabIcon, .TabIcon:hover': {
+          color: '#FCA248',
+          fill: '#FCA248',
+        },
+        '.Label': {
+          opacity: '0',
+        },
+      },
+    },
+  };
 
   return (
-    <>
-      {(loading || isLoading) && <Loader />}
-      <main className="scheduling-page calendar-online">
-        <section className="scheduling-top">
-          {(!attendeeId || activeWorkshop?.id) && (
-            <div className="container">
-              <h1 className="page-title">{workshopMaster?.title || title}</h1>
-              <div
-                className="page-description"
-                dangerouslySetInnerHTML={{
-                  __html: workshopMaster?.calenderViewDescription,
-                }}
-              ></div>
-            </div>
-          )}
-          {attendeeId && !activeWorkshop?.id && (
-            <div className="container">
-              <h1 className="page-title">Thank you for your payment</h1>
-              <div className="page-description">
-                <b>Select a date</b> to register for the {title} course.
-              </div>
-            </div>
-          )}
-        </section>
-        <section className="scheduling-stepper">
-          <div className="container">
-            <div className="step-wrapper">
-              <div className="step active">
-                <div className="step-icon">
-                  <span></span>
-                </div>
-                <div className="step-text">Select the date</div>
-              </div>
-              <div className="step active">
-                <div className="step-icon">
-                  <span></span>
-                </div>
-                <div className="step-text">Select the course time</div>
-              </div>
-              <div className="step">
-                <div className="step-icon">
-                  <span></span>
-                </div>
-                <div className="step-text">Checkout</div>
-              </div>
-            </div>
-          </div>
-        </section>
-        <section className="calendar-section">
-          <div className="container">
-            <div className="calendar-area-wrap">
-              <div className="first-col">
-                <div className="cal-filters">
-                  {!attendeeId && (
-                    <div className="form-item">
-                      <label>Course type</label>
-                      <select
-                        className="input-select"
-                        id="courseType"
-                        name="courseType"
-                        value={mode}
-                        onChange={(ev) => handleSelectMode(ev.target.value)}
-                      >
-                        <option value="both">All courses</option>
-                        <option value={COURSE_MODES.ONLINE.value}>
-                          Online
-                        </option>
-                        <option value={COURSE_MODES.IN_PERSON.value}>
-                          In-person
-                        </option>
-                      </select>
-                    </div>
-                  )}
-                  <div className="form-item">
-                    <ScheduleLocationFilterNew
-                      handleLocationChange={handleLocationFilterChange}
-                      value={locationFilter}
-                      containerClass="location-container"
-                      listClassName="result-list"
-                    />
-                  </div>
-                </div>
-
-                <div className="scheduling-modal__content-calendar">
-                  <Flatpickr
-                    ref={fp}
-                    data-enable-time
-                    onChange={handleFlatpickrOnChange}
-                    value={selectedDates}
-                    options={{
-                      allowInput: false,
-                      altInput: false,
-                      inline: true,
-                      mode: 'single',
-                      enableTime: false,
-                      monthSelectorType: 'static',
-                      dateFormat: 'Y-m-d',
-                      minDate: 'today',
-                      enable: enableDates || [],
-                    }}
-                  />
-                  <div className="event-type-pills">
-                    <div className="online">
-                      <span className="icon-aol iconaol-monitor-mobile"></span>
-                      Online
-                      <span className="icon-aol iconaol-info-circle"></span>
-                      <div className="tooltip">
-                        <h4>
-                          <span className="icon-aol iconaol-monitor-mobile"></span>
-                          Online
-                        </h4>
-                        <p>
-                          Enjoy your experience from the comfort of your own
-                          home (or anywhere quiet you choose). A more flexible
-                          choice for busy folks!
-                        </p>
-                      </div>
-                    </div>
-                    <div className="inPerson">
-                      <span className="icon-aol iconaol-profile-users"></span>
-                      In-Person
-                      <span className="icon-aol iconaol-info-circle"></span>
-                      <div className="tooltip">
-                        <h4>
-                          <span className="icon-aol iconaol-profile-users"></span>
-                          In-Person{' '}
-                        </h4>
-                        <p>
-                          Within a relaxing venue, you’ll leave everyday
-                          distractions and stresses behind, enabling an
-                          immersive journey and connection to a like-minded
-                          community in real life.
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                {!activeWorkshop?.id && (
-                  <div className="specific-teacher-text">
-                    Are you looking for a course with a specific teacher?{' '}
-                    <a href={`/us-en/courses/${slug}`}>Click here</a>
-                  </div>
-                )}
-
-                <div className="question-call">
-                  <a href="tel:(855)2024400" className="call-cta">
-                    Still have questions?{' '}
-                    <strong>Call us at (855) 202-4400</strong>
-                  </a>
-                </div>
-              </div>
-
-              <div className={'second-col'}>
-                <div className="payment-box">
-                  {!attendeeId && (
-                    <>
-                      <div className="payment-total-box">
-                        <label>Total:</label>
-                        <div className="amount">
-                          $
-                          {`${activeWorkshop?.unitPrice?.toFixed(2) || '0.00'}`}
-                        </div>
-                      </div>
-                      <div className="payment-details">
-                        <div className="payby">
-                          Pay As Low As{' '}
-                          <img src="/img/logo-affirm.webp" height="22" />
-                        </div>
-                        <div className="price-breakup">
-                          <div className="price-per-month">
-                            ${activeWorkshop?.instalmentAmount}/
-                            <span>month</span>
-                          </div>
-                          <div className="payment-tenure">for 12 months</div>
-                        </div>
-                      </div>
-                    </>
-                  )}
-
-                  <div className="checkout-details">
-                    <div className="section__body">
-                      <svg
-                        aria-hidden="true"
-                        style={{
-                          position: 'absolute',
-                          width: 0,
-                          height: 0,
-                          overflow: 'hidden',
-                        }}
-                      >
-                        <defs>
-                          <symbol id="icon-calendar" viewBox="0 0 34 32">
-                            <path
-                              fill="none"
-                              stroke="var(--color1, #9598a6)"
-                              strokeLinejoin="round"
-                              strokeLinecap="round"
-                              strokeMiterlimit={10}
-                              strokeWidth={2.4}
-                              d="M10.889 2.667v4M21.555 2.667v4M4.889 12.12h22.667M28.222 11.333v11.333c0 4-2 6.667-6.667 6.667H10.888c-4.667 0-6.667-2.667-6.667-6.667V11.333c0-4 2-6.667 6.667-6.667h10.667c4.667 0 6.667 2.667 6.667 6.667z"
-                            />
-                            <path
-                              fill="none"
-                              stroke="var(--color1, #9598a6)"
-                              strokeLinejoin="round"
-                              strokeLinecap="round"
-                              strokeWidth={3.2}
-                              d="M21.148 18.267h.012M21.148 22.267h.012M16.216 18.267h.012M16.216 22.267h.012M11.281 18.267h.012M11.281 22.267h.012"
-                            />
-                          </symbol>
-                          <symbol id="icon-call" viewBox="0 0 34 32">
-                            <path
-                              fill="none"
-                              stroke="var(--color1, #9598a6)"
-                              strokeMiterlimit={10}
-                              strokeWidth={2.4}
-                              d="M29.516 24.44c0 .48-.107.973-.333 1.453s-.52.933-.907 1.36c-.653.72-1.373 1.24-2.187 1.573-.8.333-1.667.507-2.6.507-1.36 0-2.813-.32-4.347-.973s-3.067-1.533-4.587-2.64a38.332 38.332 0 01-4.373-3.733 37.98 37.98 0 01-3.72-4.36c-1.093-1.52-1.973-3.04-2.613-4.547-.64-1.52-.96-2.973-.96-4.36 0-.907.16-1.773.48-2.573.32-.813.827-1.56 1.533-2.227.853-.84 1.787-1.253 2.773-1.253.373 0 .747.08 1.08.24.347.16.653.4.893.747l3.093 4.36c.24.333.413.64.533.933.12.28.187.56.187.813 0 .32-.093.64-.28.947a4.52 4.52 0 01-.747.947l-1.013 1.053a.712.712 0 00-.213.533c0 .107.013.2.04.307.04.107.08.187.107.267.24.44.653 1.013 1.24 1.707.6.693 1.24 1.4 1.933 2.107.72.707 1.413 1.36 2.12 1.96.693.587 1.267.987 1.72 1.227.067.027.147.067.24.107a.92.92 0 00.333.053c.227 0 .4-.08.547-.227l1.013-1c.333-.333.653-.587.96-.747.307-.187.613-.28.947-.28.253 0 .52.053.813.173s.6.293.933.52l4.413 3.133c.347.24.587.52.733.853.133.333.213.667.213 1.04z"
-                            />
-                          </symbol>
-                          <symbol id="icon-clock" viewBox="0 0 34 32">
-                            <path
-                              fill="none"
-                              stroke="var(--color1, #9598a6)"
-                              strokeLinejoin="round"
-                              strokeLinecap="round"
-                              strokeWidth={2.4}
-                              d="M29.556 16c0 7.36-5.973 13.333-13.333 13.333S2.89 23.36 2.89 16 8.863 2.667 16.223 2.667 29.556 8.64 29.556 16z"
-                            />
-                            <path
-                              fill="none"
-                              stroke="var(--color1, #9598a6)"
-                              strokeLinejoin="round"
-                              strokeLinecap="round"
-                              strokeWidth={2.4}
-                              d="M21.168 20.24l-4.133-2.467c-.72-.427-1.307-1.453-1.307-2.293v-5.467"
-                            />
-                          </symbol>
-                          <symbol id="icon-location" viewBox="0 0 34 32">
-                            <path
-                              fill="none"
-                              stroke="var(--color1, #9598a6)"
-                              strokeWidth={2.4}
-                              d="M16.223 17.907a4.16 4.16 0 10-.001-8.321 4.16 4.16 0 00.001 8.321z"
-                            />
-                            <path
-                              fill="none"
-                              stroke="var(--color1, #9598a6)"
-                              strokeWidth={2.4}
-                              d="M5.049 11.32C7.676-.227 24.782-.213 27.396 11.333c1.533 6.773-2.68 12.507-6.373 16.053a6.924 6.924 0 01-9.613 0c-3.68-3.547-7.893-9.293-6.36-16.067z"
-                            />
-                          </symbol>
-                          <symbol id="icon-profile" viewBox="0 0 34 32">
-                            <path
-                              fill="none"
-                              stroke="var(--color1, #9598a6)"
-                              strokeLinejoin="round"
-                              strokeLinecap="round"
-                              strokeWidth={2.4}
-                              d="M16.435 14.493a2.486 2.486 0 00-.44 0 5.894 5.894 0 01-5.693-5.907c0-3.267 2.64-5.92 5.92-5.92a5.923 5.923 0 015.92 5.92c-.013 3.2-2.533 5.8-5.707 5.907zM9.768 19.413c-3.227 2.16-3.227 5.68 0 7.827 3.667 2.453 9.68 2.453 13.347 0 3.227-2.16 3.227-5.68 0-7.827-3.653-2.44-9.667-2.44-13.347 0z"
-                            />
-                          </symbol>
-                        </defs>
-                      </svg>
-                      <div className="detail-item row">
-                        <div className="label col-5">
-                          <svg
-                            className="detailsIcon icon-calendar"
-                            viewBox="0 0 34 32"
-                          >
-                            <path
-                              fill="none"
-                              stroke="#9598a6"
-                              strokeLinejoin="round"
-                              strokeLinecap="round"
-                              strokeMiterlimit="4"
-                              strokeWidth="2.4"
-                              d="M29.556 16c0 7.36-5.973 13.333-13.333 13.333s-13.333-5.973-13.333-13.333c0-7.36 5.973-13.333 13.333-13.333s13.333 5.973 13.333 13.333z"
-                            ></path>
-                            <path
-                              fill="none"
-                              stroke="#9598a6"
-                              strokeLinejoin="round"
-                              strokeLinecap="round"
-                              strokeMiterlimit="4"
-                              strokeWidth="2.4"
-                              d="M21.168 20.24l-4.133-2.467c-0.72-0.427-1.307-1.453-1.307-2.293v-5.467"
-                            ></path>
-                          </svg>{' '}
-                          Date:
-                        </div>
-                        <div className="value col-7">
-                          {dayjs
-                            .utc(eventStartDate)
-                            .isSame(dayjs.utc(eventEndDate), 'month') &&
-                            `${dayjs.utc(eventStartDate).format('MMMM DD')}-${dayjs
-                              .utc(eventEndDate)
-                              .format('DD, YYYY')}`}
-
-                          {!dayjs
-                            .utc(eventStartDate)
-                            .isSame(dayjs.utc(eventEndDate), 'month') &&
-                            `${dayjs.utc(eventStartDate).format('MMM DD')}-${dayjs
-                              .utc(eventEndDate)
-                              .format('MMM DD, YYYY')}`}
-                        </div>
-                      </div>
-                      <div className="detail-item row">
-                        <div className="label col-5">
-                          <svg
-                            className="detailsIcon icon-calendar"
-                            viewBox="0 0 34 32"
-                          >
-                            <path
-                              fill="none"
-                              stroke="#9598a6"
-                              strokeLinejoin="round"
-                              strokeLinecap="round"
-                              strokeMiterlimit="10"
-                              strokeWidth="2.4"
-                              d="M10.889 2.667v4"
-                            ></path>
-                            <path
-                              fill="none"
-                              stroke="#9598a6"
-                              strokeLinejoin="round"
-                              strokeLinecap="round"
-                              strokeMiterlimit="10"
-                              strokeWidth="2.4"
-                              d="M21.555 2.667v4"
-                            ></path>
-                            <path
-                              fill="none"
-                              stroke="#9598a6"
-                              strokeLinejoin="round"
-                              strokeLinecap="round"
-                              strokeMiterlimit="10"
-                              strokeWidth="2.4"
-                              d="M4.889 12.12h22.667"
-                            ></path>
-                            <path
-                              fill="none"
-                              stroke="#9598a6"
-                              strokeLinejoin="round"
-                              strokeLinecap="round"
-                              strokeMiterlimit="10"
-                              strokeWidth="2.4"
-                              d="M28.222 11.333v11.333c0 4-2 6.667-6.667 6.667h-10.667c-4.667 0-6.667-2.667-6.667-6.667v-11.333c0-4 2-6.667 6.667-6.667h10.667c4.667 0 6.667 2.667 6.667 6.667z"
-                            ></path>
-                            <path
-                              fill="none"
-                              stroke="#9598a6"
-                              strokeLinejoin="round"
-                              strokeLinecap="round"
-                              strokeMiterlimit="4"
-                              strokeWidth="3.2"
-                              d="M21.148 18.267h0.012"
-                            ></path>
-                            <path
-                              fill="none"
-                              stroke="#9598a6"
-                              strokeLinejoin="round"
-                              strokeLinecap="round"
-                              strokeMiterlimit="4"
-                              strokeWidth="3.2"
-                              d="M21.148 22.267h0.012"
-                            ></path>
-                            <path
-                              fill="none"
-                              stroke="#9598a6"
-                              strokeLinejoin="round"
-                              strokeLinecap="round"
-                              strokeMiterlimit="4"
-                              strokeWidth="3.2"
-                              d="M16.216 18.267h0.012"
-                            ></path>
-                            <path
-                              fill="none"
-                              stroke="#9598a6"
-                              strokeLinejoin="round"
-                              strokeLinecap="round"
-                              strokeMiterlimit="4"
-                              strokeWidth="3.2"
-                              d="M16.216 22.267h0.012"
-                            ></path>
-                            <path
-                              fill="none"
-                              stroke="#9598a6"
-                              strokeLinejoin="round"
-                              strokeLinecap="round"
-                              strokeMiterlimit="4"
-                              strokeWidth="3.2"
-                              d="M11.281 18.267h0.012"
-                            ></path>
-                            <path
-                              fill="none"
-                              stroke="#9598a6"
-                              strokeLinejoin="round"
-                              strokeLinecap="round"
-                              strokeMiterlimit="4"
-                              strokeWidth="3.2"
-                              d="M11.281 22.267h0.012"
-                            ></path>
-                          </svg>{' '}
-                          Timing:
-                        </div>
-                        <div className="value col-7">
-                          {timings &&
-                            timings.map((time) => {
-                              return (
-                                <div key={time.startDate}>
-                                  {dayjs.utc(time.startDate).format('dd')}:{' '}
-                                  {tConvert(time.startTime)}-
-                                  {tConvert(time.endTime)}{' '}
-                                  {ABBRS[time.timeZone]}
-                                </div>
-                              );
-                            })}
-                        </div>
-                      </div>
-                      <div className="detail-item row">
-                        <div className="label col-5">
-                          <svg
-                            className="detailsIcon icon-calendar"
-                            viewBox="0 0 34 32"
-                          >
-                            <path
-                              fill="none"
-                              stroke="#9598a6"
-                              strokeLinejoin="round"
-                              strokeLinecap="round"
-                              strokeMiterlimit="4"
-                              strokeWidth="2.4"
-                              d="M16.435 14.493c-0.133-0.013-0.293-0.013-0.44 0-3.173-0.107-5.693-2.707-5.693-5.907 0-3.267 2.64-5.92 5.92-5.92 3.267 0 5.92 2.653 5.92 5.92-0.013 3.2-2.533 5.8-5.707 5.907z"
-                            ></path>
-                            <path
-                              fill="none"
-                              stroke="#9598a6"
-                              strokeLinejoin="round"
-                              strokeLinecap="round"
-                              strokeMiterlimit="4"
-                              strokeWidth="2.4"
-                              d="M9.768 19.413c-3.227 2.16-3.227 5.68 0 7.827 3.667 2.453 9.68 2.453 13.347 0 3.227-2.16 3.227-5.68 0-7.827-3.653-2.44-9.667-2.44-13.347 0z"
-                            ></path>
-                          </svg>{' '}
-                          Instructor(s):
-                        </div>
-                        <div className="value col-7">
-                          {primaryTeacherName && primaryTeacherName}
-                          <br />
-                          {coTeacher1Name && coTeacher1Name}
-                          <br />
-                          {coTeacher2Name && coTeacher2Name}
-                        </div>
-                      </div>
-                      <div className="detail-item row">
-                        <div className="label col-5">
-                          <svg
-                            className="detailsIcon icon-calendar"
-                            viewBox="0 0 34 32"
-                          >
-                            <path
-                              fill="none"
-                              stroke="#9598a6"
-                              strokeLinejoin="miter"
-                              strokeLinecap="butt"
-                              strokeMiterlimit="4"
-                              strokeWidth="2.4"
-                              d="M16.223 17.907c2.297 0 4.16-1.863 4.16-4.16s-1.863-4.16-4.16-4.16c-2.298 0-4.16 1.863-4.16 4.16s1.863 4.16 4.16 4.16z"
-                            ></path>
-                            <path
-                              fill="none"
-                              stroke="#9598a6"
-                              strokeLinejoin="miter"
-                              strokeLinecap="butt"
-                              strokeMiterlimit="4"
-                              strokeWidth="2.4"
-                              d="M5.049 11.32c2.627-11.547 19.733-11.533 22.347 0.013 1.533 6.773-2.68 12.507-6.373 16.053-2.68 2.587-6.92 2.587-9.613 0-3.68-3.547-7.893-9.293-6.36-16.067z"
-                            ></path>
-                          </svg>{' '}
-                          Location:
-                        </div>
-                        <div className="value col-7">
-                          {activeWorkshop?.mode === COURSE_MODES.ONLINE.value
-                            ? activeWorkshop?.mode
-                            : activeWorkshop && (
-                                <>
-                                  {!isLocationEmpty && (
-                                    <a
-                                      href={`https://www.google.com/maps/search/?api=1&query=${
-                                        locationStreet || ''
-                                      }, ${locationCity} ${locationProvince} ${locationPostalCode} ${locationCountry}`}
-                                      target="_blank"
-                                      rel="noreferrer"
-                                    >
-                                      {locationStreet && `${locationStreet}, `}
-                                      {locationCity && `${locationCity}, `}
-                                      {locationProvince || ''}{' '}
-                                      {locationPostalCode || ''}
-                                    </a>
-                                  )}
-                                  {isLocationEmpty && (
-                                    <a
-                                      href={`https://www.google.com/maps/search/?api=1&query=${
-                                        streetAddress1 || ''
-                                      },${
-                                        streetAddress2 || ''
-                                      } ${city} ${state} ${zip} ${country}`}
-                                      target="_blank"
-                                      rel="noreferrer"
-                                    >
-                                      {streetAddress1 && streetAddress1}
-                                      {streetAddress2 && streetAddress2}
-                                      {city || ''}
-                                      {', '}
-                                      {state || ''} {zip || ''}
-                                    </a>
-                                  )}
-                                </>
-                              )}
-                        </div>
-                      </div>
-                      <div className="detail-item row">
-                        <div className="label col-5">
-                          <svg
-                            className="detailsIcon icon-calendar"
-                            viewBox="0 0 34 32"
-                          >
-                            <path
-                              fill="none"
-                              stroke="#9598a6"
-                              strokeLinejoin="miter"
-                              strokeLinecap="butt"
-                              strokeMiterlimit="10"
-                              strokeWidth="2.4"
-                              d="M29.516 24.44c0 0.48-0.107 0.973-0.333 1.453s-0.52 0.933-0.907 1.36c-0.653 0.72-1.373 1.24-2.187 1.573-0.8 0.333-1.667 0.507-2.6 0.507-1.36 0-2.813-0.32-4.347-0.973s-3.067-1.533-4.587-2.64c-1.533-1.12-2.987-2.36-4.373-3.733-1.373-1.387-2.613-2.84-3.72-4.36-1.093-1.52-1.973-3.040-2.613-4.547-0.64-1.52-0.96-2.973-0.96-4.36 0-0.907 0.16-1.773 0.48-2.573 0.32-0.813 0.827-1.56 1.533-2.227 0.853-0.84 1.787-1.253 2.773-1.253 0.373 0 0.747 0.080 1.080 0.24 0.347 0.16 0.653 0.4 0.893 0.747l3.093 4.36c0.24 0.333 0.413 0.64 0.533 0.933 0.12 0.28 0.187 0.56 0.187 0.813 0 0.32-0.093 0.64-0.28 0.947-0.173 0.307-0.427 0.627-0.747 0.947l-1.013 1.053c-0.147 0.147-0.213 0.32-0.213 0.533 0 0.107 0.013 0.2 0.040 0.307 0.040 0.107 0.080 0.187 0.107 0.267 0.24 0.44 0.653 1.013 1.24 1.707 0.6 0.693 1.24 1.4 1.933 2.107 0.72 0.707 1.413 1.36 2.12 1.96 0.693 0.587 1.267 0.987 1.72 1.227 0.067 0.027 0.147 0.067 0.24 0.107 0.107 0.040 0.213 0.053 0.333 0.053 0.227 0 0.4-0.080 0.547-0.227l1.013-1c0.333-0.333 0.653-0.587 0.96-0.747 0.307-0.187 0.613-0.28 0.947-0.28 0.253 0 0.52 0.053 0.813 0.173s0.6 0.293 0.933 0.52l4.413 3.133c0.347 0.24 0.587 0.52 0.733 0.853 0.133 0.333 0.213 0.667 0.213 1.040z"
-                            ></path>
-                          </svg>{' '}
-                          Contact details:
-                        </div>
-                        <div className="value col-7">
-                          <span>{contactName}</span>
-                          <br />
-                          <a href={`tel:${phone1}`}>{phone1}</a>
-                          <br />
-                          {phone2 && <a href={`tel:${phone2}`}>{phone2}</a>}
-                          <a href={`mailto:${contactEmail}`}>{contactEmail}</a>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="payment-agreements"></div>
-                  <div className="payment-actions">
-                    {!attendeeId && activeWorkshop && activeWorkshop.id && (
-                      <StripeExpressCheckoutElement
-                        workshop={activeWorkshop}
-                        goToPaymentModal={goToPaymentModal}
-                        selectedWorkshopId={workshopId}
-                        btnText="Checkout"
-                      />
-                    )}
-                    {attendeeId && (
-                      <button
-                        className="submit-btn"
-                        disabled={!workshopId}
-                        onClick={handleTransferWorkshopRequest}
-                      >
-                        Continue
-                      </button>
-                    )}
-
-                    {!activeWorkshop && (
-                      <button
-                        className="submit-btn"
-                        disabled={!workshopId}
-                        onClick={goToPaymentModal()}
-                      >
-                        Checkout
-                      </button>
-                    )}
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-      </main>
-    </>
+    <main className="scheduling-page">
+      <Elements stripe={stripePromise} options={elementsOptions}>
+        <SchedulingInPersonPaymentForm
+          workshop={activeWorkshop}
+          fee={fee}
+          delfee={delfee}
+          router={router}
+          track={track}
+          courseType={courseType}
+        />
+      </Elements>
+    </main>
   );
 };
 
 SchedulingInPersonFlow.hideFooter = true;
+
 export default SchedulingInPersonFlow;

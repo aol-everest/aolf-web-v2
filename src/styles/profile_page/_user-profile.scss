@@ -4,6 +4,36 @@
     margin-top: 0 !important;
     padding-top: 0px;
   }
+  .showPassBtn {
+    border: none;
+    background: none;
+    position: absolute;
+    top: 34px;
+    right: 0;
+    padding: 5px 14px;
+    &:focus {
+      outline: none;
+    }
+    .icon-aol:before {
+      color: #98a2b3;
+      font-size: 24px;
+    }
+  }
+  input {
+    &.validate {
+      border-color: #dc3545;
+    }
+  }
+  .showPassBtn.password {
+    .icon-aol:before {
+      content: '\e918';
+    }
+  }
+  .showPassBtn.text {
+    .icon-aol:before {
+      content: '\e939';
+    }
+  }
   .container {
     max-width: 1348px;
     padding-top: 50px;
@@ -18,6 +48,24 @@
     @media screen and (max-width: 991px) {
       flex-direction: column;
     }
+  }
+  .new-journey-header {
+    margin-top: 18px;
+    text-align: center;
+    font-weight: 400;
+    color: #6f7283;
+    font-family: Work Sans;
+    font-size: 14px;
+  }
+  .new-journey-btn-wrapper {
+    justify-content: center;
+    margin-top: 25px;
+  }
+  .link-modal {
+    width: 100%;
+    text-align: center;
+    justify-content: center;
+    border-radius: 100px;
   }
   .user-info-box {
     background: white;
@@ -38,6 +86,8 @@
         'profilePicture username'
         'profilePicture userType'
         'profilePicture userSince'
+        'profilePicture newJourneyHeader'
+        'profilePicture newJourneyButtonWrap'
         'profilePicture userLogout';
     }
     @media screen and (max-width: 559px) {
@@ -121,6 +171,7 @@
       font-weight: 400;
       grid-area: userSince;
     }
+
     .user-logout {
       margin-top: 24px;
       border-top: #e9e9e9 1px solid;
@@ -140,6 +191,7 @@
         display: inline-flex;
         align-items: center;
         gap: 10px;
+        color: #3d8be8;
         .icon-aol {
           font-size: 20px;
         }
@@ -208,6 +260,19 @@
         gap: 12px;
         display: flex;
         flex-wrap: wrap;
+
+        .form-item .selected-flag {
+          outline: none;
+          position: relative;
+          width: 38px;
+          display: flex;
+          flex: 1;
+          align-items: center;
+          padding: 0px;
+        }
+        .second .react-tel-input .selected-flag .arrow {
+          top: unset;
+        }
       }
       .col-1-1 {
         flex: 100%;
@@ -312,13 +377,61 @@
       }
     }
   }
-  .form-item {
+  .state-dropdown {
     display: flex;
     flex-direction: column;
+    .react-select__single-value {
+      color: black;
+      font-size: 16px;
+      font-weight: 400;
+    }
     label {
       font-size: 14px;
       color: #9598a6;
       margin-bottom: 6px;
+    }
+  }
+  .edit-icon {
+    background-color: hsla(0, 0%, 100%, 0.522);
+    color: #3d8be8;
+    position: absolute;
+    right: 15px;
+    top: 35px;
+    text-align: left;
+  }
+  .form-item {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    label {
+      font-size: 14px;
+      color: #9598a6;
+      margin-bottom: 6px;
+    }
+    .input-msg {
+      font-size: 12px;
+      padding-top: 4px;
+      line-height: 18px;
+      font-weight: 400;
+    }
+    .eye-button {
+      position: absolute;
+      top: 32px;
+      right: 16px;
+      display: block;
+      background-color: $wcf-light;
+      padding: 4px;
+      width: 32px;
+      height: 32px;
+      text-align: center;
+      border: none;
+      img {
+        width: 24px;
+        height: 24px;
+      }
+      &:focus {
+        outline: none;
+      }
     }
     select {
       padding: 10px 14px;
@@ -762,6 +875,11 @@
         font-size: 14px;
         font-weight: 600;
         line-height: 18px;
+        text-transform: uppercase;
+        &.online {
+          background: #fff5eb;
+          color: #ed994e;
+        }
       }
       .course-price {
         background: linear-gradient(94.04deg, #ffa180 3.84%, #ed7347 109.6%);
@@ -944,6 +1062,7 @@
       }
       .number {
         height: 30px;
+        min-width: 30px;
         width: 30px;
         background: linear-gradient(
           102.78deg,
@@ -1657,6 +1776,29 @@
       line-height: 24px;
       width: 100%;
       padding: 10px 35px 10px 50px;
+    }
+    .schedule-location-input {
+      height: 44px;
+      border-radius: 16px;
+      border: #e9e9e9 1px solid;
+      box-shadow: 0px 1px 2px 0px rgba(16, 24, 40, 0.0509803922);
+      font-size: 16px;
+      font-weight: 500;
+      line-height: 24px;
+      width: 100%;
+      padding: 10px 35px 10px 50px;
+      display: block;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      display: flex;
+      align-items: center;
+    }
+    .schedule-location-value {
+      display: block;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
     }
   }
   &.add-new-modal {

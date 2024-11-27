@@ -343,6 +343,15 @@
           content: '\e938';
         }
       }
+      &.slick-next {
+        &::before {
+          content: '\e938';
+        }
+      }
+      &.slick-disabled {
+        opacity: 0.25;
+        cursor: default;
+      }
     }
   }
   .courses-nearby-actions {

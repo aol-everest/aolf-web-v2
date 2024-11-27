@@ -4,6 +4,7 @@ import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import { Accordion, Button } from 'react-bootstrap';
 import { COURSE_TYPES } from '@constants';
+import classNames from 'classnames';
 dayjs.extend(utc);
 
 function groupDataByCourseType(data, courseTypes) {
@@ -40,6 +41,15 @@ function groupDataByCourseType(data, courseTypes) {
 
 const EventTile = ({ event, index }) => {
   const getCourseDeration = () => {
+    if (
+      dayjs
+        .utc(event.eventStartDate)
+        .isSame(dayjs.utc(event.eventEndDate), 'day')
+    ) {
+      return (
+        <>{`${dayjs.utc(event.eventStartDate).format('MMMM DD, YYYY')}`}</>
+      );
+    }
     if (
       dayjs
         .utc(event.eventStartDate)
@@ -81,6 +91,7 @@ const EventTile = ({ event, index }) => {
 };
 
 export const PastCourses = ({ pastCourses = {} }) => {
+  const [activeKey, setActiveKey] = useState(null);
   const {
     totalCourseCount,
     totalHours,
@@ -92,6 +103,9 @@ export const PastCourses = ({ pastCourses = {} }) => {
 
   const [firstGroup] = groupedCourses;
   const { slug = '' } = firstGroup || {};
+  const handleToggle = (key) => {
+    setActiveKey(activeKey === key ? null : key);
+  };
 
   return (
     groupedCourses &&
@@ -107,9 +121,11 @@ export const PastCourses = ({ pastCourses = {} }) => {
                 <h2 class="mb-0">
                   <Accordion.Toggle
                     as={Button}
-                    className="btn btn-link btn-block text-left"
+                    className="btn-block text-left"
                     variant="link"
                     eventKey={group.slug}
+                    aria-expanded={group.slug === activeKey}
+                    onClick={() => handleToggle(group.slug)}
                   >
                     <div class="course-head">
                       <div class="course-heading">{group.name}</div>

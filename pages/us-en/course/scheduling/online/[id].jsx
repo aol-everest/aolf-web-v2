@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { useQueryState, parseAsInteger } from 'nuqs';
+import { useQueryState, parseAsString } from 'nuqs';
 import { useRouter } from 'next/router';
 import queryString from 'query-string';
 import ErrorPage from 'next/error';
@@ -12,10 +12,11 @@ import {
   phoneRegExp,
   priceCalculation,
   parsedAddress,
+  findCourseTypeByKey,
 } from '@utils';
 import { useAuth, useGlobalAlertContext } from '@contexts';
 import { useAnalytics } from 'use-analytics';
-import { ABBRS, ALERT_TYPES } from '@constants';
+import { ABBRS, ALERT_TYPES, COURSE_TYPES } from '@constants';
 import { NextSeo } from 'next-seo';
 import { useQuery } from '@tanstack/react-query';
 import { ScheduleAgreementForm } from '@components/scheduleAgreementForm';
@@ -34,32 +35,44 @@ import { Formik } from 'formik';
 import { loadStripe } from '@stripe/stripe-js';
 import { filterAllowedParams, removeNull } from '@utils/utmParam';
 
-export async function getServerSideProps(context) {
-  let response = null;
-
-  try {
-    let param = {
-      ctypeId: process.env.NEXT_PUBLIC_SKY_BREATH_MEDITATION_ONLINE_CTYPE || '',
-    };
-    response = await api.get({
-      path: 'workshopMaster',
-      param,
-    });
-  } catch (error) {
-    console.error('Failed to fetch ZIP code by IP');
-  }
-
-  return {
-    props: { workshopMaster: response?.data || {} },
-  };
-}
-
-const SchedulingOnlineFlow = ({ workshopMaster }) => {
+const SchedulingOnlineFlow = () => {
   const router = useRouter();
   const { track } = useAnalytics();
 
   const { id: workshopId } = router.query;
-  const [courseType] = useQueryState('courseType');
+  const [courseType] = useQueryState(
+    'courseType',
+    parseAsString.withDefault('SKY_BREATH_MEDITATION'),
+  );
+
+  const { data: workshopMaster = {} } = useQuery({
+    queryKey: ['workshopMaster'],
+    queryFn: async () => {
+      const mode = 'Online';
+      let ctypeId = null;
+      if (
+        findCourseTypeByKey(courseType)?.subTypes &&
+        findCourseTypeByKey(courseType)?.subTypes[mode]
+      ) {
+        ctypeId = findCourseTypeByKey(courseType)?.subTypes[mode];
+      } else {
+        const courseTypeValue =
+          findCourseTypeByKey(courseType)?.value ||
+          COURSE_TYPES.SKY_BREATH_MEDITATION?.value;
+
+        ctypeId = courseTypeValue ? courseTypeValue.split(';')[0] : undefined;
+      }
+
+      let param = {
+        ctypeId,
+      };
+      const response = await api.get({
+        path: 'workshopMaster',
+        param,
+      });
+      return response.data;
+    },
+  });
 
   const {
     data: activeWorkshop,
@@ -100,7 +113,6 @@ const SchedulingOnlineFlow = ({ workshopMaster }) => {
     router,
     track,
     courseType,
-    isReferBySameSite,
   }) => {
     const { profile = {} } = useAuth();
     const formRef = useRef();
@@ -108,7 +120,6 @@ const SchedulingOnlineFlow = ({ workshopMaster }) => {
     const [emailAddressAdded, setEmailAddressAdded] = useState(false);
     const stripe = useStripe();
     const elements = useElements();
-    const [flowVersion] = useQueryState('fver', parseAsInteger);
 
     const { showAlert } = useGlobalAlertContext();
 
@@ -327,11 +338,7 @@ const SchedulingOnlineFlow = ({ workshopMaster }) => {
               data.attendeeId
             }?${queryString.stringify(filteredParams)}`;
             if (isGenericWorkshop) {
-              if (flowVersion === 2) {
-                returnUrl = `${window.location.origin}/us-en/scheduling/online/course/${data.attendeeId}?${queryString.stringify(filteredParams)}`;
-              } else {
-                returnUrl = `${window.location.origin}/us-en/course/scheduling?aid=${data.attendeeId}&${queryString.stringify(filteredParams)}`;
-              }
+              returnUrl = `${window.location.origin}/us-en/course/scheduling?aid=${data.attendeeId}&${queryString.stringify(filteredParams)}`;
             }
 
             const result = await stripe.confirmPayment({
@@ -348,21 +355,12 @@ const SchedulingOnlineFlow = ({ workshopMaster }) => {
             }
           } else {
             if (isGenericWorkshop) {
-              if (flowVersion === 2) {
-                replaceRouteWithUTMQuery(router, {
-                  pathname: `/us-en/scheduling/online/course/${data.attendeeId}`,
-                  query: {
-                    aid: data.attendeeId,
-                  },
-                });
-              } else {
-                replaceRouteWithUTMQuery(router, {
-                  pathname: `/us-en/course/scheduling/${data.attendeeId}`,
-                  query: {
-                    aid: data.attendeeId,
-                  },
-                });
-              }
+              replaceRouteWithUTMQuery(router, {
+                pathname: `/us-en/course/scheduling/${data.attendeeId}`,
+                query: {
+                  aid: data.attendeeId,
+                },
+              });
             } else {
               replaceRouteWithUTMQuery(router, {
                 pathname: `/us-en/course/thankyou/${data.attendeeId}`,
@@ -749,7 +747,7 @@ const SchedulingOnlineFlow = ({ workshopMaster }) => {
                           </div>
                           <div className="info-box-details">
                             <div className="info-box-title">Location:</div>
-                            <div className="info-detail">{mode}</div>
+                            <div className="info-detail">{`${mode} (The instructor will email you the Zoom meeting details prior to course start date)`}</div>
                           </div>
                         </div>
                       </div>
