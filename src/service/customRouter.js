@@ -70,7 +70,7 @@ export function iframeRouteWithUTMQuery(router, params) {
   if (isNil(params)) {
     throw new Error('Route url missing');
   } else if (isString(params)) {
-    const { url, query = {} } = queryString.parseUrl(params);
+    const { pathname, query = {} } = queryString.parseUrl(params);
     const filteredParams = filterAllowedParams(router.query);
     const allParams = {
       ...filteredParams,
@@ -79,7 +79,11 @@ export function iframeRouteWithUTMQuery(router, params) {
 
     const result = '?' + new URLSearchParams(allParams).toString();
     window.top.location.href =
-      window.location.protocol + '//' + window.location.host + url + result;
+      window.location.protocol +
+      '//' +
+      window.location.host +
+      pathname +
+      result;
   } else if (isObject(params)) {
     const { pathname, query = {} } = params;
     const filteredParams = filterAllowedParams(router.query);

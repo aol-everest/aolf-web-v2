@@ -12,7 +12,7 @@ import { orgConfig } from '@org';
 
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
-import { pushRouteWithUTMQuery } from '@service';
+import { iframeRouteWithUTMQuery } from '@service';
 
 dayjs.extend(utc);
 
@@ -174,7 +174,7 @@ const WorkShopTile = ({ workshop }) => {
 
   const enrollAction = () => {
     const isOnline = mode === 'Online';
-    pushRouteWithUTMQuery(router, {
+    iframeRouteWithUTMQuery(router, {
       pathname: isOnline
         ? `/us-en/course/scheduling/online/${sfid}`
         : `/us-en/course/scheduling/inPerson/${sfid}`,
@@ -367,7 +367,7 @@ const NearbyCoursesCarousel = ({ initialLocation = null, nearbyWorkshops }) => {
   };
 
   const moreDatesAction = () => {
-    pushRouteWithUTMQuery(router, {
+    iframeRouteWithUTMQuery(router, {
       pathname: `/us-en/course/scheduling`,
     });
   };
