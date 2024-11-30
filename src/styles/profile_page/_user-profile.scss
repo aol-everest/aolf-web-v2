@@ -584,15 +584,21 @@
       }
     }
     .course-listing {
-      column-count: 2;
-      @media screen and (max-width: 767px) {
-        column-count: 1;
-      }
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+      flex: 1;
+      padding-top: 16px;
+      margin-bottom: 20px;
       .course-list-item {
         display: flex;
         gap: 12px;
-        padding-top: 16px;
-        break-inside: avoid-column;
+        flex: 1 0 48%;
+        max-width: 49%;
+        @media screen and (max-width: 767px) {
+          max-width: 100%;
+          flex: 1 0 100%;
+        }
       }
       .course-number {
         background-color: #edf5fc;
@@ -611,9 +617,9 @@
         font-size: 14px;
         font-weight: 500;
         line-height: 18px;
+        gap: 8px;
         display: flex;
         flex-direction: column;
-        justify-content: space-between;
       }
     }
   }
