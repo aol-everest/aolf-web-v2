@@ -1,0 +1,142 @@
+.calendar-container {
+  margin: 20px auto;
+  text-align: center;
+
+  h2 {
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+
+  .calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 10px;
+    background-color: #fff;
+    border-radius: 10px;
+    padding: 20px;
+  }
+
+  .day-header {
+    font-weight: bold;
+    color: #4a4a4a;
+    font-size: 14px;
+  }
+
+  .day-cell {
+    padding: 10px;
+    text-align: center;
+    border-radius: 10px;
+    background-color: #fff;
+    color: #4a4a4a;
+    border-color: transparent;
+    cursor: pointer;
+    transition: all 0.3s ease;
+
+    &.disabled {
+      pointer-events: none;
+      // background-color: #f5f5f5;
+      color: #ccc;
+      cursor: not-allowed;
+      animation: none; // Disable animation for disabled cells
+    }
+
+    &.selected-animated {
+      animation: scale-up 0.3s ease;
+    }
+
+    &:hover {
+      background-color: #e6f7ff;
+    }
+
+    &.highlighted {
+      background-color: #fef6e4;
+      color: #d97c00;
+      border: 1px solid #d97c00;
+    }
+
+    &.selected {
+      background-color: #ffe8c8;
+      color: #d97c00;
+      font-weight: bold;
+      border: 1px solid #d97c00;
+    }
+
+    &.selected-animated {
+      animation: scale-up 0.3s ease;
+    }
+  }
+
+  .weekend {
+    background-color: #f9f9f9;
+    color: #999;
+  }
+
+  .holiday {
+    background-color: #ffcccc;
+    color: #900;
+    font-weight: bold;
+  }
+
+  @keyframes scale-up {
+    0% {
+      transform: scale(0.8);
+    }
+    100% {
+      transform: scale(1);
+    }
+  }
+}
+
+.navigation-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+
+  button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+    font-size: 16px;
+    background-color: transparent;
+    color: #007bff;
+    border: none;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+
+    &:hover {
+      background-color: #e6f7ff;
+      color: #0056b3;
+    }
+
+    &:disabled {
+      background-color: #ccc;
+      color: #fff;
+      cursor: not-allowed;
+    }
+  }
+}
+
+.dropdown-container {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 20px;
+
+  select {
+    padding: 5px 10px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+    cursor: pointer;
+
+    &:focus {
+      outline: none;
+      border-color: #007bff;
+    }
+  }
+}

@@ -7,6 +7,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import dayjs from 'dayjs';
 import { sortBy } from 'lodash';
 import Flatpickr from 'react-flatpickr';
+import CustomCalendar from '@components/customCalendar';
 import { COURSE_MODES, COURSE_TYPES } from '@constants';
 import { useAnalytics } from 'use-analytics';
 import { useEffectOnce } from 'react-use';
@@ -605,6 +606,32 @@ const Scheduling = ({ initialLocation }) => {
   const productTypeId = workshopMaster?.productTypeId;
   const slug = findSlugByProductTypeId(productTypeId);
 
+  const highlightDates = [
+    [new Date(2024, 11, 3), new Date(2024, 11, 4), new Date(2024, 11, 5)],
+    [new Date(2024, 11, 9), new Date(2024, 11, 10)],
+  ];
+
+  const handleDayCreate = (date) => {
+    const day = date.getDay();
+    if (day === 0 || day === 6) {
+      return 'weekend'; // Add a class for weekends
+    }
+    if (date.getDate() === 25 && date.getMonth() === 11) {
+      return 'holiday'; // Add a class for Christmas
+    }
+    return ''; // No additional class
+  };
+
+  // Handle month change
+  const handleMonthChange = (newMonth) => {
+    console.log('Month changed to:', newMonth);
+  };
+
+  // Handle range selection
+  const handleRangeSelect = (range) => {
+    console.log('Range selected:', range);
+  };
+
   return (
     <>
       {(loading || isLoading) && <Loader />}
@@ -691,6 +718,12 @@ const Scheduling = ({ initialLocation }) => {
                 </div>
 
                 <div className="scheduling-modal__content-calendar">
+                  <CustomCalendar
+                    highlightDates={highlightDates}
+                    onMonthChange={handleMonthChange}
+                    onRangeSelect={handleRangeSelect}
+                    onDayCreate={handleDayCreate}
+                  />
                   <Flatpickr
                     ref={fp}
                     data-enable-time
