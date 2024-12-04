@@ -28,8 +28,9 @@ function groupDataByCourseType(data, courseTypes) {
         const isOnline = matchedCourseType.subTypes?.Online?.split(
           ';',
         ).includes(event.productTypeId);
-        event.mode = isOnline ? 'Online' : 'In-person';
+        event.mode = isOnline ? 'Online' : 'In-Person';
       }
+      event.mode = event.mode === 'In Person' ? 'In-Person' : event.mode;
 
       matchedCourseType.events.push(event);
     }
@@ -101,7 +102,7 @@ const EventTile = ({ event, index }) => {
 };
 
 export const PastCourses = ({ pastCourses = {} }) => {
-  const [activeKey, setActiveKey] = useState(null);
+  const [activeKey, setActiveKey] = useState('unknown');
   const {
     totalCourseCount,
     totalHours,
@@ -118,10 +119,16 @@ export const PastCourses = ({ pastCourses = {} }) => {
   };
 
   useEffect(() => {
-    if (groupedCourses && groupedCourses.length > 0) {
+    if (
+      activeKey === 'unknown' &&
+      groupedCourses &&
+      groupedCourses.length > 0
+    ) {
       setActiveKey(slug);
     }
   }, [groupedCourses]);
+
+  console.log(activeKey);
 
   if (groupedCourses && groupedCourses.length > 0) {
     return (
