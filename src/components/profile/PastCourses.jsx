@@ -1,9 +1,10 @@
 /* eslint-disable react/no-unescaped-entities */
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import { Accordion, Button } from 'react-bootstrap';
 import { COURSE_TYPES } from '@constants';
+import Link from '@components/linkWithUTM';
 import classNames from 'classnames';
 dayjs.extend(utc);
 
@@ -22,6 +23,14 @@ function groupDataByCourseType(data, courseTypes) {
     );
 
     if (matchedCourseType) {
+      // Set mode based on subTypes logic if mode is null
+      if (!event.mode) {
+        const isOnline = matchedCourseType.subTypes?.Online?.split(
+          ';',
+        ).includes(event.productTypeId);
+        event.mode = isOnline ? 'Online' : 'In-person';
+      }
+
       matchedCourseType.events.push(event);
     }
   });
@@ -75,6 +84,7 @@ const EventTile = ({ event, index }) => {
     <div class="course-list-item" key={event.sfid}>
       <div class="course-number">{index + 1}</div>
       <div class="course-info">
+        <div class="course-type">{event.mode} course</div>
         <div class="course-date">{getCourseDeration()}</div>
         <div class="course-teachers">
           {[
@@ -107,9 +117,14 @@ export const PastCourses = ({ pastCourses = {} }) => {
     setActiveKey(activeKey === key ? null : key);
   };
 
-  return (
-    groupedCourses &&
-    groupedCourses.length > 0 && (
+  useEffect(() => {
+    if (groupedCourses && groupedCourses.length > 0) {
+      setActiveKey(slug);
+    }
+  }, [groupedCourses]);
+
+  if (groupedCourses && groupedCourses.length > 0) {
+    return (
       <Accordion
         className="accordion accordion--past-courses"
         defaultActiveKey={`${slug}`}
@@ -151,6 +166,30 @@ export const PastCourses = ({ pastCourses = {} }) => {
           );
         })}
       </Accordion>
-    )
+    );
+  }
+
+  return (
+    <div class="no-events profile-form-box">
+      <div class="no-events-icon">
+        <span class="icon-aol iconaol-calendar"></span>
+      </div>
+      <div class="no-events-text">You haven't taken any courses yet</div>
+      <div class="find-event-text">
+        Find an upcoming{' '}
+        <Link href="/us-en/courses" prefetch={false} legacyBehavior>
+          <a href="#" className="link link_orange">
+            course
+          </a>
+        </Link>{' '}
+        or{' '}
+        <Link href="/us-en/meetup" prefetch={false} legacyBehavior>
+          <a href="#" className="link link_orange">
+            meetup
+          </a>
+        </Link>{' '}
+        to join.
+      </div>
+    </div>
   );
 };
