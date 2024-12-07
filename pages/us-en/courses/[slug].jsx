@@ -361,6 +361,7 @@ const Course = () => {
   const [cityFilter] = useQueryState('city');
   const [centerFilter] = useQueryState('center');
   const [centerNameFilter] = useQueryState('center-name');
+  const [limit] = useQueryState('limit');
   const [searchKey, setSearchKey] = useState('');
   const [showFilterModal, setShowFilterModal] = useState(false);
 
@@ -384,7 +385,7 @@ const Course = () => {
         queryFn: async ({ pageParam = 1 }) => {
           let param = {
             page: pageParam,
-            size: 12,
+            size: limit || 12,
             timingsRequired: true,
           };
 
@@ -459,7 +460,7 @@ const Course = () => {
           return res;
         },
         getNextPageParam: (page) => {
-          return page.currectPage >= page.lastPage
+          return page.currectPage >= page.lastPage || limit
             ? undefined
             : page.currectPage + 1;
         },
