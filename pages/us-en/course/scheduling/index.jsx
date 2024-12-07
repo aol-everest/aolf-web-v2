@@ -581,8 +581,9 @@ const Scheduling = ({ initialLocation }) => {
   const handleNavigateToDetailsPage = (isOnlineCourse, workshopId) => {
     if (!isOnlineCourse) {
       replaceRouteWithUTMQuery(router, {
-        pathname: `/us-en/course/scheduling/${workshopId}?mode=inPerson`,
+        pathname: `/us-en/course/scheduling/${workshopId}`,
         query: {
+          mode: 'inPerson',
           ...router.query,
           productTypeId: workshopMaster?.productTypeId,
           courseType: courseTypeFilter,
@@ -591,8 +592,9 @@ const Scheduling = ({ initialLocation }) => {
       });
     } else {
       replaceRouteWithUTMQuery(router, {
-        pathname: `/us-en/course/scheduling/${workshopId}?mode=online`,
+        pathname: `/us-en/course/scheduling/${workshopId}`,
         query: {
+          mode: 'online',
           ...router.query,
           productTypeId: workshopMaster?.productTypeId,
           courseType: courseTypeFilter,

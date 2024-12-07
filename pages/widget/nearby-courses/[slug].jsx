@@ -175,10 +175,9 @@ const WorkShopTile = ({ workshop }) => {
   const enrollAction = () => {
     const isOnline = mode === 'Online';
     iframeRouteWithUTMQuery(router, {
-      pathname: isOnline
-        ? `/us-en/course/scheduling/${sfid}?mode=online`
-        : `/us-en/course/scheduling/${sfid}?mode=inPerson`,
+      pathname: `/us-en/course/scheduling/${sfid}`,
       query: {
+        mode: isOnline ? 'online' : 'inPerson',
         ctype: productTypeId,
       },
     });
