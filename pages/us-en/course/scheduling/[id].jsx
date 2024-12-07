@@ -35,9 +35,12 @@ import { Formik } from 'formik';
 import { loadStripe } from '@stripe/stripe-js';
 import { filterAllowedParams, removeNull } from '@utils/utmParam';
 
-const SchedulingOnlineFlow = () => {
+const SchedulingCheckoutFlow = () => {
   const router = useRouter();
   const { track } = useAnalytics();
+  const [mode] = useQueryState('mode');
+
+  console.log('mode', mode);
 
   const { id: workshopId } = router.query;
   const [courseType] = useQueryState(
@@ -45,16 +48,17 @@ const SchedulingOnlineFlow = () => {
     parseAsString.withDefault('SKY_BREATH_MEDITATION'),
   );
 
+  const courseMode = mode === 'online' ? 'Online' : 'In Person';
+
   const { data: workshopMaster = {} } = useQuery({
     queryKey: ['workshopMaster'],
     queryFn: async () => {
-      const mode = 'Online';
-      let ctypeId = null;
+      let ctypeId = 811569;
       if (
         findCourseTypeByKey(courseType)?.subTypes &&
-        findCourseTypeByKey(courseType)?.subTypes[mode]
+        findCourseTypeByKey(courseType)?.subTypes[courseMode]
       ) {
-        ctypeId = findCourseTypeByKey(courseType)?.subTypes[mode];
+        ctypeId = findCourseTypeByKey(courseType)?.subTypes[courseMode];
       } else {
         const courseTypeValue =
           findCourseTypeByKey(courseType)?.value ||
@@ -64,7 +68,7 @@ const SchedulingOnlineFlow = () => {
       }
 
       let param = {
-        ctypeId,
+        ctypeId: 811569,
       };
       const response = await api.get({
         path: 'workshopMaster',
@@ -107,7 +111,7 @@ const SchedulingOnlineFlow = () => {
 
   const { title: courseTitle } = activeWorkshop || {};
 
-  const SchedulingOnlinePaymentForm = ({
+  const SchedulingPaymentForm = ({
     workshop,
     fee,
     router,
@@ -129,7 +133,6 @@ const SchedulingOnlineFlow = () => {
       eventEndDate,
       eventStartDate,
       primaryTeacherName,
-      mode,
       timings = [],
       isGenericWorkshop,
     } = workshop;
@@ -356,7 +359,7 @@ const SchedulingOnlineFlow = () => {
           } else {
             if (isGenericWorkshop) {
               replaceRouteWithUTMQuery(router, {
-                pathname: `/us-en/course/scheduling/${data.attendeeId}`,
+                pathname: `/us-en/course/scheduling/thankyou/${data.attendeeId}`,
                 query: {
                   aid: data.attendeeId,
                 },
@@ -747,7 +750,7 @@ const SchedulingOnlineFlow = () => {
                           </div>
                           <div className="info-box-details">
                             <div className="info-box-title">Location:</div>
-                            <div className="info-detail">{`${mode} (The instructor will email you the Zoom meeting details prior to course start date)`}</div>
+                            <div className="info-detail">{`${workshop?.mode} (The instructor will email you the Zoom meeting details prior to course start date)`}</div>
                           </div>
                         </div>
                       </div>
@@ -1003,7 +1006,7 @@ const SchedulingOnlineFlow = () => {
   return (
     <main className="scheduling-page">
       <Elements stripe={stripePromise} options={elementsOptions}>
-        <SchedulingOnlinePaymentForm
+        <SchedulingPaymentForm
           workshop={activeWorkshop}
           fee={fee}
           delfee={delfee}
@@ -1016,6 +1019,6 @@ const SchedulingOnlineFlow = () => {
   );
 };
 
-SchedulingOnlineFlow.hideFooter = true;
+SchedulingCheckoutFlow.hideFooter = true;
 
-export default SchedulingOnlineFlow;
+export default SchedulingCheckoutFlow;
