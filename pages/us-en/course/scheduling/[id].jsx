@@ -50,11 +50,13 @@ const SchedulingPaymentForm = ({
   courseType,
   activeStep,
   setActiveStep,
+  discountResponse,
+  setDiscountResponse,
   handleChangeDates,
 }) => {
   const { profile = {} } = useAuth();
   const formRef = useRef();
-  const [discountResponse, setDiscountResponse] = useState(null);
+
   const [isPending, startTransition] = useTransition();
   // const [loading, setLoading] = useState(false);
 
@@ -871,6 +873,7 @@ const SchedulingCheckoutFlow = () => {
   const router = useRouter();
   const { track } = useAnalytics();
   const [mode] = useQueryState('mode');
+  const [discountResponse, setDiscountResponse] = useState(null);
   const [activeStep, setActiveStep] = useQueryState(
     'step',
     parseAsString.withDefault(CheckoutStates.EMAIL_INPUT),
@@ -951,6 +954,7 @@ const SchedulingCheckoutFlow = () => {
 
   const { fee, delfee } = priceCalculation({
     workshop: activeWorkshop,
+    discount: discountResponse,
   });
 
   const elementsOptions = {
@@ -1034,6 +1038,8 @@ const SchedulingCheckoutFlow = () => {
           courseType={courseType}
           activeStep={activeStep}
           setActiveStep={setActiveStep}
+          discountResponse={discountResponse}
+          setDiscountResponse={setDiscountResponse}
           handleChangeDates={handleChangeDates}
         />
       </Elements>
