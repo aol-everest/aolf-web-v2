@@ -45,6 +45,7 @@ const SchedulingPaymentForm = ({
   workshopMaster,
   workshop,
   fee,
+  delfee,
   router,
   track,
   courseType,
@@ -608,7 +609,7 @@ const SchedulingPaymentForm = ({
                           <label>Total:</label>
                           <div className="amount">
                             {' '}
-                            ${`${workshop?.unitPrice?.toFixed(2) || '0.00'}`}
+                            {delfee && <s>${delfee}</s>} ${fee || '0'}
                           </div>
                         </div>
                         <div className="payment-details">

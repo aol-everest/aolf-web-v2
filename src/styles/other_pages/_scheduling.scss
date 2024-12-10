@@ -334,6 +334,9 @@
       font-size: 16px;
       font-weight: 300;
       line-height: 24px;
+      .react-tag-remove {
+        color: #ffffff;
+      }
 
       &:focus {
         border-color: #ed994e !important;
@@ -796,6 +799,9 @@
         font-size: 24px;
         line-height: 26px;
         font-weight: 600;
+        s {
+          color: #9598a6;
+        }
       }
     }
     .payment-details {
