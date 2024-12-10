@@ -18,7 +18,7 @@ dayjs.extend(utc);
 
 const settings = {
   slidesToShow: 4,
-  slidesToScroll: 1,
+  slidesToScroll: 4,
   centerMode: false,
   arrows: true,
   dots: false,
@@ -37,6 +37,7 @@ const settings = {
         centerMode: true,
         centerPadding: '20px',
         slidesToShow: 3,
+        slidesToScroll: 3,
       },
     },
     {
@@ -46,6 +47,7 @@ const settings = {
         centerMode: true,
         centerPadding: '10px',
         slidesToShow: 2,
+        slidesToScroll: 2,
       },
     },
     {
@@ -55,6 +57,7 @@ const settings = {
         centerMode: true,
         centerPadding: '10px',
         slidesToShow: 1,
+        slidesToScroll: 1,
       },
     },
   ],
