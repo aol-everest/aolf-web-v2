@@ -145,11 +145,16 @@ const Scheduling = ({ initialLocation }) => {
       showPopupVariation();
     }
   };
+  const handleScrollSpeed = (speed) => {
+    console.log(`Scrolling too fast! Speed: ${speed.toFixed(2)} pixels/second`);
+    showPopupVariation();
+  };
 
   const { ref } = usePageTriggers({
     onTimeTrigger: handleTimeTrigger,
     onInactivityTrigger: handleInactivityTrigger,
     onVisibilityChange: handleVisibilityChange,
+    onScrollSpeedTrigger: handleScrollSpeed,
   });
 
   useEffectOnce(() => {
