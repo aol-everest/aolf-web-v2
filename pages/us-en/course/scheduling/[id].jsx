@@ -890,14 +890,16 @@ const SchedulingCheckoutFlow = () => {
   const courseMode = mode === 'online' ? 'Online' : 'In Person';
 
   const { data: workshopMaster = {} } = useQuery({
-    queryKey: ['workshopMaster'],
+    queryKey: ['workshopMaster', mode],
     queryFn: async () => {
-      let ctypeId = 811569;
-      if (
+      let ctypeId = null;
+      if (mode === 'both' && findCourseTypeByKey(courseType)?.subTypes) {
+        ctypeId = findCourseTypeByKey(courseType)?.subTypes['Online'];
+      } else if (
         findCourseTypeByKey(courseType)?.subTypes &&
-        findCourseTypeByKey(courseType)?.subTypes[courseMode]
+        findCourseTypeByKey(courseType)?.subTypes[mode]
       ) {
-        ctypeId = findCourseTypeByKey(courseType)?.subTypes[courseMode];
+        ctypeId = findCourseTypeByKey(courseType)?.subTypes[mode];
       } else {
         const courseTypeValue =
           findCourseTypeByKey(courseType)?.value ||
@@ -907,7 +909,7 @@ const SchedulingCheckoutFlow = () => {
       }
 
       let param = {
-        ctypeId: 811569,
+        ctypeId,
       };
       const response = await api.get({
         path: 'workshopMaster',
