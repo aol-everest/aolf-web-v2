@@ -2,6 +2,7 @@ import { useEffect, useState, useRef } from 'react';
 import { useIdleTimer } from 'react-idle-timer';
 import { usePageVisibility } from 'react-page-visibility';
 import { useScrollPercentage } from 'react-scroll-percentage';
+import throttle from 'lodash.throttle';
 
 export const usePageTriggers = ({
   onTimeTrigger,
@@ -16,8 +17,12 @@ export const usePageTriggers = ({
   onVisibilityChange,
 }) => {
   const [scrollSpeed, setScrollSpeed] = useState(0);
-  const [lastScrollTop, setLastScrollTop] = useState(window.scrollY);
-  const [lastTimestamp, setLastTimestamp] = useState(Date.now());
+  const [lastScrollTop, setLastScrollTop] = useState(
+    typeof window !== 'undefined' ? window.scrollY : 0,
+  );
+  const [lastTimestamp, setLastTimestamp] = useState(
+    typeof window !== 'undefined' ? Date.now() : 0,
+  );
   const [ref, percentage] = useScrollPercentage();
 
   const isVisible = usePageVisibility();
@@ -47,27 +52,34 @@ export const usePageTriggers = ({
   useEffect(() => {
     if (!onScrollSpeedTrigger) return;
 
-    const handleScroll = () => {
+    const handleScroll = throttle(() => {
       const now = Date.now();
       const scrollTop = window.scrollY;
       const timeDiff = (now - lastTimestamp) / 1000; // Time difference in seconds
-      const distance = Math.abs(scrollTop - lastScrollTop); // Scroll distance in pixels
+      const distance = Math.abs(scrollTop - lastScrollTop); // Distance scrolled in pixels
       const speed = distance / timeDiff; // Speed in pixels per second
 
+      // Update the last known scroll position and timestamp
       setScrollSpeed(speed);
       setLastScrollTop(scrollTop);
       setLastTimestamp(now);
 
+      // Determine device type and corresponding threshold
       const isMobile = window.innerWidth <= 768;
       const speedThreshold = isMobile ? mobileSpeedLimit : desktopSpeedLimit;
 
+      // Trigger the event if the speed exceeds the threshold
       if (speed > speedThreshold) {
         onScrollSpeedTrigger(speed);
       }
-    };
+    }, 100); // Throttle scroll handling to once every 100ms
 
     window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      handleScroll.cancel(); // Cancel the throttled function to prevent memory leaks
+    };
   }, [
     lastScrollTop,
     lastTimestamp,

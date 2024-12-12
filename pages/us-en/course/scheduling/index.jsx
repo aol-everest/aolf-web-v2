@@ -145,11 +145,16 @@ const Scheduling = ({ initialLocation }) => {
       showPopupVariation();
     }
   };
+  const handleScrollSpeed = (speed) => {
+    console.log(`Scrolling too fast! Speed: ${speed.toFixed(2)} pixels/second`);
+    showPopupVariation();
+  };
 
   const { ref } = usePageTriggers({
     onTimeTrigger: handleTimeTrigger,
     onInactivityTrigger: handleInactivityTrigger,
     onVisibilityChange: handleVisibilityChange,
+    onScrollSpeedTrigger: handleScrollSpeed,
   });
 
   useEffectOnce(() => {
@@ -581,8 +586,9 @@ const Scheduling = ({ initialLocation }) => {
   const handleNavigateToDetailsPage = (isOnlineCourse, workshopId) => {
     if (!isOnlineCourse) {
       replaceRouteWithUTMQuery(router, {
-        pathname: `/us-en/course/scheduling/inPerson/${workshopId}`,
+        pathname: `/us-en/course/scheduling/${workshopId}`,
         query: {
+          mode: 'inPerson',
           ...router.query,
           productTypeId: workshopMaster?.productTypeId,
           courseType: courseTypeFilter,
@@ -591,8 +597,9 @@ const Scheduling = ({ initialLocation }) => {
       });
     } else {
       replaceRouteWithUTMQuery(router, {
-        pathname: `/us-en/course/scheduling/online/${workshopId}`,
+        pathname: `/us-en/course/scheduling/${workshopId}`,
         query: {
+          mode: 'online',
           ...router.query,
           productTypeId: workshopMaster?.productTypeId,
           courseType: courseTypeFilter,

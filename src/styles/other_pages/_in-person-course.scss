@@ -1011,12 +1011,19 @@
     @media screen and (max-width: 720px) {
       padding-left: 0;
       padding-right: 0 !important;
+      &.show {
+        .modal-dialog {
+          transform: translateY(0);
+        }
+      }
     }
     .modal-dialog {
       max-width: 720px;
       @media screen and (max-width: 720px) {
         max-width: 100%;
         align-items: flex-end;
+        transition: transform 0.3s ease-in-out;
+        transform: translateY(100%);
       }
       .slot-action {
         text-align: center;
