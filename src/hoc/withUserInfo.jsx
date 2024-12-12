@@ -126,7 +126,7 @@ export const withUserInfo = (WrappedComponent) => {
       { href: PAST_COURSES, label: 'Past Courses' },
       { href: UPCOMING_EVENTS, label: 'Upcoming Activities' },
       { href: PREFERENCES, label: 'Preferences' },
-      { href: REFER_A_FRIEND, label: 'Refer a Friend' },
+      // { href: REFER_A_FRIEND, label: 'Refer a Friend' },
     ];
 
     // Define the alerts based on the request status
