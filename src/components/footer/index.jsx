@@ -241,6 +241,11 @@ export function Footer() {
                     </Link>
                   </li>
                   <li className="nav-item">
+                    <Link href="https://members.us.artofliving.org/us-en/referral-offer?traffic&#95;source=footer">
+                      Referral Offer
+                    </Link>
+                  </li>
+                  <li className="nav-item">
                     <Link href="https://www.shareasale.com/shareasale.cfm?merchantID=103115">
                       Affiliates
                     </Link>
