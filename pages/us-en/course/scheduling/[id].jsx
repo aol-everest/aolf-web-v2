@@ -74,6 +74,7 @@ const SchedulingPaymentForm = ({
     primaryTeacherName,
     timings = [],
     isGenericWorkshop,
+    unitPrice,
   } = workshop;
 
   const { first_name, last_name, email, personMobilePhone } = profile || {};
@@ -743,18 +744,20 @@ const SchedulingPaymentForm = ({
                                 handleLocationFilterChange(value, formikProps)
                               }
                             />
-                            <div className="form-item fullw mt-3 mb-3">
-                              <DiscountInputNew
-                                formikProps={formikProps}
-                                placeholder="Discount"
-                                formikKey="couponCode"
-                                product={workshop.id}
-                                applyDiscount={applyDiscount}
-                                addOnProducts={workshop.addOnProducts}
-                                containerClass={`tickets-modal__input-label tickets-modal__input-label--top`}
-                                label="Discount Code"
-                              ></DiscountInputNew>
-                            </div>
+                            {unitPrice > 0 && (
+                              <div className="form-item fullw mt-3 mb-3">
+                                <DiscountInputNew
+                                  formikProps={formikProps}
+                                  placeholder="Discount"
+                                  formikKey="couponCode"
+                                  product={workshop.id}
+                                  applyDiscount={applyDiscount}
+                                  addOnProducts={workshop.addOnProducts}
+                                  containerClass={`tickets-modal__input-label tickets-modal__input-label--top`}
+                                  label="Discount Code"
+                                ></DiscountInputNew>
+                              </div>
+                            )}
 
                             <div className="section-box !tw-border-y-0">
                               {fee > 0 && (
