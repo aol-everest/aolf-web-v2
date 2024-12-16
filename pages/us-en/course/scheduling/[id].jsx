@@ -883,8 +883,6 @@ const SchedulingCheckoutFlow = () => {
     parseAsString.withDefault(CheckoutStates.EMAIL_INPUT),
   );
 
-  console.log('mode', mode);
-
   const { id: workshopId } = router.query;
   const [courseType] = useQueryState(
     'courseType',
@@ -947,7 +945,13 @@ const SchedulingCheckoutFlow = () => {
   const handleChangeDates = () => {
     replaceRouteWithUTMQuery(router, {
       pathname: `/us-en/course/scheduling`,
-      query: { ...router.query, productTypeId: null },
+      query: {
+        ...router.query,
+        productTypeId: null,
+        mode: 'both',
+        courseType: null,
+        ctype: null,
+      },
     });
   };
 

@@ -123,8 +123,6 @@ const MembershipThankyou = () => {
     subscriptionType,
   } = order || {};
 
-  console.log(subscriptionType, MEMBERSHIP_TYPES.JOURNEY_PLUS.name);
-
   const { data: workshopDetail = [] } = useQuery({
     queryKey: 'workshopDetail',
     queryFn: async () => {
