@@ -172,7 +172,7 @@ export const SKYBreathMeditation = ({
                   </div>
                   <div class="progress_content">
                     <span class="title">
-                      <strong>500M+</strong> Lives
+                      <strong>800M+</strong> Lives
                     </span>
                     <br />
                     <span class="content">

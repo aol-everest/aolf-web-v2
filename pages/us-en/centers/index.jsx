@@ -660,7 +660,7 @@ const Centers = ({ initialLocation = null, initialCenters }) => {
             helps individuals relieve stress, build community, and live happier
             lives through evidence-based techniques and training. Since its
             inception in 1981, the Art of Living has touched the lives of more
-            than 500 million people around the world.
+            than 800 million people around the world.
           </div>
           <div className="journal-info">
             <div className="feature_box">

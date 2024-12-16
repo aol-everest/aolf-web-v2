@@ -15,7 +15,7 @@ export function PopVariation2({ closeAction, acceptAction, show }) {
             <img src="/img/4-comments.png" alt="reviewer" />
           </div>
           <div class="review-text">
-            500M+ people have already transformed their lives with ArtOfLiving
+            800M+ people have already transformed their lives with ArtOfLiving
             courses
           </div>
           <div class="rating-wrap">
@@ -33,7 +33,7 @@ export function PopVariation2({ closeAction, acceptAction, show }) {
             <img src="/img/1-sahaj-comment.png" alt="reviewer" />
           </div>
           <div class="review-text">
-            500M+ people have already transformed their lives with ArtOfLiving
+            800M+ people have already transformed their lives with ArtOfLiving
             courses
           </div>
         </div>
