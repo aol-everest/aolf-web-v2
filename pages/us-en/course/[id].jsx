@@ -42,6 +42,10 @@ const VolunteerTrainingProgram = dynamic(() =>
     (mod) => mod.VolunteerTrainingProgram,
   ),
 );
+const ResilienceTraining = dynamic(() =>
+  import('@components/courseDetails').then((mod) => mod.ResilienceTraining),
+);
+
 const HealingBreath = dynamic(() =>
   import('@components/courseDetails').then((mod) => mod.HealingBreath),
 );
@@ -344,6 +348,9 @@ function CourseDetail() {
   };
 
   const renderCourseDetail = () => {
+    if (true) {
+      return <ResilienceTraining {...props} />;
+    }
     if (isVolunteerTrainingProgram) {
       return <VolunteerTrainingProgram {...props} />;
     }

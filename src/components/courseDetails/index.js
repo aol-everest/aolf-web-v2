@@ -12,3 +12,4 @@ export { SKYWithSahaj } from './SKYWithSahaj';
 export { SriSriYogaDeepDive } from './SriSriYogaDeepDive';
 export { MarmaTraining } from './MarmaTraining';
 export { HealingBreathSilent } from './HealingBreathSilent';
+export { ResilienceTraining } from './ResilienceTraining';
