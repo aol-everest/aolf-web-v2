@@ -805,7 +805,7 @@ const GuidedMeditation = (props) => {
               </div>
             </div>
             <div className="key-item">
-              <div className="key-item--title">500M+</div>
+              <div className="key-item--title">800M+</div>
               <div className="key-item--desc">
                 Lives touched through our courses & events
               </div>

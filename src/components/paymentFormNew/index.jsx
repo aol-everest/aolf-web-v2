@@ -1430,7 +1430,7 @@ export const PaymentFormNew = ({
                                 Millions of Lives Touched
                               </div>
                               <div className="feature__content">
-                                Join a community of over 500 million people
+                                Join a community of over 800 million people
                                 whose lives have been positively transformed
                                 through SKY Breath Meditation and other events.
                               </div>
@@ -1910,7 +1910,7 @@ export const PaymentFormNew = ({
                                   Millions of Lives Touched
                                 </div>
                                 <div className="feature__content">
-                                  Join a community of over 500 million people
+                                  Join a community of over 800 million people
                                   whose lives have been positively transformed
                                   through SKY Breath Meditation and other
                                   events.
