@@ -87,7 +87,11 @@ const COURSE_TYPES_OPTIONS = COURSE_TYPES_MASTER[orgConfig.name].reduce(
         if (COURSE_TYPES[key]) {
           return {
             ...courseTypes,
-            [COURSE_TYPES[key].slug]: { ...COURSE_TYPES[key], ...value },
+            [COURSE_TYPES[key].slug]: {
+              ...COURSE_TYPES[key],
+              ...value,
+              key: key,
+            },
           };
         } else {
           return courseTypes;
@@ -371,6 +375,9 @@ const NearbyCoursesCarousel = ({ initialLocation = null, nearbyWorkshops }) => {
   const moreDatesAction = () => {
     iframeRouteWithUTMQuery(router, {
       pathname: `/us-en/course/scheduling`,
+      query: {
+        courseType: courseTypeFilter.key,
+      },
     });
   };
 
