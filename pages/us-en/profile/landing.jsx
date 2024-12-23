@@ -54,6 +54,17 @@ const getMeetupDuration = (item, updateMeetupDuration) => {
   );
 };
 
+const getMeetupDurationTop = (item, updateMeetupDuration) => {
+  const { meetupStartDate, meetupTimeZone, meetupStartTime } = item;
+  return (
+    <>
+      {`${dayjs.utc(meetupStartDate).format('MMM DD')}, `}
+      {`${tConvert(meetupStartTime)} ${ABBRS[meetupTimeZone]}, `}
+      {`${updateMeetupDuration}`}
+    </>
+  );
+};
+
 const PreferredCenterComp = ({ item }) => {
   const router = useRouter();
 
@@ -98,6 +109,7 @@ const PreferredCenterComp = ({ item }) => {
     eventTimeZone,
     primaryTeacherName,
     coTeacher1Name,
+    meetupStartDate,
     meetupDuration,
     meetupTimeZone,
     type,
@@ -173,11 +185,7 @@ const PreferredCenterComp = ({ item }) => {
                 {mode}
               </div>
               <div className="course-type duration">
-                {getCourseDuration(
-                  eventStartDate,
-                  eventEndDate,
-                  meetupTimeZone,
-                )}
+                {getMeetupDurationTop(item, updateMeetupDuration)}
               </div>
             </div>
           </div>
@@ -595,6 +603,17 @@ const ProfileLanding = () => {
     },
   });
 
+  const preferredEventOrdered = preferredEvents.sort((a, b) => {
+    const aStartTime = a.eventStartDateTimeGMT || a.meetupStartDateTimeGMT;
+    const bStartTime = b.eventStartDateTimeGMT || b.meetupStartDateTimeGMT;
+
+    if (!aStartTime && !bStartTime) return 0; // If both are missing, maintain order
+    if (!aStartTime) return 1; // Place items without a start time at the end
+    if (!bStartTime) return -1; // Place items without a start time at the end
+
+    return new Date(aStartTime) - new Date(bStartTime); // Earliest event first
+  });
+
   const upcomingEvents = [
     ...(data?.workshops || []),
     ...(data?.meetups || []),
@@ -952,7 +971,7 @@ const ProfileLanding = () => {
           </div>
         </div>
       </section>
-      {preferredEvents.length > 0 && (
+      {preferredEventOrdered.length > 0 && (
         <section className="activities-courses">
           <div className="container">
             <div className="top-picks-container">
@@ -984,7 +1003,7 @@ const ProfileLanding = () => {
                     </div>
                   </div>
                 </div>
-                {preferredEvents.map((item) => {
+                {preferredEventOrdered.map((item) => {
                   return (
                     <SwiperSlide key={item.id}>
                       <PreferredCenterComp item={item} />
