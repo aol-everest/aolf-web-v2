@@ -149,57 +149,48 @@ const Thankyou = () => {
       },
     );
 
-    track(
-      "'aol_purchase'",
-      {
-        event_id: orderExternalId,
-        user_properties: [
-          {
-            customer_id: userExternalId,
-            customer_email: email,
-            customer_first_name: firstname,
-            customer_phone: personMobilePhone,
-            customer_last_name: lastname,
-            customer_city: personMailingCity,
-            customer_zip: personMailingPostalCode,
-            customer_address_1: personMailingStreet,
-            customer_address_2: '',
-            customer_country: personMailingCountry,
-            customer_state: personMailingState,
-          },
-        ],
-        ecommerce: [
-          {
-            currencyCode: 'USD',
-            purchase: {
-              revenue: amountPaid,
-              discount_amount: '',
-              tax: '0.00',
-              shipping: '0.00',
-              sub_total: amountPaid,
-              coupon: '',
-            },
-            products: [
-              {
-                name: title,
-                product_id: comboProductSfid,
-                id: comboSfid,
-                price: amountPaid,
-                category: 'bundle',
-                brand: 'Art of Living Foundation',
-                quantity: 1,
-              },
-            ],
-          },
-        ],
-      },
-      {
-        plugins: {
-          // disable this specific track call for all plugins except customerio
-          'clevertap-plugin': false,
+    track("'aol_purchase'", {
+      event_id: orderExternalId,
+      user_properties: [
+        {
+          customer_id: userExternalId,
+          customer_email: email,
+          customer_first_name: firstname,
+          customer_phone: personMobilePhone,
+          customer_last_name: lastname,
+          customer_city: personMailingCity,
+          customer_zip: personMailingPostalCode,
+          customer_address_1: personMailingStreet,
+          customer_address_2: '',
+          customer_country: personMailingCountry,
+          customer_state: personMailingState,
         },
-      },
-    );
+      ],
+      ecommerce: [
+        {
+          currencyCode: 'USD',
+          purchase: {
+            revenue: amountPaid,
+            discount_amount: '',
+            tax: '0.00',
+            shipping: '0.00',
+            sub_total: amountPaid,
+            coupon: '',
+          },
+          products: [
+            {
+              name: title,
+              product_id: comboProductSfid,
+              id: comboSfid,
+              price: amountPaid,
+              category: 'bundle',
+              brand: 'Art of Living Foundation',
+              quantity: 1,
+            },
+          ],
+        },
+      ],
+    });
 
     setCookie(orderExternalId, 'DONE');
   }, [result]);
