@@ -5,7 +5,7 @@ import { api, trimAndSplitName } from '@utils';
 import { useAnalytics } from 'use-analytics';
 import { Formik } from 'formik';
 import { useRouter } from 'next/router';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import * as Yup from 'yup';
 import useQuestionnaireSelection from 'src/hooks/useQuestionnaireSelection';
@@ -13,6 +13,7 @@ import { useGlobalAlertContext } from '@contexts';
 import { ALERT_TYPES } from '@constants';
 import { PhoneInputNewCheckout } from '@components/checkout';
 import { Loader } from '@components';
+import Script from 'next/script';
 
 const humanizeNumber = (num) => {
   var ones = [
@@ -122,6 +123,10 @@ const CourseFinder = () => {
     const stepCount = element.stepCount !== null ? element.stepCount : 1;
     return total + stepCount;
   }, 0);
+
+  useEffect(() => {
+    window.iticks = window.iticks || {};
+  }, []);
 
   const handleNextStep = () => {
     const answers = currentStepData.options.reduce(
@@ -353,6 +358,24 @@ const CourseFinder = () => {
       {(isLoading || loading) && <Loader />}
 
       <main className="course-finder-questionnaire-question checkout-aol">
+        <Script
+          id="intelliticks-script"
+          strategy="afterInteractive"
+          dangerouslySetInnerHTML={{
+            __html: `(function(I, L, T, i, c, k, s) {
+            if(I.iticks) return;
+            I.iticks = {host: c, settings: s, clientId: k, cdn: L, queue: []};
+            var h = T.head || T.documentElement;
+            var e = T.createElement(i);
+            var l = I.location;
+            e.async = true;
+            e.src = (L || c) + '/client/inject-v2.min.js';
+            h.insertBefore(e, h.firstChild);
+            I.iticks.call = function(a, b) { I.iticks.queue.push([a, b]); };
+          })(window, 'https://cdn-v1.intelliticks.com/prod/common', document, 'script', 'https://app.intelliticks.com', 'LZ8KCvfnuX6wbRgga_c', {});
+          `,
+          }}
+        />
         <section className="questionnaire-question">
           <div className="container">
             <div className="back-btn-wrap">

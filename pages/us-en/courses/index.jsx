@@ -3,6 +3,8 @@ import { COURSE_TYPES_MASTER, COURSE_TYPES } from '@constants';
 import { orgConfig } from '@org';
 import Link from '@components/linkWithUTM';
 import { NextSeo } from 'next-seo';
+import Script from 'next/script';
+import { useEffect } from 'react';
 
 const CourseTypeTile = ({ courseType }) => {
   const findCourseAction = () => {
@@ -13,8 +15,30 @@ const CourseTypeTile = ({ courseType }) => {
     }
   };
 
+  useEffect(() => {
+    window.iticks = window.iticks || {};
+  }, []);
+
   return (
     <div className="course-item">
+      <Script
+        id="intelliticks-script"
+        strategy="afterInteractive"
+        dangerouslySetInnerHTML={{
+          __html: `(function(I, L, T, i, c, k, s) {
+            if(I.iticks) return;
+            I.iticks = {host: c, settings: s, clientId: k, cdn: L, queue: []};
+            var h = T.head || T.documentElement;
+            var e = T.createElement(i);
+            var l = I.location;
+            e.async = true;
+            e.src = (L || c) + '/client/inject-v2.min.js';
+            h.insertBefore(e, h.firstChild);
+            I.iticks.call = function(a, b) { I.iticks.queue.push([a, b]); };
+          })(window, 'https://cdn-v1.intelliticks.com/prod/common', document, 'script', 'https://app.intelliticks.com', 'LZ8KCvfnuX6wbRgga_c', {});
+          `,
+        }}
+      />
       <div className="course-img">
         <img
           src={`/img/courses/${courseType.slug}.webp`}
