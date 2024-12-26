@@ -139,7 +139,7 @@ export async function getServerSideProps(context) {
         lat: lat,
         lng: lng,
         dist: 50,
-        size: 30,
+        size: 12,
         timingsRequired: true,
         ctype: courseTypeFilter.value,
       },
@@ -290,7 +290,7 @@ const NearbyCoursesCarousel = ({ initialLocation = null, nearbyWorkshops }) => {
         lat: location.latitude,
         lng: location.longitude,
         dist: 50,
-        size: 30,
+        size: 12,
         timingsRequired: true,
         ctype: courseTypeFilter.value,
       };
