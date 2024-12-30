@@ -186,7 +186,7 @@ function LoginPage() {
     setLoading(true);
     setShowMessage(false);
     try {
-      await signOut({ global: true });
+      await signOut();
       const { nextStep } = await signIn({ username, password });
       switch (nextStep.signInStep) {
         case 'CONFIRM_SIGN_IN_WITH_NEW_PASSWORD_REQUIRED':
@@ -228,6 +228,7 @@ function LoginPage() {
       }
     } catch (ex) {
       console.log(ex);
+      await signOut();
       const data = ex.response?.data;
       let errorMessage = ex.message.match(/\[(.*)\]/);
       if (errorMessage) {
