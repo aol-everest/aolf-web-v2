@@ -77,7 +77,16 @@ const SchedulingPaymentForm = ({
     unitPrice,
   } = workshop;
 
-  const { first_name, last_name, email, personMobilePhone } = profile || {};
+  const {
+    first_name,
+    last_name,
+    email,
+    personMobilePhone,
+    personMailingPostalCode,
+    personMailingState,
+    personMailingStreet,
+    personMailingCity,
+  } = profile || {};
 
   const questionnaireArray = complianceQuestionnaire
     ? complianceQuestionnaire.map((current) => ({
@@ -463,14 +472,14 @@ const SchedulingPaymentForm = ({
       {isPending && <Loader />}
       <Formik
         initialValues={{
-          firstName: '',
-          lastName: '',
-          email: '',
-          contactAddress: '',
-          contactCity: '',
-          contactState: '',
-          contactZip: '',
-          contactPhone: '',
+          firstName: first_name,
+          lastName: last_name,
+          email: email,
+          contactAddress: personMailingStreet || '',
+          contactCity: personMailingCity || '',
+          contactState: personMailingState || '',
+          contactZip: personMailingPostalCode || '',
+          contactPhone: personMobilePhone,
           questionnaire: questionnaireArray,
           ppaAgreement: true,
         }}
@@ -695,7 +704,8 @@ const SchedulingPaymentForm = ({
                             ? 'Pay and enroll'
                             : 'Enter Your Email'}
                         </div>
-                        {activeStep === CheckoutStates.EMAIL_INPUT ? (
+                        {activeStep === CheckoutStates.EMAIL_INPUT &&
+                        !values.email ? (
                           <StyledInputNewCheckout
                             type="email"
                             label="Email Address"
