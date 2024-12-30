@@ -128,8 +128,6 @@ export const PastCourses = ({ pastCourses = {} }) => {
     }
   }, [groupedCourses]);
 
-  console.log(activeKey);
-
   if (groupedCourses && groupedCourses.length > 0) {
     return (
       <Accordion

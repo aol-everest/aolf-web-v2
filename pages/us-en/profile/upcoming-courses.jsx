@@ -22,7 +22,20 @@ const UpcomingCourses = () => {
     },
   });
 
-  const upcomingEvents = [...(data?.workshops || []), ...(data?.meetups || [])];
+  const upcomingEvents = [
+    ...(data?.workshops || []),
+    ...(data?.meetups || []),
+    ...(data?.ticketedEvents || []),
+  ].sort((a, b) => {
+    const aStartTime = a.eventStartDateTimeGMT || a.meetupStartDateTimeGMT;
+    const bStartTime = b.eventStartDateTimeGMT || b.meetupStartDateTimeGMT;
+
+    if (!aStartTime && !bStartTime) return 0; // If both are missing, maintain order
+    if (!aStartTime) return 1; // Place items without a start time at the end
+    if (!bStartTime) return -1; // Place items without a start time at the end
+
+    return new Date(aStartTime) - new Date(bStartTime); // Earliest event first
+  });
 
   return (
     <div>

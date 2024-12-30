@@ -74,9 +74,19 @@ const SchedulingPaymentForm = ({
     primaryTeacherName,
     timings = [],
     isGenericWorkshop,
+    unitPrice,
   } = workshop;
 
-  const { first_name, last_name, email, personMobilePhone } = profile || {};
+  const {
+    first_name,
+    last_name,
+    email,
+    personMobilePhone,
+    personMailingPostalCode,
+    personMailingState,
+    personMailingStreet,
+    personMailingCity,
+  } = profile || {};
 
   const questionnaireArray = complianceQuestionnaire
     ? complianceQuestionnaire.map((current) => ({
@@ -462,14 +472,14 @@ const SchedulingPaymentForm = ({
       {isPending && <Loader />}
       <Formik
         initialValues={{
-          firstName: '',
-          lastName: '',
-          email: '',
-          contactAddress: '',
-          contactCity: '',
-          contactState: '',
-          contactZip: '',
-          contactPhone: '',
+          firstName: first_name,
+          lastName: last_name,
+          email: email,
+          contactAddress: personMailingStreet || '',
+          contactCity: personMailingCity || '',
+          contactState: personMailingState || '',
+          contactZip: personMailingPostalCode || '',
+          contactPhone: personMobilePhone,
           questionnaire: questionnaireArray,
           ppaAgreement: true,
         }}
@@ -690,11 +700,13 @@ const SchedulingPaymentForm = ({
                         <div
                           className={`checkout-title ${activeStep === CheckoutStates.USER_INFO ? 'mb-1 ' : 'mb-3'}`}
                         >
-                          {activeStep === CheckoutStates.USER_INFO
+                          {activeStep === CheckoutStates.USER_INFO ||
+                          (activeStep === CheckoutStates.EMAIL_INPUT && email)
                             ? 'Pay and enroll'
                             : 'Enter Your Email'}
                         </div>
-                        {activeStep === CheckoutStates.EMAIL_INPUT ? (
+                        {activeStep === CheckoutStates.EMAIL_INPUT &&
+                        !values.email ? (
                           <StyledInputNewCheckout
                             type="email"
                             label="Email Address"
@@ -716,15 +728,17 @@ const SchedulingPaymentForm = ({
                         ) : (
                           <div class="checkout-user-info">
                             {values.email}{' '}
-                            <a
-                              href="#"
-                              onClick={() => {
-                                resetForm({});
-                                setActiveStep(CheckoutStates.EMAIL_INPUT);
-                              }}
-                            >
-                              not you?
-                            </a>
+                            {!email && (
+                              <a
+                                href="#"
+                                onClick={() => {
+                                  resetForm({});
+                                  setActiveStep(CheckoutStates.EMAIL_INPUT);
+                                }}
+                              >
+                                not you?
+                              </a>
+                            )}
                           </div>
                         )}
 
@@ -743,18 +757,20 @@ const SchedulingPaymentForm = ({
                                 handleLocationFilterChange(value, formikProps)
                               }
                             />
-                            <div className="form-item fullw mt-3 mb-3">
-                              <DiscountInputNew
-                                formikProps={formikProps}
-                                placeholder="Discount"
-                                formikKey="couponCode"
-                                product={workshop.id}
-                                applyDiscount={applyDiscount}
-                                addOnProducts={workshop.addOnProducts}
-                                containerClass={`tickets-modal__input-label tickets-modal__input-label--top`}
-                                label="Discount Code"
-                              ></DiscountInputNew>
-                            </div>
+                            {unitPrice > 0 && (
+                              <div className="form-item fullw mt-3 mb-3">
+                                <DiscountInputNew
+                                  formikProps={formikProps}
+                                  placeholder="Discount"
+                                  formikKey="couponCode"
+                                  product={workshop.id}
+                                  applyDiscount={applyDiscount}
+                                  addOnProducts={workshop.addOnProducts}
+                                  containerClass={`tickets-modal__input-label tickets-modal__input-label--top`}
+                                  label="Discount Code"
+                                ></DiscountInputNew>
+                              </div>
+                            )}
 
                             <div className="section-box !tw-border-y-0">
                               {fee > 0 && (
@@ -880,8 +896,6 @@ const SchedulingCheckoutFlow = () => {
     parseAsString.withDefault(CheckoutStates.EMAIL_INPUT),
   );
 
-  console.log('mode', mode);
-
   const { id: workshopId } = router.query;
   const [courseType] = useQueryState(
     'courseType',
@@ -944,7 +958,13 @@ const SchedulingCheckoutFlow = () => {
   const handleChangeDates = () => {
     replaceRouteWithUTMQuery(router, {
       pathname: `/us-en/course/scheduling`,
-      query: { ...router.query, productTypeId: null },
+      query: {
+        ...router.query,
+        productTypeId: null,
+        mode: 'both',
+        courseType: null,
+        ctype: null,
+      },
     });
   };
 

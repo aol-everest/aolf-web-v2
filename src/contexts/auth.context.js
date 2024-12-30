@@ -55,6 +55,9 @@ export const AuthProvider = ({
     } catch (error) {
       setCurrentUser({ isAuthenticated: false });
       console.log('Error fetching current user:', error);
+      throw new Error(
+        'Unable to load your profile details. Please refresh the page or contact support if the issue persists.',
+      );
     }
   };
 

@@ -218,6 +218,7 @@ export default function AskGurudev() {
                 selectedVotes={selectedVotes}
                 selectedPageIndex={selectedPageIndex}
                 query={query}
+                currentMeta={searchResult?.meta}
               />
             )}
           </div>
