@@ -700,7 +700,8 @@ const SchedulingPaymentForm = ({
                         <div
                           className={`checkout-title ${activeStep === CheckoutStates.USER_INFO ? 'mb-1 ' : 'mb-3'}`}
                         >
-                          {activeStep === CheckoutStates.USER_INFO
+                          {activeStep === CheckoutStates.USER_INFO ||
+                          (activeStep === CheckoutStates.EMAIL_INPUT && email)
                             ? 'Pay and enroll'
                             : 'Enter Your Email'}
                         </div>
@@ -727,15 +728,17 @@ const SchedulingPaymentForm = ({
                         ) : (
                           <div class="checkout-user-info">
                             {values.email}{' '}
-                            <a
-                              href="#"
-                              onClick={() => {
-                                resetForm({});
-                                setActiveStep(CheckoutStates.EMAIL_INPUT);
-                              }}
-                            >
-                              not you?
-                            </a>
+                            {!email && (
+                              <a
+                                href="#"
+                                onClick={() => {
+                                  resetForm({});
+                                  setActiveStep(CheckoutStates.EMAIL_INPUT);
+                                }}
+                              >
+                                not you?
+                              </a>
+                            )}
                           </div>
                         )}
 
