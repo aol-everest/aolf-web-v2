@@ -121,6 +121,7 @@ const SearchResult = React.forwardRef(function SearchResult(
     handleVoteSelect,
     selectedPageIndex,
     query,
+    currentMeta,
   },
   ref,
 ) {
@@ -147,13 +148,20 @@ const SearchResult = React.forwardRef(function SearchResult(
 
   const isFeedbackSelected = selectedVotes[selectedPageIndex];
 
+  const getErrorMessagesForMeta = () => {
+    switch (currentMeta) {
+      case 'suicide':
+        return "Hi there, below is a wisdom sheet from Gurudev. You are so loved and as Gurudev says, 'know that you are very much needed in this world' too. You are not alone, we are with you, and help is available. To speak with a certified listener in the USA, call the National Suicide Prevention Hotline at <a href='tel:988'>988</a>. In India, call the Aasra hotline at <a href='tel:+91-9820466726'>91-9820466726</a> . For other countries, find a helpline <a href='https://findahelpline.com/'>here</a>. To speak to an Art of Living teacher, call <a href='tel:(855) 202-4400'>(855) 202-4400</a>";
+      default:
+        return "Here is a wisdom sheet we found related to your question. It may not be specific to your situation, but we hope it's helpful!";
+    }
+  };
+
   const CustomMessage = () => {
+    const message = getErrorMessagesForMeta();
     return (
       <div className="emptyResults">
-        <p>
-          Here is a wisdom sheet we found related to your question. It may not
-          be specific to your situation, but we hope it's helpful!
-        </p>
+        <p dangerouslySetInnerHTML={{ __html: message }} />
       </div>
     );
   };

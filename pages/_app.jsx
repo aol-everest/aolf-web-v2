@@ -250,7 +250,6 @@ function App({ Component, pageProps }) {
               {isCCUpdateRequired && <CardUpdateRequired />}
               {isPendingAgreement && <PendingAgreement />}
               <Component {...pageProps} />
-              {/* <ClevertapAnalytics></ClevertapAnalytics> */}
               <ReactQueryDevtools initialIsOpen={false} />
             </Layout>
           </Compose>

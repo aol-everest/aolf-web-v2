@@ -146,7 +146,7 @@ const Scheduling = ({ initialLocation }) => {
     }
   };
   const handleScrollSpeed = (speed) => {
-    console.log(`Scrolling too fast! Speed: ${speed.toFixed(2)} pixels/second`);
+    // console.log(`Scrolling too fast! Speed: ${speed.toFixed(2)} pixels/second`);
     showPopupVariation();
   };
 
@@ -588,22 +588,22 @@ const Scheduling = ({ initialLocation }) => {
       replaceRouteWithUTMQuery(router, {
         pathname: `/us-en/course/scheduling/${workshopId}`,
         query: {
-          mode: 'inPerson',
           ...router.query,
           productTypeId: workshopMaster?.productTypeId,
           courseType: courseTypeFilter,
           ctype: workshopMaster?.productTypeId,
+          mode: 'inPerson',
         },
       });
     } else {
       replaceRouteWithUTMQuery(router, {
         pathname: `/us-en/course/scheduling/${workshopId}`,
         query: {
-          mode: 'online',
           ...router.query,
           productTypeId: workshopMaster?.productTypeId,
           courseType: courseTypeFilter,
           ctype: workshopMaster?.productTypeId,
+          mode: 'online',
         },
       });
     }

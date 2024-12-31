@@ -87,7 +87,11 @@ const COURSE_TYPES_OPTIONS = COURSE_TYPES_MASTER[orgConfig.name].reduce(
         if (COURSE_TYPES[key]) {
           return {
             ...courseTypes,
-            [COURSE_TYPES[key].slug]: { ...COURSE_TYPES[key], ...value },
+            [COURSE_TYPES[key].slug]: {
+              ...COURSE_TYPES[key],
+              ...value,
+              key: key,
+            },
           };
         } else {
           return courseTypes;
@@ -135,7 +139,7 @@ export async function getServerSideProps(context) {
         lat: lat,
         lng: lng,
         dist: 50,
-        size: 30,
+        size: 12,
         timingsRequired: true,
         ctype: courseTypeFilter.value,
       },
@@ -286,7 +290,7 @@ const NearbyCoursesCarousel = ({ initialLocation = null, nearbyWorkshops }) => {
         lat: location.latitude,
         lng: location.longitude,
         dist: 50,
-        size: 30,
+        size: 12,
         timingsRequired: true,
         ctype: courseTypeFilter.value,
       };
@@ -371,6 +375,9 @@ const NearbyCoursesCarousel = ({ initialLocation = null, nearbyWorkshops }) => {
   const moreDatesAction = () => {
     iframeRouteWithUTMQuery(router, {
       pathname: `/us-en/course/scheduling`,
+      query: {
+        courseType: courseTypeFilter.key,
+      },
     });
   };
 

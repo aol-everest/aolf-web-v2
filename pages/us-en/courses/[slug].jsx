@@ -8,7 +8,7 @@ import {
 } from '@utils';
 import ContentLoader from 'react-content-loader';
 import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useQueryState, parseAsBoolean, parseAsJson, createParser } from 'nuqs';
 import { useUIDSeed } from 'react-uid';
 import { useAuth } from '@contexts';
@@ -36,6 +36,7 @@ import { navigateToLogin, isEmpty } from '@utils';
 import { NextSeo } from 'next-seo';
 import { SmartInput, SmartDropDown, Popup } from '@components';
 import { MobileFilterModal } from '@components/filterComps/mobileFilterModal';
+import Script from 'next/script';
 
 // (Optional) Import component styles. If you are using Less, import the `index.less` file.
 import 'rsuite/DateRangePicker/styles/index.css';
@@ -484,6 +485,10 @@ const Course = () => {
   }, [inView, fetchNextPage, hasNextPage]);
 
   useEffect(() => {
+    window.iticks = window.iticks || {};
+  }, []);
+
+  useEffect(() => {
     if (!router.isReady) return;
     page({
       category: 'course_registration',
@@ -728,6 +733,24 @@ const Course = () => {
       <NextSeo
         defaultTitle={`${courseTypeFilter.name} - Course Dates and Registration`}
         description={courseTypeFilter.description}
+      />
+      <Script
+        id="intelliticks-script"
+        strategy="afterInteractive"
+        dangerouslySetInnerHTML={{
+          __html: `(function(I, L, T, i, c, k, s) {
+            if(I.iticks) return;
+            I.iticks = {host: c, settings: s, clientId: k, cdn: L, queue: []};
+            var h = T.head || T.documentElement;
+            var e = T.createElement(i);
+            var l = I.location;
+            e.async = true;
+            e.src = (L || c) + '/client/inject-v2.min.js';
+            h.insertBefore(e, h.firstChild);
+            I.iticks.call = function(a, b) { I.iticks.queue.push([a, b]); };
+          })(window, 'https://cdn-v1.intelliticks.com/prod/common', document, 'script', 'https://app.intelliticks.com', 'LZ8KCvfnuX6wbRgga_c', {});
+          `,
+        }}
       />
       <section className="title-header">
         {courseTypeFilter && (
