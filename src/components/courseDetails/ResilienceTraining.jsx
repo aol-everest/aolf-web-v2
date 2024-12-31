@@ -97,6 +97,7 @@ export const ResilienceTraining = ({
               <div class="col dates icon-money">
                 <span class="title">Course Fee</span>
                 <br />
+
                 <span class="content">
                   $500 <strike>$395</strike>
                 </span>

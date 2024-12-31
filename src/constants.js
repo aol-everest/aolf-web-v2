@@ -373,6 +373,13 @@ export const COURSE_TYPES = {
     name: 'SKY Happiness Retreat',
     value: process.env.NEXT_PUBLIC_SKY_HAPPINESS_RETREAT_CTYPE || '',
   },
+  SKY_RESILIENCE: {
+    slug: 'sky_resilience',
+    name: 'SKY Resilience Training',
+    value: process.env.NEXT_PUBLIC_SKY_RESILIENCE_CTYPE || '',
+    description:
+      'Learn how to heal yourself and others through Marma, the most restorative Ayurvedic treatment.',
+  },
   BLESSINGS_COURSE: {
     slug: 'blessings-course',
     name: 'Blessings Course',
