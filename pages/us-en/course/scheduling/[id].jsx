@@ -576,7 +576,7 @@ const SchedulingPaymentForm = ({
           } = formikProps;
           formikOnChange(values);
 
-          const isNotAllQuestionnaireChecked = values.questionnaire.some(
+          const isNotAllQuestionnaireChecked = values?.questionnaire?.some(
             (item) => !item.value,
           );
 
