@@ -27,8 +27,8 @@ const axiosClient = Axios.create({
 axiosClient.interceptors.request.use(async function (config) {
   try {
     if (!config.isUnauthorized) {
-      const { accessToken } = await Auth.getSession();
-      const token = accessToken;
+      const { idToken } = await Auth.getSession();
+      const token = idToken;
       config.headers.Authorization = `Bearer ${token}`;
     }
   } catch (error) {
