@@ -16,8 +16,6 @@ import 'flatpickr/dist/flatpickr.min.css';
 import { replaceRouteWithUTMQuery } from '@service';
 import { Loader } from '@components';
 import WorkshopSelectModal from '@components/scheduleWorkshopModal/ScheduleWorkshopModal';
-import { usePageTriggers } from '@hooks';
-import { PopVariation2 } from '@components/inactivePopup';
 
 const advancedFormat = require('dayjs/plugin/advancedFormat');
 dayjs.extend(advancedFormat);
@@ -111,51 +109,6 @@ const Scheduling = ({ initialLocation }) => {
 
   const [teacherFilter] = useQueryState('teacher');
   const [cityFilter, setCityFilter] = useQueryState('city');
-  const [utmMedium, setUtmMedium] = useQueryState('utm_medium');
-  const [isPopupVariationVisible, setPopupVariationVisible] = useState(false);
-  const [isPopupVariationExecuted, setPopupVariationExecuted] = useState(false);
-
-  const showPopupVariation = () => {
-    if (!isPopupVariationExecuted && selectedDates?.length > 0) {
-      setPopupVariationVisible(true);
-      setPopupVariationExecuted(true);
-    }
-  };
-
-  const closePopupVariation = (state) => (e) => {
-    if (e) e.preventDefault();
-    state(false);
-  };
-
-  const acceptPopupVariationOffer = (e) => {
-    setUtmMedium('sys');
-    setPopupVariationVisible(false);
-  };
-
-  const handleTimeTrigger = () => {
-    showPopupVariation();
-  };
-
-  const handleInactivityTrigger = () => {
-    showPopupVariation();
-  };
-
-  const handleVisibilityChange = (isVisible) => {
-    if (!isVisible) {
-      showPopupVariation();
-    }
-  };
-  const handleScrollSpeed = (speed) => {
-    // console.log(`Scrolling too fast! Speed: ${speed.toFixed(2)} pixels/second`);
-    showPopupVariation();
-  };
-
-  const { ref } = usePageTriggers({
-    onTimeTrigger: handleTimeTrigger,
-    onInactivityTrigger: handleInactivityTrigger,
-    onVisibilityChange: handleVisibilityChange,
-    onScrollSpeedTrigger: handleScrollSpeed,
-  });
 
   useEffectOnce(() => {
     page({
@@ -615,7 +568,7 @@ const Scheduling = ({ initialLocation }) => {
   return (
     <>
       {(loading || isLoading) && <Loader />}
-      <main ref={ref} className="scheduling-page calendar-online">
+      <main className="scheduling-page calendar-online">
         <section className="scheduling-top">
           {(!attendeeId || activeWorkshop?.id) && (
             <div className="container">
@@ -874,12 +827,6 @@ const Scheduling = ({ initialLocation }) => {
           workshopMaster={workshopMaster}
           handleNavigateToDetailsPage={handleNavigateToDetailsPage}
         />
-
-        <PopVariation2
-          show={isPopupVariationVisible}
-          closeAction={closePopupVariation(setPopupVariationVisible)}
-          acceptAction={acceptPopupVariationOffer}
-        ></PopVariation2>
       </main>
     </>
   );
