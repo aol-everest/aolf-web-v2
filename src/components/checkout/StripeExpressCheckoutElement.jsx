@@ -251,20 +251,19 @@ const CheckoutPage = ({
           ppaAgreement: false,
         }}
         validationSchema={Yup.object().shape({
-          ppaAgreement: Yup.boolean()
-            .label('Terms')
-            .test(
-              'is-true',
-              'Please check the box in order to continue.',
-              (value) => value === true,
-            ),
+          ppaAgreement: Yup.boolean().oneOf(
+            [true],
+            'Please check the box in order to continue.',
+          ), // Ensures the value is true
         })}
+        // validate={validate}
         onSubmit={() => {}}
       >
         {(formikProps) => {
           const hidePayMessage =
             formikProps?.values?.ppaAgreement &&
-            formikProps?.values?.questionnaire?.some((item) => item.value);
+            (formikProps?.values?.questionnaire?.length === 0 ||
+              formikProps.values.questionnaire.some((item) => item.value));
           return (
             <>
               <ScheduleAgreementForm
@@ -274,9 +273,10 @@ const CheckoutPage = ({
                 questionnaireArray={questionnaireArray}
                 workshop={workshop}
                 screen="DESKTOP"
+                hideValidation={true}
               />
               {showHealthLink && (
-                <div className="rsvp-note">
+                <div className="rsvp-note !tw-py-3">
                   For any health related questions, please contact us at{' '}
                   <a href="mailto:healthinfo@us.artofliving.org">
                     healthinfo@us.artofliving.org

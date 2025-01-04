@@ -320,6 +320,54 @@
       padding-top: 28px;
       padding-bottom: 28px;
     }
+    .discount-text-input {
+      padding: 10px 14px;
+      height: 44px;
+      border: 1px solid #e9e9e9;
+      border-radius: 16px;
+      box-shadow: 0px 1px 2px 0px #1018280d;
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-family: Work Sans;
+      font-size: 16px;
+      font-weight: 300;
+      line-height: 24px;
+      .react-tag-remove {
+        color: #ffffff;
+      }
+
+      &:focus {
+        border-color: #ed994e !important;
+      }
+      &::placeholder {
+        color: #9598a6;
+        opacity: 1; /* Firefox */
+      }
+
+      &::-ms-input-placeholder {
+        /* Edge 12 -18 */
+        color: #9598a6;
+      }
+      a {
+        text-decoration: none;
+        font-size: 26px;
+      }
+
+      &.error {
+        border-color: red;
+      }
+
+      &::-ms-input-placeholder {
+        /* Edge 12 -18 */
+        color: #9598a6;
+      }
+      a {
+        text-decoration: none;
+        font-size: 26px;
+      }
+    }
     .checkout-area-wrap {
       display: flex;
       gap: 40px;
@@ -751,6 +799,9 @@
         font-size: 24px;
         line-height: 26px;
         font-weight: 600;
+        s {
+          color: #9598a6;
+        }
       }
     }
     .payment-details {
@@ -791,6 +842,7 @@
       color: #6f7283;
       font-size: 16px;
       line-height: 24px;
+      padding-bottom: 16px;
       a {
         color: #ed994e;
         font-weight: 600;
@@ -841,6 +893,34 @@
       display: flex;
       flex-direction: column;
       gap: 12px;
+      .agreement {
+        &__important {
+          display: flex;
+          align-items: center;
+          opacity: 1;
+          pointer-events: all;
+          margin-bottom: 15px;
+          font-size: 12px;
+          font-weight: normal;
+          font-stretch: normal;
+          font-style: normal;
+          line-height: normal;
+          letter-spacing: normal;
+          color: #ee8585;
+          transition: all 0.3s ease-in-out;
+
+          &.hide {
+            opacity: 0;
+            pointer-events: none;
+          }
+
+          &-icon {
+            width: 20px;
+            height: 20px;
+            margin-right: 10px;
+          }
+        }
+      }
     }
     .payment-actions {
       display: flex;
@@ -1346,14 +1426,8 @@
             }
           }
         }
-        .slot-listing {
-          order: 2;
-        }
         .specific-teacher-text {
           order: 3;
-        }
-        .slot-action {
-          order: 4;
         }
       }
     }

@@ -226,7 +226,7 @@ function LoginPage() {
     setLoading(true);
     setShowMessage(false);
     try {
-      await signOut({ global: true });
+      await signOut();
       await authenticateWithPassword({
         username: username,
         password: password,
@@ -290,6 +290,7 @@ function LoginPage() {
       } */
     } catch (ex) {
       console.log(ex);
+      await signOut();
       const data = ex.response?.data;
       let errorMessage = ex.message.match(/\[(.*)\]/);
       if (errorMessage) {

@@ -54,6 +54,17 @@ const getMeetupDuration = (item, updateMeetupDuration) => {
   );
 };
 
+const getMeetupDurationTop = (item, updateMeetupDuration) => {
+  const { meetupStartDate, meetupTimeZone, meetupStartTime } = item;
+  return (
+    <>
+      {`${dayjs.utc(meetupStartDate).format('MMM DD')}, `}
+      {`${tConvert(meetupStartTime)} ${ABBRS[meetupTimeZone]}, `}
+      {`${updateMeetupDuration}`}
+    </>
+  );
+};
+
 const PreferredCenterComp = ({ item }) => {
   const router = useRouter();
 
@@ -98,6 +109,7 @@ const PreferredCenterComp = ({ item }) => {
     eventTimeZone,
     primaryTeacherName,
     coTeacher1Name,
+    meetupStartDate,
     meetupDuration,
     meetupTimeZone,
     type,
@@ -173,11 +185,7 @@ const PreferredCenterComp = ({ item }) => {
                 {mode}
               </div>
               <div className="course-type duration">
-                {getCourseDuration(
-                  eventStartDate,
-                  eventEndDate,
-                  meetupTimeZone,
-                )}
+                {getMeetupDurationTop(item, updateMeetupDuration)}
               </div>
             </div>
           </div>
@@ -595,13 +603,31 @@ const ProfileLanding = () => {
     },
   });
 
+  const preferredEventOrdered = preferredEvents.sort((a, b) => {
+    const aStartTime = a.eventStartDateTimeGMT || a.meetupStartDateTimeGMT;
+    const bStartTime = b.eventStartDateTimeGMT || b.meetupStartDateTimeGMT;
+
+    if (!aStartTime && !bStartTime) return 0; // If both are missing, maintain order
+    if (!aStartTime) return 1; // Place items without a start time at the end
+    if (!bStartTime) return -1; // Place items without a start time at the end
+
+    return new Date(aStartTime) - new Date(bStartTime); // Earliest event first
+  });
+
   const upcomingEvents = [
     ...(data?.workshops || []),
     ...(data?.meetups || []),
-    ...(data?.ticketdEvents || []),
-  ];
+    ...(data?.ticketedEvents || []),
+  ].sort((a, b) => {
+    const aStartTime = a.eventStartDateTimeGMT || a.meetupStartDateTimeGMT;
+    const bStartTime = b.eventStartDateTimeGMT || b.meetupStartDateTimeGMT;
 
-  const handleBannerButtonClick = () => {};
+    if (!aStartTime && !bStartTime) return 0; // If both are missing, maintain order
+    if (!aStartTime) return 1; // Place items without a start time at the end
+    if (!bStartTime) return -1; // Place items without a start time at the end
+
+    return new Date(aStartTime) - new Date(bStartTime); // Earliest event first
+  });
 
   return (
     <main className="profile-home">
@@ -945,48 +971,50 @@ const ProfileLanding = () => {
           </div>
         </div>
       </section>
-      <section className="activities-courses">
-        <div className="container">
-          <div className="top-picks-container">
-            <Swiper
-              {...swiperOption}
-              className="top-picks-content activities-slider"
-              navigation={{
-                prevEl: '.slide-button-activities-prev',
-                nextEl: '.slide-button-activities-next',
-              }}
-              onAfterInit={(swiper) => {
-                swiper.params.navigation.prevEl =
-                  '.slide-button-activities-prev';
-                swiper.params.navigation.nextEl =
-                  '.slide-button-activities-next';
-                swiper.navigation.update();
-              }}
-            >
-              <div slot="container-start" className="top-picks-header">
-                <div className="top-picks-title">
-                  Activities happening at your preferred center
-                </div>
-                <div className="top-picks-actions">
-                  <div className="slide-button-activities-prev slide-button">
-                    <span className="icon-aol iconaol-arrow-long-left"></span>
+      {preferredEventOrdered.length > 0 && (
+        <section className="activities-courses">
+          <div className="container">
+            <div className="top-picks-container">
+              <Swiper
+                {...swiperOption}
+                className="top-picks-content activities-slider"
+                navigation={{
+                  prevEl: '.slide-button-activities-prev',
+                  nextEl: '.slide-button-activities-next',
+                }}
+                onAfterInit={(swiper) => {
+                  swiper.params.navigation.prevEl =
+                    '.slide-button-activities-prev';
+                  swiper.params.navigation.nextEl =
+                    '.slide-button-activities-next';
+                  swiper.navigation.update();
+                }}
+              >
+                <div slot="container-start" className="top-picks-header">
+                  <div className="top-picks-title">
+                    Activities happening at your preferred center
                   </div>
-                  <div className="slide-button-activities-next slide-button">
-                    <span className="icon-aol iconaol-arrow-long-right"></span>
+                  <div className="top-picks-actions">
+                    <div className="slide-button-activities-prev slide-button">
+                      <span className="icon-aol iconaol-arrow-long-left"></span>
+                    </div>
+                    <div className="slide-button-activities-next slide-button">
+                      <span className="icon-aol iconaol-arrow-long-right"></span>
+                    </div>
                   </div>
                 </div>
-              </div>
-              {preferredEvents.map((item) => {
-                return (
-                  <SwiperSlide key={item.id}>
-                    <PreferredCenterComp item={item} />
-                  </SwiperSlide>
-                );
-              })}
-            </Swiper>
+                {preferredEventOrdered.map((item) => {
+                  return (
+                    <SwiperSlide key={item.id}>
+                      <PreferredCenterComp item={item} />
+                    </SwiperSlide>
+                  );
+                })}
+              </Swiper>
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
     </main>
   );
 };

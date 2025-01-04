@@ -1008,10 +1008,22 @@
     }
   }
   &.available-time {
+    @media screen and (max-width: 720px) {
+      padding-left: 0;
+      padding-right: 0 !important;
+      &.show {
+        .modal-dialog {
+          transform: translateY(0);
+        }
+      }
+    }
     .modal-dialog {
       max-width: 720px;
       @media screen and (max-width: 720px) {
         max-width: 100%;
+        align-items: flex-end;
+        transition: transform 0.3s ease-in-out;
+        transform: translateY(100%);
       }
       .slot-action {
         text-align: center;
@@ -1039,6 +1051,13 @@
         background: none;
         top: 14px;
         font-weight: 300;
+        @media screen and (max-width: 720px) {
+          right: 10px;
+          top: -40px;
+          line-height: 32px;
+          background: white;
+          color: #6f7283;
+        }
         &:focus {
           outline: none;
         }
@@ -1049,6 +1068,8 @@
       padding: 24px 32px;
       @media screen and (max-width: 720px) {
         padding: 24px 20px;
+        border-radius: 20px 20px 0 0;
+        min-height: calc(100% - 50px);
       }
     }
     .modal-body {

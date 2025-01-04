@@ -1,4 +1,4 @@
-import { getCurrentUser, fetchAuthSession } from 'aws-amplify/auth';
+import { getCurrentUser, fetchAuthSession, signOut } from 'aws-amplify/auth';
 import { retrieveTokens, storeTokens } from '@passwordLess/storage.js';
 import { api } from '@utils';
 
@@ -32,7 +32,9 @@ const getSession = async () => {
   }
 };
 
-const logout = async () => {};
+const logout = async () => {
+  await signOut();
+};
 
 export const Auth = {
   fetchUserProfile,

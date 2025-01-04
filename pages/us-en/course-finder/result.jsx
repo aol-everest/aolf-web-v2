@@ -4,6 +4,7 @@ import { pushRouteWithUTMQuery } from '@service';
 import { useSessionStorage } from '@uidotdev/usehooks';
 import { useRouter } from 'next/router';
 import React, { useEffect } from 'react';
+import Script from 'next/script';
 
 function CourseFinderResult() {
   const router = useRouter();
@@ -13,6 +14,10 @@ function CourseFinderResult() {
     questions = [],
     scientificStudy = {},
   } = value;
+
+  useEffect(() => {
+    window.iticks = window.iticks || {};
+  }, []);
 
   useEffect(() => {
     if (questions.length === 0) {
@@ -31,6 +36,24 @@ function CourseFinderResult() {
 
   return (
     <main className="course-finder-questionnaire-question">
+      <Script
+        id="intelliticks-script"
+        strategy="afterInteractive"
+        dangerouslySetInnerHTML={{
+          __html: `(function(I, L, T, i, c, k, s) {
+            if(I.iticks) return;
+            I.iticks = {host: c, settings: s, clientId: k, cdn: L, queue: []};
+            var h = T.head || T.documentElement;
+            var e = T.createElement(i);
+            var l = I.location;
+            e.async = true;
+            e.src = (L || c) + '/client/inject-v2.min.js';
+            h.insertBefore(e, h.firstChild);
+            I.iticks.call = function(a, b) { I.iticks.queue.push([a, b]); };
+          })(window, 'https://cdn-v1.intelliticks.com/prod/common', document, 'script', 'https://app.intelliticks.com', 'LZ8KCvfnuX6wbRgga_c', {});
+          `,
+        }}
+      />
       <section className="questionnaire-results">
         <div className="container">
           <div className="back-btn-wrap">

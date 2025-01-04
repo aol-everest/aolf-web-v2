@@ -5,7 +5,7 @@ import {
 } from '@components/checkout';
 import { US_STATES } from '@constants';
 import { DropdownNewCheckout } from './DropdownNewCheckout';
-import { ScheduleLocationFilterNew } from '@components/scheduleLocationFilter/ScheduleLocationFilterNew';
+import { ScheduleLocationFilterOnline } from '@components/scheduleLocationFilter/ScheduleLocationFilterOnline';
 
 export const UserInfoFormNewCheckout = ({
   formikProps,
@@ -17,7 +17,7 @@ export const UserInfoFormNewCheckout = ({
   showContactCity = true,
   showContactZip = true,
   handleLocationFilterChange,
-  locationFilter,
+  locationValue,
 }) => {
   return (
     <Fragment>
@@ -39,13 +39,15 @@ export const UserInfoFormNewCheckout = ({
         ></StyledInputNewCheckout>
 
         {showLocationSearch && (
-          <ScheduleLocationFilterNew
+          <ScheduleLocationFilterOnline
             handleLocationChange={handleLocationFilterChange}
-            value={locationFilter}
+            value={locationValue}
             containerClass="required fullw"
             listClassName="result-list"
             placeholder="Address"
             label="Address"
+            formikProps={formikProps}
+            formikKey="contactAddress"
             showOnlyRegions={false}
           />
         )}
@@ -60,24 +62,24 @@ export const UserInfoFormNewCheckout = ({
           ></StyledInputNewCheckout>
         )}
 
+        {showContactCity && (
+          <StyledInputNewCheckout
+            className="form-item required fullw"
+            placeholder="City"
+            formikProps={formikProps}
+            formikKey="contactCity"
+            label="City"
+          ></StyledInputNewCheckout>
+        )}
+
         {showContactState && (
           <DropdownNewCheckout
             placeholder="State"
             formikProps={formikProps}
             formikKey="contactState"
             options={US_STATES}
-            containerClass="form-item required fullw"
+            containerClass="form-item required"
           ></DropdownNewCheckout>
-        )}
-
-        {showContactCity && (
-          <StyledInputNewCheckout
-            className="form-item required"
-            placeholder="City"
-            formikProps={formikProps}
-            formikKey="contactCity"
-            label="City"
-          ></StyledInputNewCheckout>
         )}
 
         {showContactZip && (

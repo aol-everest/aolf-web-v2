@@ -12,6 +12,7 @@ export const ScheduleAgreementForm = ({
   questionnaireArray,
   workshop,
   parentClass = 'mt-4',
+  hideValidation = false,
 }) => {
   const { track, page } = useAnalytics();
   const validateQuestionnaire = (complianceQuestionnaire) => (value) => {
@@ -53,60 +54,67 @@ export const ScheduleAgreementForm = ({
       program_time: workshop?.eventStartTime,
       category: 'All',
     });
-    formikProps.handleChange('ppaAgreement')(e);
   };
 
   return (
     <>
-      <div className="form-item checkbox">
-        <input
-          type="checkbox"
-          className={classNames('', {
-            error:
-              formikProps.errors.ppaAgreement &&
-              formikProps.touched.ppaAgreement,
-          })}
-          id="privacy"
-          checked={formikProps.values.ppaAgreement}
-          onChange={onChangeHandler}
-          value={formikProps.values.ppaAgreement}
-          name="ppaAgreement"
-        />
-
-        <label htmlFor="privacy" className="events-news">
-          I agree to the{' '}
-          <Link
-            prefetch={false}
-            href={
-              isIahv
-                ? 'https://members.us.iahv.org/policy/ppa-course'
-                : isCorporateEvent
-                  ? '/policy/ppa-corporate'
-                  : '/policy/ppa-course'
-            }
-            legacyBehavior
-          >
-            <a target="_blank" rel="noreferrer">
-              Program Participant agreement including privacy and cancellation
-              policy.
-            </a>
-          </Link>
-        </label>
-      </div>
-
-      <div className="agreement">
-        {formikProps.errors.ppaAgreement &&
-          formikProps.touched.ppaAgreement && (
-            <div className="agreement__important">
-              <img
-                className="agreement__important-icon"
-                src="/img/warning.svg"
-                alt="warning"
+      <Field name="ppaAgreement">
+        {({ field, meta }) => (
+          <>
+            <div className="form-item checkbox">
+              <input
+                type="checkbox"
+                id="privacy"
+                className={classNames('', {
+                  error: meta.touched && meta.error,
+                })}
+                {...field} // Includes `name`, `value`, `checked`, and `onChange`
+                checked={field.value}
+                onChange={(e) => {
+                  field.onChange(e); // Formik's default onChange handler
+                  onChangeHandler(e); // Custom tracking logic
+                }}
               />
-              Please check the box in order to continue
+
+              <label htmlFor="privacy" className="events-news">
+                I agree to the{' '}
+                <Link
+                  prefetch={false}
+                  href={
+                    isIahv
+                      ? 'https://members.us.iahv.org/policy/ppa-course'
+                      : isCorporateEvent
+                        ? '/policy/ppa-corporate'
+                        : '/policy/ppa-course'
+                  }
+                  legacyBehavior
+                >
+                  <a target="_blank" rel="noreferrer">
+                    Program Participant agreement including privacy and
+                    cancellation policy.
+                  </a>
+                </Link>
+              </label>
             </div>
-          )}
-      </div>
+            {!hideValidation && meta.touched && meta.error && (
+              <div className="agreement">
+                {formikProps.errors.ppaAgreement &&
+                  formikProps.touched.ppaAgreement && (
+                    <div className="agreement__important">
+                      <img
+                        className="agreement__important-icon"
+                        src="/img/warning.svg"
+                        alt="warning"
+                      />{' '}
+                      Please check the box in order to continue
+                    </div>
+                  )}
+              </div>
+            )}
+          </>
+        )}
+      </Field>
+
       {complianceQuestionnaire && complianceQuestionnaire.length > 0 && (
         <div className={`health-confirmation ${parentClass}`}>
           {complianceQuestionnaire.map((compliance) => (
@@ -152,6 +160,7 @@ export const ScheduleAgreementForm = ({
                           const nextValue = [...otherValues, currentValue];
 
                           form.setFieldValue('questionnaire', nextValue);
+                          formikProps.setFieldTouched('questionnaire', true);
                         }
                       }}
                     />
@@ -170,17 +179,21 @@ export const ScheduleAgreementForm = ({
               </label>
             </div>
           ))}
-          {formikProps.errors.questionnaire &&
-            formikProps.touched.questionnaire && (
-              <div className="agreement__important">
-                <img
-                  className="agreement__important-icon"
-                  src="/img/warning.svg"
-                  alt="warning"
-                />
-                Please check the box in order to continue
-              </div>
-            )}
+          {!hideValidation && (
+            <>
+              {formikProps.errors.questionnaire &&
+                formikProps.touched.questionnaire && (
+                  <div className="agreement__important">
+                    <img
+                      className="agreement__important-icon"
+                      src="/img/warning.svg"
+                      alt="warning"
+                    />{' '}
+                    Please check the box in order to continue
+                  </div>
+                )}
+            </>
+          )}
         </div>
       )}
     </>

@@ -268,12 +268,22 @@ export const PaymentFormBundle = ({
     lastName: Yup.string()
       .required('Last Name is required')
       .matches(/\S/, 'String should not contain empty spaces'),
-    email: Yup.string().required('Email is required').email(),
-    contactAddress: Yup.string().required('Address is required'),
-    contactCity: Yup.string().required('City is required'),
-    contactState: Yup.string().required('State is required'),
+    email: Yup.string()
+      .required('Email is required')
+      .matches(/\S/, 'String should not contain empty spaces')
+      .email(),
+    contactAddress: Yup.string()
+      .required('Address is required')
+      .matches(/\S/, 'String should not contain empty spaces'),
+    contactCity: Yup.string()
+      .required('City is required')
+      .matches(/\S/, 'String should not contain empty spaces'),
+    contactState: Yup.string()
+      .required('State is required')
+      .matches(/\S/, 'String should not contain empty spaces'),
     contactZip: Yup.string()
       .required('Zip is required!')
+      .matches(/\S/, 'String should not contain empty spaces')
       //.matches(/^[0-9]+$/, { message: 'Zip is invalid' })
       .min(2, 'Zip is invalid')
       .max(10, 'Zip is invalid'),

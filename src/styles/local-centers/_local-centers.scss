@@ -189,9 +189,11 @@ main.local-centers {
     line-height: 18px;
     flex: 48%;
     display: flex;
+    width: 48%;
     flex-direction: column;
     @media screen and (max-width: 1179px) {
       flex: 100%;
+      width: 100%;
     }
     .title {
       font-family: Lora;
@@ -213,8 +215,35 @@ main.local-centers {
       display: flex;
       align-items: flex-start;
       &.email {
-        word-break: break-word;
         margin-bottom: 34px;
+        a {
+          overflow: hidden;
+          white-space: nowrap;
+          text-overflow: ellipsis;
+          position: relative;
+          transition: all 0s ease-in-out;
+          &::after {
+            content: attr(data-text);
+            position: absolute;
+            left: 0;
+            top: 0;
+            visibility: hidden;
+            width: calc(100% - 0px);
+            word-break: break-all;
+            white-space: normal;
+            color: #89beec;
+          }
+          &:hover {
+            overflow: unset;
+            color: #f7f7f7;
+            white-space: normal;
+            word-break: break-all;
+            height: 18px;
+            &:after {
+              visibility: visible;
+            }
+          }
+        }
       }
     }
     .action-btn {

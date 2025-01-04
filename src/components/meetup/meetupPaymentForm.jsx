@@ -755,154 +755,200 @@ export const MeetupPaymentForm = ({
                       RSVP:
                     </span>
                   </p>
-                  {mode === 'In Person' ? (
+                  {unitPrice === 0 && (
+                    <ul className="reciept__item_list">
+                      <li>
+                        <span>Regular Tuition:</span>
+                        {unitPrice !== listPrice && (
+                          <span>
+                            <span className="discount">${listPrice}</span> $
+                            {unitPrice}
+                          </span>
+                        )}
+                        {unitPrice === listPrice && <span>${unitPrice}</span>}
+                      </li>
+                      <li>
+                        <span>Member rate:</span>
+                        {memberPrice !== listPrice && (
+                          <span>
+                            <span className="discount">${listPrice}</span> $
+                            {memberPrice}
+                          </span>
+                        )}
+                        {memberPrice === listPrice && (
+                          <span>${memberPrice}</span>
+                        )}
+                      </li>
+                    </ul>
+                  )}
+                  {unitPrice !== 0 && (
                     <>
-                      {!isJourneyPlus && (
-                        <ul className="reciept__item_list">
-                          <li>
-                            <span>Regular Tuition:</span>
-                            {unitPrice !== listPrice && (
-                              <span>
-                                <span className="discount">${listPrice}</span> $
-                                {unitPrice}
-                              </span>
-                            )}
-                            {unitPrice === listPrice && (
-                              <span>${unitPrice}</span>
-                            )}
-                          </li>
+                      {mode === 'In Person' ? (
+                        <>
+                          {!isJourneyPlus && (
+                            <ul className="reciept__item_list">
+                              <li>
+                                <span>Regular Tuition:</span>
+                                {unitPrice !== listPrice && (
+                                  <span>
+                                    <span className="discount">
+                                      ${listPrice}
+                                    </span>{' '}
+                                    ${unitPrice}
+                                  </span>
+                                )}
+                                {unitPrice === listPrice && (
+                                  <span>${unitPrice}</span>
+                                )}
+                              </li>
 
-                          <li>
-                            <span>Member rate:</span>
-                            {memberPrice !== listPrice && (
-                              <span>
-                                <span className="discount">${listPrice}</span> $
-                                {memberPrice}
-                              </span>
-                            )}
-                            {memberPrice === listPrice && (
-                              <span>${memberPrice}</span>
-                            )}
-                          </li>
+                              <li>
+                                <span>Member rate:</span>
+                                {memberPrice !== listPrice && (
+                                  <span>
+                                    <span className="discount">
+                                      ${listPrice}
+                                    </span>{' '}
+                                    ${memberPrice}
+                                  </span>
+                                )}
+                                {memberPrice === listPrice && (
+                                  <span>${memberPrice}</span>
+                                )}
+                              </li>
 
-                          <li className="btn-item">
-                            <button
-                              className="btn-outline"
-                              onClick={openSubscriptionPaywallPage(
-                                MEMBERSHIP_TYPES.JOURNEY_PLUS.value,
-                              )}
-                            >
-                              Join Journey +
-                            </button>
-                          </li>
-                        </ul>
-                      )}
-                      {isJourneyPlus && isSubscriptionOfferingUsed && (
-                        <ul className="reciept__item_list">
-                          <li>
-                            <span>Member rate:</span>
-                            {memberPrice !== listPrice && (
-                              <span>
-                                <span className="discount">${listPrice}</span> $
-                                {memberPrice}
-                              </span>
-                            )}
-                            {memberPrice === listPrice && (
-                              <span>${memberPrice}</span>
-                            )}
-                          </li>
-                        </ul>
-                      )}
-                      {isJourneyPlus && !isSubscriptionOfferingUsed && (
-                        <ul className="reciept__item_list">
-                          <li>
-                            <span>Member rate:</span>
-                            {unitPrice !== listPrice && (
-                              <span>
-                                <span className="discount">${listPrice}</span> $
-                                {unitPrice}
-                              </span>
-                            )}
-                            {unitPrice === listPrice && (
-                              <span>${unitPrice}</span>
-                            )}
-                          </li>
-                        </ul>
-                      )}
-                    </>
-                  ) : (
-                    <>
-                      {!isDigitalMember && (
-                        <ul className="reciept__item_list">
-                          <li>
-                            <span>Regular Tuition:</span>
-                            {unitPrice !== listPrice && (
-                              <span>
-                                <span className="discount">${listPrice}</span> $
-                                {unitPrice}
-                              </span>
-                            )}
-                            {unitPrice === listPrice && (
-                              <span>${unitPrice}</span>
-                            )}
-                          </li>
+                              <li className="btn-item">
+                                <button
+                                  className="btn-outline"
+                                  onClick={openSubscriptionPaywallPage(
+                                    MEMBERSHIP_TYPES.JOURNEY_PLUS.value,
+                                  )}
+                                >
+                                  Join Journey +
+                                </button>
+                              </li>
+                            </ul>
+                          )}
+                          {isJourneyPlus && isSubscriptionOfferingUsed && (
+                            <ul className="reciept__item_list">
+                              <li>
+                                <span>Member rate:</span>
+                                {memberPrice !== listPrice && (
+                                  <span>
+                                    <span className="discount">
+                                      ${listPrice}
+                                    </span>{' '}
+                                    ${memberPrice}
+                                  </span>
+                                )}
+                                {memberPrice === listPrice && (
+                                  <span>${memberPrice}</span>
+                                )}
+                              </li>
+                            </ul>
+                          )}
+                          {isJourneyPlus && !isSubscriptionOfferingUsed && (
+                            <ul className="reciept__item_list">
+                              <li>
+                                <span>Member rate:</span>
+                                {unitPrice !== listPrice && (
+                                  <span>
+                                    <span className="discount">
+                                      ${listPrice}
+                                    </span>{' '}
+                                    ${unitPrice}
+                                  </span>
+                                )}
+                                {unitPrice === listPrice && (
+                                  <span>${unitPrice}</span>
+                                )}
+                              </li>
+                            </ul>
+                          )}
+                        </>
+                      ) : (
+                        <>
+                          {!isDigitalMember && (
+                            <ul className="reciept__item_list">
+                              <li>
+                                <span>Regular Tuition:</span>
+                                {unitPrice !== listPrice && (
+                                  <span>
+                                    <span className="discount">
+                                      ${listPrice}
+                                    </span>{' '}
+                                    ${unitPrice}
+                                  </span>
+                                )}
+                                {unitPrice === listPrice && (
+                                  <span>${unitPrice}</span>
+                                )}
+                              </li>
 
-                          <li>
-                            <span>Member rate:</span>
-                            {memberPrice !== listPrice && (
-                              <span>
-                                <span className="discount">${listPrice}</span> $
-                                {memberPrice}
-                              </span>
-                            )}
-                            {memberPrice === listPrice && (
-                              <span>${memberPrice}</span>
-                            )}
-                          </li>
+                              <li>
+                                <span>Member rate:</span>
+                                {memberPrice !== listPrice && (
+                                  <span>
+                                    <span className="discount">
+                                      ${listPrice}
+                                    </span>{' '}
+                                    ${memberPrice}
+                                  </span>
+                                )}
+                                {memberPrice === listPrice && (
+                                  <span>${memberPrice}</span>
+                                )}
+                              </li>
 
-                          <li className="btn-item">
-                            <button
-                              className="btn-outline"
-                              onClick={openSubscriptionPaywallPage(
-                                MEMBERSHIP_TYPES.DIGITAL_MEMBERSHIP.value,
-                              )}
-                            >
-                              Join Digital Membership
-                            </button>
-                          </li>
-                        </ul>
-                      )}
-                      {isDigitalMember && isSubscriptionOfferingUsed && (
-                        <ul className="reciept__item_list">
-                          <li>
-                            <span>Member rate:</span>
-                            {memberPrice !== listPrice && (
-                              <span>
-                                <span className="discount">${listPrice}</span> $
-                                {memberPrice}
-                              </span>
-                            )}
-                            {memberPrice === listPrice && (
-                              <span>${memberPrice}</span>
-                            )}
-                          </li>
-                        </ul>
-                      )}
-                      {isDigitalMember && !isSubscriptionOfferingUsed && (
-                        <ul className="reciept__item_list">
-                          <li>
-                            <span>Member rate:</span>
-                            {unitPrice !== listPrice && (
-                              <span>
-                                <span className="discount">${listPrice}</span> $
-                                {unitPrice}
-                              </span>
-                            )}
-                            {unitPrice === listPrice && (
-                              <span>${unitPrice}</span>
-                            )}
-                          </li>
-                        </ul>
+                              <li className="btn-item">
+                                <button
+                                  className="btn-outline"
+                                  onClick={openSubscriptionPaywallPage(
+                                    MEMBERSHIP_TYPES.DIGITAL_MEMBERSHIP.value,
+                                  )}
+                                >
+                                  Join Digital Membership
+                                </button>
+                              </li>
+                            </ul>
+                          )}
+                          {isDigitalMember && isSubscriptionOfferingUsed && (
+                            <ul className="reciept__item_list">
+                              <li>
+                                <span>Member rate:</span>
+                                {memberPrice !== listPrice && (
+                                  <span>
+                                    <span className="discount">
+                                      ${listPrice}
+                                    </span>{' '}
+                                    ${memberPrice}
+                                  </span>
+                                )}
+                                {memberPrice === listPrice && (
+                                  <span>${memberPrice}</span>
+                                )}
+                              </li>
+                            </ul>
+                          )}
+                          {isDigitalMember && !isSubscriptionOfferingUsed && (
+                            <ul className="reciept__item_list">
+                              <li>
+                                <span>Member rate:</span>
+                                {unitPrice !== listPrice && (
+                                  <span>
+                                    <span className="discount">
+                                      ${listPrice}
+                                    </span>{' '}
+                                    ${unitPrice}
+                                  </span>
+                                )}
+                                {unitPrice === listPrice && (
+                                  <span>${unitPrice}</span>
+                                )}
+                              </li>
+                            </ul>
+                          )}
+                        </>
                       )}
                     </>
                   )}

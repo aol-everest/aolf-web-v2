@@ -1,31 +1,53 @@
 /* eslint-disable no-inline-styles/no-inline-styles */
 import React, { useState } from 'react';
-import { api } from '@utils';
-import 'slick-carousel/slick/slick.css';
-import 'slick-carousel/slick/slick-theme.css';
+import { api, tConvert, concatenateStrings } from '@utils';
 import Slider from 'react-slick';
 import usePlacesService from 'react-google-autocomplete/lib/usePlacesAutocompleteService';
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
+import { ABBRS, COURSE_TYPES_MASTER, COURSE_TYPES } from '@constants';
+import { useQuery } from '@tanstack/react-query';
+import { useRouter } from 'next/router';
+import { orgConfig } from '@org';
+
+import 'slick-carousel/slick/slick.css';
+import 'slick-carousel/slick/slick-theme.css';
+import { iframeRouteWithUTMQuery } from '@service';
+
+dayjs.extend(utc);
 
 const settings = {
   slidesToShow: 4,
-  slidesToScroll: 1,
+  slidesToScroll: 4,
   centerMode: false,
   arrows: true,
   dots: false,
   speed: 300,
   centerPadding: '24px',
-  infinite: true,
+  infinite: false,
   autoplaySpeed: 5000,
-  autoplay: true,
+  autoplay: false,
   draggable: true,
+  //adaptiveHeight: true,
   responsive: [
     {
-      breakpoint: 991,
+      breakpoint: 1279,
       settings: {
         arrows: false,
         centerMode: true,
         centerPadding: '20px',
         slidesToShow: 3,
+        slidesToScroll: 3,
+      },
+    },
+    {
+      breakpoint: 991,
+      settings: {
+        arrows: false,
+        centerMode: true,
+        centerPadding: '10px',
+        slidesToShow: 2,
+        slidesToScroll: 2,
       },
     },
     {
@@ -33,8 +55,9 @@ const settings = {
       settings: {
         arrows: false,
         centerMode: true,
-        centerPadding: '20px',
+        centerPadding: '10px',
         slidesToShow: 1,
+        slidesToScroll: 1,
       },
     },
   ],
@@ -57,8 +80,33 @@ function convertUndefinedToNull(obj) {
   return obj;
 }
 
+const COURSE_TYPES_OPTIONS = COURSE_TYPES_MASTER[orgConfig.name].reduce(
+  (accumulator, currentValue) => {
+    const courseTypes = Object.entries(currentValue.courseTypes).reduce(
+      (courseTypes, [key, value]) => {
+        if (COURSE_TYPES[key]) {
+          return {
+            ...courseTypes,
+            [COURSE_TYPES[key].slug]: {
+              ...COURSE_TYPES[key],
+              ...value,
+              key: key,
+            },
+          };
+        } else {
+          return courseTypes;
+        }
+      },
+      {},
+    );
+    return { ...accumulator, ...courseTypes };
+  },
+  {},
+);
+
 export async function getServerSideProps(context) {
   let initialLocation = {};
+  let nearbyWorkshops = [];
   const ip =
     context.req.headers['x-forwarded-for'] ||
     context.req.connection.remoteAddress;
@@ -80,18 +128,135 @@ export async function getServerSideProps(context) {
       lat,
       lng,
       postal,
-      locationName: [city, region, country, postal].join(', '),
+      locationName: [city, region, country, postal].filter(Boolean).join(', '),
     };
+
+    const courseTypeFilter = COURSE_TYPES_OPTIONS[context.params.slug];
+
+    const { data } = await api.get({
+      path: 'nearbyWorkshops',
+      param: {
+        lat: lat,
+        lng: lng,
+        dist: 50,
+        size: 12,
+        timingsRequired: true,
+        ctype: courseTypeFilter.value,
+      },
+    });
+    nearbyWorkshops = data;
   } catch (error) {
     console.error('Failed to fetch ZIP code by IP');
   }
 
   return {
-    props: { initialLocation },
+    props: { initialLocation, nearbyWorkshops },
   };
 }
 
-const NearbyCoursesCarousel = ({ initialLocation = null }) => {
+const WorkShopTile = ({ workshop }) => {
+  const {
+    mode,
+    eventStartDate,
+    eventEndDate,
+    sfid,
+    locationPostalCode,
+    locationCity,
+    locationProvince,
+    locationStreet,
+    timings,
+    listPrice,
+    productTypeId,
+  } = workshop || {};
+  const router = useRouter();
+  const getCourseDeration = () => {
+    return (
+      <>
+        {`${dayjs.utc(eventStartDate).format('DD MMM')} - ${dayjs
+          .utc(eventEndDate)
+          .format('DD MMM')}`}
+      </>
+    );
+  };
+
+  const enrollAction = () => {
+    const isOnline = mode === 'Online';
+    iframeRouteWithUTMQuery(router, {
+      pathname: `/us-en/course/scheduling/${sfid}`,
+      query: {
+        mode: isOnline ? 'online' : 'inPerson',
+        ctype: productTypeId,
+      },
+    });
+  };
+  return (
+    <div class="slide">
+      <div class="course-item-box">
+        <div class="course-item-top">
+          <div class="row">
+            <div class="course-item-date">{getCourseDeration()}</div>
+            <div className="course-item-price">$ {listPrice}</div>
+          </div>
+          <div class="payment-details">
+            <div class="payby">
+              Pay As Low As <img src="/img/logo-affirm.webp" height="22" />
+            </div>
+            <div class="price-breakup">
+              <div class="price-per-month">
+                $27/<span>mon</span>
+              </div>
+              <div class="payment-tenure">for 12 months</div>
+            </div>
+          </div>
+        </div>
+        <div class="course-item-content">
+          <div class="course-date">
+            <div>
+              <label>Timing:</label>
+              {timings?.length > 0 &&
+                timings.map((time, i) => {
+                  return (
+                    <div key={i}>
+                      {dayjs.utc(time.startDate).format('dd: ')}
+                      {`${tConvert(time.startTime)}-${tConvert(time.endTime)} ${
+                        ABBRS[time.timeZone]
+                      }`}
+                    </div>
+                  );
+                })}
+            </div>
+          </div>
+          <div class="course-location">
+            <div>
+              <label>Location:</label>
+              {mode !== 'Online' && locationCity && (
+                <div>
+                  {concatenateStrings([
+                    locationStreet,
+                    locationCity,
+                    locationProvince,
+                    locationPostalCode,
+                  ])}
+                </div>
+              )}
+              {mode === 'Online' && <div>Online</div>}
+            </div>
+          </div>
+        </div>
+        <div class="course-actions">
+          <button class="btn-primary" onClick={enrollAction}>
+            Register Now
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const NearbyCoursesCarousel = ({ initialLocation = null, nearbyWorkshops }) => {
+  const router = useRouter();
+  const { slug } = router.query;
+  const courseTypeFilter = COURSE_TYPES_OPTIONS[slug];
   const {
     placesService,
     placePredictions,
@@ -110,7 +275,34 @@ const NearbyCoursesCarousel = ({ initialLocation = null }) => {
     address: initialLocation.locationName,
     latitude: initialLocation?.lat,
     longitude: initialLocation?.lng,
-    isInputAllowed: true,
+    isInputAllowed: !initialLocation.locationName,
+  });
+
+  const { data, isLoading, isError, error } = useQuery({
+    queryKey: [
+      'nearbyWorkshops',
+      location.latitude,
+      location.longitude,
+      courseTypeFilter,
+    ],
+    queryFn: async () => {
+      let param = {
+        lat: location.latitude,
+        lng: location.longitude,
+        dist: 50,
+        size: 12,
+        timingsRequired: true,
+        ctype: courseTypeFilter.value,
+      };
+
+      const response = await api.get({
+        path: 'nearbyWorkshops',
+        param,
+      });
+      return response.data;
+    },
+    enabled: !!location.latitude,
+    initialData: nearbyWorkshops,
   });
 
   const placeholder = location.address || 'location';
@@ -165,8 +357,8 @@ const NearbyCoursesCarousel = ({ initialLocation = null }) => {
     setReadyForSelection(false);
     setLocation({
       address: '',
-      latitude: initialLocation?.lat,
-      longitude: initialLocation?.lng,
+      latitude: null,
+      longitude: null,
       isInputAllowed: true,
     });
   };
@@ -181,8 +373,12 @@ const NearbyCoursesCarousel = ({ initialLocation = null }) => {
   };
 
   const moreDatesAction = () => {
-    window.parent.location.href =
-      'https://members.us.artofliving.org/us-en/courses/art-of-living-part-1';
+    iframeRouteWithUTMQuery(router, {
+      pathname: `/us-en/course/scheduling`,
+      query: {
+        courseType: courseTypeFilter.key,
+      },
+    });
   };
 
   return (
@@ -210,11 +406,11 @@ const NearbyCoursesCarousel = ({ initialLocation = null }) => {
                     id="search-field"
                     className="search-input"
                     value={location.address}
+                    autoComplete="off"
                     onChange={(evt) => {
                       getPlacePredictions({ input: evt.target.value });
                       handleChange(evt.target.value);
                     }}
-                    onSelect={(ev) => console.log('seeeee', ev)}
                     placeholder={placeholder}
                     loading={isPlacePredictionsLoading}
                   />
@@ -254,50 +450,8 @@ const NearbyCoursesCarousel = ({ initialLocation = null }) => {
           </div>
         </div>
         <Slider {...settings} className="courses-slider">
-          {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((banner, index) => {
-            return (
-              <div class="slide" key={index}>
-                <div class="course-item-box">
-                  <div class="course-item-top">
-                    <div class="row">
-                      <div class="course-item-date">17 Sep - 19 Sep</div>
-                      <div class="course-item-price">$100</div>
-                    </div>
-                    <div class="payment-details">
-                      <div class="payby">
-                        Pay As Low As{' '}
-                        <img src="/img/logo-affirm.webp" height="22" />
-                      </div>
-                      <div class="price-breakup">
-                        <div class="price-per-month">
-                          $27/<span>mon</span>
-                        </div>
-                        <div class="payment-tenure">for 12 months</div>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="course-item-content">
-                    <div class="course-date">
-                      <div>
-                        <label>Timing:</label>
-                        <div>Tu: 12:00 PM-2:30 PM ET</div>
-                        <div>We: 12:00 PM-2:30 PM ET</div>
-                        <div>Th: 12:00 PM-2:30 PM ET</div>
-                      </div>
-                    </div>
-                    <div class="course-location">
-                      <div>
-                        <label>Location:</label>
-                        <div>13473 Dolomite DR Frisko, TX 75035</div>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="course-actions">
-                    <button class="btn-primary">Register Now</button>
-                  </div>
-                </div>
-              </div>
-            );
+          {(data || []).map((workshop, index) => {
+            return <WorkShopTile workshop={workshop} key={index} />;
           })}
         </Slider>
 

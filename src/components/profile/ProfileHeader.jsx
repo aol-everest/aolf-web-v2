@@ -97,7 +97,7 @@ export const ProfileHeader = ({
 
         if (userSubscriptions[subscriptionId]) {
           showModal(MODAL_TYPES.CUSTOM_MODAL, {
-            title: `Your ${modalSubscription.name} Membership`,
+            title: `Your ${modalSubscription.name}`,
             children: modalBody,
             className: 'course-details-card',
             footer: () => {

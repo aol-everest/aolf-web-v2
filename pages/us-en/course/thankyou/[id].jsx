@@ -216,57 +216,48 @@ const Thankyou = ({ currentHost }) => {
       },
     );
 
-    track(
-      "'aol_purchase'",
-      {
-        event_id: orderExternalId,
-        user_properties: [
-          {
-            customer_id: userExternalId,
-            customer_email: userEmail,
-            customer_first_name: first_name,
-            customer_phone: personMobilePhone,
-            customer_last_name: last_name,
-            customer_city: personMailingCity,
-            customer_zip: personMailingPostalCode,
-            customer_address_1: personMailingStreet,
-            customer_address_2: '',
-            customer_country: personMailingCountry,
-            customer_state: personMailingState,
-          },
-        ],
-        ecommerce: [
-          {
-            currencyCode: 'USD',
-            purchase: {
-              revenue: ammountPaid,
-              discount_amount: '',
-              tax: '0.00',
-              shipping: '0.00',
-              sub_total: ammountPaid,
-              coupon: couponCode || '',
-            },
-            products: [
-              {
-                name: title,
-                product_id: productTypeId,
-                id: courseId,
-                price: ammountPaid,
-                category: 'workshop',
-                brand: 'Art of Living Foundation',
-                quantity: 1,
-              },
-            ],
-          },
-        ],
-      },
-      {
-        plugins: {
-          // disable this specific track call for all plugins except customerio
-          'clevertap-plugin': false,
+    track("'aol_purchase'", {
+      event_id: orderExternalId,
+      user_properties: [
+        {
+          customer_id: userExternalId,
+          customer_email: userEmail,
+          customer_first_name: first_name,
+          customer_phone: personMobilePhone,
+          customer_last_name: last_name,
+          customer_city: personMailingCity,
+          customer_zip: personMailingPostalCode,
+          customer_address_1: personMailingStreet,
+          customer_address_2: '',
+          customer_country: personMailingCountry,
+          customer_state: personMailingState,
         },
-      },
-    );
+      ],
+      ecommerce: [
+        {
+          currencyCode: 'USD',
+          purchase: {
+            revenue: ammountPaid,
+            discount_amount: '',
+            tax: '0.00',
+            shipping: '0.00',
+            sub_total: ammountPaid,
+            coupon: couponCode || '',
+          },
+          products: [
+            {
+              name: title,
+              product_id: productTypeId,
+              id: courseId,
+              price: ammountPaid,
+              category: 'workshop',
+              brand: 'Art of Living Foundation',
+              quantity: 1,
+            },
+          ],
+        },
+      ],
+    });
     Talkable.purchase(
       {
         order_number: orderExternalId, // Unique order number. Example: '100011'

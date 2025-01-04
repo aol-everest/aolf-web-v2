@@ -14,7 +14,7 @@ const ReferAFriend = () => {
     <div>
       <div className="profile-form-box">
         <div className="refer-section">
-          <div className="top-logo">
+          {/* <div className="top-logo">
             <img
               src="/img/ic-logo-2.svg"
               className="logo footer-logo"
@@ -35,9 +35,9 @@ const ReferAFriend = () => {
             <div className="refer-section-col">
               <CouponStack></CouponStack>
             </div>
-          </div>
+          </div> */}
           <div id="talkable-offer"></div>
-          <div className="accordion" id="accordionRefer">
+          {/* <div className="accordion" id="accordionRefer">
             <div className="refer-accordion-item">
               <div className="refer-accordion-header" id="referHeadingOne">
                 <h2 className="mb-0">
@@ -134,7 +134,7 @@ const ReferAFriend = () => {
                 </div>
               </div>
             </div>
-          </div>
+          </div> */}
         </div>
       </div>
     </div>
