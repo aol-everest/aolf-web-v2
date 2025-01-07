@@ -585,7 +585,7 @@ const SchedulingPaymentForm = ({
               <section className="scheduling-top">
                 <div className="container">
                   <h1 className="page-title">
-                    {workshopMaster?.title || title}
+                    {title || workshopMaster?.title}
                   </h1>
                   <div
                     className="page-description"
@@ -1097,7 +1097,11 @@ const SchedulingCheckoutFlow = () => {
 
   return (
     <main className="scheduling-page">
-      <NextSeo title={workshopMaster?.title + ' Course Checkout'} />
+      <NextSeo
+        title={
+          (activeWorkshop?.title || workshopMaster?.title) + ' Course Checkout'
+        }
+      />
       <Elements stripe={stripePromise} options={elementsOptions}>
         <SchedulingPaymentForm
           workshopMaster={workshopMaster}
