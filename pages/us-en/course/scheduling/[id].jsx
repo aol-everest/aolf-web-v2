@@ -55,7 +55,8 @@ const SchedulingPaymentForm = ({
   setDiscountResponse,
   handleChangeDates,
 }) => {
-  const { profile = {} } = useAuth();
+  const { profile = {}, passwordLess, isAuthenticated } = useAuth();
+  const { signOut } = passwordLess;
   const formRef = useRef();
 
   const [isPending, startTransition] = useTransition();
@@ -467,6 +468,17 @@ const SchedulingPaymentForm = ({
     setDiscountResponse(discount);
   };
 
+  const initialValue = {
+    firstName: '',
+    lastName: '',
+    email: '',
+    contactAddress: '',
+    contactCity: '',
+    contactState: '',
+    contactZip: '',
+    contactPhone: '',
+  };
+
   return (
     <>
       {isPending && <Loader />}
@@ -563,7 +575,8 @@ const SchedulingPaymentForm = ({
             resetForm,
           } = formikProps;
           formikOnChange(values);
-          const isNotAllQuestionnaireChecked = values.questionnaire.some(
+
+          const isNotAllQuestionnaireChecked = values?.questionnaire?.some(
             (item) => !item.value,
           );
 
@@ -572,7 +585,7 @@ const SchedulingPaymentForm = ({
               <section className="scheduling-top">
                 <div className="container">
                   <h1 className="page-title">
-                    {workshopMaster?.title || title}
+                    {title || workshopMaster?.title}
                   </h1>
                   <div
                     className="page-description"
@@ -728,17 +741,52 @@ const SchedulingPaymentForm = ({
                         ) : (
                           <div class="checkout-user-info">
                             {values.email}{' '}
-                            {!email && (
+                            {!isAuthenticated && (
                               <a
                                 href="#"
                                 onClick={() => {
-                                  resetForm({});
+                                  resetForm({
+                                    values: {
+                                      ...values,
+                                      ...initialValue,
+                                    },
+                                    errors: {},
+                                  });
                                   setActiveStep(CheckoutStates.EMAIL_INPUT);
                                 }}
                               >
                                 not you?
                               </a>
                             )}
+                            {isAuthenticated &&
+                              activeStep === CheckoutStates.USER_INFO && (
+                                <a
+                                  href="#"
+                                  onClick={() => {
+                                    setActiveStep(CheckoutStates.EMAIL_INPUT);
+                                  }}
+                                >
+                                  not you?
+                                </a>
+                              )}
+                            {email &&
+                              activeStep === CheckoutStates.EMAIL_INPUT && (
+                                <a
+                                  href="#"
+                                  onClick={async () => {
+                                    resetForm({
+                                      values: {
+                                        ...values,
+                                        ...initialValue,
+                                      },
+                                      errors: {},
+                                    });
+                                    await signOut();
+                                  }}
+                                >
+                                  logout?
+                                </a>
+                              )}
                           </div>
                         )}
 
@@ -1049,7 +1097,11 @@ const SchedulingCheckoutFlow = () => {
 
   return (
     <main className="scheduling-page">
-      <NextSeo title={workshopMaster?.title + ' Course Checkout'} />
+      <NextSeo
+        title={
+          (activeWorkshop?.title || workshopMaster?.title) + ' Course Checkout'
+        }
+      />
       <Elements stripe={stripePromise} options={elementsOptions}>
         <SchedulingPaymentForm
           workshopMaster={workshopMaster}
