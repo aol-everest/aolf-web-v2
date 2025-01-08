@@ -28,7 +28,7 @@ const getSession = async () => {
     const session = await fetchAuthSession();
     return session.tokens;
   } catch (err) {
-    console.log(err);
+    console.error(err);
   }
 };
 

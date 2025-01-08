@@ -365,7 +365,6 @@ const AddCenterModel = ({
                     getPlacePredictions({ input: evt.target.value });
                     handleChange(evt.target.value);
                   }}
-                  onSelect={(ev) => console.log('seeeee', ev)}
                   placeholder={placeholder}
                   loading={isPlacePredictionsLoading}
                 />

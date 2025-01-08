@@ -9,9 +9,8 @@ import Link from '@components/linkWithUTM';
 import { ALERT_TYPES, MEMBERSHIP_TYPES, COURSE_TYPES } from '@constants';
 import { useAuth, useGlobalAlertContext } from '@contexts';
 import { orgConfig } from '@org';
-import { pushRouteWithUTMQuery } from '@service';
 import { CardElement, useElements, useStripe } from '@stripe/react-stripe-js';
-import { Auth, api, phoneRegExp } from '@utils';
+import { api, phoneRegExp } from '@utils';
 import { filterAllowedParams } from '@utils/utmParam';
 import classNames from 'classnames';
 import { Formik } from 'formik';
@@ -91,18 +90,15 @@ export const MembershipCheckoutStripe = ({
     first_name,
     last_name,
     email,
-    personMailingCity,
-    personMailingCountry,
     personMailingPostalCode,
     personMailingState,
     personMobilePhone,
     personMailingStreet,
     isRegisteredStripeCustomer,
     cardLast4Digit,
-    subscriptionMasterSfid,
     subscriptions = [],
   } = profile;
-  const { name, sfid } = subsciption || {};
+  const { sfid } = subsciption || {};
   const { isCreditCardRequired } = discount || {};
 
   const userSubscriptions = subscriptions.reduce(
@@ -315,20 +311,12 @@ export const MembershipCheckoutStripe = ({
             (value) => value === true,
           ),
       })}
-      onSubmit={async (values, { setSubmitting, isValid, errors }) => {
+      onSubmit={async (values) => {
         await completeEnrollmentAction(values);
       }}
     >
       {(formikProps) => {
-        const {
-          values,
-          touched,
-          errors,
-          handleChange,
-          handleBlur,
-          handleSubmit,
-        } = formikProps;
-        console.log(errors);
+        const { handleSubmit } = formikProps;
         return (
           <div className="row">
             {loading && <Loader />}

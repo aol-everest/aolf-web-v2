@@ -317,7 +317,6 @@ function CourseDetail() {
   const handleRegister =
     (courseType = COURSE_TYPES.SKY_BREATH_MEDITATION.code) =>
     (e) => {
-      console.log('callelddd');
       e.preventDefault();
       const { sfid, isGuestCheckoutEnabled, productTypeId } = data || {};
 
@@ -350,8 +349,6 @@ function CourseDetail() {
     mode,
     handleRegister,
   };
-
-  console.log('isSkyResilienceTrainingProgram', isSkyResilienceTrainingProgram);
 
   const renderCourseDetail = () => {
     if (isSkyResilienceTrainingProgram) {
