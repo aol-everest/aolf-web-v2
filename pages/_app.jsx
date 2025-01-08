@@ -17,7 +17,6 @@ import { orgConfig } from '@org';
 import { analytics } from '@service';
 import { Auth, Compose, Talkable, api } from '@utils';
 import { DefaultSeo } from 'next-seo';
-import dynamic from 'next/dynamic';
 import { useEffect, useState } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
@@ -134,7 +133,7 @@ function App({ Component, pageProps }) {
       setUser(userInfo);
       await checkUserPendingAction(userInfo);
     } catch (ex) {
-      console.log(ex);
+      console.error(ex);
       await Auth.logout();
     }
     setLoading(false);
