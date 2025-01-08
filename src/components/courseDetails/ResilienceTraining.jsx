@@ -1,75 +1,81 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 /* eslint-disable react/no-unescaped-entities */
-import { HideOn } from '@components';
-import { ABBRS, WORKSHOP_MODE, COURSE_MODES_MAP } from '@constants';
-import { tConvert } from '@utils';
-import classNames from 'classnames';
+import { ABBRS, WORKSHOP_MODE, COURSE_MODES } from '@constants';
+import { isEmpty, priceCalculation, tConvert } from '@utils';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
-import { useState } from 'react';
-import { Element, Link } from 'react-scroll';
-import { Swiper, SwiperSlide } from 'swiper/react';
-import { CourseBottomCard } from './CourseBottomCard';
-import Style from './CourseDetails.module.scss';
-import { RegisterPanel } from './RegisterPanel';
+import { FaArrowRightLong } from 'react-icons/fa6';
 
 dayjs.extend(utc);
 
 export const ResilienceTraining = ({
-  data,
-  swiperOption,
+  data: workshop,
   mode: courseViewMode,
   handleRegister,
 }) => {
-  const [selectedFAQ, setSelectedFAQ] = useState(-1);
-
-  // const showResearchModal = (e) => {
-  //   if (e) e.preventDefault();
-  //   showAlert(ALERT_TYPES.CUSTOM_ALERT, {
-  //     title: 'Success',
-  //     children: <ResearchFindingSource />,
-  //     className: 'research-detail-modal',
-  //     hideConfirm: true,
-  //   });
-  // };
-
-  const handleFAQselection = (index) => {
-    if (selectedFAQ === index) {
-      setSelectedFAQ(-1);
-    } else {
-      setSelectedFAQ(index);
-    }
-  };
+  const { fee, delfee } = priceCalculation({ workshop });
 
   const {
     title,
-    workshopTotalHours,
     mode,
     eventStartDate,
     eventEndDate,
     email,
     phone1,
-    phone2,
     timings,
     primaryTeacherName,
     coTeacher1Name,
     coTeacher2Name,
     notes,
-    streetAddress1,
-    streetAddress2,
-    state,
-    city,
-    country,
-    productTypeId,
-    corporateName,
-  } = data || {};
+    description,
+    aosCountRequisite,
+    businessRules = [],
+    earlyBirdFeeIncreasing,
+    usableCredit,
+  } = workshop || {};
+
+  const isUsableCreditAvailable = usableCredit && !isEmpty(usableCredit);
+
+  let UpdatedFeeAfterCredits;
+  if (
+    isUsableCreditAvailable &&
+    usableCredit.creditMeasureUnit === 'Quantity' &&
+    usableCredit.availableCredit === 1
+  ) {
+    UpdatedFeeAfterCredits = 0;
+  } else if (
+    isUsableCreditAvailable &&
+    usableCredit.creditMeasureUnit === 'Amount'
+  ) {
+    if (usableCredit.availableCredit > fee) {
+      UpdatedFeeAfterCredits = 0;
+    } else {
+      UpdatedFeeAfterCredits = fee - usableCredit.availableCredit;
+    }
+  }
+
+  const teachers = [primaryTeacherName, coTeacher1Name, coTeacher2Name]
+    .filter((name) => name && name.trim() !== '')
+    .join(', ');
+
+  const aosCount =
+    aosCountRequisite != null && aosCountRequisite > 1 ? aosCountRequisite : '';
+
+  const eligibilityCriteriaMessages = businessRules
+    .filter((item) => item.eligibilityCriteriaMessage)
+    .map((item) => item.eligibilityCriteriaMessage);
+
+  const preRequisiteCondition = eligibilityCriteriaMessages
+    .join(', ')
+    .replace(/,(?=[^,]+$)/, ' and')
+    .replace('Silent Retreat', `${aosCount} Silent Retreat`);
 
   return (
     <main class="sky-resilience">
       <section class="banner-section">
         <div class="container">
-          <div class="course-type-pill">Online</div>
-          <div class="banner-title">SKY Resilience Training</div>
+          <div class="course-type-pill">{mode}</div>
+          <div class="banner-title">{title}</div>
           <ul class="banner-course-features">
             <li>
               <span class="icon-aol iconaol-flower-1"></span>Relieve stress,
@@ -99,42 +105,91 @@ export const ResilienceTraining = ({
                 <br />
 
                 <span class="content">
-                  $500 <strike>$395</strike>
+                  {isUsableCreditAvailable && (
+                    <span className="content">
+                      ${UpdatedFeeAfterCredits}&nbsp;
+                      {delfee && (
+                        <span className="actual-price">
+                          <strike>${delfee}</strike>
+                        </span>
+                      )}
+                    </span>
+                  )}
+                  {!isUsableCreditAvailable && (
+                    <span className="content">
+                      ${fee}&nbsp;
+                      {delfee && (
+                        <span className="actual-price">
+                          <strike>${delfee}</strike>
+                        </span>
+                      )}
+                    </span>
+                  )}
                 </span>
               </div>
               <div class="col dates icon-calendar">
                 <span class="title">Dates</span>
                 <br />
-                <span class="content">09/02/2023 - 09/02/2023</span>
+                <span class="content">
+                  {dayjs
+                    .utc(eventStartDate)
+                    .isSame(dayjs.utc(eventEndDate), 'month') &&
+                    `${dayjs.utc(eventStartDate).format('M/D/YYYY')} - ${dayjs
+                      .utc(eventEndDate)
+                      .format('M/D/YYYY')}`}
+                  {!dayjs
+                    .utc(eventStartDate)
+                    .isSame(dayjs.utc(eventEndDate), 'month') &&
+                    `${dayjs.utc(eventStartDate).format('M/DD/YYYY')} - ${dayjs
+                      .utc(eventEndDate)
+                      .format('M/DD/YYYY')}`}
+                </span>
               </div>
               <div class="col location icon-location">
                 <span class="title">Location</span>
                 <br />
-                <span class="content">Online</span>
+                <span class="content">
+                  {mode === COURSE_MODES.ONLINE.value ? (
+                    mode
+                  ) : (
+                    <a
+                      href={`https://www.google.com/maps/search/?api=1&query=${
+                        workshop.locationStreet || ''
+                      }, ${workshop.locationCity} ${workshop.locationProvince} ${
+                        workshop.locationPostalCode
+                      } ${workshop.locationCountry}`}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      {`${workshop.locationStreet || ''} ${
+                        workshop.locationCity || ''
+                      }
+                      ${workshop.locationProvince || ''} ${
+                        workshop.locationCountry || ''
+                      }`}
+                    </a>
+                  )}
+                </span>
               </div>
             </div>
             <div class=" row register-content">
-              <div class="col circle">
-                <div class="dates">
-                  <span class="title">Fri, Sep 01</span>
-                  <br />
-                  <span class="content">7:00 AM - 9:30 AM(ET)</span>
-                </div>
-              </div>
-              <div class="col circle">
-                <div class="dates">
-                  <span class="title">Fri, Sep 01</span>
-                  <br />
-                  <span class="content">7:00 AM - 9:30 AM(ET)</span>
-                </div>
-              </div>
-              <div class="col circle">
-                <div class="dates">
-                  <span class="title">Fri, Sep 01</span>
-                  <br />
-                  <span class="content">7:00 AM - 9:30 AM(ET)</span>
-                </div>
-              </div>
+              {timings &&
+                timings.map((time) => {
+                  return (
+                    <div className="col circle" key={time.startDate}>
+                      <div className="dates">
+                        <span className="title">
+                          {dayjs.utc(time.startDate).format('ddd, MMM DD')}
+                        </span>
+                        <br />
+                        <span className="content">
+                          {tConvert(time.startTime)}-{tConvert(time.endTime)}
+                          {` (${ABBRS[time.timeZone]})`}
+                        </span>
+                      </div>
+                    </div>
+                  );
+                })}
             </div>
             <div class=" row register-content">
               <div class="col dates instructor">
@@ -142,9 +197,7 @@ export const ResilienceTraining = ({
                 <div class="instructor-content">
                   <span class="title">Instructor</span>
                   <br />
-                  <span class="content">
-                    Archana Karne, Reshma Thawani, Shalini Jerath
-                  </span>
+                  <span class="content">{teachers}</span>
                 </div>
               </div>
               <div class="col location contact">
@@ -153,41 +206,75 @@ export const ResilienceTraining = ({
                   <span class="title">Contact</span>
                   <br />
                   <span class="content">
-                    archana.karne@artogliving.org | 202 431-7429
+                    {email} | {phone1}
                   </span>
                 </div>
               </div>
             </div>
-            <div class="row register-content">
-              <div class="col dates notes-content">
-                <i class="icon-aol iconaol-message-text"></i>
-                <div class="notes-content">
-                  <span class="title">Notes</span>
-                  <br />
-                  <span class="content">
-                    All SKY Resilience workshops will take place over zoom
-                  </span>
+            {(description || notes) && (
+              <div class="row register-content">
+                <div class="col dates notes-content">
+                  <i class="icon-aol iconaol-message-text"></i>
+                  <div class="notes-content">
+                    <span class="title">Notes</span>
+                    <br />
+                    {description && (
+                      <span
+                        className="content"
+                        dangerouslySetInnerHTML={{
+                          __html: description,
+                        }}
+                      ></span>
+                    )}
+                    {notes && (
+                      <span
+                        className="content"
+                        dangerouslySetInnerHTML={{
+                          __html: notes,
+                        }}
+                      ></span>
+                    )}
+                  </div>
                 </div>
               </div>
-            </div>
+            )}
             <div class=" row register-content no_border">
               <div class="col-md-12">
-                <button class="register-button">Register Now</button>
+                {courseViewMode !== WORKSHOP_MODE.VIEW && (
+                  <button
+                    className="register-button"
+                    onClick={handleRegister()}
+                  >
+                    Register Now <FaArrowRightLong />
+                  </button>
+                )}
               </div>
             </div>
-            <div class="additional-info-box">
-              <div class="info-row">
-                <i class="icon-aol iconaol-coin"></i>
-                <span>A $100 late fee will apply starting Jul 26, 2024</span>
+            {(earlyBirdFeeIncreasing ||
+              (preRequisiteCondition && preRequisiteCondition.length > 0)) && (
+              <div class="additional-info-box">
+                {earlyBirdFeeIncreasing && (
+                  <div class="info-row">
+                    <i class="icon-aol iconaol-coin"></i>
+                    <span>
+                      {earlyBirdFeeIncreasing.increasingFee} starting{' '}
+                      {dayjs
+                        .utc(earlyBirdFeeIncreasing.increasingByDate)
+                        .format('MMM D, YYYY')}
+                    </span>
+                  </div>
+                )}
+
+                {preRequisiteCondition && preRequisiteCondition.length > 0 && (
+                  <div class="info-row">
+                    <i class="icon-aol iconaol-shield-tick"></i>
+                    <span>
+                      <strong>Eligibility:</strong> {preRequisiteCondition}1
+                    </span>
+                  </div>
+                )}
               </div>
-              <div class="info-row">
-                <i class="icon-aol iconaol-shield-tick"></i>
-                <span>
-                  <strong>Eligibility:</strong> Completion of Art of Living Part
-                  1
-                </span>
-              </div>
-            </div>
+            )}
           </div>
         </div>
       </section>
@@ -613,7 +700,9 @@ export const ResilienceTraining = ({
             </div>
           </div>
           <div class="page-registration-action">
-            <button class="register-button">Register Now</button>
+            <button className="register-button" onClick={handleRegister()}>
+              Register Now
+            </button>
           </div>
         </div>
       </section>
