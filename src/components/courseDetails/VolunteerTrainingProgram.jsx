@@ -1,26 +1,17 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 /* eslint-disable react/no-unescaped-entities */
 import { HideOn } from '@components';
-import {
-  ABBRS,
-  ALERT_TYPES,
-  WORKSHOP_MODE,
-  COURSE_MODES_MAP,
-} from '@constants';
-import { useGlobalAlertContext } from '@contexts';
-import { pushRouteWithUTMQuery } from '@service';
-import { priceCalculation, tConvert } from '@utils';
+import { ABBRS, WORKSHOP_MODE, COURSE_MODES_MAP } from '@constants';
+import { tConvert } from '@utils';
 import classNames from 'classnames';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
-import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { Element, Link } from 'react-scroll';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { CourseBottomCard } from './CourseBottomCard';
 import Style from './CourseDetails.module.scss';
 import { RegisterPanel } from './RegisterPanel';
-import { ResearchFindingSource } from './ResearchFindingSource';
 
 dayjs.extend(utc);
 
@@ -72,16 +63,6 @@ export const VolunteerTrainingProgram = ({
 }) => {
   const [selectedFAQ, setSelectedFAQ] = useState(-1);
 
-  // const showResearchModal = (e) => {
-  //   if (e) e.preventDefault();
-  //   showAlert(ALERT_TYPES.CUSTOM_ALERT, {
-  //     title: 'Success',
-  //     children: <ResearchFindingSource />,
-  //     className: 'research-detail-modal',
-  //     hideConfirm: true,
-  //   });
-  // };
-
   const handleFAQselection = (index) => {
     if (selectedFAQ === index) {
       setSelectedFAQ(-1);
@@ -92,7 +73,6 @@ export const VolunteerTrainingProgram = ({
 
   const {
     title,
-    workshopTotalHours,
     mode,
     eventStartDate,
     eventEndDate,
@@ -103,14 +83,6 @@ export const VolunteerTrainingProgram = ({
     primaryTeacherName,
     coTeacher1Name,
     coTeacher2Name,
-    notes,
-    streetAddress1,
-    streetAddress2,
-    state,
-    city,
-    country,
-    productTypeId,
-    corporateName,
   } = data || {};
 
   return (

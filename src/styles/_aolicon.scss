@@ -1,11 +1,12 @@
 @font-face {
   font-family: 'iconaol';
   src: url('/fonts/iconaol/iconaol.eot?zi4e70');
+  src: url('/fonts/iconaol/iconaol.eot?g3x2mw');
   src:
-    url('/fonts/iconaol/iconaol.eot?zi4e70#iefix') format('embedded-opentype'),
-    url('/fonts/iconaol/iconaol.ttf?zi4e70') format('truetype'),
-    url('/fonts/iconaol/iconaol.woff?zi4e70') format('woff'),
-    url('/fonts/iconaol/iconaol.svg?zi4e70#iconaol') format('svg');
+    url('/fonts/iconaol/iconaol.eot?g3x2mw#iefix') format('embedded-opentype'),
+    url('/fonts/iconaol/iconaol.ttf?g3x2mw') format('truetype'),
+    url('/fonts/iconaol/iconaol.woff?g3x2mw') format('woff'),
+    url('/fonts/iconaol/iconaol.svg?g3x2mw#iconaol') format('svg');
   font-weight: normal;
   font-style: normal;
   font-display: block;
@@ -23,6 +24,36 @@
   /* Better Font Rendering =========== */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+.iconaol-flower-6:before {
+  content: '\e953';
+}
+.iconaol-flower-5:before {
+  content: '\e954';
+}
+.iconaol-shield-tick:before {
+  content: '\e955';
+}
+.iconaol-coin:before {
+  content: '\e956';
+}
+.iconaol-message-text:before {
+  content: '\e957';
+}
+.iconaol-money:before {
+  content: '\e958';
+}
+.iconaol-flower-1:before {
+  content: '\e94f';
+}
+.iconaol-flower-2:before {
+  content: '\e950';
+}
+.iconaol-flower-3:before {
+  content: '\e951';
+}
+.iconaol-flower-4:before {
+  content: '\e952';
 }
 .iconaol-university-1:before {
   content: '\e94d';
