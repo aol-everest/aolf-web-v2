@@ -4,7 +4,9 @@ import { ABBRS, WORKSHOP_MODE, COURSE_MODES } from '@constants';
 import { isEmpty, priceCalculation, tConvert } from '@utils';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
+import { useState } from 'react';
 import { FaArrowRightLong } from 'react-icons/fa6';
+import LinesEllipsis from 'react-lines-ellipsis';
 
 dayjs.extend(utc);
 
@@ -13,6 +15,8 @@ export const ResilienceTraining = ({
   mode: courseViewMode,
   handleRegister,
 }) => {
+  const [ellipsisTestimonialIds, setEllipsisTestimonialIds] = useState([]);
+
   const { fee, delfee } = priceCalculation({ workshop });
 
   const {
@@ -53,6 +57,94 @@ export const ResilienceTraining = ({
       UpdatedFeeAfterCredits = fee - usableCredit.availableCredit;
     }
   }
+
+  const testimonials = [
+    {
+      id: 1,
+      heading: 'Until this study, I could not find right help for me.',
+      text: 'A few weeks ago shooting, cars exploding, screaming, death, that was your world. Now back home, no one knows what it is like over there so no one knows how to help you get back your normalcy. They label you a victim of the war. I AM NOT A VICTIM… but how do I get back my normalcy? For most of us it is booze and Ambien. It works for a brief period then it take over your life. Until this study, I could not find right help for me. BREATHING like a champ.',
+      img: '/img/Testimony-Nathan-Hruska.webp',
+      name: 'Nathan Hruska, Afghanistan',
+      position: 'US Marine Corps, Operation Enduring Freedom',
+    },
+    {
+      id: 2,
+      heading: 'Thank you for giving me a life worth living',
+      text: 'This workshop has done more than I ever could have imagined. Not knowing there were any underlying issues made it hard to even acknowledge or accept them. After doing the workshop and continuing my home practice, I have opened the door to my emotions. I am happy to say that I can feel happiness as well as sadness, and both are great. Just being able to feel has been an amazing experience for me, and has made me become connected with friends and family. I have been given a new life, and I feel empowered to share my new self with everyone. It has been a very interesting journey for me, coming from a cold person who judged and criticized everyone to an open and loving person who is dedicated to serving my community and helping others make the same transition that I went through. Thank you for giving me a life worth living.',
+      img: '/img/Testimony-Travis-Leanna.webp',
+      name: 'Travis Leanna, Iraq',
+      position: 'US Marine Corps, Operation Iraqi Freedom',
+    },
+    {
+      id: 3,
+      heading: 'I have found an inner contentment and peace',
+      text: 'I stumbled upon The SKY Resilience Program a couple years ago now, at the time I didn’t realize the impact it would have on me. The experiences I had, the people I met, and the things I learned truly changed my life! I’m not sure words can really describe the shift I have felt… I have found an inner contentment and peace that I had not experienced before the course. I learned to be more accepting of myself and others. I learned the POWER the breath has… and how it is the key to surviving any and every situation life throws at you. I have repeated the course a few times and have encouraged everyone I know to consider it. Make the time, see for yourself, it will be worth every breath!',
+      img: '/img/Testimony-Jennifer-Kannel.webp',
+      name: 'Jennifer Kannel Ambord',
+      position: 'WI Army National Guard, Operation Iraqi Freedom',
+    },
+    {
+      id: 4,
+      heading: 'I’d recommend it to everybody',
+      text: 'I feel as if I can finally move on with my life. I’ve just completed a 6 day The SKY Resilience Program and I’d recommend it to everybody. It really helps you to release issues you have, sometimes stuff you didn’t even know you had, so go ahead and do it!',
+      img: '/img/Testimony-Mike-Masse.webp',
+      name: 'Mike Masse, Iraq',
+      position: 'Wisconsin National Guard, Operation Iraqi Freedom',
+    },
+    {
+      id: 5,
+      heading: 'Tool for individuals who suffer emotional trauma.',
+      text: 'The course really puts you in touch with your breathing and how it affects your stress levels. You become calm and relaxed with less stress… It is an extremely useful tool for individuals who suffer emotional trauma.',
+      img: '/img/Testimony-Shad-Meshad.webp',
+      name: 'Shad Meshad, Vietnam',
+      position:
+        'Vietnam Veteran, Founder & Director, National Veteran’s Foundation',
+    },
+    {
+      id: 6,
+      heading: 'I wish I could have learned this breathing 40 years ago.',
+      text: 'The course was very beneficial for me uncovering things about myself that I never realized had been bothering me. It helped me be at peace with myself from issues, feelings and the things that I participated in at war… Through that I have been able to come to peace with some of the things that I did and the way I felt about them. I wish I could have learned this breathing 40 years ago.',
+      img: '/img/Testimony-Noel.webp',
+      name: 'Noel, Vietnam',
+      position: 'Vietnam Combat Veteran',
+    },
+    {
+      id: 7,
+      heading: 'Finally beginning to feel like myself again',
+      text: 'After almost 20 years of chronic pain due to military and civilian traumas, I am finally beginning to feel like myself again. I got to meet some kind people who understand how it feels to navigate life before, during, and after the military.',
+      img: '/img/Testimony-Pamela-Black.webp',
+      name: 'Pamela Black, U.S',
+      position: 'Veteran, U.S. Air Force',
+    },
+    {
+      id: 8,
+      heading: 'No longer wanting to die',
+      text: 'The benefits or changes I have noticed are increased patience and joy. I have become much less irritated, greatly decreased my outbursts of anger, and not having suicidal thoughts. The single biggest change in my life since taking the workshop - No longer wanting to die.',
+      img: '/img/Testimony-Lance-Santiago.webp',
+      name: 'Lance Santiago, U.S',
+      position: 'U.S. Marine Corps, OEF',
+    },
+    {
+      id: 9,
+      heading: 'I felt completely different after just a few sessions',
+      text: 'What PWHT and its approach did was to help wake me back up. I felt completely different after just a few sessions in my initial exposure to their approach. I felt far less anxiety. I experienced fewer intrusive thoughts. My communication was more measured. My reactions to people were more appropriate. My relationships began to improve. I didn’t need to self-medicate. I was no longer an irreparable conscious casualty of war.',
+      img: '/img/Testimony-Anthony-Anderson.webp',
+      name: 'Anthony Anderson, USA',
+      position: 'US Army, OIF',
+    },
+  ];
+
+  const readMoreClickAction = (e, id) => {
+    if (e) e.preventDefault();
+    setEllipsisTestimonialIds((prevState) => [...prevState, id]);
+  };
+
+  const readLessClickAction = (e, id) => {
+    if (e) e.preventDefault();
+    const filteredId = ellipsisTestimonialIds.filter((item) => item !== id);
+    console.log('filteredId', filteredId);
+    setEllipsisTestimonialIds(filteredId);
+  };
 
   const teachers = [primaryTeacherName, coTeacher1Name, coTeacher2Name]
     .filter((name) => name && name.trim() !== '')
@@ -471,233 +563,59 @@ export const ResilienceTraining = ({
           <div class="section-tag">TESTIMONIALS</div>
           <h2 class="section-title">What people are sharing</h2>
           <div class="testimonials-listing">
-            <div class="testimonial-item">
-              <div class="testimony-title">
-                Until this study, I could not find right help for me.
-              </div>
-              <div class="testimony-text">
-                A few weeks ago shooting, cars exploding, screaming, death, that
-                was your world. Now back home, no one knows what it is like over
-                there so no one knows how to...<a href="#">READ MORE</a>
-              </div>
-              <div class="author-info">
-                <div class="author-picutre">
-                  <img
-                    src="/img/Testimony-Nathan-Hruska.webp"
-                    alt="Nathan"
-                    height="60"
-                    width="60"
-                  />
-                </div>
-                <div class="author-details">
-                  <div class="author-name">Nathan Hruska, Afghanistan</div>
-                  <div class="author-position">
-                    US Marine Corps, Operation Enduring Freedom
+            {testimonials?.map((testimonial) => (
+              <div class="testimonial-item" key={testimonial.id}>
+                <div class="testimony-title">{testimonial.heading}</div>
+                {!ellipsisTestimonialIds.includes(testimonial.id) ? (
+                  <>
+                    <div class="testimony-text">
+                      <LinesEllipsis
+                        text={testimonial.text}
+                        maxLine="3"
+                        ellipsis="..."
+                        trimRight
+                        basedOn="letters"
+                      />
+                      <a
+                        href="#"
+                        className="morelink"
+                        onClick={(e) => readMoreClickAction(e, testimonial.id)}
+                      >
+                        READ MORE...
+                      </a>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <div class="testimony-text">
+                      {testimonial.text}
+                      <a
+                        href="#"
+                        className="morelink"
+                        onClick={(e) => readLessClickAction(e, testimonial.id)}
+                      >
+                        READ LESS...
+                      </a>
+                    </div>
+                  </>
+                )}
+
+                <div class="author-info">
+                  <div class="author-picutre">
+                    <img
+                      src={testimonial.img}
+                      alt="Nathan"
+                      height="60"
+                      width="60"
+                    />
+                  </div>
+                  <div class="author-details">
+                    <div class="author-name">{testimonial.name}</div>
+                    <div class="author-position">{testimonial.position}</div>
                   </div>
                 </div>
               </div>
-            </div>
-            <div class="testimonial-item">
-              <div class="testimony-title">
-                Thank you for giving me a life worth living
-              </div>
-              <div class="testimony-text">
-                This workshop has done more than I ever could have imagined. Not
-                knowing there were any underlying issues made it hard to even
-                acknowledge or accept them...<a href="#">READ MORE</a>
-              </div>
-              <div class="author-info">
-                <div class="author-picutre">
-                  <img
-                    src="/img/Testimony-Travis-Leanna.webp"
-                    alt="Travis"
-                    height="60"
-                    width="60"
-                  />
-                </div>
-                <div class="author-details">
-                  <div class="author-name">Travis Leanna, Iraq</div>
-                  <div class="author-position">
-                    US Marine Corps, Operation Iraqi Freedom
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="testimonial-item">
-              <div class="testimony-title">
-                I have found an inner contentment and peace
-              </div>
-              <div class="testimony-text">
-                I stumbled upon The Power Breath workshop a couple year ago now,
-                at the time I didn’t realize the impact it would have on me. The
-                experiences I had, the people...<a href="#">READ MORE</a>
-              </div>
-              <div class="author-info">
-                <div class="author-picutre">
-                  <img
-                    src="/img/Testimony-Jennifer-Kannel.webp"
-                    alt="Jennifer"
-                    height="60"
-                    width="60"
-                  />
-                </div>
-                <div class="author-details">
-                  <div class="author-name">Jennifer Kannel Ambord</div>
-                  <div class="author-position">
-                    WI Army National Guard, Operation Iraqi Freedom
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="testimonial-item">
-              <div class="testimony-title">I’d recommend it to everybody</div>
-              <div class="testimony-text">
-                I feel as if can finally move on with my life. I’ve just
-                completed a 6 day warrior breathing program and I’d recommend it
-                to everybody. It really helps you to release issues...
-                <a href="#">READ MORE</a>
-              </div>
-              <div class="author-info">
-                <div class="author-picutre">
-                  <img
-                    src="/img/Testimony-Mike-Masse.webp"
-                    alt="Mike"
-                    height="60"
-                    width="60"
-                  />
-                </div>
-                <div class="author-details">
-                  <div class="author-name">Mike Masse, Iraq</div>
-                  <div class="author-position">
-                    Wisconsin National Guard, Operation Iraqi Freedom
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="testimonial-item">
-              <div class="testimony-title">
-                Tool for individuals who suffer emotional trauma.
-              </div>
-              <div class="testimony-text">
-                The course really puts you in touch with your breathing and how
-                it affects your stress levels. You become calm and relaxed with
-                less stress. It is an extremely useful tool...
-                <a href="#">READ MORE</a>
-              </div>
-              <div class="author-info">
-                <div class="author-picutre">
-                  <img
-                    src="/img/Testimony-Shad-Meshad.webp"
-                    alt="Shad"
-                    height="60"
-                    width="60"
-                  />
-                </div>
-                <div class="author-details">
-                  <div class="author-name">Shad Meshad, Vietnam</div>
-                  <div class="author-position">
-                    Vietnam Veteran, Founder & Director, National Veteran’s
-                    Foundation
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="testimonial-item">
-              <div class="testimony-title">
-                I wish I could have learned this breathing 40 years ago.
-              </div>
-              <div class="testimony-text">
-                The course was very beneficial for me uncovering things about
-                myself that I never realized had been bothering me. It helped me
-                be at peace with myself from...<a href="#">READ MORE</a>
-              </div>
-              <div class="author-info">
-                <div class="author-picutre">
-                  <img
-                    src="/img/Testimony-Noel.webp"
-                    alt="Noel"
-                    height="60"
-                    width="60"
-                  />
-                </div>
-                <div class="author-details">
-                  <div class="author-name">Noel, Vietnam</div>
-                  <div class="author-position">Vietnam Combat Veteran</div>
-                </div>
-              </div>
-            </div>
-            <div class="testimonial-item">
-              <div class="testimony-title">
-                Finally beginning to feel like myself again
-              </div>
-              <div class="testimony-text">
-                After almost 20 years of chronic pain due to military and
-                civilian traumas, I am finally beginning to feel like myself
-                again. I got to meet some kind people who...
-                <a href="#">READ MORE</a>
-              </div>
-              <div class="author-info">
-                <div class="author-picutre">
-                  <img
-                    src="/img/Testimony-Pamela-Black.webp"
-                    alt="Pamela"
-                    height="60"
-                    width="60"
-                  />
-                </div>
-                <div class="author-details">
-                  <div class="author-name">Pamela Black, U.S</div>
-                  <div class="author-position">Veteran, U.S. Air Force</div>
-                </div>
-              </div>
-            </div>
-            <div class="testimonial-item">
-              <div class="testimony-title">No longer wanting to die</div>
-              <div class="testimony-text">
-                The benefits or changes I have noticed are increased patience
-                and joy. I have become much less irritated, greatly decreased my
-                outbursts of anger, and not ha...<a href="#">READ MORE</a>
-              </div>
-              <div class="author-info">
-                <div class="author-picutre">
-                  <img
-                    src="/img/Testimony-Lance-Santiago.webp"
-                    alt="Lance"
-                    height="60"
-                    width="60"
-                  />
-                </div>
-                <div class="author-details">
-                  <div class="author-name">Lance Santiago, U.S</div>
-                  <div class="author-position">U.S. Marine Corps, OEF</div>
-                </div>
-              </div>
-            </div>
-            <div class="testimonial-item">
-              <div class="testimony-title">
-                I felt completely different after just a few sessions
-              </div>
-              <div class="testimony-text">
-                What PWHT and its approach did was to help wake me back up. I
-                felt completely different after just a few sessions in my
-                initial exposure to their approach. I felt far less...
-                <a href="#">READ MORE</a>
-              </div>
-              <div class="author-info">
-                <div class="author-picutre">
-                  <img
-                    src="/img/Testimony-Anthony-Anderson.webp"
-                    alt="Anthony"
-                    height="60"
-                    width="60"
-                  />
-                </div>
-                <div class="author-details">
-                  <div class="author-name">Anthony Anderson, USA</div>
-                  <div class="author-position">US Army, OIF</div>
-                </div>
-              </div>
-            </div>
+            ))}
           </div>
           <div class="page-registration-action">
             <button className="register-button" onClick={handleRegister()}>
