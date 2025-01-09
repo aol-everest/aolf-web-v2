@@ -1233,8 +1233,10 @@
       }
       @media screen and (max-width: 767px) {
         grid-template-columns: repeat(1, auto);
-        max-height: calc(100dvh - 300px);
-        padding-bottom: 75px;
+        height: calc(100dvh - 280px);
+        padding-bottom: 65px;
+        max-height: unset;
+        grid-auto-rows: max-content;
       }
       .slot-item {
         background: #f7f7f7;
