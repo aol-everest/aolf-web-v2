@@ -1030,6 +1030,9 @@
         padding-top: 24px;
         button {
           width: auto;
+          @media screen and (max-width: 720px) {
+            width: 100%;
+          }
         }
       }
     }
@@ -1230,7 +1233,8 @@
       }
       @media screen and (max-width: 767px) {
         grid-template-columns: repeat(1, auto);
-        max-height: calc(100dvh - 375px);
+        max-height: calc(100dvh - 300px);
+        padding-bottom: 75px;
       }
       .slot-item {
         background: #f7f7f7;

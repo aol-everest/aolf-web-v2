@@ -1359,8 +1359,16 @@
       .slot-action {
         text-align: center;
         padding-top: 24px;
+        @media screen and (max-width: 720px) {
+          position: absolute;
+          bottom: 75px;
+          width: 100%;
+        }
         button {
           width: auto;
+          @media screen and (max-width: 720px) {
+            width: 100%;
+          }
         }
       }
     }
@@ -1500,6 +1508,7 @@
       font-weight: 600;
       line-height: 24px;
       border: none;
+      opacity: 1;
     }
     .time-slot-changer {
       display: flex;
@@ -1611,6 +1620,11 @@
   align-items: center;
   font-weight: 500;
   padding-top: 24px;
+  @media screen and (max-width: 720px) {
+    font-size: 14px;
+    line-height: 18px;
+    padding-top: 20px;
+  }
   .icon-aol {
     width: 28px;
     height: 28px;
