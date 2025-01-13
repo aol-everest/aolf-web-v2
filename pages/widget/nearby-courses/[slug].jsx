@@ -63,6 +63,40 @@ const settings = {
   ],
 };
 
+async function getTimezone(lat, lng) {
+  try {
+    const response = await fetch(`/api/timezone?lat=${lat}&lng=${lng}`);
+    const data = await response.json();
+
+    if (data.status === 'OK') {
+      const timezone = getMappedTimezone(data.timeZoneId);
+      console.log('Timezone:', timezone);
+      return timezone;
+    } else {
+      console.error('Time Zone API failed:', data.status);
+      return getMappedTimezone(); // Default to EST
+    }
+  } catch (error) {
+    console.error('Error fetching Time Zone API:', error);
+    return getMappedTimezone(); // Default to EST
+  }
+}
+
+// Map Google Time Zone API's timeZoneId to your custom TIME_ZONE
+function getMappedTimezone(timeZoneId) {
+  // Mapping timeZoneId to your predefined values
+  const timeZoneMap = {
+    'America/New_York': 'EST',
+    'America/Chicago': 'CST',
+    'America/Denver': 'MST',
+    'America/Los_Angeles': 'PST',
+    'Pacific/Honolulu': 'HST',
+  };
+
+  // Return the mapped timezone or default to EST
+  return timeZoneMap[timeZoneId] || 'EST';
+}
+
 function convertUndefinedToNull(obj) {
   // Check if the input is an object
   if (obj && typeof obj === 'object') {
@@ -124,11 +158,13 @@ export async function getServerSideProps(context) {
     } = convertUndefinedToNull(await res.json());
 
     const [lat = null, lng = null] = (loc || '').split(',');
+    const timezone = await getTimezone(lat, lng);
     initialLocation = {
       lat,
       lng,
       postal,
       locationName: [city, region, country, postal].filter(Boolean).join(', '),
+      timezone,
     };
 
     const courseTypeFilter = COURSE_TYPES_OPTIONS[context.params.slug];
@@ -142,6 +178,7 @@ export async function getServerSideProps(context) {
         size: 12,
         timingsRequired: true,
         ctype: courseTypeFilter.value,
+        timeZone: timezone,
       },
     });
     nearbyWorkshops = data;
@@ -276,6 +313,7 @@ const NearbyCoursesCarousel = ({ initialLocation = null, nearbyWorkshops }) => {
     latitude: initialLocation?.lat,
     longitude: initialLocation?.lng,
     isInputAllowed: !initialLocation.locationName,
+    timezone: initialLocation.timezone,
   });
 
   const { data, isLoading, isError, error } = useQuery({
@@ -284,6 +322,7 @@ const NearbyCoursesCarousel = ({ initialLocation = null, nearbyWorkshops }) => {
       location.latitude,
       location.longitude,
       courseTypeFilter,
+      location.timezone,
     ],
     queryFn: async () => {
       let param = {
@@ -293,6 +332,7 @@ const NearbyCoursesCarousel = ({ initialLocation = null, nearbyWorkshops }) => {
         size: 12,
         timingsRequired: true,
         ctype: courseTypeFilter.value,
+        timeZone: location.timezone,
       };
 
       const response = await api.get({
@@ -323,11 +363,15 @@ const NearbyCoursesCarousel = ({ initialLocation = null, nearbyWorkshops }) => {
           fields: ['geometry'],
           placeId: item.place_id,
         },
-        (placeDetails) => {
+        async (placeDetails) => {
+          const lat = placeDetails.geometry.location.lat();
+          const lng = placeDetails.geometry.location.lng();
+          const timezone = await getTimezone(lat, lng);
           setLocation({
-            latitude: placeDetails.geometry.location.lat(),
-            longitude: placeDetails.geometry.location.lng(),
+            latitude: lat,
+            longitude: lng,
             address: item.description,
+            timezone: timezone,
             isInputAllowed: false,
           });
         },
