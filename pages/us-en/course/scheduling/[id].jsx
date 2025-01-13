@@ -718,8 +718,7 @@ const SchedulingPaymentForm = ({
                             ? 'Pay and enroll'
                             : 'Enter Your Email'}
                         </div>
-                        {activeStep === CheckoutStates.EMAIL_INPUT &&
-                        !values.email ? (
+                        {activeStep === CheckoutStates.EMAIL_INPUT && !email ? (
                           <StyledInputNewCheckout
                             type="email"
                             label="Email Address"
