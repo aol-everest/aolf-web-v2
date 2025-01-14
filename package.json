@@ -72,6 +72,7 @@
     "helmet": "^7.1.0",
     "heroku-ssl-redirect": "^0.1.1",
     "is-url": "^1.2.4",
+    "js-cookie": "^3.0.5",
     "moment-timezone": "^0.5.45",
     "next": "^14.2.3",
     "next-compose-plugins": "^2.2.1",
