@@ -26,6 +26,7 @@ import { Passwordless } from '@components/passwordLessAuth/passwordless';
 import { Hub } from 'aws-amplify/utils';
 import { useRouter } from 'next/router';
 import { clearInflightOAuth } from '@passwordLess/storage.js';
+import { CookieStorage } from 'amazon-cognito-identity-js';
 // import { SurveyRequest } from "@components/surveyRequest";
 
 // import TopProgressBar from "@components/topProgressBar";
@@ -49,6 +50,9 @@ Passwordless.configure({
       userVerification: 'required',
     },
   },
+  storage: new CookieStorage({
+    domain: '.artofliving.org',
+  }),
   // debug: console.debug,
 });
 Amplify.configure({

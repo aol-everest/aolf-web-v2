@@ -64,13 +64,13 @@ const settings = {
 };
 
 async function getTimezone(lat, lng) {
+  console.log(lat, lng);
   try {
     const response = await fetch(`/api/timezone?lat=${lat}&lng=${lng}`);
     const data = await response.json();
 
     if (data.status === 'OK') {
       const timezone = getMappedTimezone(data.timeZoneId);
-      console.log('Timezone:', timezone);
       return timezone;
     } else {
       console.error('Time Zone API failed:', data.status);
@@ -157,8 +157,23 @@ export async function getServerSideProps(context) {
       country = null,
     } = convertUndefinedToNull(await res.json());
 
-    const [lat = null, lng = null] = (loc || '').split(',');
-    const timezone = await getTimezone(lat, lng);
+    const [lat = null, lng = null] = loc ? loc.split(',') : [];
+    let timezone = 'EST';
+
+    if (lat) {
+      const timestamp = Math.floor(Date.now() / 1000); // Current time in seconds since the epoch
+      const apiKey = process.env.GOOGLE_API_KEY; // Store your API key in an environment variable
+
+      const url = `https://maps.googleapis.com/maps/api/timezone/json?location=${lat},${lng}&timestamp=${timestamp}&key=${apiKey}`;
+
+      const response = await fetch(url);
+      const timeZoneData = await await response.json();
+
+      if (timeZoneData.status === 'OK') {
+        timezone = getMappedTimezone(timeZoneData.timeZoneId);
+      }
+    }
+
     initialLocation = {
       lat,
       lng,
