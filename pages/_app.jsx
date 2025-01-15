@@ -22,10 +22,12 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { AnalyticsProvider } from 'use-analytics';
 import { Amplify } from 'aws-amplify';
+import { cognitoUserPoolsTokenProvider } from 'aws-amplify/auth/cognito';
 import { Passwordless } from '@components/passwordLessAuth/passwordless';
 import { Hub } from 'aws-amplify/utils';
 import { useRouter } from 'next/router';
 import { clearInflightOAuth } from '@passwordLess/storage.js';
+import CookieStorage from '@utils/cookeeStorage';
 // import { SurveyRequest } from "@components/surveyRequest";
 
 // import TopProgressBar from "@components/topProgressBar";
@@ -39,6 +41,8 @@ import '@styles/old-design/style.scss';
 
 import SEO from '../next-seo.config';
 
+const isLocal = process.env.NODE_ENV === 'development';
+
 Passwordless.configure({
   clientId: process.env.NEXT_PUBLIC_COGNITO_CLIENT_ID,
   userPoolId: process.env.NEXT_PUBLIC_COGNITO_USERPOOL,
@@ -49,6 +53,9 @@ Passwordless.configure({
       userVerification: 'required',
     },
   },
+  storage: new CookieStorage({
+    domain: isLocal ? undefined : 'artofliving.org',
+  }),
   // debug: console.debug,
 });
 Amplify.configure({
@@ -81,6 +88,12 @@ Amplify.configure({
     },
   },
 });
+
+cognitoUserPoolsTokenProvider.setKeyValueStorage(
+  new CookieStorage({
+    domain: isLocal ? undefined : 'artofliving.org',
+  }),
+);
 
 function App({ Component, pageProps }) {
   const router = useRouter();
