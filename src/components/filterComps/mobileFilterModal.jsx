@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useState } from 'react';
 import classNames from 'classnames';
 
 export const MobileFilterModal = (props) => {
@@ -7,6 +7,9 @@ export const MobileFilterModal = (props) => {
   const showModal = () => {
     setIsHidden(false);
     document.body.classList.add('overflow-hidden');
+    if (props?.scrollRef?.current) {
+      props.scrollRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
   };
 
   const hideModal = () => {
