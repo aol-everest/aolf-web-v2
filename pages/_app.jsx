@@ -62,8 +62,12 @@ const getParentDomain = () => {
     return hostname; // Return hostname as-is
   }
 
-  return domain;
+  return `.${domain}`;
 };
+
+const PARENT_DOMAIN = getParentDomain();
+
+console.log(PARENT_DOMAIN);
 
 Passwordless.configure({
   clientId: process.env.NEXT_PUBLIC_COGNITO_CLIENT_ID,
@@ -76,7 +80,7 @@ Passwordless.configure({
     },
   },
   storage: new CookieStorage({
-    domain: isLocal ? undefined : getParentDomain(),
+    domain: isLocal ? undefined : PARENT_DOMAIN,
   }),
   // debug: console.debug,
 });
@@ -113,7 +117,7 @@ Amplify.configure({
 
 cognitoUserPoolsTokenProvider.setKeyValueStorage(
   new CookieStorage({
-    domain: isLocal ? undefined : getParentDomain(),
+    domain: isLocal ? undefined : PARENT_DOMAIN,
   }),
 );
 
