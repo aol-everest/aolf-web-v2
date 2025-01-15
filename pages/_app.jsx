@@ -70,8 +70,6 @@ const getParentDomain = () => {
 
 const PARENT_DOMAIN = getParentDomain();
 
-console.log(PARENT_DOMAIN);
-
 Passwordless.configure({
   clientId: process.env.NEXT_PUBLIC_COGNITO_CLIENT_ID,
   userPoolId: process.env.NEXT_PUBLIC_COGNITO_USERPOOL,

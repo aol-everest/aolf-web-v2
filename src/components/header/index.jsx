@@ -433,15 +433,22 @@ const MENU =
       ? IAHV_MENU
       : HB_MENU;
 
+const getInitials = (firstName, lastName) => {
+  if (!firstName && !lastName) return '';
+
+  const firstInitial = firstName?.[0] || '';
+  const lastInitial = lastName?.[0] || '';
+
+  return (firstInitial + lastInitial).toUpperCase();
+};
+
 export const Header = () => {
   const router = useRouter();
   const { isAuthenticated = false, profile } = useAuth();
   const [navExpanded, setNavExpanded] = useState(false);
 
-  const { showModal } = useGlobalModalContext();
   const { userProfilePic: profilePic, first_name, last_name } = profile || {};
-  let initials = `${first_name || ''} ${last_name || ''}`.match(/\b\w/g) || [];
-  initials = ((initials.shift() || '') + (initials.pop() || '')).toUpperCase();
+  const initials = getInitials(first_name, last_name);
 
   document.addEventListener('click', function (event) {
     if (event?.target?.classList?.contains('back-link')) {

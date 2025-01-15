@@ -11,13 +11,13 @@ import {
 } from '@components/loginForm';
 import { useQueryState, parseAsString } from 'nuqs';
 import {
-  signIn,
+  // signIn,
   signOut,
   signUp,
   signInWithRedirect,
   resetPassword,
   confirmResetPassword,
-  confirmSignIn,
+  // confirmSignIn,
 } from 'aws-amplify/auth';
 import { useAuth } from '@contexts';
 // import { Passwordless as PasswordlessComponent } from '@components/passwordLessAuth';
