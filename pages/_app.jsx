@@ -27,7 +27,7 @@ import { Passwordless } from '@components/passwordLessAuth/passwordless';
 import { Hub } from 'aws-amplify/utils';
 import { useRouter } from 'next/router';
 import { clearInflightOAuth } from '@passwordLess/storage.js';
-import CookieStorage from '@utils/cookeeStorage';
+import CookieStorage from '@utils/cookieStorage';
 // import { SurveyRequest } from "@components/surveyRequest";
 
 // import TopProgressBar from "@components/topProgressBar";
@@ -54,7 +54,7 @@ Passwordless.configure({
     },
   },
   storage: new CookieStorage({
-    domain: isLocal ? undefined : 'artofliving.org',
+    domain: isLocal ? undefined : process.env.NEXT_PUBLIC_AMPLIFY_COOKIE_DOMAIN,
   }),
   // debug: console.debug,
 });
@@ -91,7 +91,7 @@ Amplify.configure({
 
 cognitoUserPoolsTokenProvider.setKeyValueStorage(
   new CookieStorage({
-    domain: isLocal ? undefined : 'artofliving.org',
+    domain: isLocal ? undefined : process.env.NEXT_PUBLIC_AMPLIFY_COOKIE_DOMAIN,
   }),
 );
 

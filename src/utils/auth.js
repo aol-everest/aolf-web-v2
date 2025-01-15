@@ -1,12 +1,11 @@
 import { getCurrentUser, fetchAuthSession, signOut } from 'aws-amplify/auth';
-import { retrieveTokens, storeTokens } from '@passwordLess/storage.js';
+import { storeTokens } from '@passwordLess/storage.js';
 import { api } from '@utils';
 
 const fetchUserProfile = async () => {
   const user = await getCurrentUser();
   const session = await fetchAuthSession();
   await storeTokens(session.tokens);
-  const data = await retrieveTokens();
 
   const profile = await api.get({
     path: 'profile',
