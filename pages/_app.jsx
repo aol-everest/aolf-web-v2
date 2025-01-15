@@ -62,6 +62,9 @@ const getParentDomain = () => {
     return hostname; // Return hostname as-is
   }
 
+  if (isLocal || domain === 'herokuapp.com') {
+    return undefined;
+  }
   return `.${domain}`;
 };
 
@@ -80,7 +83,8 @@ Passwordless.configure({
     },
   },
   storage: new CookieStorage({
-    domain: isLocal ? undefined : PARENT_DOMAIN,
+    domain: PARENT_DOMAIN,
+    secure: !isLocal,
   }),
   // debug: console.debug,
 });
@@ -117,7 +121,8 @@ Amplify.configure({
 
 cognitoUserPoolsTokenProvider.setKeyValueStorage(
   new CookieStorage({
-    domain: isLocal ? undefined : PARENT_DOMAIN,
+    domain: PARENT_DOMAIN,
+    secure: !isLocal,
   }),
 );
 
