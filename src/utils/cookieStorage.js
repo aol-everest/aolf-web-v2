@@ -16,7 +16,7 @@ export default class CookieStorage {
     this.domain = data.domain || null;
     this.path = data.path || '/';
     this.expires = data.expires !== undefined ? data.expires : 365;
-    this.secure = data.secure !== undefined ? data.secure : false;
+    this.secure = data.secure !== undefined ? data.secure : true;
 
     if (data.sameSite) {
       if (!['strict', 'lax', 'none'].includes(data.sameSite.toLowerCase())) {
