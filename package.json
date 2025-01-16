@@ -15,7 +15,7 @@
     "debug:qa": "cross-env NODE_ENV=qa NODE_OPTIONS='--inspect' yarn local-run",
     "local-run": "next dev",
     "build": "next build",
-    "start": "node server.js",
+    "start": "next start",
     "build:analyze": "cross-env ANALYZE=true npm run build",
     "lint": "next lint",
     "svgr": "npx @svgr/cli -d src/components/icons --ignore-existing --icon public/icons",
