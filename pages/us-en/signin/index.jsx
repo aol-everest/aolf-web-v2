@@ -208,9 +208,13 @@ function LoginPage() {
   const backToFlowAction = (e) => {
     if (e) e.preventDefault();
     if (navigateTo) {
-      router.push(navigateTo);
+      window.top.location.href =
+        window.location.protocol + '//' + window.location.host + navigateTo;
+      //router.push(navigateTo);
     } else {
-      router.push('/us-en');
+      window.top.location.href =
+        window.location.protocol + '//' + window.location.host + '/us-en';
+      // router.push('/us-en');
     }
   };
   const newPasswordFlow = () => {
