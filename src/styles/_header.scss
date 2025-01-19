@@ -19,6 +19,11 @@
       .mobile-menu-buttons {
         display: none;
       }
+      .navbar-collapse.collapse {
+        .nav-logowrap {
+          display: none;
+        }
+      }
     }
     .navbar-nav {
       @media screen and (min-width: 992px) {
@@ -420,7 +425,10 @@
   @media screen and (max-width: 991px) {
     position: relative !important;
     &.menu-opened {
-      position: fixed !important;
+      .navbar-toggler {
+        position: fixed;
+        right: 15px;
+      }
     }
   }
   .header__container {
@@ -459,7 +467,7 @@
     .navbar-nav {
       gap: 28px;
       @media screen and (max-width: 991px) {
-        gap: 24px;
+        gap: 0px;
       }
       .nav-item {
         .back-link {
@@ -481,6 +489,14 @@
               margin-bottom: 10px;
               display: flex;
               flex-direction: column;
+              &::before {
+                content: attr(data-title);
+                padding: 0 20px;
+                margin-bottom: 12px;
+                line-height: 28px;
+                font-size: 20px;
+                font-weight: 400;
+              }
             }
           }
           &-inner {
@@ -490,6 +506,13 @@
               overflow: auto;
               height: 100%;
               padding-bottom: 40px;
+              &::before {
+                content: attr(data-title);
+                padding: 0 20px;
+                line-height: 28px;
+                font-size: 20px;
+                font-weight: 400;
+              }
             }
           }
           .dropdown-header {
@@ -584,7 +607,7 @@
       }
       .nav-link {
         font-weight: 400;
-        color: #000000;
+        color: #31364e;
         &:hover {
           color: #ff9200;
         }
@@ -665,6 +688,16 @@
         max-height: calc(100vh - 180px);
         overflow: auto;
         .nav-item {
+          padding-top: 14px;
+          padding-bottom: 14px;
+          border-bottom: #e9e9e9 1px solid;
+          &:first-child {
+            padding-top: 0;
+          }
+          &:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+          }
           &:not(:last-child) {
             margin-right: 0;
           }
@@ -682,9 +715,9 @@
             transition: all 0.3s ease-in-out;
             display: block;
             &.show {
-              left: 0;
+              left: 56px;
               .back-link {
-                left: 20px;
+                left: 76px;
               }
             }
             .dropdown-item {
@@ -716,12 +749,37 @@
             line-height: 28px;
             font-size: 20px !important;
             font-weight: 400;
+            display: flex;
+            justify-content: space-between;
+            &.dropdown-toggle {
+              &::after {
+                background: url(/img/BackArrow.svg) no-repeat center;
+                height: 20px;
+                width: 20px;
+                border: none;
+                transform: rotate(180deg);
+                margin: 0;
+                display: block;
+              }
+            }
           }
           .dropdown-toggle {
-            &:after {
+            &::after {
               display: none;
             }
           }
+        }
+      }
+      &:has(.navbar-collapse.collapse.show) {
+        &::before {
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100vw;
+          height: 100vh;
+          background: rgba(0, 0, 0, 0.5);
+          content: '';
+          display: block;
         }
       }
       .mobile-menu-buttons {
@@ -748,19 +806,25 @@
       }
       .navbar-collapse {
         position: fixed;
-        width: 100%;
-        left: 0px;
-        top: 63px;
+        width: calc(100vw - 56px);
+        left: 100%;
+        top: 0;
         background-color: #ffffff;
+        transition: all 0.3s ease;
         &.show {
           display: flex;
           flex-direction: column;
           justify-content: flex-start;
           align-items: flex-start;
+          left: 56px;
         }
         @media screen and (max-width: 991px) {
-          height: calc(100vh - 64px) !important;
+          height: 100vh !important;
           overflow: auto;
+        }
+        .nav-logowrap {
+          padding-left: 20px;
+          padding-top: 8px;
         }
       }
     }

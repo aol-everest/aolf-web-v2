@@ -66,7 +66,32 @@ const HB_MENU = [
 const AOL_MENU = [
   {
     name: 'Gurudev',
-    link: 'https://www.artofliving.org/us-en/gurudev',
+
+    submenu: [
+      {
+        name: 'About',
+        link: '/us-en/lp/gurudev',
+      },
+      /* Link not available
+      {
+        name: 'Biography',
+        link: '#',
+      },*/
+      {
+        name: 'Accolades',
+        link: 'https://www.artofliving.org/us-en/awards-and-honours',
+      },
+      /* Link not available
+      {
+        name: 'Work',
+        link: '#',
+      },*/
+      /* Link not available
+      {
+        name: 'Tour',
+        link: '#',
+      },*/
+    ],
   },
   {
     name: 'Explore',
@@ -101,6 +126,16 @@ const AOL_MENU = [
   {
     name: 'Wisdom',
     submenu: [
+      /* Link not available
+      {
+        name: 'Articles',
+        link: '#',
+      },*/
+      /* Link not available
+      {
+        name: 'Ask Gurudev',
+        link: '#',
+      },*/
       {
         name: 'Podcasts',
         link: '/us-en/wisdom/podcast',
@@ -146,18 +181,18 @@ const AOL_MENU = [
             name: 'Chakra Kriya',
             link: '/us-en/lp/chakra-kriya',
           },
-          {
+          /*{
             name: 'DSN',
             link: '/us-en/courses/dsn-course',
-          },
+          },*/
           {
             name: 'Sanyam',
             link: '/us-en/lp/sanyam',
           },
-          {
+          /*{
             name: 'Shakti Kriya',
             link: '/us-en/lp/shakti-kriya',
-          },
+          },*/
           {
             name: 'Sri Sri Yoga Deep Dive',
             link: '/us-en/lp/srisriyoga-deepdiveretreat',
@@ -222,18 +257,27 @@ const AOL_MENU = [
   {
     name: 'Resources',
     submenu: [
-      {
+      /*{
         name: 'Meditations',
         link: `/us-en/library/${CONTENT_FOLDER_IDS.MEDITATE_FOLDER_ID}`,
       },
       {
         name: 'Wisdom',
         link: `/us-en/library/${CONTENT_FOLDER_IDS.WISDOM_FOLDER_ID}`,
-      },
+      },*/
       {
         name: 'App',
         link: '/us-en/lp/journey-app',
       },
+      {
+        name: 'Blog',
+        link: 'https://www.artofliving.org/us-en/sri-sri-blog',
+      },
+      /* Link not available
+      {
+        name: 'Science',
+        link: '#',
+      },*/
     ],
   },
   {
@@ -248,21 +292,25 @@ const AOL_MENU = [
         link: 'https://www.artofliving.org/us-en/service-projects-overview',
       },
       {
+        name: 'World Culture Festival',
+        link: 'https://wcf.artofliving.org/',
+      },
+      /*{
         name: 'Science',
         link: 'https://www.artofliving.org/us-en/meditation/benefits/research-sudarshan-kriya',
       },
       {
         name: 'Blog',
         link: 'https://www.artofliving.org/us-en/blog',
-      },
+      },*/
       {
         name: 'Press & Media',
         link: 'https://www.artofliving.org/us-en/media-coverage?search=',
       },
-      {
+      /*{
         name: 'Testimonials',
         link: 'https://www.artofliving.org/us-en/testimonials/search',
-      },
+      },*/
       {
         name: 'Contact Us',
         link: 'https://www.artofliving.org/us-en/contact-us',
@@ -497,7 +545,7 @@ export const Header = () => {
               className="past-courses__cards__arrow back-link"
             />
           </button>
-          <div className="dropdown-menu-col">
+          <div className="dropdown-menu-col" data-title={menu.name}>
             {menu.submenu.map((submenu) => {
               return (
                 <NavDropdown.Item
@@ -530,7 +578,7 @@ export const Header = () => {
               className="past-courses__cards__arrow back-link"
             />
           </button>
-          <div className="dropdown-menu-inner">
+          <div className="dropdown-menu-inner" data-title={menu.name}>
             {menu.subHeading?.map((subMenu) => {
               return (
                 <React.Fragment key={subMenu.name}>
@@ -609,6 +657,9 @@ export const Header = () => {
             <span className="icon-bar bottom-bar"></span>
           </Navbar.Toggle>
           <Navbar.Collapse id="basic-navbar-nav">
+            <div className="nav-logowrap">
+              <img src="/img/ic-logo.svg" alt="logo" height="32" />
+            </div>
             <Nav className="mr-auto" as="ul">
               {MENU.map((menu) => {
                 if (menu.link) {
