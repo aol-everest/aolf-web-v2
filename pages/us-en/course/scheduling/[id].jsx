@@ -47,7 +47,6 @@ const SchedulingPaymentForm = ({
   fee,
   delfee,
   router,
-  track,
   courseType,
   activeStep,
   setActiveStep,
@@ -55,6 +54,7 @@ const SchedulingPaymentForm = ({
   setDiscountResponse,
   handleChangeDates,
 }) => {
+  const { track, identify } = useAnalytics();
   const { profile = {}, passwordLess, isAuthenticated } = useAuth();
   const { signOut } = passwordLess;
   const formRef = useRef();
@@ -405,6 +405,17 @@ const SchedulingPaymentForm = ({
   }, []); // Runs only on component mount (when the pa
 
   const handleTrackEvent = () => {
+    if (formRef.current) {
+      identify(formRef.current.values.email, {
+        email: formRef.current.values.email,
+      });
+    }
+    track('submit_email', {
+      screen_name: 'course_scheduling_checkout',
+      event_target: 'register_button',
+      course_type: courseType,
+      location_type: workshop.mode,
+    });
     track(
       'begin_checkout',
       {
