@@ -530,6 +530,225 @@ const UpcomingEventsComp = ({ item }) => {
   }
 };
 
+const RecommendedCourses = ({ item }) => {
+  const router = useRouter();
+
+  const detailsPage = (item) => () => {
+    pushRouteWithUTMQuery(router, {
+      pathname: `/us-en/${item.sfid}`,
+      query: {
+        ctype: item.productTypeId,
+        page: 'c-o',
+      },
+    });
+  };
+
+  const enrollMeetupAction = (item) => () => {
+    pushRouteWithUTMQuery(router, {
+      pathname: `/us-en/meetup/checkout/${item.sfid}`,
+      query: {
+        ctype: item.productTypeId,
+        page: 'c-o',
+      },
+    });
+  };
+
+  const enrollWorkshopAction = (item) => () => {
+    pushRouteWithUTMQuery(router, {
+      pathname: `/us-en/course/checkout/${item.sfid}`,
+      query: {
+        ctype: item.productTypeId,
+        page: 'c-o',
+      },
+    });
+  };
+  const enrollEventAction = (item) => () => {
+    pushRouteWithUTMQuery(router, {
+      pathname: `/us-en/ticketed-event/${item.sfid}`,
+      query: {
+        ctype: item.productTypeId,
+      },
+    });
+  };
+  const {
+    meetupTitle,
+    title,
+    mode,
+    locationPostalCode,
+    locationCity,
+    locationProvince,
+    locationStreet,
+    primaryTeacherName,
+    coTeacher1Name,
+    meetupDuration,
+    type,
+    timings,
+    unitPrice,
+  } = item || {};
+  const updateMeetupDuration = meetupDuration?.replace(/Minutes/g, 'Min');
+  const isOnline = mode === COURSE_MODES.ONLINE.value;
+
+  switch (type) {
+    case 'workshop':
+      return (
+        <div className="course-item">
+          <div className="course-item-header">
+            <div className="course-title-duration">
+              <div className="course-title">{title}</div>
+              <div
+                className={`course-type ${isOnline ? 'online' : 'in-person'}`}
+              >
+                {mode}
+              </div>
+              <div className="course-price">
+                <span>${unitPrice}</span>
+              </div>
+            </div>
+          </div>
+          {mode !== 'Online' && locationCity && (
+            <div className="course-location">
+              {concatenateStrings([
+                locationStreet,
+                locationCity,
+                locationProvince,
+                locationPostalCode,
+              ])}
+            </div>
+          )}
+          <div class="course-instructors">
+            {concatenateStrings([primaryTeacherName, coTeacher1Name])}
+          </div>
+          {timings?.length > 0 && (
+            <div class="course-timings">
+              {timings.map((time, i) => {
+                return (
+                  <div className="course-timing" key={i}>
+                    <span>{dayjs.utc(time.startDate).format('M/D ddd')}</span>
+                    {`, ${tConvert(time.startTime)} - ${tConvert(time.endTime)} ${
+                      ABBRS[time.timeZone]
+                    }`}
+                  </div>
+                );
+              })}
+            </div>
+          )}
+
+          <div className="course-actions">
+            <button className="btn-primary" onClick={detailsPage(item)}>
+              Details
+            </button>
+            <button
+              className="btn-primary"
+              onClick={enrollWorkshopAction(item)}
+            >
+              Register
+            </button>
+          </div>
+        </div>
+      );
+    case 'meetup':
+      return (
+        <div className="course-item">
+          <div className="course-item-header">
+            <div className="course-title-duration">
+              <div className="course-title">{meetupTitle}</div>
+              <div
+                className={`course-type ${isOnline ? 'online' : 'in-person'}`}
+              >
+                {mode}
+              </div>
+              <div className="course-price">
+                <span>${unitPrice}</span>
+              </div>
+            </div>
+          </div>
+          {mode !== 'Online' && locationCity && (
+            <div className="course-location">
+              {concatenateStrings([
+                locationStreet,
+                locationCity,
+                locationProvince,
+                locationPostalCode,
+              ])}
+            </div>
+          )}
+          <div class="course-instructors">
+            {concatenateStrings([primaryTeacherName, coTeacher1Name])}
+          </div>
+          <div className="course-timings">
+            <div className="course-timing">
+              {getMeetupDuration(item, updateMeetupDuration)}
+            </div>
+          </div>
+
+          <div className="course-actions">
+            <button className="btn-primary" onClick={detailsPage(item)}>
+              Details
+            </button>
+            <button className="btn-primary" onClick={enrollMeetupAction(item)}>
+              Register
+            </button>
+          </div>
+        </div>
+      );
+    case 'ticketedEvent':
+      return (
+        <div className="course-item">
+          <div className="course-item-header">
+            <div className="course-title-duration">
+              <div className="course-title">{title}</div>
+              <div
+                className={`course-type ${isOnline ? 'online' : 'in-person'}`}
+              >
+                {mode}
+              </div>
+              <div className="course-price">
+                <span>${unitPrice}</span>
+              </div>
+            </div>
+          </div>
+          {mode !== 'Online' && locationCity && (
+            <div className="course-location">
+              {concatenateStrings([
+                locationStreet,
+                locationCity,
+                locationProvince,
+                locationPostalCode,
+              ])}
+            </div>
+          )}
+          <div class="course-instructors">
+            {concatenateStrings([primaryTeacherName, coTeacher1Name])}
+          </div>
+
+          {timings?.length > 0 && (
+            <div class="course-timings">
+              {timings.map((time, i) => {
+                return (
+                  <div className="course-timing" key={i}>
+                    <span>{dayjs.utc(time.startDate).format('M/D ddd')}</span>
+                    {`, ${tConvert(time.startTime)} - ${tConvert(time.endTime)} ${
+                      ABBRS[time.timeZone]
+                    }`}
+                  </div>
+                );
+              })}
+            </div>
+          )}
+
+          <div className="course-actions">
+            <button className="btn-primary" onClick={detailsPage(item)}>
+              Details
+            </button>
+            <button className="btn-primary" onClick={enrollEventAction(item)}>
+              Regiser
+            </button>
+          </div>
+        </div>
+      );
+  }
+};
+
 const ProfileLanding = () => {
   const { profile } = useAuth();
 
@@ -583,7 +802,7 @@ const ProfileLanding = () => {
     getBannersData();
   }, []);
 
-  const { data = [], isLoading } = useQuery({
+  const { data = [] } = useQuery({
     queryKey: 'getUserUpcomingCourses',
     queryFn: async () => {
       const response = await api.get({
@@ -600,6 +819,16 @@ const ProfileLanding = () => {
         path: 'preferredEvents',
       });
       return response.events;
+    },
+  });
+
+  const { data: recommendedEvents = [] } = useQuery({
+    queryKey: 'recommendedWorkshopV2',
+    queryFn: async () => {
+      const response = await api.get({
+        path: 'recommendedWorkshopV2',
+      });
+      return response.data;
     },
   });
 
@@ -759,214 +988,13 @@ const ProfileLanding = () => {
                 </div>
               </div>
 
-              <SwiperSlide>
-                <div className="course-item">
-                  <div className="course-item-header">
-                    <div className="course-title-duration">
-                      <div className="course-title">Blessings Course</div>
-                      <div className="course-type in-person">In Person</div>
-                      <div className="course-type online">Online</div>
-                    </div>
-                    <div className="course-price">
-                      <span>$100</span>
-                    </div>
-                  </div>
-                  <div className="course-location">
-                    1901 Thornridge Cir. Shiloh, Hawaii 81063
-                  </div>
-                  <div className="course-instructors">
-                    Cameron Williamson, Cameron Williamson
-                  </div>
-                  <div className="course-timings">
-                    <div className="course-timing">
-                      1/18, Monday, 12pm - 2:30 pm ET
-                    </div>
-                    <div className="course-timing">
-                      1/19, Tuesdauy, 12pm - 2:30 pm ET
-                    </div>
-                    <div className="course-timing">
-                      1/20, Wednesday, 12pm - 2:30pm ET
-                    </div>
-                  </div>
-                  <div className="course-actions">
-                    <button className="btn-secondary">Details</button>
-                    <button className="btn-primary">Register</button>
-                  </div>
-                </div>
-              </SwiperSlide>
-              <SwiperSlide>
-                <div className="course-item">
-                  <div className="course-item-header">
-                    <div className="course-title-duration">
-                      <div className="course-title">DSN Course</div>
-                      <div className="course-type online">Online</div>
-                    </div>
-                    <div className="course-price">
-                      <span>$100</span>
-                    </div>
-                  </div>
-                  <div className="course-location">
-                    1901 Thornridge Cir. Shiloh, Hawaii 81063
-                  </div>
-                  <div className="course-instructors">
-                    Cameron Williamson, Cameron Williamson
-                  </div>
-                  <div className="course-timings">
-                    <div className="course-timing">
-                      1/18, Monday, 12pm - 2:30 pm ET
-                    </div>
-                    <div className="course-timing">
-                      1/19, Tuesdauy, 12pm - 2:30 pm ET
-                    </div>
-                    <div className="course-timing">
-                      1/20, Wednesday, 12pm - 2:30pm ET
-                    </div>
-                  </div>
-                  <div className="course-actions">
-                    <button className="btn-secondary">Details</button>
-                    <button className="btn-primary">Register</button>
-                  </div>
-                </div>
-              </SwiperSlide>
-              <SwiperSlide>
-                <div className="course-item">
-                  <div className="course-item-header">
-                    <div className="course-title-duration">
-                      <div className="course-title">Chakra Kriya</div>
-                      <div className="course-type in-person">In Person</div>
-                      <div className="course-type online">Online</div>
-                    </div>
-                    <div className="course-price">
-                      <span>$100</span>
-                    </div>
-                  </div>
-                  <div className="course-location">
-                    1901 Thornridge Cir. Shiloh, Hawaii 81063
-                  </div>
-                  <div className="course-instructors">
-                    Cameron Williamson, Cameron Williamson
-                  </div>
-                  <div className="course-timings">
-                    <div className="course-timing">
-                      1/18, Monday, 12pm - 2:30 pm ET
-                    </div>
-                    <div className="course-timing">
-                      1/19, Tuesdauy, 12pm - 2:30 pm ET
-                    </div>
-                    <div className="course-timing">
-                      1/20, Wednesday, 12pm - 2:30pm ET
-                    </div>
-                  </div>
-                  <div className="course-actions">
-                    <button className="btn-secondary">Details</button>
-                    <button className="btn-primary">Register</button>
-                  </div>
-                </div>
-              </SwiperSlide>
-              <SwiperSlide>
-                <div className="course-item">
-                  <div className="course-item-header">
-                    <div className="course-title-duration">
-                      <div className="course-title">Chakra Kriya</div>
-                      <div className="course-type in-person">In Person</div>
-                      <div className="course-type online">Online</div>
-                    </div>
-                    <div className="course-price">
-                      <span>$100</span>
-                    </div>
-                  </div>
-                  <div className="course-location">
-                    1901 Thornridge Cir. Shiloh, Hawaii 81063
-                  </div>
-                  <div className="course-instructors">
-                    Cameron Williamson, Cameron Williamson
-                  </div>
-                  <div className="course-timings">
-                    <div className="course-timing">
-                      1/18, Monday, 12pm - 2:30 pm ET
-                    </div>
-                    <div className="course-timing">
-                      1/19, Tuesdauy, 12pm - 2:30 pm ET
-                    </div>
-                    <div className="course-timing">
-                      1/20, Wednesday, 12pm - 2:30pm ET
-                    </div>
-                  </div>
-                  <div className="course-actions">
-                    <button className="btn-secondary">Details</button>
-                    <button className="btn-primary">Register</button>
-                  </div>
-                </div>
-              </SwiperSlide>
-              <SwiperSlide>
-                <div className="course-item">
-                  <div className="course-item-header">
-                    <div className="course-title-duration">
-                      <div className="course-title">Blessings Course</div>
-                      <div className="course-type in-person">In Person</div>
-                    </div>
-                    <div className="course-price">
-                      <span>$100</span>
-                    </div>
-                  </div>
-                  <div className="course-location">
-                    1901 Thornridge Cir. Shiloh, Hawaii 81063
-                  </div>
-                  <div className="course-instructors">
-                    Cameron Williamson, Cameron Williamson
-                  </div>
-                  <div className="course-timings">
-                    <div className="course-timing">
-                      1/18, Monday, 12pm - 2:30 pm ET
-                    </div>
-                    <div className="course-timing">
-                      1/19, Tuesdauy, 12pm - 2:30 pm ET
-                    </div>
-                    <div className="course-timing">
-                      1/20, Wednesday, 12pm - 2:30pm ET
-                    </div>
-                  </div>
-                  <div className="course-actions">
-                    <button className="btn-secondary">Details</button>
-                    <button className="btn-primary">Register</button>
-                  </div>
-                </div>
-              </SwiperSlide>
-              <SwiperSlide>
-                <div className="course-item">
-                  <div className="course-item-header">
-                    <div className="course-title-duration">
-                      <div className="course-title">Chakra Kriya</div>
-                      <div className="course-type in-person">In Person</div>
-                      <div className="course-type online">Online</div>
-                    </div>
-                    <div className="course-price">
-                      <span>$100</span>
-                    </div>
-                  </div>
-                  <div className="course-location">
-                    1901 Thornridge Cir. Shiloh, Hawaii 81063
-                  </div>
-                  <div className="course-instructors">
-                    Cameron Williamson, Cameron Williamson
-                  </div>
-                  <div className="course-timings">
-                    <div className="course-timing">
-                      1/18, Monday, 12pm - 2:30 pm ET
-                    </div>
-                    <div className="course-timing">
-                      1/19, Tuesdauy, 12pm - 2:30 pm ET
-                    </div>
-                    <div className="course-timing">
-                      1/20, Wednesday, 12pm - 2:30pm ET
-                    </div>
-                  </div>
-                  <div className="course-actions">
-                    <button className="btn-secondary">Details</button>
-                    <button className="btn-primary">Register</button>
-                  </div>
-                </div>
-              </SwiperSlide>
+              {recommendedEvents.map((item) => {
+                return (
+                  <SwiperSlide key={item.sfid}>
+                    <RecommendedCourses item={item} />
+                  </SwiperSlide>
+                );
+              })}
             </Swiper>
           </div>
         </div>
