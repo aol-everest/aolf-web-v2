@@ -588,165 +588,57 @@ const RecommendedCourses = ({ item }) => {
   const updateMeetupDuration = meetupDuration?.replace(/Minutes/g, 'Min');
   const isOnline = mode === COURSE_MODES.ONLINE.value;
 
-  switch (type) {
-    case 'workshop':
-      return (
-        <div className="course-item">
-          <div className="course-item-header">
-            <div className="course-title-duration">
-              <div className="course-title">{title}</div>
-              <div
-                className={`course-type ${isOnline ? 'online' : 'in-person'}`}
-              >
-                {mode}
-              </div>
-              <div className="course-price">
-                <span>${unitPrice}</span>
-              </div>
-            </div>
-          </div>
-          {mode !== 'Online' && locationCity && (
-            <div className="course-location">
-              {concatenateStrings([
-                locationStreet,
-                locationCity,
-                locationProvince,
-                locationPostalCode,
-              ])}
-            </div>
-          )}
-          <div class="course-instructors">
-            {concatenateStrings([primaryTeacherName, coTeacher1Name])}
-          </div>
-          {timings?.length > 0 && (
-            <div class="course-timings">
-              {timings.map((time, i) => {
-                return (
-                  <div className="course-timing" key={i}>
-                    <span>{dayjs.utc(time.startDate).format('M/D ddd')}</span>
-                    {`, ${tConvert(time.startTime)} - ${tConvert(time.endTime)} ${
-                      ABBRS[time.timeZone]
-                    }`}
-                  </div>
-                );
-              })}
-            </div>
-          )}
-
-          <div className="course-actions">
-            <button className="btn-primary" onClick={detailsPage(item)}>
-              Details
-            </button>
-            <button
-              className="btn-primary"
-              onClick={enrollWorkshopAction(item)}
-            >
-              Register
-            </button>
+  return (
+    <div className="course-item">
+      <div className="course-item-header">
+        <div className="course-title-duration">
+          <div className="course-title">{title}</div>
+          <div className={`course-type ${isOnline ? 'online' : 'in-person'}`}>
+            {mode}
           </div>
         </div>
-      );
-    case 'meetup':
-      return (
-        <div className="course-item">
-          <div className="course-item-header">
-            <div className="course-title-duration">
-              <div className="course-title">{meetupTitle}</div>
-              <div
-                className={`course-type ${isOnline ? 'online' : 'in-person'}`}
-              >
-                {mode}
-              </div>
-              <div className="course-price">
-                <span>${unitPrice}</span>
-              </div>
-            </div>
-          </div>
-          {mode !== 'Online' && locationCity && (
-            <div className="course-location">
-              {concatenateStrings([
-                locationStreet,
-                locationCity,
-                locationProvince,
-                locationPostalCode,
-              ])}
-            </div>
-          )}
-          <div class="course-instructors">
-            {concatenateStrings([primaryTeacherName, coTeacher1Name])}
-          </div>
-          <div className="course-timings">
-            <div className="course-timing">
-              {getMeetupDuration(item, updateMeetupDuration)}
-            </div>
-          </div>
-
-          <div className="course-actions">
-            <button className="btn-primary" onClick={detailsPage(item)}>
-              Details
-            </button>
-            <button className="btn-primary" onClick={enrollMeetupAction(item)}>
-              Register
-            </button>
-          </div>
+        <div className="course-price">
+          <span>${unitPrice}</span>
         </div>
-      );
-    case 'ticketedEvent':
-      return (
-        <div className="course-item">
-          <div className="course-item-header">
-            <div className="course-title-duration">
-              <div className="course-title">{title}</div>
-              <div
-                className={`course-type ${isOnline ? 'online' : 'in-person'}`}
-              >
-                {mode}
-              </div>
-              <div className="course-price">
-                <span>${unitPrice}</span>
-              </div>
-            </div>
-          </div>
-          {mode !== 'Online' && locationCity && (
-            <div className="course-location">
-              {concatenateStrings([
-                locationStreet,
-                locationCity,
-                locationProvince,
-                locationPostalCode,
-              ])}
-            </div>
-          )}
-          <div class="course-instructors">
-            {concatenateStrings([primaryTeacherName, coTeacher1Name])}
-          </div>
-
-          {timings?.length > 0 && (
-            <div class="course-timings">
-              {timings.map((time, i) => {
-                return (
-                  <div className="course-timing" key={i}>
-                    <span>{dayjs.utc(time.startDate).format('M/D ddd')}</span>
-                    {`, ${tConvert(time.startTime)} - ${tConvert(time.endTime)} ${
-                      ABBRS[time.timeZone]
-                    }`}
-                  </div>
-                );
-              })}
-            </div>
-          )}
-
-          <div className="course-actions">
-            <button className="btn-primary" onClick={detailsPage(item)}>
-              Details
-            </button>
-            <button className="btn-primary" onClick={enrollEventAction(item)}>
-              Regiser
-            </button>
-          </div>
+      </div>
+      {mode !== 'Online' && locationCity && (
+        <div className="course-location">
+          {concatenateStrings([
+            locationStreet,
+            locationCity,
+            locationProvince,
+            locationPostalCode,
+          ])}
         </div>
-      );
-  }
+      )}
+      <div class="course-instructors">
+        {concatenateStrings([primaryTeacherName, coTeacher1Name])}
+      </div>
+      {timings?.length > 0 && (
+        <div class="course-timings">
+          {timings.map((time, i) => {
+            return (
+              <div className="course-timing" key={i}>
+                <span>{dayjs.utc(time.startDate).format('M/D ddd')}</span>
+                {`, ${tConvert(time.startTime)} - ${tConvert(time.endTime)} ${
+                  ABBRS[time.timeZone]
+                }`}
+              </div>
+            );
+          })}
+        </div>
+      )}
+
+      <div className="course-actions">
+        <button className="btn-primary" onClick={detailsPage(item)}>
+          Details
+        </button>
+        <button className="btn-primary" onClick={enrollWorkshopAction(item)}>
+          Register
+        </button>
+      </div>
+    </div>
+  );
 };
 
 const ProfileLanding = () => {
@@ -842,6 +734,19 @@ const ProfileLanding = () => {
 
     return new Date(aStartTime) - new Date(bStartTime); // Earliest event first
   });
+
+  const recommendedEventsOrdered = recommendedEvents.sort((a, b) => {
+    const aStartTime = a.eventStartDateTimeGMT || a.meetupStartDateTimeGMT;
+    const bStartTime = b.eventStartDateTimeGMT || b.meetupStartDateTimeGMT;
+
+    if (!aStartTime && !bStartTime) return 0; // If both are missing, maintain order
+    if (!aStartTime) return 1; // Place items without a start time at the end
+    if (!bStartTime) return -1; // Place items without a start time at the end
+
+    return new Date(aStartTime) - new Date(bStartTime); // Earliest event first
+  });
+
+  console.log('recommendedEventsOrdered', recommendedEventsOrdered);
 
   const upcomingEvents = [
     ...(data?.workshops || []),
@@ -988,7 +893,7 @@ const ProfileLanding = () => {
                 </div>
               </div>
 
-              {recommendedEvents.map((item) => {
+              {recommendedEventsOrdered.map((item) => {
                 return (
                   <SwiperSlide key={item.sfid}>
                     <RecommendedCourses item={item} />
