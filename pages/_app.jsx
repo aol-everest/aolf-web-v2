@@ -27,7 +27,8 @@ import { Passwordless } from '@components/passwordLessAuth/passwordless';
 import { Hub } from 'aws-amplify/utils';
 import { useRouter } from 'next/router';
 import { clearInflightOAuth } from '@passwordLess/storage.js';
-import CookieStorage from '@utils/cookeeStorage';
+import CookieStorage from '@utils/cookieStorage';
+import { parse } from 'tldts';
 // import { SurveyRequest } from "@components/surveyRequest";
 
 // import TopProgressBar from "@components/topProgressBar";
@@ -43,6 +44,32 @@ import SEO from '../next-seo.config';
 
 const isLocal = process.env.NODE_ENV === 'development';
 
+const getParentDomain = () => {
+  // Check if running in a browser
+  if (typeof window === 'undefined') {
+    return null; // Return null on the server side
+  }
+
+  const hostname = window.location.hostname; // e.g., "qa.members.us.artofliving.org"
+  const { domain } = parse(hostname); // Extract the root domain using tldts
+
+  // Fallback logic for cases where parsing fails or domain is undefined
+  if (!domain) {
+    const parts = hostname.split('.');
+    if (parts.length > 2) {
+      return `${parts[parts.length - 2]}.${parts[parts.length - 1]}`; // Fallback to "example.com"
+    }
+    return hostname; // Return hostname as-is
+  }
+
+  if (isLocal || domain === 'herokuapp.com') {
+    return undefined;
+  }
+  return `.${domain}`;
+};
+
+const PARENT_DOMAIN = getParentDomain();
+
 Passwordless.configure({
   clientId: process.env.NEXT_PUBLIC_COGNITO_CLIENT_ID,
   userPoolId: process.env.NEXT_PUBLIC_COGNITO_USERPOOL,
@@ -54,7 +81,8 @@ Passwordless.configure({
     },
   },
   storage: new CookieStorage({
-    domain: isLocal ? undefined : 'artofliving.org',
+    domain: PARENT_DOMAIN,
+    secure: !isLocal,
   }),
   // debug: console.debug,
 });
@@ -91,7 +119,8 @@ Amplify.configure({
 
 cognitoUserPoolsTokenProvider.setKeyValueStorage(
   new CookieStorage({
-    domain: isLocal ? undefined : 'artofliving.org',
+    domain: PARENT_DOMAIN,
+    secure: !isLocal,
   }),
 );
 

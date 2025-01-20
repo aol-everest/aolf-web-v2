@@ -38,6 +38,7 @@ export const MeetupEnroll = ({
     locationProvince,
     locationPostalCode,
     locationCountry,
+    isCCNotRequired,
   } = selectedMeetup;
 
   const goToCheckout = (e) => {
@@ -153,7 +154,7 @@ export const MeetupEnroll = ({
                 </div>
               </div>
             )}
-            {!isSubscriptionOfferingUsed && (
+            {!isSubscriptionOfferingUsed && !isCCNotRequired && (
               <div className="rsvp-member-types">
                 <div className="member-detail non-member">
                   <div className="for-member">For non-members</div>
@@ -196,7 +197,7 @@ export const MeetupEnroll = ({
                 )}
               </div>
             )}
-            {isSubscriptionOfferingUsed && (
+            {(isSubscriptionOfferingUsed || isCCNotRequired) && (
               <>
                 <div className="payment-agreements"></div>
                 <div className="payment-actions modal-actions">

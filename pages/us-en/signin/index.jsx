@@ -11,13 +11,13 @@ import {
 } from '@components/loginForm';
 import { useQueryState, parseAsString } from 'nuqs';
 import {
-  signIn,
+  // signIn,
   signOut,
   signUp,
   signInWithRedirect,
   resetPassword,
   confirmResetPassword,
-  confirmSignIn,
+  // confirmSignIn,
 } from 'aws-amplify/auth';
 import { useAuth } from '@contexts';
 // import { Passwordless as PasswordlessComponent } from '@components/passwordLessAuth';
@@ -208,9 +208,13 @@ function LoginPage() {
   const backToFlowAction = (e) => {
     if (e) e.preventDefault();
     if (navigateTo) {
-      router.push(navigateTo);
+      window.top.location.href =
+        window.location.protocol + '//' + window.location.host + navigateTo;
+      //router.push(navigateTo);
     } else {
-      router.push('/us-en');
+      window.top.location.href =
+        window.location.protocol + '//' + window.location.host + '/us-en';
+      // router.push('/us-en');
     }
   };
   const newPasswordFlow = () => {

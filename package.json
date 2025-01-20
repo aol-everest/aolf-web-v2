@@ -15,7 +15,7 @@
     "debug:qa": "cross-env NODE_ENV=qa NODE_OPTIONS='--inspect' yarn local-run",
     "local-run": "next dev",
     "build": "next build",
-    "start": "node server.js",
+    "start": "next start",
     "build:analyze": "cross-env ANALYZE=true npm run build",
     "lint": "next lint",
     "svgr": "npx @svgr/cli -d src/components/icons --ignore-existing --icon public/icons",
@@ -31,6 +31,8 @@
     "check:staged": "lint-staged",
     "update-deps": "npm-check-updates -u",
     "kill": "kill-port 3000",
+    "heroku-postbuild": "echo '{\"presets\": [\"next/babel\"]}' > .babelrc && npm run build",
+    "heroku-cleanup": "rm -rf .next/cache && find node_modules/@next -depth -maxdepth 1 -type d -name 'swc*' -exec rm -rf {} \\; -prune #Remove cache and SWC binaries to reduce heroku slug size",
     "coupling-graph": "npx madge --extensions js,jsx,ts,tsx,css,md,scss ./ --exclude '.next|tailwind.config.js|reset.d.ts|prettier.config.js|postcss.config.js|playwright.config.ts|next.config.js|next-env.d.ts|instrumentation.ts|e2e/|README.md|.storybook/|.eslintrc.js' --image graph.svg"
   },
   "dependencies": {
@@ -120,6 +122,7 @@
     "select2": "^4.1.0-rc.0",
     "slick-carousel": "^1.8.1",
     "swiper": "^9.4.1",
+    "tldts": "^6.1.71",
     "use-analytics": "^1.1.0",
     "video-react": "^0.16.0",
     "wrap-ansi": "7.0.0",

@@ -353,14 +353,15 @@ export const findSlugByProductTypeId = (productTypeId) => {
 };
 
 export function getFullPathWithQueryParams(router) {
-  // Get pathname
-  const { pathname } = router;
+  const { pathname, query } = router;
 
-  // Get query parameters
-  const { query } = router;
+  // Replace dynamic segments ([id]) in the pathname with their actual values
+  const resolvedPathname = Object.keys(query).reduce((path, key) => {
+    return path.replace(`[${key}]`, query[key]);
+  }, pathname);
 
-  // Combine pathname and query parameters
-  const fullPath = `${pathname}${Object.keys(query).length > 0 ? '?' + new URLSearchParams(query).toString() : ''}`;
+  // Combine the resolved pathname and query parameters
+  const fullPath = `${resolvedPathname}${Object.keys(query).length > 0 ? '?' + new URLSearchParams(query).toString() : ''}`;
 
   return fullPath;
 }
