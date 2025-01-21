@@ -23,10 +23,18 @@ export const ScheduleLocationFilterNew = ({
   const removeLocation = (e) => {
     if (e) e.preventDefault();
     handleLocationChange(null);
+    setIsInputAllowed(true);
   };
 
   const handleLocationFilterChange = (value) => () => {
     handleLocationChange(value);
+    setIsInputAllowed(false);
+  };
+
+  const handleAddressClick = () => {
+    if (!isInputAllowed) {
+      setIsInputAllowed(true);
+    }
   };
 
   return (
