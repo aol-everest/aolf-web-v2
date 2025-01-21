@@ -512,6 +512,7 @@ const Course = () => {
     setTimeZoneFilter(null);
     setInstructorFilter(null);
     setFilterStartEndDate(null);
+    setSearchKey('');
   };
 
   const onFilterChange = (field) => async (value) => {
@@ -540,6 +541,7 @@ const Course = () => {
           setInstructorFilter(value);
         } else {
           setInstructorFilter(null);
+          setSearchKey('');
         }
         break;
     }
@@ -565,6 +567,7 @@ const Course = () => {
         break;
       case 'instructorFilter':
         setInstructorFilter(null);
+        setSearchKey('');
         break;
     }
   };
@@ -596,6 +599,7 @@ const Course = () => {
           setInstructorFilter(value);
         } else {
           setInstructorFilter(null);
+          setSearchKey('');
         }
         break;
     }
