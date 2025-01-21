@@ -42,7 +42,7 @@ import '@styles/old-design/style.scss';
 
 import SEO from '../next-seo.config';
 
-const isLocal = process.env.NODE_ENV === 'development';
+// const isLocal = process.env.NODE_ENV === 'development';
 
 /* const getParentDomain = () => {
   // Check if running in a browser
