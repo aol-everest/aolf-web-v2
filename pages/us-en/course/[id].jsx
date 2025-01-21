@@ -42,6 +42,10 @@ const VolunteerTrainingProgram = dynamic(() =>
     (mod) => mod.VolunteerTrainingProgram,
   ),
 );
+const ResilienceTraining = dynamic(() =>
+  import('@components/courseDetails').then((mod) => mod.ResilienceTraining),
+);
+
 const HealingBreath = dynamic(() =>
   import('@components/courseDetails').then((mod) => mod.HealingBreath),
 );
@@ -218,7 +222,8 @@ function CourseDetail() {
       !isSanyamCourse &&
       !isSKYWithSahaj &&
       !isSriSriYogaDeepDiveType &&
-      !isMarmaTraining
+      !isMarmaTraining &&
+      !isSkyResilienceTrainingProgram
     ) {
       pushRouteWithUTMQuery(router, {
         pathname: `/us-en/course/checkout/${data.id}`,
@@ -290,6 +295,8 @@ function CourseDetail() {
   const isVolunteerTrainingProgram =
     COURSE_TYPES.VOLUNTEER_TRAINING_PROGRAM.value.indexOf(data.productTypeId) >=
     0;
+  const isSkyResilienceTrainingProgram =
+    COURSE_TYPES.SKY_RESILIENCE.value.indexOf(data.productTypeId) >= 0;
   const isSKYSilentRetreatType =
     COURSE_TYPES.SKY_SILENT_RETREAT.value.indexOf(data.productTypeId) >= 0;
   const isBlessingsCourse =
@@ -344,6 +351,9 @@ function CourseDetail() {
   };
 
   const renderCourseDetail = () => {
+    if (isSkyResilienceTrainingProgram) {
+      return <ResilienceTraining {...props} />;
+    }
     if (isVolunteerTrainingProgram) {
       return <VolunteerTrainingProgram {...props} />;
     }

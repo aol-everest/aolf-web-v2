@@ -17,16 +17,18 @@ import { orgConfig } from '@org';
 import { analytics } from '@service';
 import { Auth, Compose, Talkable, api } from '@utils';
 import { DefaultSeo } from 'next-seo';
-import dynamic from 'next/dynamic';
 import { useEffect, useState } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { AnalyticsProvider } from 'use-analytics';
 import { Amplify } from 'aws-amplify';
+import { cognitoUserPoolsTokenProvider } from 'aws-amplify/auth/cognito';
 import { Passwordless } from '@components/passwordLessAuth/passwordless';
 import { Hub } from 'aws-amplify/utils';
 import { useRouter } from 'next/router';
 import { clearInflightOAuth } from '@passwordLess/storage.js';
+import CookieStorage from '@utils/cookieStorage';
+import { parse } from 'tldts';
 // import { SurveyRequest } from "@components/surveyRequest";
 
 // import TopProgressBar from "@components/topProgressBar";
@@ -40,6 +42,34 @@ import '@styles/old-design/style.scss';
 
 import SEO from '../next-seo.config';
 
+const isLocal = process.env.NODE_ENV === 'development';
+
+const getParentDomain = () => {
+  // Check if running in a browser
+  if (typeof window === 'undefined') {
+    return null; // Return null on the server side
+  }
+
+  const hostname = window.location.hostname; // e.g., "qa.members.us.artofliving.org"
+  const { domain } = parse(hostname); // Extract the root domain using tldts
+
+  // Fallback logic for cases where parsing fails or domain is undefined
+  if (!domain) {
+    const parts = hostname.split('.');
+    if (parts.length > 2) {
+      return `${parts[parts.length - 2]}.${parts[parts.length - 1]}`; // Fallback to "example.com"
+    }
+    return hostname; // Return hostname as-is
+  }
+
+  if (isLocal || domain === 'herokuapp.com') {
+    return undefined;
+  }
+  return `.${domain}`;
+};
+
+const PARENT_DOMAIN = getParentDomain();
+
 Passwordless.configure({
   clientId: process.env.NEXT_PUBLIC_COGNITO_CLIENT_ID,
   userPoolId: process.env.NEXT_PUBLIC_COGNITO_USERPOOL,
@@ -50,6 +80,10 @@ Passwordless.configure({
       userVerification: 'required',
     },
   },
+  storage: new CookieStorage({
+    domain: PARENT_DOMAIN,
+    secure: !isLocal,
+  }),
   // debug: console.debug,
 });
 Amplify.configure({
@@ -82,6 +116,13 @@ Amplify.configure({
     },
   },
 });
+
+cognitoUserPoolsTokenProvider.setKeyValueStorage(
+  new CookieStorage({
+    domain: PARENT_DOMAIN,
+    secure: !isLocal,
+  }),
+);
 
 function App({ Component, pageProps }) {
   const router = useRouter();
@@ -134,7 +175,7 @@ function App({ Component, pageProps }) {
       setUser(userInfo);
       await checkUserPendingAction(userInfo);
     } catch (ex) {
-      console.log(ex);
+      console.error(ex);
       await Auth.logout();
     }
     setLoading(false);

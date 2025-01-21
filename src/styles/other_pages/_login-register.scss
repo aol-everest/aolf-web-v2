@@ -257,6 +257,37 @@
       img {
         width: 70px;
       }
+      input {
+        &.validate {
+          border-color: #dc3545;
+        }
+      }
+    }
+    .validation-input {
+      color: #dc3545;
+      font-size: 12px;
+      padding: 5px 0;
+    }
+    .common-error-message {
+      color: #dc3545;
+      font-size: 13px;
+      margin-bottom: 10px;
+      text-align: center;
+    }
+    .form-action {
+      display: flex;
+      gap: 16px;
+      margin-top: 16px;
+      button {
+        outline: none;
+      }
+    }
+    .apple-logo-login {
+      text-align: center;
+      padding: 10px 0;
+      img {
+        width: 70px;
+      }
     }
     a.forgot-pass {
       font-size: 14px;

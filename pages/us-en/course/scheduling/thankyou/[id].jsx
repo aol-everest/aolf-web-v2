@@ -109,6 +109,12 @@ const Thankyou = () => {
 
   useEffect(() => {
     if (workshop) {
+      track('complete_registration', {
+        screen_name: 'course_registration_thank_you',
+        event_target: 'register_button',
+        course_type: courseType,
+        location_type: workshop.mode,
+      });
       track(
         'purchase',
         {

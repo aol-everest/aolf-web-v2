@@ -434,7 +434,6 @@ const Course = () => {
       },
       // { initialData: workshops },
     );
-  //console.log(data.pages[0]);
 
   const { bundleInfo } = data?.pages[0] || {};
   const { comboName, comboDescription } = bundleInfo || {};

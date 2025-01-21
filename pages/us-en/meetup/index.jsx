@@ -160,6 +160,7 @@ const MeetupTile = ({ data }) => {
       sfid,
       productTypeId,
       isSubscriptionOfferingUsed,
+      isCCNotRequired,
     } = selectedMeetup;
     const { subscriptions = [] } = profile;
     hideAlert();
@@ -175,7 +176,7 @@ const MeetupTile = ({ data }) => {
         )
       : null;
 
-    if (!isSubscriptionOfferingUsed) {
+    if (!isSubscriptionOfferingUsed && !isCCNotRequired) {
       pushRouteWithUTMQuery(router, {
         pathname: `/us-en/meetup/checkout/${sfid}`,
         query: {

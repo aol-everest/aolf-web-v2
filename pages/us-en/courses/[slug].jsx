@@ -8,7 +8,7 @@ import {
 } from '@utils';
 import ContentLoader from 'react-content-loader';
 import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useQueryState, parseAsBoolean, parseAsJson, createParser } from 'nuqs';
 import { useUIDSeed } from 'react-uid';
 import { useAuth } from '@contexts';
@@ -365,6 +365,7 @@ const Course = () => {
   const [limit] = useQueryState('limit');
   const [searchKey, setSearchKey] = useState('');
   const [showFilterModal, setShowFilterModal] = useState(false);
+  const scrollRef = useRef();
 
   const { isSuccess, data, isFetchingNextPage, fetchNextPage, hasNextPage } =
     useInfiniteQuery(
@@ -1003,7 +1004,7 @@ const Course = () => {
                 </div>
                 {showFilterModal && (
                   <div className="filter--box">
-                    <div className="selected-filter-wrap">
+                    <div className="selected-filter-wrap" ref={scrollRef}>
                       {locationFilter && (
                         <div
                           className="selected-filter-item"
@@ -1073,6 +1074,7 @@ const Course = () => {
                         locationFilter ? `${locationFilter.locationName}` : null
                       }
                       clearEvent={onFilterClearEvent('locationFilter')}
+                      scrollRef={scrollRef}
                     >
                       <AddressSearch
                         closeHandler={onFilterChange('locationFilter')}
@@ -1128,6 +1130,7 @@ const Course = () => {
                       }
                       hideClearOption
                       closeEvent={changeCourseType}
+                      scrollRef={scrollRef}
                     >
                       <div className="dropdown">
                         <SmartDropDown
@@ -1165,6 +1168,7 @@ const Course = () => {
                         filterStartEndDateStr ? filterStartEndDateStr : null
                       }
                       clearEvent={onDatesChange}
+                      scrollRef={scrollRef}
                     >
                       <div className="datepicker-block">
                         <DateRangePicker
@@ -1259,6 +1263,7 @@ const Course = () => {
                           : null
                       }
                       clearEvent={onFilterClearEvent('timeZoneFilter')}
+                      scrollRef={scrollRef}
                     >
                       <div className="dropdown">
                         <SmartDropDown
@@ -1311,6 +1316,7 @@ const Course = () => {
                       label="Instructor"
                       value={instructorFilter ? instructorFilter.label : null}
                       clearEvent={onFilterClearEvent('instructorFilter')}
+                      scrollRef={scrollRef}
                     >
                       <SmartInput
                         containerClassName="smart-input-mobile"
