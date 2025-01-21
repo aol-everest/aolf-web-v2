@@ -746,8 +746,6 @@ const ProfileLanding = () => {
     return new Date(aStartTime) - new Date(bStartTime); // Earliest event first
   });
 
-  console.log('recommendedEventsOrdered', recommendedEventsOrdered);
-
   const upcomingEvents = [
     ...(data?.workshops || []),
     ...(data?.meetups || []),

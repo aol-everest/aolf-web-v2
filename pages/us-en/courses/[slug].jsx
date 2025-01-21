@@ -540,6 +540,7 @@ const Course = () => {
           setInstructorFilter(value);
         } else {
           setInstructorFilter(null);
+          setSearchKey('');
         }
         break;
     }
@@ -565,6 +566,7 @@ const Course = () => {
         break;
       case 'instructorFilter':
         setInstructorFilter(null);
+        setSearchKey('');
         break;
     }
   };
@@ -596,6 +598,7 @@ const Course = () => {
           setInstructorFilter(value);
         } else {
           setInstructorFilter(null);
+          setSearchKey('');
         }
         break;
     }
