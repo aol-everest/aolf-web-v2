@@ -512,6 +512,7 @@ const Course = () => {
     setTimeZoneFilter(null);
     setInstructorFilter(null);
     setFilterStartEndDate(null);
+    setSearchKey('');
   };
 
   const onFilterChange = (field) => async (value) => {
