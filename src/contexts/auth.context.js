@@ -27,13 +27,13 @@ import {
 } from '@passwordLess/plaintext.js';
 import { stepUpAuthenticationWithSmsOtp } from '@passwordLess/sms-otp-stepup.js';
 import { configure } from '@passwordLess/config.js';
-import { retrieveTokens, storeTokens } from '@passwordLess/storage.js';
-import { busyState } from '@passwordLess/model.js';
 import {
-  scheduleRefresh,
-  refreshTokens,
+  retrieveTokens,
+  storeTokens,
   clearStorage,
-} from '@passwordLess/refresh.js';
+} from '@passwordLess/storage.js';
+import { busyState } from '@passwordLess/model.js';
+import { scheduleRefresh, refreshTokens } from '@passwordLess/refresh.js';
 
 // Create a context for managing authentication state
 const AuthContext = createContext();
@@ -82,6 +82,8 @@ export const AuthProvider = ({
         case 'signedOut':
           console.log('user have been signedOut successfully.');
           setCurrentUser({ isAuthenticated: false });
+          localStorage.clear();
+          clearStorage();
           break;
         case 'tokenRefresh':
           console.log('auth tokens have been refreshed.');
