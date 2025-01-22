@@ -1,4 +1,4 @@
-import Cookies from 'universal-cookie';
+import Cookies from 'js-cookie';
 
 /** @class */
 export default class CookieStorage {
@@ -8,15 +8,14 @@ export default class CookieStorage {
    * @param {string} data.domain Cookies domain (default: domain of the page
    * 				where the cookie was created, excluding subdomains)
    * @param {string} data.path Cookies path (default: '/')
-   * @param {integer} data.expires Cookie expiration (in days, default: 2)
+   * @param {integer} data.expires Cookie expiration (in days, default: 365)
    * @param {boolean} data.secure Cookie secure flag (default: true)
    * @param {string} data.sameSite Cookie request behavior (default: 'Lax')
    */
   constructor(data = {}) {
-    this.cookies = new Cookies();
     this.domain = data.domain || null;
     this.path = data.path || '/';
-    this.expires = data.expires !== undefined ? data.expires : 2;
+    this.expires = data.expires !== undefined ? data.expires : 365;
     this.secure = data.secure !== undefined ? data.secure : true;
 
     if (data.sameSite) {
@@ -45,14 +44,14 @@ export default class CookieStorage {
   setItem(key, value) {
     const options = {
       path: this.path,
-      expires: new Date(Date.now() + this.expires * 24 * 60 * 60 * 1000),
+      expires: this.expires,
       domain: this.domain,
       secure: this.secure,
       sameSite: this.sameSite,
     };
 
-    this.cookies.set(key, value, options);
-    return this.cookies.get(key);
+    Cookies.set(key, value, options);
+    return Cookies.get(key);
   }
 
   /**
@@ -61,7 +60,7 @@ export default class CookieStorage {
    * @returns {string | undefined} The value of the key, or undefined if not found
    */
   getItem(key) {
-    return this.cookies.get(key);
+    return Cookies.get(key);
   }
 
   /**
@@ -76,7 +75,7 @@ export default class CookieStorage {
       sameSite: this.sameSite,
     };
 
-    this.cookies.remove(key, options);
+    Cookies.remove(key, options);
   }
 
   /**
@@ -84,8 +83,8 @@ export default class CookieStorage {
    * @returns {object} An empty object
    */
   clear() {
-    const allCookies = this.cookies.getAll();
-    Object.keys(allCookies).forEach((key) => {
+    const cookies = Cookies.get();
+    Object.keys(cookies).forEach((key) => {
       this.removeItem(key);
     });
     return {};

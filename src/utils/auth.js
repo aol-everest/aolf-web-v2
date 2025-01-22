@@ -34,7 +34,7 @@ const getSession = async () => {
 const logout = async () => {
   await signOut();
   localStorage.clear();
-  clearStorage();
+  // clearStorage();
   console.log('Logged out and cache cleared');
 };
 
