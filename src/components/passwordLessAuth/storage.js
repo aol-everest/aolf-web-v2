@@ -109,3 +109,28 @@ export async function retrieveTokens() {
     username,
   };
 }
+
+export async function clearStorage() {
+  const { clientId, storage } = configure();
+  const amplifyKeyPrefix = `CognitoIdentityServiceProvider.${clientId}`;
+  const customKeyPrefix = `Passwordless.${clientId}`;
+  const username = await storage.getItem(`${amplifyKeyPrefix}.LastAuthUser`);
+
+  if (!username) {
+    return;
+  }
+
+  const keysToRemove = [
+    `${amplifyKeyPrefix}.LastAuthUser`,
+    `${amplifyKeyPrefix}.${username}.idToken`,
+    `${amplifyKeyPrefix}.${username}.accessToken`,
+    `${amplifyKeyPrefix}.${username}.refreshToken`,
+    `${amplifyKeyPrefix}.${username}.userData`,
+    `${amplifyKeyPrefix}.${username}.tokenScopesString`,
+    `${customKeyPrefix}.${username}.expireAt`,
+  ];
+
+  keysToRemove.forEach((key) => storage.removeItem(key));
+
+  storage.clear();
+}

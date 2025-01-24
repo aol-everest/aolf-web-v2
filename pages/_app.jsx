@@ -84,7 +84,7 @@ Passwordless.configure({
     domain: PARENT_DOMAIN,
     secure: !isLocal,
   }),
-  // debug: console.debug,
+  debug: console.debug,
 });
 Amplify.configure({
   Auth: {

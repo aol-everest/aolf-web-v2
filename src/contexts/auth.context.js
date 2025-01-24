@@ -27,7 +27,11 @@ import {
 } from '@passwordLess/plaintext.js';
 import { stepUpAuthenticationWithSmsOtp } from '@passwordLess/sms-otp-stepup.js';
 import { configure } from '@passwordLess/config.js';
-import { retrieveTokens, storeTokens } from '@passwordLess/storage.js';
+import {
+  retrieveTokens,
+  storeTokens,
+  clearStorage,
+} from '@passwordLess/storage.js';
 import { busyState } from '@passwordLess/model.js';
 import { scheduleRefresh, refreshTokens } from '@passwordLess/refresh.js';
 
@@ -78,6 +82,8 @@ export const AuthProvider = ({
         case 'signedOut':
           console.log('user have been signedOut successfully.');
           setCurrentUser({ isAuthenticated: false });
+          localStorage.clear();
+          clearStorage();
           break;
         case 'tokenRefresh':
           console.log('auth tokens have been refreshed.');
@@ -475,7 +481,10 @@ function _usePasswordless(fetchCurrentUser) {
         currentStatus: signingInStatus,
       });
       signingOut.signedOut.catch(setLastError);
-      amplifySignOut({ global: true });
+      amplifySignOut();
+      localStorage.clear();
+      clearStorage();
+      console.log('Logged out and cache cleared');
       return signingOut;
     },
     /** Request a sign-in link ("magic link") to be sent to the user's e-mail address */

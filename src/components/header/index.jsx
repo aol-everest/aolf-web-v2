@@ -70,7 +70,7 @@ const AOL_MENU = [
     submenu: [
       {
         name: 'About',
-        link: '/us-en/lp/gurudev',
+        link: 'https://www.artofliving.org/us-en/gurudev',
       },
       /* Link not available
       {
@@ -257,14 +257,14 @@ const AOL_MENU = [
   {
     name: 'Resources',
     submenu: [
-      /*{
+      {
         name: 'Meditations',
         link: `/us-en/library/${CONTENT_FOLDER_IDS.MEDITATE_FOLDER_ID}`,
       },
       {
         name: 'Wisdom',
         link: `/us-en/library/${CONTENT_FOLDER_IDS.WISDOM_FOLDER_ID}`,
-      },*/
+      },
       {
         name: 'App',
         link: '/us-en/lp/journey-app',
