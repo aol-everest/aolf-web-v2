@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 export const SmartInput = ({
   dataList,
@@ -12,6 +12,12 @@ export const SmartInput = ({
 }) => {
   const [isHidden, setIsHidden] = useState(true);
   const [searchKey, setSearchKey] = useState(value);
+
+  useEffect(() => {
+    if (value !== searchKey) {
+      setSearchKey(value);
+    }
+  }, [value]);
 
   const handleChange = (event) => {
     if (onSearchKeyChange) {
@@ -26,7 +32,10 @@ export const SmartInput = ({
   const closeHandlerInner = (data) => (event) => {
     if (closeHandler) {
       setSearchKey(data.label);
-      //onSearchKeyChange("");
+      if (onSearchKeyChange) {
+        onSearchKeyChange(data.label);
+      }
+
       closeHandler(data)();
     }
     setIsHidden(true);
