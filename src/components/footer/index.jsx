@@ -223,7 +223,9 @@ export function Footer() {
                     </Link>
                   </li>
                   <li className="nav-item">
-                    <Link href="/us-en/lp/donations">Donate</Link>
+                    <Link href="https://event.us.artofliving.org/us-en/donations/">
+                      Donate
+                    </Link>
                   </li>
                   <li className="nav-item">
                     <Link href="https://endowment.us.artofliving.org/">
