@@ -717,7 +717,10 @@ export const Header = () => {
                 );
               })}
               <Nav.Item as="li" className="mobileView">
-                <Nav.Link href="/us-en/lp/donations" as={Link}>
+                <Nav.Link
+                  href="https://event.us.artofliving.org/us-en/donations/"
+                  as={Link}
+                >
                   Donation
                 </Nav.Link>
               </Nav.Item>
