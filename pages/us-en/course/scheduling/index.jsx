@@ -282,6 +282,11 @@ const Scheduling = ({ initialLocation }) => {
 
   function getGroupedUniqueEventIds(response) {
     const groupedEvents = response.data.reduce((acc, obj) => {
+      if (obj.mode === COURSE_MODES.IN_PERSON.value) {
+        acc[`${obj.mode}-${obj.id}`] = obj; // Add a unique key for in-person courses
+        return acc;
+      }
+
       let timings = obj.timings;
       timings = sortBy(timings, (obj) => new Date(obj.startDate));
 
