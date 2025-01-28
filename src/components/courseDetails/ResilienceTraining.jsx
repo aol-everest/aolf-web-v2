@@ -170,20 +170,18 @@ export const ResilienceTraining = ({
           <div class="banner-title">{title}</div>
           <ul class="banner-course-features">
             <li>
-              <span class="icon-aol iconaol-flower-1"></span>Relieve stress,
-              anxiety, and tension
+              <span class="icon-aol iconaol-flower-1"></span>Resiliency
             </li>
             <li>
-              <span class="icon-aol iconaol-flower-2"></span>Enhance mental
-              clarity and optimize performance
+              <span class="icon-aol iconaol-flower-2"></span>Enhanced Wellbeing
             </li>
             <li>
-              <span class="icon-aol iconaol-flower-3"></span>Improve sleep
-              quality
+              <span class="icon-aol iconaol-flower-3"></span>Improved Sleep
+              Quality
             </li>
             <li>
-              <span class="icon-aol iconaol-flower-4"></span>Reduce symptoms of
-              chronic and traumatic stress
+              <span class="icon-aol iconaol-flower-4"></span>Increased Mental
+              Clarity and Focus
             </li>
           </ul>
         </div>
@@ -402,7 +400,7 @@ export const ResilienceTraining = ({
             </div>
             <div class="benefits-col col-img">
               <img
-                src="/img/resilience-benefit.jpeg"
+                src="/img/resilience-benefit1.webp"
                 class="img-resilience-benefit"
                 width="670"
               />
@@ -488,7 +486,7 @@ export const ResilienceTraining = ({
           <div class="why-content-box">
             <div class="cb-image-container">
               <img
-                src="/img/why-resilience-placeholder.webp"
+                src="/img/why-resilience-placeholder1.webp"
                 alt="Why Resilience"
                 width="680"
               />

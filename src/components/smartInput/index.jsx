@@ -52,6 +52,7 @@ export const SmartInput = ({
       />
       <div className="smart-input--list">
         {dataList &&
+          !isHidden &&
           dataList.map((data) => {
             return (
               <p

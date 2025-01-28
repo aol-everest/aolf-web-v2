@@ -47,22 +47,24 @@
     }
   }
   .banner-section {
-    background-image: url(/img/sky-resilience-banner.webp);
+    background-image: url(/img/sky-resilience-banner1.webp);
     background-repeat: no-repeat;
-    background-position: top center;
+    background-position: bottom center;
     background-size: cover;
     @media screen and (max-width: 767px) {
-      background-image: url(/img/sky-resilience-banner-mobile.webp);
-      background-size: cover;
+      background-image: url(/img/sky-resilience-banner-mobile1.webp);
+      background-size: auto;
       background-position: center;
       padding-bottom: 290px;
     }
     .container {
-      padding-top: 108px;
-      padding-bottom: 316px;
+      padding-top: 83px;
+      padding-bottom: 217px;
+      margin-bottom: 100px;
       @media screen and (max-width: 991px) {
         padding-top: 58px;
         padding-bottom: 40px;
+        margin-bottom: 0px;
       }
       @media screen and (max-width: 767px) {
         padding-top: 30px;
@@ -399,6 +401,9 @@
     }
     .cb-image-container {
       max-width: 680px;
+      img {
+        border-radius: 32px;
+      }
       @media screen and (max-width: 1199px) {
         flex: 50%;
         flex-shrink: 0;
