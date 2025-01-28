@@ -59,8 +59,7 @@ const SchedulingPaymentForm = ({
   const { signOut } = passwordLess;
   const formRef = useRef();
 
-  const [isPending, startTransition] = useTransition();
-  // const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const stripe = useStripe();
   const elements = useElements();
@@ -96,248 +95,248 @@ const SchedulingPaymentForm = ({
       }))
     : [];
 
-  const completeEnrollmentAction = (values) => {
-    startTransition(async () => {
-      const {
-        questionnaire,
-        firstName,
-        lastName,
-        email,
-        couponCode,
-        contactPhone,
-        contactAddress,
-        contactCity,
-        contactState,
-        contactZip,
-      } = values;
+  const completeEnrollmentAction = async (values) => {
+    setLoading(true);
+    const {
+      questionnaire,
+      firstName,
+      lastName,
+      email,
+      couponCode,
+      contactPhone,
+      contactAddress,
+      contactCity,
+      contactState,
+      contactZip,
+    } = values;
 
-      if (!stripe || !elements) {
-        // Stripe.js hasn't yet loaded.
-        // Make sure to disable form submission until Stripe.js has loaded.
-        return;
-      }
+    if (!stripe || !elements) {
+      // Stripe.js hasn't yet loaded.
+      // Make sure to disable form submission until Stripe.js has loaded.
+      return;
+    }
 
-      track(
-        'add_payment_info',
-        {
-          ecommerce: {
-            currency: 'USD',
-            value: workshop?.unitPrice,
-            coupon: couponCode || '',
-            payment_type: 'credit_card/gpay/apple_pay',
-            course_format: workshop?.productTypeId,
-            course_name: workshop?.title,
-            items: [
-              {
-                item_id: workshop?.id,
-                item_name: workshop?.title,
-                affiliation: 'NA',
-                coupon: couponCode || '',
-                discount: 0.0,
-                index: 0,
-                item_brand: workshop?.businessOrg,
-                item_category: workshop?.title,
-                item_category2: workshop?.mode,
-                item_category3: 'paid',
-                item_category4: 'NA',
-                item_category5: 'NA',
-                item_list_id: workshop?.productTypeId,
-                item_list_name: workshop?.title,
-                item_variant: workshop?.workshopTotalHours,
-                location_id: workshop?.locationCity,
-                price: workshop?.unitPrice,
-                quantity: 1,
-              },
-            ],
-          },
+    track(
+      'add_payment_info',
+      {
+        ecommerce: {
+          currency: 'USD',
+          value: workshop?.unitPrice,
+          coupon: couponCode || '',
+          payment_type: 'credit_card/gpay/apple_pay',
+          course_format: workshop?.productTypeId,
+          course_name: workshop?.title,
+          items: [
+            {
+              item_id: workshop?.id,
+              item_name: workshop?.title,
+              affiliation: 'NA',
+              coupon: couponCode || '',
+              discount: 0.0,
+              index: 0,
+              item_brand: workshop?.businessOrg,
+              item_category: workshop?.title,
+              item_category2: workshop?.mode,
+              item_category3: 'paid',
+              item_category4: 'NA',
+              item_category5: 'NA',
+              item_list_id: workshop?.productTypeId,
+              item_list_name: workshop?.title,
+              item_variant: workshop?.workshopTotalHours,
+              location_id: workshop?.locationCity,
+              price: workshop?.unitPrice,
+              quantity: 1,
+            },
+          ],
         },
-        {
-          plugins: {
-            all: false,
-            'gtm-ecommerce-plugin': true,
-          },
+      },
+      {
+        plugins: {
+          all: false,
+          'gtm-ecommerce-plugin': true,
         },
-      );
+      },
+    );
 
-      // Trigger form validation and wallet collection
-      const { error: submitError } = await elements.submit();
-      if (submitError) {
-        throw submitError;
-      }
+    // Trigger form validation and wallet collection
+    const { error: submitError } = await elements.submit();
+    if (submitError) {
+      throw submitError;
+    }
 
-      const { id: productId, addOnProducts, productTypeId } = workshop;
+    const { id: productId, addOnProducts, productTypeId } = workshop;
 
-      const complianceQuestionnaire = questionnaire.reduce(
-        (res, current) => ({
-          ...res,
-          [current.key]: current.value ? 'Yes' : 'No',
-        }),
-        {},
-      );
+    const complianceQuestionnaire = questionnaire.reduce(
+      (res, current) => ({
+        ...res,
+        [current.key]: current.value ? 'Yes' : 'No',
+      }),
+      {},
+    );
 
-      try {
-        const selectedAddOn = null;
+    try {
+      const selectedAddOn = null;
 
-        let addOnProductsList = addOnProducts
-          ? addOnProducts.map((product) => {
-              if (!product.isAddOnSelectionRequired) {
-                const value = values[product.productName];
-                if (value) {
-                  return product.productSfid;
-                } else {
-                  return null;
-                }
+      let addOnProductsList = addOnProducts
+        ? addOnProducts.map((product) => {
+            if (!product.isAddOnSelectionRequired) {
+              const value = values[product.productName];
+              if (value) {
+                return product.productSfid;
+              } else {
+                return null;
               }
-              return product.productSfid;
-            })
-          : [];
+            }
+            return product.productSfid;
+          })
+        : [];
 
-        let AddOnProductIds = [selectedAddOn, ...addOnProductsList];
+      let AddOnProductIds = [selectedAddOn, ...addOnProductsList];
 
-        AddOnProductIds = AddOnProductIds.filter((AddOn) => AddOn !== null);
+      AddOnProductIds = AddOnProductIds.filter((AddOn) => AddOn !== null);
 
-        const isRegularOrder = values.comboDetailId
-          ? values.comboDetailId === productId
-          : true;
+      const isRegularOrder = values.comboDetailId
+        ? values.comboDetailId === productId
+        : true;
 
-        const products = isRegularOrder
-          ? {
+      const products = isRegularOrder
+        ? {
+            productType: 'workshop',
+            productSfId: productId,
+            AddOnProductIds: AddOnProductIds,
+          }
+        : {
+            productType: 'bundle',
+            productSfId: values.comboDetailId,
+            childProduct: {
               productType: 'workshop',
               productSfId: productId,
               AddOnProductIds: AddOnProductIds,
-            }
-          : {
-              productType: 'bundle',
-              productSfId: values.comboDetailId,
-              childProduct: {
-                productType: 'workshop',
-                productSfId: productId,
-                AddOnProductIds: AddOnProductIds,
-                complianceQuestionnaire,
-              },
-            };
-
-        let payLoad = {
-          shoppingRequest: {
-            couponCode: couponCode || '',
-            contactAddress: {
-              contactPhone,
-              contactAddress,
-              contactCity,
-              contactState,
-              contactZip,
+              complianceQuestionnaire,
             },
-            billingAddress: {
-              billingPhone: contactPhone,
-              billingAddress: contactAddress,
-              billingCity: contactCity,
-              billingState: contactState,
-              billingZip: contactZip,
+          };
+
+      let payLoad = {
+        shoppingRequest: {
+          couponCode: couponCode || '',
+          contactAddress: {
+            contactPhone,
+            contactAddress,
+            contactCity,
+            contactState,
+            contactZip,
+          },
+          billingAddress: {
+            billingPhone: contactPhone,
+            billingAddress: contactAddress,
+            billingCity: contactCity,
+            billingState: contactState,
+            billingZip: contactZip,
+          },
+          products,
+          complianceQuestionnaire,
+          isInstalmentOpted: false,
+          isStripeIntentPayment: true,
+        },
+        utm: filterAllowedParams(router.query),
+      };
+
+      if (fee <= 0) {
+        payLoad.shoppingRequest.isStripeIntentPayment = false;
+      }
+
+      payLoad = {
+        ...payLoad,
+        user: {
+          lastName: lastName,
+          firstName: firstName,
+          email: email,
+        },
+      };
+
+      //token.saveCardForFuture = true;
+      const {
+        stripeIntentObj,
+        status,
+        data,
+        error: errorMessage,
+        isError,
+      } = await api.post({
+        path: 'createAndPayOrder',
+        body: payLoad,
+        isUnauthorized: true,
+      });
+
+      if (status === 400 || isError) {
+        throw new Error(errorMessage);
+      }
+
+      if (data) {
+        if (data.totalOrderAmount > 0) {
+          let filteredParams = {
+            ctype: productTypeId,
+            page: 'ty',
+            referral: 'course_scheduling_checkout',
+            courseType,
+            ...filterAllowedParams(router.query),
+          };
+          filteredParams = removeNull(filteredParams);
+          let returnUrl = `${window.location.origin}/us-en/course/thankyou/${
+            data.attendeeId
+          }?${queryString.stringify(filteredParams)}`;
+          if (isGenericWorkshop) {
+            returnUrl = `${window.location.origin}/us-en/course/scheduling?aid=${data.attendeeId}&${queryString.stringify(filteredParams)}`;
+          }
+
+          const result = await stripe.confirmPayment({
+            //`Elements` instance that was used to create the Payment Element
+            elements,
+            clientSecret: stripeIntentObj.client_secret,
+            confirmParams: {
+              return_url: returnUrl,
             },
-            products,
-            complianceQuestionnaire,
-            isInstalmentOpted: false,
-            isStripeIntentPayment: true,
-          },
-          utm: filterAllowedParams(router.query),
-        };
-
-        if (fee <= 0) {
-          payLoad.shoppingRequest.isStripeIntentPayment = false;
-        }
-
-        payLoad = {
-          ...payLoad,
-          user: {
-            lastName: lastName,
-            firstName: firstName,
-            email: email,
-          },
-        };
-
-        //token.saveCardForFuture = true;
-        const {
-          stripeIntentObj,
-          status,
-          data,
-          error: errorMessage,
-          isError,
-        } = await api.post({
-          path: 'createAndPayOrder',
-          body: payLoad,
-          isUnauthorized: true,
-        });
-
-        if (status === 400 || isError) {
-          throw new Error(errorMessage);
-        }
-
-        if (data) {
-          if (data.totalOrderAmount > 0) {
-            let filteredParams = {
-              ctype: productTypeId,
-              page: 'ty',
-              referral: 'course_scheduling_checkout',
-              courseType,
-              ...filterAllowedParams(router.query),
-            };
-            filteredParams = removeNull(filteredParams);
-            let returnUrl = `${window.location.origin}/us-en/course/thankyou/${
-              data.attendeeId
-            }?${queryString.stringify(filteredParams)}`;
-            if (isGenericWorkshop) {
-              returnUrl = `${window.location.origin}/us-en/course/scheduling?aid=${data.attendeeId}&${queryString.stringify(filteredParams)}`;
-            }
-
-            const result = await stripe.confirmPayment({
-              //`Elements` instance that was used to create the Payment Element
-              elements,
-              clientSecret: stripeIntentObj.client_secret,
-              confirmParams: {
-                return_url: returnUrl,
+          });
+          if (result.error) {
+            // Show error to your customer (for example, payment details incomplete)
+            throw new Error(result.error.message);
+          }
+        } else {
+          if (isGenericWorkshop) {
+            replaceRouteWithUTMQuery(router, {
+              pathname: `/us-en/course/scheduling/thankyou/${data.attendeeId}`,
+              query: {
+                aid: data.attendeeId,
               },
             });
-            if (result.error) {
-              // Show error to your customer (for example, payment details incomplete)
-              throw new Error(result.error.message);
-            }
           } else {
-            if (isGenericWorkshop) {
-              replaceRouteWithUTMQuery(router, {
-                pathname: `/us-en/course/scheduling/thankyou/${data.attendeeId}`,
-                query: {
-                  aid: data.attendeeId,
-                },
-              });
-            } else {
-              replaceRouteWithUTMQuery(router, {
-                pathname: `/us-en/course/thankyou/${data.attendeeId}`,
-                query: {
-                  ctype: productTypeId,
-                  page: 'ty',
-                  courseType,
-                  referral: 'course_scheduling_checkout',
-                },
-              });
-            }
+            replaceRouteWithUTMQuery(router, {
+              pathname: `/us-en/course/thankyou/${data.attendeeId}`,
+              query: {
+                ctype: productTypeId,
+                page: 'ty',
+                courseType,
+                referral: 'course_scheduling_checkout',
+              },
+            });
           }
         }
-      } catch (ex) {
-        console.error(ex);
-        const data = ex.response?.data;
-        const { message, statusCode } = data || {};
-        showAlert(ALERT_TYPES.ERROR_ALERT, {
-          children: message ? `Error: ${message} (${statusCode})` : ex.message,
-        });
-        track('show_error', {
-          screen_name: 'course_scheduling_checkout_error',
-          course_type: courseType,
-          error_message: message
-            ? `Error: ${message} (${statusCode})`
-            : ex.message,
-        });
       }
-    });
+    } catch (ex) {
+      console.error(ex);
+      const data = ex.response?.data;
+      const { message, statusCode } = data || {};
+      showAlert(ALERT_TYPES.ERROR_ALERT, {
+        children: message ? `Error: ${message} (${statusCode})` : ex.message,
+      });
+      track('show_error', {
+        screen_name: 'course_scheduling_checkout_error',
+        course_type: courseType,
+        error_message: message
+          ? `Error: ${message} (${statusCode})`
+          : ex.message,
+      });
+    }
+    setLoading(false);
   };
 
   const formikOnChange = (values) => {
@@ -492,7 +491,7 @@ const SchedulingPaymentForm = ({
 
   return (
     <>
-      {isPending && <Loader />}
+      {loading && <Loader />}
       <Formik
         initialValues={{
           firstName: first_name,
@@ -888,7 +887,7 @@ const SchedulingPaymentForm = ({
                               className="submit-btn"
                               id="pay-button"
                               type="button"
-                              disabled={isPending}
+                              disabled={loading}
                               form="my-form"
                               onClick={handleFormSubmit}
                             >
@@ -898,7 +897,7 @@ const SchedulingPaymentForm = ({
                             <button
                               className="submit-btn"
                               type="button"
-                              disabled={isPending}
+                              disabled={loading}
                               onClick={(e) => {
                                 if (
                                   !values.email ||
