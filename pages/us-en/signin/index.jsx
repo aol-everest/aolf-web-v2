@@ -187,7 +187,7 @@ function LoginPage() {
       message ===
       'Temporary password has expired and must be reset by an administrator.'
     ) {
-      return 'Temporary password has expired. Please use the ‘Reset Password’ link.';
+      return `Temporary password has expired. Please use the 'Reset Password' link.`;
     }
     const matches = message.match(/\[(.*?)\]/);
     if (matches) {
@@ -208,13 +208,19 @@ function LoginPage() {
   const backToFlowAction = (e) => {
     if (e) e.preventDefault();
     if (navigateTo) {
-      window.top.location.href =
-        window.location.protocol + '//' + window.location.host + navigateTo;
-      //router.push(navigateTo);
+      // Check if navigateTo starts with http:// or https:// (absolute URL)
+      const isAbsoluteUrl = /^https?:\/\//i.test(navigateTo);
+
+      if (isAbsoluteUrl) {
+        window.top.location.href = navigateTo;
+      } else {
+        // For relative paths, construct the full URL
+        window.top.location.href =
+          window.location.protocol + '//' + window.location.host + navigateTo;
+      }
     } else {
       window.top.location.href =
         window.location.protocol + '//' + window.location.host + '/us-en';
-      // router.push('/us-en');
     }
   };
   const newPasswordFlow = () => {
