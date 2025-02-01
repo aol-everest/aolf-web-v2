@@ -123,12 +123,13 @@ const ExploreCourses = () => {
               </div>
               <div class="video-title">{selectedVideo.title}</div>
               <div class="video-description">
-                In this video, celebrated happiness expert Rajshree Patel
+                {selectedVideo.description ||
+                  `In this video, celebrated happiness expert Rajshree Patel
                 enlightens you about what stress is and how it negatively
                 affects your body. You’ll learn the causes of stress and how it
                 affects your body chemistry. Stress causes changes in our
                 bodies, and it can have a cumulative effect in our lives. Find
-                out now.
+                out now.`}
               </div>
               <button
                 class="showMoreToggleBtn"
