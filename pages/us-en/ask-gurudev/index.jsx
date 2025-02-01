@@ -6,11 +6,11 @@ import React, {
   useMemo,
   useRef,
 } from 'react';
-import SearchOptions from './SearchOptions/SearchOptions';
-import CategoryTabs from './CategoryTabs';
+import SearchOptions from '@components/askGurudev/SearchOptions/SearchOptions';
+import CategoryTabs from '@components/askGurudev/CategoryTabs';
 import { useQueryString } from '@hooks';
-import Footer from './Footer';
-import SearchResultsList from './SearchResultsList/SearchResultsList';
+import Footer from '@components/askGurudev/Footer';
+import SearchResultsList from '@components/askGurudev/SearchResultsList/SearchResultsList';
 import { Loader } from '@components/loader';
 
 export default function AskGurudev() {
