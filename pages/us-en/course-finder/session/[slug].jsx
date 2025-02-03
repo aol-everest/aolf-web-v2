@@ -7,7 +7,8 @@ import { useQuery } from '@tanstack/react-query';
 import { api } from '@utils';
 import { pushRouteWithUTMQuery } from '@service';
 import { useAuth, useGlobalVideoPlayerContext } from '@contexts';
-
+import ErrorPage from 'next/error';
+import { PageLoading } from '@components';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 
@@ -73,6 +74,7 @@ const VideoCard = ({ video, index, isAuthenticated }) => {
       );
     } else {
       showVideoPlayer({
+        autoPlay: true,
         track: {
           title,
           image: thumbnail,
@@ -142,7 +144,6 @@ const VideoCard = ({ video, index, isAuthenticated }) => {
 };
 
 export default function Session() {
-  const { showVideoPlayer } = useGlobalVideoPlayerContext();
   const { isAuthenticated } = useAuth();
   const router = useRouter();
   const { slug } = router.query;
@@ -160,7 +161,8 @@ export default function Session() {
       return response.data;
     },
   });
-  console.log(data);
+  if (isError) return <ErrorPage statusCode={500} title={error.message} />;
+  if (isLoading || !router.isReady) return <PageLoading />;
   return (
     <main class="course-finder-questionnaire-question">
       <section class="questionnaire-results new">
