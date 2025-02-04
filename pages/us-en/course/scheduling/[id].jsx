@@ -20,6 +20,7 @@ import { ABBRS, ALERT_TYPES, COURSE_TYPES } from '@constants';
 import { NextSeo } from 'next-seo';
 import { useQuery } from '@tanstack/react-query';
 import { ScheduleAgreementForm } from '@components/scheduleAgreementForm';
+import { StripeExpressElement } from '@components/checkout/StripeExpressElementOnly';
 import {
   StyledInputNewCheckout,
   UserInfoFormNewCheckout,
@@ -31,7 +32,7 @@ import {
   useElements,
 } from '@stripe/react-stripe-js';
 import * as Yup from 'yup';
-import { Formik } from 'formik';
+import { Formik, Field } from 'formik';
 import { loadStripe } from '@stripe/stripe-js';
 import { filterAllowedParams, removeNull } from '@utils/utmParam';
 import { DiscountInputNew } from '@components/discountInputNew';
@@ -585,6 +586,7 @@ const SchedulingPaymentForm = ({
             resetForm,
           } = formikProps;
           formikOnChange(values);
+          console.log(values);
 
           const isNotAllQuestionnaireChecked = values?.questionnaire?.some(
             (item) => !item.value,
@@ -880,6 +882,14 @@ const SchedulingPaymentForm = ({
                             healthinfo@us.artofliving.org
                           </a>
                         </div>
+                        <Field
+                          name="payment"
+                          component={StripeExpressElement}
+                          workshop={workshop}
+                          loading={loading}
+                          parentStyle={{ display: 'flex' }}
+                          email={values.email}
+                        />
 
                         <div className="payment-actions">
                           {activeStep === CheckoutStates.USER_INFO ? (
