@@ -49,17 +49,19 @@ export const StripeExpressElement = ({
     },
   };
   return (
-    <Elements stripe={stripePromise} options={elementsOptions}>
-      <CheckoutPage
-        email={email}
-        workshop={workshop}
-        loading={loading}
-        parentStyle={parentStyle}
-        nextPageUrl={nextPageUrl}
-        field={field}
-        form={form}
-      />
-    </Elements>
+    <div className="express-checkout-element-only">
+      <Elements stripe={stripePromise} options={elementsOptions}>
+        <CheckoutPage
+          email={email}
+          workshop={workshop}
+          loading={loading}
+          parentStyle={parentStyle}
+          nextPageUrl={nextPageUrl}
+          field={field}
+          form={form}
+        />
+      </Elements>
+    </div>
   );
 };
 
