@@ -9,6 +9,7 @@ const SearchResultsList = ({
   selectedPageIndex,
   query,
   currentMeta,
+  results,
 }) => {
   const [playingId, setPlayingId] = useState(null);
   return (
@@ -22,6 +23,7 @@ const SearchResultsList = ({
         selectedPageIndex={selectedPageIndex}
         query={query}
         currentMeta={currentMeta}
+        results={results}
       />
     </AnimatePresence>
   );
