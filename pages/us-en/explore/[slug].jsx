@@ -122,15 +122,7 @@ const ExploreCourses = () => {
                 />
               </div>
               <div class="video-title">{selectedVideo.title}</div>
-              <div class="video-description">
-                {selectedVideo.description ||
-                  `In this video, celebrated happiness expert Rajshree Patel
-                enlightens you about what stress is and how it negatively
-                affects your body. You’ll learn the causes of stress and how it
-                affects your body chemistry. Stress causes changes in our
-                bodies, and it can have a cumulative effect in our lives. Find
-                out now.`}
-              </div>
+              <div class="video-description">{selectedVideo.description}</div>
               <button
                 class="showMoreToggleBtn"
                 onClick="this.classList.toggle('show')"
@@ -183,9 +175,9 @@ const ExploreCourses = () => {
                           {item?.title?.split('-')?.[1] || `Day ${index + 1}`}
                         </div>
                         <div class="video-title">{item.title}</div>
-                        <div class="video-duration">
-                          {item.duration || '7 Min'}
-                        </div>
+                        {item.duration && (
+                          <div class="video-duration">{item.duration} Min</div>
+                        )}
                       </div>
                     </div>
                   );

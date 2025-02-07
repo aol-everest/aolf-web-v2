@@ -9,7 +9,6 @@ import React, {
 import SearchOptions from '@components/askGurudev/SearchOptions/SearchOptions';
 import CategoryTabs from '@components/askGurudev/CategoryTabs';
 import { useQueryString } from '@hooks';
-import Footer from '@components/askGurudev/Footer';
 import SearchResultsList from '@components/askGurudev/SearchResultsList/SearchResultsList';
 import { Loader } from '@components/loader';
 
@@ -174,7 +173,12 @@ export default function AskGurudev() {
   return (
     <main className="ask-gurudev-page">
       <section className="ask-gurudev-top">
-        {feedbackText && <div className="toast">{feedbackText}</div>}
+        {feedbackText && (
+          <div id="message" class="copy-message">
+            <span class="icon-aol iconaol-stars"></span>
+            {feedbackText}
+          </div>
+        )}
         <div className="container">
           <h1 className="page-title beta">Ask Gurudev</h1>
           <CategoryTabs
@@ -219,16 +223,10 @@ export default function AskGurudev() {
                 selectedPageIndex={selectedPageIndex}
                 query={query}
                 currentMeta={searchResult?.meta}
+                results={searchResult?.matches}
               />
             )}
           </div>
-          {selectedQueryResponse && !initialPageLoad && (
-            <Footer
-              results={searchResult?.matches}
-              setSelectedPageIndex={setSelectedPageIndex}
-              selectedPageIndex={selectedPageIndex}
-            />
-          )}
         </div>
       </section>
     </main>

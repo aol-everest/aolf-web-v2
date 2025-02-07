@@ -1,16 +1,16 @@
 @font-face {
   font-family: 'iconaol';
-  src: url('/fonts/iconaol/iconaol.eot?zi4e70');
-  src: url('/fonts/iconaol/iconaol.eot?g3x2mw');
+  src: url('/fonts/iconaol/iconaol.eot?r44xp');
   src:
-    url('/fonts/iconaol/iconaol.eot?g3x2mw#iefix') format('embedded-opentype'),
-    url('/fonts/iconaol/iconaol.ttf?g3x2mw') format('truetype'),
-    url('/fonts/iconaol/iconaol.woff?g3x2mw') format('woff'),
-    url('/fonts/iconaol/iconaol.svg?g3x2mw#iconaol') format('svg');
+    url('/fonts/iconaol/iconaol.eot?r44xp#iefix') format('embedded-opentype'),
+    url('/fonts/iconaol/iconaol.ttf?r44xp') format('truetype'),
+    url('/fonts/iconaol/iconaol.woff?r44xp') format('woff'),
+    url('/fonts/iconaol/iconaol.svg?r44xp#iconaol') format('svg');
   font-weight: normal;
   font-style: normal;
   font-display: block;
 }
+
 .icon-aol {
   /* use !important to prevent issues with browser extensions that change fonts */
   font-family: 'iconaol' !important;
@@ -24,6 +24,21 @@
   /* Better Font Rendering =========== */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+.iconaol-close:before {
+  content: '\e95d';
+}
+.iconaol-stars:before {
+  content: '\e95b';
+}
+.iconaol-tick-circle:before {
+  content: '\e95c';
+}
+.iconaol-book:before {
+  content: '\e95a';
+}
+.iconaol-export:before {
+  content: '\e959';
 }
 .iconaol-flower-6:before {
   content: '\e953';
@@ -54,6 +69,9 @@
 }
 .iconaol-flower-4:before {
   content: '\e952';
+}
+.iconaol-document-text:before {
+  content: '\e94e';
 }
 .iconaol-university-1:before {
   content: '\e94d';
