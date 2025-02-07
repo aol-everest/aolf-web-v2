@@ -174,7 +174,7 @@ const SearchResult = React.forwardRef(function SearchResult(
     return results?.slice(1).map((item, index) => {
       const parts = item.content.split('\n\n');
       return {
-        index: index,
+        index: String(index),
         question: parts[0],
         answer: parts.slice(1).join('\n\n'),
       };
