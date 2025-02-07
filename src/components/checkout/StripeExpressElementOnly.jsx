@@ -241,22 +241,58 @@ const CheckoutPage = ({
     setShowMessage(true);
   };
   const hidePayMessage =
+    form.values.email &&
     form?.values?.ppaAgreement &&
     (form?.values?.questionnaire?.length === 0 ||
       form.values.questionnaire.some((item) => item.value));
+
+  const getValidationMessage = () => {
+    const missingItems = [];
+
+    if (!form.values.email) {
+      missingItems.push('email');
+    }
+    if (!form.values.ppaAgreement) {
+      missingItems.push('agreements');
+    }
+    if (
+      form.values.questionnaire?.length > 0 &&
+      !form.values.questionnaire.every((q) => q.value)
+    ) {
+      missingItems.push('questionnaire');
+    }
+
+    if (missingItems.length === 0) return '';
+
+    if (missingItems.length === 1) {
+      return `Please provide your ${missingItems[0]} to proceed.`;
+    }
+
+    const lastItem = missingItems.pop();
+    return `Please provide your ${missingItems.join(', ')} and ${lastItem} to proceed.`;
+  };
+
   return (
     <div>
       {!hidePayMessage && showMessage && (
         <div className={Style.pay_message}>
           <BiErrorCircle />
           {'  '}
-          To proceed, kindly acknowledge the agreements above.
+          {getValidationMessage()}
         </div>
       )}
 
       <div className="tw-relative" style={parentStyle}>
         <div
-          className={!form.isValid ? Style.express_checkout_block : ''}
+          className={
+            !form.values.email ||
+            !form.values.ppaAgreement ||
+            (form.values.questionnaire?.length > 0 &&
+              !form.values.questionnaire.every((q) => q.value)) ||
+            !form.isValid
+              ? Style.express_checkout_block
+              : ''
+          }
           onClick={dummyValidationMessage}
         ></div>
         <ExpressCheckoutElement
