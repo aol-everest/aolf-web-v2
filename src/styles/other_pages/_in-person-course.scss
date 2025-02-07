@@ -1070,7 +1070,7 @@
       border-radius: 20px;
       padding: 24px 32px;
       @media screen and (max-width: 720px) {
-        padding: 24px 20px;
+        padding: 24px 20px 10px;
         border-radius: 20px 20px 0 0;
         min-height: calc(100% - 50px);
       }
@@ -1233,8 +1233,8 @@
       }
       @media screen and (max-width: 767px) {
         grid-template-columns: repeat(1, auto);
-        height: calc(100dvh - 258px);
-        padding-bottom: 65px;
+        height: calc(100dvh - 245px);
+        padding-bottom: 60px;
         max-height: unset;
         grid-auto-rows: max-content;
       }
