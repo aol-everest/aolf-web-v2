@@ -25,7 +25,7 @@ const VideoPlayer = () => {
   const [showFull, setShowFull] = useState(false);
 
   const { playerProps } = store || {};
-  const { track, playAction } = playerProps || {};
+  const { track, playAction, autoPlay = false } = playerProps || {};
   const [isPlaying, setIsPlaying] = useState(false);
   const [isActivityLogged, setIsActivityLogged] = useState(false);
 
@@ -113,6 +113,7 @@ const VideoPlayer = () => {
                     poster={image}
                     onPlay={onPlayPauseAction}
                     onPause={onPlayPauseAction}
+                    autoPlay={autoPlay}
                   >
                     <source src={audioSrc} />
                     <BigPlayButton position="center" className="d-none" />
