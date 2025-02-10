@@ -122,7 +122,7 @@ const allOrganizationConfig = [
     seo: {
       image:
         'https://us.iahv.org/wp-content/uploads/2017/02/imageedit_5_7682410385.png',
-      url: 'https://https://projectwelcomehometroops.org',
+      url: 'https://projectwelcomehometroops.org',
       description:
         "You're minutes away from the next step in your journey. Log In Sign Up. facebook. google. or. Don't remember your password?",
     },
