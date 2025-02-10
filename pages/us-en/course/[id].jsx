@@ -408,5 +408,6 @@ function CourseDetail() {
     </>
   );
 }
+CourseDetail.hideFooter = orgConfig.name === 'PWHT' ?? false;
 
 export default CourseDetail;
