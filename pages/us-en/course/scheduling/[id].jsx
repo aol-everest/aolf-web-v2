@@ -42,6 +42,61 @@ const CheckoutStates = {
   USER_INFO: 'USER_INFO',
 };
 
+// Define validation schemas outside the component
+const emailStepSchema = Yup.object().shape({
+  email: Yup.string()
+    .email('Email is invalid!')
+    .required('Email is required!')
+    .matches(/\S/, 'String should not contain empty spaces'),
+  ppaAgreement: Yup.boolean()
+    .label('Terms')
+    .test(
+      'is-true',
+      'Please check the box in order to continue.',
+      (value) => value === true,
+    ),
+  questionnaire: Yup.array().test(
+    'all-checked',
+    'All questions must be answered',
+    (arr) => arr?.every((item) => item.value === true),
+  ),
+});
+
+const userInfoStepSchema = Yup.object().shape({
+  firstName: Yup.string()
+    .required('First Name is required')
+    .matches(/\S/, 'String should not contain empty spaces'),
+  lastName: Yup.string()
+    .required('Last Name is required')
+    .matches(/\S/, 'String should not contain empty spaces'),
+  contactPhone: Yup.string()
+    .required('Phone number required')
+    .matches(phoneRegExp, 'Phone number is not valid'),
+  contactAddress: Yup.string()
+    .required('Address is required')
+    .matches(/\S/, 'String should not contain empty spaces'),
+  contactCity: Yup.string().when('contactAddress', {
+    is: (address) => !!address,
+    then: Yup.string()
+      .required('City is required')
+      .matches(/\S/, 'String should not contain empty spaces'),
+  }),
+  contactState: Yup.string().when('contactAddress', {
+    is: (address) => !!address,
+    then: Yup.string()
+      .required('State is required')
+      .matches(/\S/, 'String should not contain empty spaces'),
+  }),
+  contactZip: Yup.string().when('contactAddress', {
+    is: (address) => !!address,
+    then: Yup.string()
+      .required('Zip code is required!')
+      .matches(/\S/, 'String should not contain empty spaces')
+      .min(2, 'Zip must be at least 2 characters')
+      .max(10, 'Zip can be at most 10 characters'),
+  }),
+});
+
 const SchedulingPaymentForm = ({
   workshopMaster,
   workshop,
@@ -506,71 +561,11 @@ const SchedulingPaymentForm = ({
           questionnaire: questionnaireArray,
           ppaAgreement: true,
         }}
-        validationSchema={Yup.object().shape({
-          firstName: Yup.string().when('email', {
-            is: (value) => !!value,
-            then: Yup.string()
-              .required('First Name is required')
-              .matches(/\S/, 'String should not contain empty spaces'),
-            otherwise: Yup.string().notRequired(),
-          }),
-          lastName: Yup.string().when('email', {
-            is: (value) => !!value,
-            then: Yup.string()
-              .required('Last Name is required')
-              .matches(/\S/, 'String should not contain empty spaces'),
-            otherwise: Yup.string().notRequired(),
-          }),
-          contactPhone: Yup.string().when('email', {
-            is: (value) => !!value,
-            then: Yup.string()
-              .required('Phone number required')
-              .matches(phoneRegExp, 'Phone number is not valid'),
-            otherwise: Yup.string().notRequired(),
-          }),
-          email: Yup.string()
-            .email('Email is invalid!')
-            .required('Email is required!')
-            .matches(/\S/, 'String should not contain empty spaces')
-            .email(),
-          contactAddress: Yup.string().when('email', {
-            is: (value) => !!value,
-            then: Yup.string()
-              .required('Address is required')
-              .matches(/\S/, 'String should not contain empty spaces'),
-            otherwise: Yup.string().notRequired(),
-          }),
-          contactCity: Yup.string().when(['contactAddress', 'email'], {
-            is: (address, email) => !!address && !!email,
-            then: Yup.string()
-              .required('City is required')
-              .matches(/\S/, 'String should not contain empty spaces'),
-            otherwise: Yup.string().notRequired(),
-          }),
-          contactState: Yup.string().when(['contactAddress', 'email'], {
-            is: (address, email) => !!address && !!email,
-            then: Yup.string()
-              .required('State is required')
-              .matches(/\S/, 'String should not contain empty spaces'),
-            otherwise: Yup.string().notRequired(),
-          }),
-          contactZip: Yup.string().when(['contactAddress', 'email'], {
-            is: (address, email) => !!address && !!email,
-            then: Yup.string()
-              .required('Zip code is required!')
-              .matches(/\S/, 'String should not contain empty spaces')
-              .min(2, 'Zip must be at least 2 characters')
-              .max(10, 'Zip can be at most 10 characters'),
-            otherwise: Yup.string().notRequired(),
-          }),
-          ppaAgreement: Yup.boolean()
-            .label('Terms')
-            .test(
-              'is-true',
-              'Please check the box in order to continue.',
-              (value) => value === true,
-            ),
-        })}
+        validationSchema={
+          activeStep === CheckoutStates.EMAIL_INPUT
+            ? emailStepSchema
+            : userInfoStepSchema
+        }
         innerRef={formRef}
         onSubmit={async (values) => {
           await completeEnrollmentAction(values);
@@ -586,7 +581,6 @@ const SchedulingPaymentForm = ({
             resetForm,
           } = formikProps;
           formikOnChange(values);
-          console.log(values);
 
           const isNotAllQuestionnaireChecked = values?.questionnaire?.some(
             (item) => !item.value,
@@ -882,14 +876,16 @@ const SchedulingPaymentForm = ({
                             healthinfo@us.artofliving.org
                           </a>
                         </div>
-                        <Field
-                          name="payment"
-                          component={StripeExpressElement}
-                          workshop={workshop}
-                          loading={loading}
-                          parentStyle={{ display: 'flex' }}
-                          email={values.email}
-                        />
+                        {activeStep === CheckoutStates.EMAIL_INPUT && (
+                          <Field
+                            name="payment"
+                            component={StripeExpressElement}
+                            workshop={workshop}
+                            loading={loading}
+                            parentStyle={{ display: 'flex' }}
+                            email={values.email}
+                          />
+                        )}
 
                         <div className="payment-actions">
                           {activeStep === CheckoutStates.USER_INFO ? (
