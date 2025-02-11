@@ -203,7 +203,7 @@ export default function Session() {
                 </div>
               </div>
               <iframe
-                src="https://members.us.artofliving.org/widget/nearby-courses/art-of-living-part-1"
+                src={`${process.env.NEXT_PUBLIC_BASE_URL}/widget/nearby-courses/art-of-living-part-1`}
                 style={{ border: '0px #ffffff none' }}
                 name="carouselIframe"
                 scrolling="no"
