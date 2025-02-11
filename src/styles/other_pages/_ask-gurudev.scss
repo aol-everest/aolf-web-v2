@@ -530,7 +530,10 @@
     .tab-content-video {
       overflow: hidden;
       border-radius: 10px;
-      display: flex;
+      position: relative;
+      width: 100%;
+      min-height: 410px;
+      text-align: center;
       .youtube-iframe {
         position: absolute;
         top: 0;

@@ -475,12 +475,73 @@ const IAHV_MENU = [
   }, */
 ];
 
+const PWHT_MENU = [
+  {
+    name: 'Upcoming Workshops',
+    link: '/us-en/courses',
+  },
+  {
+    name: 'SKY Resilience',
+    submenu: [
+      {
+        name: 'What is SKY Resilience',
+        link: 'https://projectwelcomehometroops.org/sky-resilience-training/',
+      },
+      {
+        name: 'Veterans, Trauma and Moral Injury',
+        link: 'https://projectwelcomehometroops.org/about-us/veterans-and-trauma/',
+      },
+      {
+        name: 'Research',
+        link: `https://projectwelcomehometroops.org/research/`,
+        // link: `/us-en/course?courseType=SAHAJ_SAMADHI_MEDITATION`,
+      },
+    ],
+  },
+  {
+    name: 'Testimonials',
+    submenu: [
+      {
+        name: 'Videos',
+        link: `https://projectwelcomehometroops.org/videos/`,
+      },
+      {
+        name: 'What Veterans are saying',
+        link: 'https://projectwelcomehometroops.org/what-veterans-say/',
+      },
+    ],
+  },
+  {
+    name: 'About PWHT',
+    submenu: [
+      {
+        name: 'About us',
+        link: 'https://projectwelcomehometroops.org/about-us/',
+      },
+      {
+        name: 'Press',
+        link: 'https://projectwelcomehometroops.org/press/',
+      },
+      {
+        name: 'Contact us',
+        link: `https://projectwelcomehometroops.org/contact/`,
+      },
+    ],
+  },
+  {
+    name: 'Donate',
+    link: 'https://iahv.networkforgood.com/projects/29020-project-welcome-home-troops-main',
+  },
+];
+
 const MENU =
   orgConfig.name === 'AOL'
     ? AOL_MENU
     : orgConfig.name === 'IAHV'
       ? IAHV_MENU
-      : HB_MENU;
+      : orgConfig.name === 'PWHT'
+        ? PWHT_MENU
+        : HB_MENU;
 
 const getInitials = (firstName, lastName) => {
   if (!firstName && !lastName) return '';
