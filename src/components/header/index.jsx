@@ -165,6 +165,10 @@ const AOL_MENU = [
             name: 'Sri Sri Yoga Foundation',
             link: '/us-en/lp/online-foundation-program?utm_source=organic&utm_medium=home&utm_content=menu&course_id=1004431',
           },
+          {
+            name: 'Sleep and Anxiety Protocol',
+            link: '/us-en/courses/stress-anxiety',
+          },
         ],
       },
       {
@@ -182,18 +186,18 @@ const AOL_MENU = [
             name: 'Chakra Kriya',
             link: '/us-en/lp/chakra-kriya',
           },
-          /*{
+          {
             name: 'DSN',
             link: '/us-en/courses/dsn-course',
-          },*/
+          },
           {
             name: 'Sanyam',
             link: '/us-en/lp/sanyam',
           },
-          /*{
+          {
             name: 'Shakti Kriya',
             link: '/us-en/lp/shakti-kriya',
-          },*/
+          },
           {
             name: 'Sri Sri Yoga Deep Dive',
             link: '/us-en/lp/srisriyoga-deepdiveretreat',
