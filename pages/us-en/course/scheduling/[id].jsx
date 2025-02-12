@@ -16,7 +16,7 @@ import {
 } from '@utils';
 import { useAuth, useGlobalAlertContext } from '@contexts';
 import { useAnalytics } from 'use-analytics';
-import { ABBRS, ALERT_TYPES, COURSE_TYPES } from '@constants';
+import { ABBRS, ALERT_TYPES, COURSE_TYPES, COURSE_MODES } from '@constants';
 import { NextSeo } from 'next-seo';
 import { useQuery } from '@tanstack/react-query';
 import { ScheduleAgreementForm } from '@components/scheduleAgreementForm';
@@ -710,7 +710,31 @@ const SchedulingPaymentForm = ({
                         </div>
                         <div className="info-box-details">
                           <div className="info-box-title">Location:</div>
-                          <div className="info-detail">{`${workshop?.mode} ${workshop?.mode === 'online' ? `(The instructor will email you the Zoom meeting details prior to course start date)` : ''}`}</div>
+                          <div className="info-detail">
+                            {workshop?.mode === COURSE_MODES.ONLINE.value ? (
+                              `${workshop?.mode} (The instructor will email you the Zoom meeting details prior to course start date)`
+                            ) : (
+                              <a
+                                href={`https://www.google.com/maps/search/?api=1&query=${
+                                  workshop.streetAddress1 || ''
+                                },${workshop.streetAddress2 || ''} ${
+                                  workshop.city
+                                } ${workshop.state} ${workshop.zip} ${
+                                  workshop.country
+                                }`}
+                                target="_blank"
+                                rel="noreferrer"
+                              >
+                                {workshop.streetAddress1 &&
+                                  workshop.streetAddress1}
+                                {workshop.streetAddress2 &&
+                                  workshop.streetAddress2}
+                                {workshop.city || ''}
+                                {', '}
+                                {workshop.state || ''} {workshop.zip || ''}
+                              </a>
+                            )}
+                          </div>
                         </div>
                       </div>
                     </div>
