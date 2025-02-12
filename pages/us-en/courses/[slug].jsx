@@ -865,6 +865,36 @@ const Course = () => {
                   </>
                 )}
               </Popup>
+              <Popup
+                tabIndex="3"
+                value={courseTypeFilter}
+                buttonText={
+                  courseTypeFilter && courseTypeFilter.name
+                    ? courseTypeFilter.name
+                    : null
+                }
+                label="Course Type"
+                hideClearOption
+                closeEvent={changeCourseType}
+              >
+                {({ closeHandler }) => (
+                  <>
+                    {Object.values(COURSE_TYPES_OPTIONS).map(
+                      (courseType, index) => {
+                        return (
+                          <li
+                            className="courses-filter__list-item"
+                            key={index}
+                            onClick={closeHandler(courseType)}
+                          >
+                            {courseType.name}
+                          </li>
+                        );
+                      },
+                    )}
+                  </>
+                )}
+              </Popup>
               <div
                 data-filter="timezone"
                 className={classNames('courses-filter', {
@@ -956,36 +986,6 @@ const Course = () => {
                     closeHandler={closeHandler}
                     value={searchKey}
                   ></SmartInput>
-                )}
-              </Popup>
-              <Popup
-                tabIndex="3"
-                value={courseTypeFilter}
-                buttonText={
-                  courseTypeFilter && courseTypeFilter.name
-                    ? courseTypeFilter.name
-                    : null
-                }
-                label="Course Type"
-                hideClearOption
-                closeEvent={changeCourseType}
-              >
-                {({ closeHandler }) => (
-                  <>
-                    {Object.values(COURSE_TYPES_OPTIONS).map(
-                      (courseType, index) => {
-                        return (
-                          <li
-                            className="courses-filter__list-item"
-                            key={index}
-                            onClick={closeHandler(courseType)}
-                          >
-                            {courseType.name}
-                          </li>
-                        );
-                      },
-                    )}
-                  </>
                 )}
               </Popup>
             </div>
@@ -1179,7 +1179,47 @@ const Course = () => {
                         </SmartDropDown>
                       </div>
                     </MobileFilterModal>
-
+                    <MobileFilterModal
+                      label="Course Type"
+                      value={
+                        courseTypeFilter && courseTypeFilter.name
+                          ? courseTypeFilter.name
+                          : null
+                      }
+                      hideClearOption
+                      closeEvent={changeCourseType}
+                      scrollRef={scrollRef}
+                    >
+                      <div className="dropdown">
+                        <SmartDropDown
+                          value={courseTypeFilter}
+                          buttonText={
+                            courseTypeFilter && courseTypeFilter.name
+                              ? courseTypeFilter.name
+                              : null
+                          }
+                          closeEvent={changeCourseType}
+                        >
+                          {({ closeHandler }) => (
+                            <>
+                              {Object.values(COURSE_TYPES_OPTIONS).map(
+                                (courseType, index) => {
+                                  return (
+                                    <li
+                                      className="dropdown-item"
+                                      key={index}
+                                      onClick={closeHandler(courseType)}
+                                    >
+                                      {courseType.name}
+                                    </li>
+                                  );
+                                },
+                              )}
+                            </>
+                          )}
+                        </SmartDropDown>
+                      </div>
+                    </MobileFilterModal>
                     <MobileFilterModal
                       label="Dates"
                       value={
@@ -1288,47 +1328,6 @@ const Course = () => {
                         dataList={instructorList}
                         closeHandler={onFilterChangeEvent('instructorFilter')}
                       ></SmartInput>
-                    </MobileFilterModal>
-                    <MobileFilterModal
-                      label="Course Type"
-                      value={
-                        courseTypeFilter && courseTypeFilter.name
-                          ? courseTypeFilter.name
-                          : null
-                      }
-                      hideClearOption
-                      closeEvent={changeCourseType}
-                      scrollRef={scrollRef}
-                    >
-                      <div className="dropdown">
-                        <SmartDropDown
-                          value={courseTypeFilter}
-                          buttonText={
-                            courseTypeFilter && courseTypeFilter.name
-                              ? courseTypeFilter.name
-                              : null
-                          }
-                          closeEvent={changeCourseType}
-                        >
-                          {({ closeHandler }) => (
-                            <>
-                              {Object.values(COURSE_TYPES_OPTIONS).map(
-                                (courseType, index) => {
-                                  return (
-                                    <li
-                                      className="dropdown-item"
-                                      key={index}
-                                      onClick={closeHandler(courseType)}
-                                    >
-                                      {courseType.name}
-                                    </li>
-                                  );
-                                },
-                              )}
-                            </>
-                          )}
-                        </SmartDropDown>
-                      </div>
                     </MobileFilterModal>
                   </div>
                 )}
