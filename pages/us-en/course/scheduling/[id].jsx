@@ -710,7 +710,7 @@ const SchedulingPaymentForm = ({
                         </div>
                         <div className="info-box-details">
                           <div className="info-box-title">Location:</div>
-                          <div className="info-detail">{`${workshop?.mode} (The instructor will email you the Zoom meeting details prior to course start date)`}</div>
+                          <div className="info-detail">{`${workshop?.mode} ${workshop?.mode === 'online' ? `(The instructor will email you the Zoom meeting details prior to course start date)` : ''}`}</div>
                         </div>
                       </div>
                     </div>
@@ -964,8 +964,6 @@ const SchedulingCheckoutFlow = () => {
     'courseType',
     parseAsString.withDefault('SKY_BREATH_MEDITATION'),
   );
-
-  const courseMode = mode === 'online' ? 'Online' : 'In Person';
 
   const { data: workshopMaster = {} } = useQuery({
     queryKey: ['workshopMaster', mode],
