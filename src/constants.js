@@ -333,7 +333,7 @@ export const COURSE_TYPES = {
     code: '10106000',
     value: process.env.NEXT_PUBLIC_SLEEP_ANXIETY_CTYPE || '',
     description:
-      'Step into a world of deep sleep and anxiety relief with the online Sleep & Anxiety Protocol. In just 3 days, over 3 hours per day, you’ll discover effective biohacks to improve the quality of your sleep—without any unwanted side effects.',
+      'Step into a world of deep sleep and anxiety relief with the online Sleep & Anxiety Protocol. In just 3 days, over 3 hours per day, you’ll discover effective biohacks to improve the quality of your sleep.',
   },
   CHAKRA_KRIYA: {
     slug: 'chakra-kriya',
