@@ -114,6 +114,10 @@ export const COURSE_TYPES_MASTER = {
           slug: 'sri-sri-yoga-foundation',
           name: 'Sri Sri Yoga Foundation',
         },
+        SLEEP_ANXIETY: {
+          slug: 'sleep-anxiety',
+          name: 'Sleep and Anxiety Protocol',
+        },
       },
     },
     {
@@ -322,6 +326,14 @@ export const COURSE_TYPES = {
     value: process.env.NEXT_PUBLIC_SRI_SRI_YOGA_CTYPE || '',
     description:
       'Improve your flexibility and nourish your spirit with this deeply relaxing style of yoga and its wealth of mind-body benefits.',
+  },
+  SLEEP_ANXIETY: {
+    slug: 'sleep-anxiety',
+    name: 'Sleep and Anxiety Protocol',
+    code: '10106000',
+    value: process.env.NEXT_PUBLIC_SLEEP_ANXIETY_CTYPE || '',
+    description:
+      'Step into a world of deep sleep and anxiety relief with the online Sleep & Anxiety Protocol. In just 3 days, over 3 hours per day, you’ll discover effective biohacks to improve the quality of your sleep—without any unwanted side effects.',
   },
   CHAKRA_KRIYA: {
     slug: 'chakra-kriya',

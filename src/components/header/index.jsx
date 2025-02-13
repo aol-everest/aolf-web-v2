@@ -165,10 +165,10 @@ const AOL_MENU = [
             name: 'Sri Sri Yoga Foundation',
             link: '/us-en/lp/online-foundation-program?utm_source=organic&utm_medium=home&utm_content=menu&course_id=1004431',
           },
-          {
-            name: 'Sleep and Anxiety Protocol',
-            link: '/us-en/courses/stress-anxiety',
-          },
+          // {
+          //   name: 'Sleep and Anxiety Protocol',
+          //   link: '/us-en/courses/stress-anxiety',
+          // },
         ],
       },
       {
