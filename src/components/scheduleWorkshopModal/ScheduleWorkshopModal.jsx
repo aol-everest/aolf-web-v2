@@ -21,7 +21,6 @@ const WorkshopSelectModal = React.memo(
     workshops,
     handleWorkshopModalCalendarMonthChange,
     currentMonthYear,
-    setWorkshops,
     loading,
     setActiveWorkshop,
     handleAutoScrollForMobile,

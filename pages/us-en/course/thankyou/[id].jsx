@@ -154,6 +154,7 @@ const Thankyou = ({ currentHost }) => {
       first_name: first_name,
       last_name: last_name,
     });
+
     page({
       category: 'course_registration',
       name: 'course_registration_thank_you',
@@ -169,6 +170,15 @@ const Thankyou = ({ currentHost }) => {
         referral === 'course_scheduling_checkout'
           ? 'scheduling_flow'
           : 'journey_flow';
+
+      if (flowName === 'scheduling_flow') {
+        track('complete_registration', {
+          screen_name: 'course_registration_thank_you',
+          event_target: 'register_button',
+          course_type: courseType,
+          location_type: workshop.mode,
+        });
+      }
     }
 
     track(

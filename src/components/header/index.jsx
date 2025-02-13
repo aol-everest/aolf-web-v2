@@ -1,13 +1,15 @@
 /* eslint-disable react/display-name */
 import Link from '@components/linkWithUTM';
-import { useAuth, useGlobalModalContext } from '@contexts';
+import { useAuth } from '@contexts';
+import { useQuery } from '@tanstack/react-query';
 import { orgConfig } from '@org';
 import { useRouter } from 'next/router';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Nav, Navbar, NavDropdown } from 'react-bootstrap';
 // import { FaUserCircle } from "react-icons/fa";
 import { CONTENT_FOLDER_IDS } from '@constants';
 import { navigateToLogin } from '@utils';
+import { api } from '@utils';
 
 const HB_MENU = [
   {
@@ -66,7 +68,6 @@ const HB_MENU = [
 const AOL_MENU = [
   {
     name: 'Gurudev',
-
     submenu: [
       {
         name: 'About',
@@ -164,6 +165,10 @@ const AOL_MENU = [
             name: 'Sri Sri Yoga Foundation',
             link: '/us-en/lp/online-foundation-program?utm_source=organic&utm_medium=home&utm_content=menu&course_id=1004431',
           },
+          // {
+          //   name: 'Sleep and Anxiety Protocol',
+          //   link: '/us-en/courses/stress-anxiety',
+          // },
         ],
       },
       {
@@ -181,18 +186,18 @@ const AOL_MENU = [
             name: 'Chakra Kriya',
             link: '/us-en/lp/chakra-kriya',
           },
-          /*{
+          {
             name: 'DSN',
             link: '/us-en/courses/dsn-course',
-          },*/
+          },
           {
             name: 'Sanyam',
             link: '/us-en/lp/sanyam',
           },
-          /*{
+          {
             name: 'Shakti Kriya',
             link: '/us-en/lp/shakti-kriya',
-          },*/
+          },
           {
             name: 'Sri Sri Yoga Deep Dive',
             link: '/us-en/lp/srisriyoga-deepdiveretreat',
@@ -474,12 +479,73 @@ const IAHV_MENU = [
   }, */
 ];
 
+const PWHT_MENU = [
+  {
+    name: 'Upcoming Workshops',
+    link: '/us-en/courses',
+  },
+  {
+    name: 'SKY Resilience',
+    submenu: [
+      {
+        name: 'What is SKY Resilience',
+        link: 'https://projectwelcomehometroops.org/sky-resilience-training/',
+      },
+      {
+        name: 'Veterans, Trauma and Moral Injury',
+        link: 'https://projectwelcomehometroops.org/about-us/veterans-and-trauma/',
+      },
+      {
+        name: 'Research',
+        link: `https://projectwelcomehometroops.org/research/`,
+        // link: `/us-en/course?courseType=SAHAJ_SAMADHI_MEDITATION`,
+      },
+    ],
+  },
+  {
+    name: 'Testimonials',
+    submenu: [
+      {
+        name: 'Videos',
+        link: `https://projectwelcomehometroops.org/videos/`,
+      },
+      {
+        name: 'What Veterans are saying',
+        link: 'https://projectwelcomehometroops.org/what-veterans-say/',
+      },
+    ],
+  },
+  {
+    name: 'About PWHT',
+    submenu: [
+      {
+        name: 'About us',
+        link: 'https://projectwelcomehometroops.org/about-us/',
+      },
+      {
+        name: 'Press',
+        link: 'https://projectwelcomehometroops.org/press/',
+      },
+      {
+        name: 'Contact us',
+        link: `https://projectwelcomehometroops.org/contact/`,
+      },
+    ],
+  },
+  {
+    name: 'Donate',
+    link: 'https://iahv.networkforgood.com/projects/29020-project-welcome-home-troops-main',
+  },
+];
+
 const MENU =
   orgConfig.name === 'AOL'
     ? AOL_MENU
     : orgConfig.name === 'IAHV'
       ? IAHV_MENU
-      : HB_MENU;
+      : orgConfig.name === 'PWHT'
+        ? PWHT_MENU
+        : HB_MENU;
 
 const getInitials = (firstName, lastName) => {
   if (!firstName && !lastName) return '';
@@ -494,9 +560,41 @@ export const Header = () => {
   const router = useRouter();
   const { isAuthenticated = false, profile } = useAuth();
   const [navExpanded, setNavExpanded] = useState(false);
+  const [menu, setMenu] = useState(MENU);
 
   const { userProfilePic: profilePic, first_name, last_name } = profile || {};
   const initials = getInitials(first_name, last_name);
+
+  const { data: introData = [] } = useQuery({
+    queryKey: ['get-started-intro-series'],
+    queryFn: async () => {
+      const response = await api.get({
+        path: 'get-started-intro-series',
+      });
+      return response;
+    },
+  });
+
+  useEffect(() => {
+    if (introData?.length && orgConfig.name === 'AOL' && isAuthenticated) {
+      const updatedMenu = [...AOL_MENU];
+
+      const exploreMenu = updatedMenu.find(
+        (menuItem) => menuItem.name === 'Explore',
+      );
+      if (exploreMenu) {
+        exploreMenu.submenu = [
+          ...exploreMenu.submenu,
+          ...introData.map((item) => ({
+            name: item.title,
+            link: `/us-en/explore/${item.slug}` || '#',
+          })),
+        ];
+      }
+
+      setMenu(updatedMenu);
+    }
+  }, [introData]);
 
   document.addEventListener('click', function (event) {
     if (event?.target?.classList?.contains('back-link')) {
@@ -684,7 +782,10 @@ export const Header = () => {
                 );
               })}
               <Nav.Item as="li" className="mobileView">
-                <Nav.Link href="/us-en/lp/donations" as={Link}>
+                <Nav.Link
+                  href="https://event.us.artofliving.org/us-en/donations/"
+                  as={Link}
+                >
                   Donation
                 </Nav.Link>
               </Nav.Item>

@@ -1,5 +1,5 @@
 /* eslint-disable react/no-unescaped-entities */
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { motion } from 'framer-motion';
 import YouTube from 'react-youtube';
 import {
@@ -9,6 +9,7 @@ import {
 } from '@utils';
 import FacebookVideo from '@components/facebookVideo';
 import InstagramVideo from '@components/instagramVideo';
+import { Accordion, Button } from 'react-bootstrap';
 
 export const VideoItemComp = (props) => {
   const { video, playingId, onPlayAction } = props;
@@ -122,17 +123,20 @@ const SearchResult = React.forwardRef(function SearchResult(
     selectedPageIndex,
     query,
     currentMeta,
+    results,
   },
   ref,
 ) {
   const [showToast, setShowToast] = useState(false);
+  const [showSharePopup, setShowSharePopup] = useState(false);
+  const [activeKey, setActiveKey] = useState('unknown');
   const onPlayAction = (id) => {
     setPlayingId(id);
   };
 
-  const copyToClipboard = () => {
+  const copyToClipboard = (data) => {
     navigator.clipboard
-      .writeText(result.content)
+      .writeText(data)
       .then(() => {
         setShowToast(true);
         setTimeout(() => setShowToast(false), 2000); // Reset the copied state after 2 seconds
@@ -166,6 +170,25 @@ const SearchResult = React.forwardRef(function SearchResult(
     );
   };
 
+  const relatedData = useMemo(() => {
+    return results?.slice(1).map((item, index) => {
+      const parts = item.content.split('\n\n');
+      return {
+        index: String(index),
+        question: parts[0],
+        answer: parts.slice(1).join('\n\n'),
+      };
+    });
+  }, [results]);
+
+  const handleToggle = (key) => {
+    setActiveKey(activeKey === key ? null : key);
+  };
+
+  const handleShare = () => {
+    setShowSharePopup(true);
+  };
+
   return (
     <motion.div
       // className={['searchResult']}
@@ -193,14 +216,41 @@ const SearchResult = React.forwardRef(function SearchResult(
       ) : (
         result.content && (
           <div className="tab-pane active" id="nav-anger" role="tabpanel">
+            <div class="tab-question">{query}</div>
+            <div class="tab-answer-precontent">
+              <label>
+                <span class="icon-aol iconaol-book"></span>Answer
+              </label>
+              {query && <div className="pretext">{<CustomMessage />}</div>}
+            </div>
             <div className="tab-content-text">
-              {query && <div className="disclaimer">{<CustomMessage />}</div>}
               <p dangerouslySetInnerHTML={{ __html: getFormattedText() }} />
             </div>
-            <div className="tab-content-action">
-              <div className="vote-up-down">
-                <label>Did we find the right bit of wisdom for you?</label>
-                <div className="vote-actions">
+            <div class="tab-content-footer">
+              <div class="source-info">
+                <strong>Source:</strong> This wisdom sheet is from the book An
+                Intimate Note to the Sincere Seeker.
+              </div>
+              <div class="tab-content-action">
+                <button
+                  class="tc-action-btn"
+                  id="share-button"
+                  onClick={handleShare}
+                >
+                  <span class="icon-aol iconaol-export"></span>
+                </button>
+                <button
+                  class="tc-action-btn copy-btn"
+                  onClick={() => copyToClipboard(result.content)}
+                >
+                  <span class="icon-aol iconaol-copy"></span>
+                </button>
+              </div>
+            </div>
+            <div class="tab-content-voting">
+              <div class="vote-up-down">
+                <label>Did this answer your question?</label>
+                <div class="vote-actions">
                   <button
                     className={`vote-btn ${isFeedbackSelected === 1 ? 'active' : ''}`}
                     onClick={() => handleVoteSelect(true)}
@@ -256,11 +306,146 @@ const SearchResult = React.forwardRef(function SearchResult(
                 </div>
               </div>
             </div>
+            <div class="related-questions-wrap">
+              <div class="box-title">
+                <span class="icon-aol iconaol-chat-flower"></span>Related
+              </div>
+              <Accordion className="accordion" defaultActiveKey={activeKey}>
+                {relatedData.map((data) => {
+                  return (
+                    <div class="question-item" key={data.index}>
+                      <div class="question-header">
+                        <h2>
+                          <Accordion.Toggle
+                            as={Button}
+                            className="btn btn-link"
+                            variant="link"
+                            eventKey={data.index}
+                            aria-expanded={data.index === activeKey}
+                            onClick={() => handleToggle(data.index)}
+                          >
+                            {data.question}
+                          </Accordion.Toggle>
+                        </h2>
+                      </div>
+
+                      <Accordion.Collapse eventKey={data.index}>
+                        <div class="question-body">{data.answer}</div>
+                      </Accordion.Collapse>
+                    </div>
+                  );
+                })}
+              </Accordion>
+            </div>
           </div>
         )
       )}
 
-      {showToast && <div className="toast">Text copied!</div>}
+      {showToast && (
+        <div id="message" class="copy-message">
+          <span class="icon-aol iconaol-stars"></span>Content has been copied
+          successfully.
+        </div>
+      )}
+
+      {showSharePopup && (
+        <div id="share-popup" class="share-popup">
+          <div class="share-popup-content">
+            <button
+              id="close-popup"
+              class="close-popup"
+              onClick={() => setShowSharePopup(false)}
+            >
+              <span class="icon-aol iconaol-close"></span>
+            </button>
+            <h3>Share this link</h3>
+            <div class="copy-link-container">
+              <input
+                type="text"
+                id="copy-input"
+                value="https://www.artofliving.com/to/hUbGFdw239"
+                readonly
+              />
+              <button
+                id="copy-button"
+                class="copy-button"
+                onClick={() =>
+                  copyToClipboard('https://www.artofliving.com/to/hUbGFdw239')
+                }
+              >
+                <span class="icon-aol iconaol-copy"></span>
+              </button>
+            </div>
+            <div class="share-icons">
+              <a
+                href="https://twitter.com/intent/tweet?url=https://www.artofliving.com/to/hUbGFdw239"
+                target="_blank"
+                class="share-icon twitter"
+              >
+                <img
+                  src="/img/twitter-icon-round.png"
+                  height="60"
+                  width="60"
+                  alt="Twitter"
+                />
+                Twitter
+              </a>
+              <a
+                href="https://www.linkedin.com/sharing/share-offsite/?url=https://www.artofliving.com/to/hUbGFdw239"
+                target="_blank"
+                class="share-icon linkedin"
+              >
+                <img
+                  src="/img/linkedin-icon-round.png"
+                  height="60"
+                  width="60"
+                  alt="Twitter"
+                />
+                LinkedIn
+              </a>
+              <a
+                href="https://reddit.com/submit?url=https://www.artofliving.com/to/hUbGFdw239"
+                target="_blank"
+                class="share-icon reddit"
+              >
+                <img
+                  src="/img/reddit-icon-round.png"
+                  height="60"
+                  width="60"
+                  alt="Twitter"
+                />
+                Reddit
+              </a>
+              <a
+                href="https://pinterest.com/pin/create/button/?url=https://www.artofliving.com/to/hUbGFdw239"
+                target="_blank"
+                class="share-icon pinterest"
+              >
+                <img
+                  src="/img/pinterest-icon-round.png"
+                  height="60"
+                  width="60"
+                  alt="Twitter"
+                />
+                Pinterest
+              </a>
+              <a
+                href="https://www.facebook.com/sharer/sharer.php?u=https://www.artofliving.com/to/hUbGFdw239"
+                target="_blank"
+                class="share-icon facebook"
+              >
+                <img
+                  src="/img/fb-icon-round.png"
+                  height="60"
+                  width="60"
+                  alt="Twitter"
+                />
+                Facebook
+              </a>
+            </div>
+          </div>
+        </div>
+      )}
     </motion.div>
   );
 });

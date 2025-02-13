@@ -776,22 +776,6 @@ const Course = () => {
             >
               <button className="filter-save-button">Save Changes</button>
               <Popup
-                tabIndex="1"
-                value={locationFilter}
-                buttonText={
-                  locationFilter ? `${locationFilter.locationName}` : null
-                }
-                closeEvent={onFilterChange('locationFilter')}
-                label="Location"
-              >
-                {({ closeHandler }) => (
-                  <AddressSearch
-                    closeHandler={closeHandler}
-                    placeholder="Search for Location"
-                  />
-                )}
-              </Popup>
-              <Popup
                 tabIndex="2"
                 value={COURSE_MODES[courseModeFilter] && courseModeFilter}
                 buttonText={
@@ -818,7 +802,69 @@ const Course = () => {
                   </>
                 )}
               </Popup>
-
+              <Popup
+                tabIndex="1"
+                value={locationFilter}
+                buttonText={
+                  locationFilter ? `${locationFilter.locationName}` : null
+                }
+                closeEvent={onFilterChange('locationFilter')}
+                label="Location"
+              >
+                {({ closeHandler }) => (
+                  <AddressSearch
+                    closeHandler={closeHandler}
+                    placeholder="Search for Location"
+                  />
+                )}
+              </Popup>
+              <Popup
+                tabIndex="4"
+                value={TIME_ZONE[timeZoneFilter] ? timeZoneFilter : null}
+                buttonText={
+                  timeZoneFilter && TIME_ZONE[timeZoneFilter]
+                    ? TIME_ZONE[timeZoneFilter].name
+                    : null
+                }
+                closeEvent={onFilterChange('timeZoneFilter')}
+                label="Time Zone"
+                parentClassName="upward"
+              >
+                {({ closeHandler }) => (
+                  <>
+                    <li
+                      className="courses-filter__list-item"
+                      onClick={closeHandler(TIME_ZONE.EST.value)}
+                    >
+                      {TIME_ZONE.EST.name}
+                    </li>
+                    <li
+                      className="courses-filter__list-item"
+                      onClick={closeHandler(TIME_ZONE.CST.value)}
+                    >
+                      {TIME_ZONE.CST.name}
+                    </li>
+                    <li
+                      className="courses-filter__list-item"
+                      onClick={closeHandler(TIME_ZONE.MST.value)}
+                    >
+                      {TIME_ZONE.MST.name}
+                    </li>
+                    <li
+                      className="courses-filter__list-item"
+                      onClick={closeHandler(TIME_ZONE.PST.value)}
+                    >
+                      {TIME_ZONE.PST.name}
+                    </li>
+                    <li
+                      className="courses-filter__list-item"
+                      onClick={closeHandler(TIME_ZONE.HST.value)}
+                    >
+                      {TIME_ZONE.HST.name}
+                    </li>
+                  </>
+                )}
+              </Popup>
               <Popup
                 tabIndex="3"
                 value={courseTypeFilter}
@@ -849,7 +895,6 @@ const Course = () => {
                   </>
                 )}
               </Popup>
-
               <div
                 data-filter="timezone"
                 className={classNames('courses-filter', {
@@ -916,6 +961,7 @@ const Course = () => {
                   />
                 </div>
               </div>
+
               <Popup
                 tabIndex="2"
                 value={onlyWeekend}
@@ -925,53 +971,6 @@ const Course = () => {
                 buttonText={onlyWeekend ? 'Weekend Courses / Events' : null}
               ></Popup>
 
-              <Popup
-                tabIndex="4"
-                value={TIME_ZONE[timeZoneFilter] ? timeZoneFilter : null}
-                buttonText={
-                  timeZoneFilter && TIME_ZONE[timeZoneFilter]
-                    ? TIME_ZONE[timeZoneFilter].name
-                    : null
-                }
-                closeEvent={onFilterChange('timeZoneFilter')}
-                label="Time Zone"
-                parentClassName="upward"
-              >
-                {({ closeHandler }) => (
-                  <>
-                    <li
-                      className="courses-filter__list-item"
-                      onClick={closeHandler(TIME_ZONE.EST.value)}
-                    >
-                      {TIME_ZONE.EST.name}
-                    </li>
-                    <li
-                      className="courses-filter__list-item"
-                      onClick={closeHandler(TIME_ZONE.CST.value)}
-                    >
-                      {TIME_ZONE.CST.name}
-                    </li>
-                    <li
-                      className="courses-filter__list-item"
-                      onClick={closeHandler(TIME_ZONE.MST.value)}
-                    >
-                      {TIME_ZONE.MST.name}
-                    </li>
-                    <li
-                      className="courses-filter__list-item"
-                      onClick={closeHandler(TIME_ZONE.PST.value)}
-                    >
-                      {TIME_ZONE.PST.name}
-                    </li>
-                    <li
-                      className="courses-filter__list-item"
-                      onClick={closeHandler(TIME_ZONE.HST.value)}
-                    >
-                      {TIME_ZONE.HST.name}
-                    </li>
-                  </>
-                )}
-              </Popup>
               <Popup
                 tabIndex="5"
                 value={instructorFilter ? instructorFilter.label : null}
@@ -1071,20 +1070,6 @@ const Course = () => {
                         </div>
                       )}
                     </div>
-
-                    <MobileFilterModal
-                      label="Location"
-                      value={
-                        locationFilter ? `${locationFilter.locationName}` : null
-                      }
-                      clearEvent={onFilterClearEvent('locationFilter')}
-                      scrollRef={scrollRef}
-                    >
-                      <AddressSearch
-                        closeHandler={onFilterChange('locationFilter')}
-                        placeholder="Search for Location"
-                      />
-                    </MobileFilterModal>
                     <MobileFilterModal
                       label="Course format"
                       value={
@@ -1124,7 +1109,76 @@ const Course = () => {
                         </SmartDropDown>
                       </div>
                     </MobileFilterModal>
-
+                    <MobileFilterModal
+                      label="Location"
+                      value={
+                        locationFilter ? `${locationFilter.locationName}` : null
+                      }
+                      clearEvent={onFilterClearEvent('locationFilter')}
+                      scrollRef={scrollRef}
+                    >
+                      <AddressSearch
+                        closeHandler={onFilterChange('locationFilter')}
+                        placeholder="Search for Location"
+                      />
+                    </MobileFilterModal>
+                    <MobileFilterModal
+                      label="Time Zone"
+                      value={
+                        timeZoneFilter && TIME_ZONE[timeZoneFilter]
+                          ? TIME_ZONE[timeZoneFilter].name
+                          : null
+                      }
+                      clearEvent={onFilterClearEvent('timeZoneFilter')}
+                      scrollRef={scrollRef}
+                    >
+                      <div className="dropdown">
+                        <SmartDropDown
+                          value={timeZoneFilter}
+                          buttonText={
+                            timeZoneFilter && TIME_ZONE[timeZoneFilter]
+                              ? TIME_ZONE[timeZoneFilter].name
+                              : 'Select Timezone'
+                          }
+                          closeEvent={onFilterChange('timeZoneFilter')}
+                        >
+                          {({ closeHandler }) => (
+                            <>
+                              <li
+                                className="dropdown-item"
+                                onClick={closeHandler(TIME_ZONE.EST.value)}
+                              >
+                                {TIME_ZONE.EST.name}
+                              </li>
+                              <li
+                                className="dropdown-item"
+                                onClick={closeHandler(TIME_ZONE.CST.value)}
+                              >
+                                {TIME_ZONE.CST.name}
+                              </li>
+                              <li
+                                className="dropdown-item"
+                                onClick={closeHandler(TIME_ZONE.MST.value)}
+                              >
+                                {TIME_ZONE.MST.name}
+                              </li>
+                              <li
+                                className="dropdown-item"
+                                onClick={closeHandler(TIME_ZONE.PST.value)}
+                              >
+                                {TIME_ZONE.PST.name}
+                              </li>
+                              <li
+                                className="dropdown-item"
+                                onClick={closeHandler(TIME_ZONE.HST.value)}
+                              >
+                                {TIME_ZONE.HST.name}
+                              </li>
+                            </>
+                          )}
+                        </SmartDropDown>
+                      </div>
+                    </MobileFilterModal>
                     <MobileFilterModal
                       label="Course Type"
                       value={
@@ -1259,63 +1313,7 @@ const Course = () => {
                         </svg>
                       </button>
                     </div>
-                    <MobileFilterModal
-                      label="Time Zone"
-                      value={
-                        timeZoneFilter && TIME_ZONE[timeZoneFilter]
-                          ? TIME_ZONE[timeZoneFilter].name
-                          : null
-                      }
-                      clearEvent={onFilterClearEvent('timeZoneFilter')}
-                      scrollRef={scrollRef}
-                    >
-                      <div className="dropdown">
-                        <SmartDropDown
-                          value={timeZoneFilter}
-                          buttonText={
-                            timeZoneFilter && TIME_ZONE[timeZoneFilter]
-                              ? TIME_ZONE[timeZoneFilter].name
-                              : 'Select Timezone'
-                          }
-                          closeEvent={onFilterChange('timeZoneFilter')}
-                        >
-                          {({ closeHandler }) => (
-                            <>
-                              <li
-                                className="dropdown-item"
-                                onClick={closeHandler(TIME_ZONE.EST.value)}
-                              >
-                                {TIME_ZONE.EST.name}
-                              </li>
-                              <li
-                                className="dropdown-item"
-                                onClick={closeHandler(TIME_ZONE.CST.value)}
-                              >
-                                {TIME_ZONE.CST.name}
-                              </li>
-                              <li
-                                className="dropdown-item"
-                                onClick={closeHandler(TIME_ZONE.MST.value)}
-                              >
-                                {TIME_ZONE.MST.name}
-                              </li>
-                              <li
-                                className="dropdown-item"
-                                onClick={closeHandler(TIME_ZONE.PST.value)}
-                              >
-                                {TIME_ZONE.PST.name}
-                              </li>
-                              <li
-                                className="dropdown-item"
-                                onClick={closeHandler(TIME_ZONE.HST.value)}
-                              >
-                                {TIME_ZONE.HST.name}
-                              </li>
-                            </>
-                          )}
-                        </SmartDropDown>
-                      </div>
-                    </MobileFilterModal>
+
                     <MobileFilterModal
                       label="Instructor"
                       value={instructorFilter ? instructorFilter.label : null}

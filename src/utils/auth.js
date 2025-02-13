@@ -1,5 +1,5 @@
 import { getCurrentUser, fetchAuthSession, signOut } from 'aws-amplify/auth';
-import { storeTokens } from '@passwordLess/storage.js';
+import { storeTokens, clearStorage } from '@passwordLess/storage.js';
 import { api } from '@utils';
 
 const fetchUserProfile = async () => {
@@ -33,6 +33,9 @@ const getSession = async () => {
 
 const logout = async () => {
   await signOut();
+  localStorage.clear();
+  // clearStorage();
+  console.log('Logged out and cache cleared');
 };
 
 export const Auth = {

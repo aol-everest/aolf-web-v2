@@ -58,7 +58,7 @@ function Token() {
           param: router.query,
         });
         setSuccess(true);
-        await Auth.signOut({ global: true });
+        await Auth.logout();
       } catch (ex) {
         const data = ex.response?.data;
         const { message, statusCode, code } = data || {};

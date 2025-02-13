@@ -16,10 +16,11 @@ import {
 } from '@utils';
 import { useAuth, useGlobalAlertContext } from '@contexts';
 import { useAnalytics } from 'use-analytics';
-import { ABBRS, ALERT_TYPES, COURSE_TYPES } from '@constants';
+import { ABBRS, ALERT_TYPES, COURSE_TYPES, COURSE_MODES } from '@constants';
 import { NextSeo } from 'next-seo';
 import { useQuery } from '@tanstack/react-query';
 import { ScheduleAgreementForm } from '@components/scheduleAgreementForm';
+import { StripeExpressElement } from '@components/checkout/StripeExpressElementOnly';
 import {
   StyledInputNewCheckout,
   UserInfoFormNewCheckout,
@@ -31,7 +32,7 @@ import {
   useElements,
 } from '@stripe/react-stripe-js';
 import * as Yup from 'yup';
-import { Formik } from 'formik';
+import { Formik, Field } from 'formik';
 import { loadStripe } from '@stripe/stripe-js';
 import { filterAllowedParams, removeNull } from '@utils/utmParam';
 import { DiscountInputNew } from '@components/discountInputNew';
@@ -40,6 +41,61 @@ const CheckoutStates = {
   EMAIL_INPUT: 'EMAIL_INPUT',
   USER_INFO: 'USER_INFO',
 };
+
+// Define validation schemas outside the component
+const emailStepSchema = Yup.object().shape({
+  email: Yup.string()
+    .email('Email is invalid!')
+    .required('Email is required!')
+    .matches(/\S/, 'String should not contain empty spaces'),
+  ppaAgreement: Yup.boolean()
+    .label('Terms')
+    .test(
+      'is-true',
+      'Please check the box in order to continue.',
+      (value) => value === true,
+    ),
+  questionnaire: Yup.array().test(
+    'all-checked',
+    'All questions must be answered',
+    (arr) => arr?.every((item) => item.value === true),
+  ),
+});
+
+const userInfoStepSchema = Yup.object().shape({
+  firstName: Yup.string()
+    .required('First Name is required')
+    .matches(/\S/, 'String should not contain empty spaces'),
+  lastName: Yup.string()
+    .required('Last Name is required')
+    .matches(/\S/, 'String should not contain empty spaces'),
+  contactPhone: Yup.string()
+    .required('Phone number required')
+    .matches(phoneRegExp, 'Phone number is not valid'),
+  contactAddress: Yup.string()
+    .required('Address is required')
+    .matches(/\S/, 'String should not contain empty spaces'),
+  contactCity: Yup.string().when('contactAddress', {
+    is: (address) => !!address,
+    then: Yup.string()
+      .required('City is required')
+      .matches(/\S/, 'String should not contain empty spaces'),
+  }),
+  contactState: Yup.string().when('contactAddress', {
+    is: (address) => !!address,
+    then: Yup.string()
+      .required('State is required')
+      .matches(/\S/, 'String should not contain empty spaces'),
+  }),
+  contactZip: Yup.string().when('contactAddress', {
+    is: (address) => !!address,
+    then: Yup.string()
+      .required('Zip code is required!')
+      .matches(/\S/, 'String should not contain empty spaces')
+      .min(2, 'Zip must be at least 2 characters')
+      .max(10, 'Zip can be at most 10 characters'),
+  }),
+});
 
 const SchedulingPaymentForm = ({
   workshopMaster,
@@ -59,8 +115,7 @@ const SchedulingPaymentForm = ({
   const { signOut } = passwordLess;
   const formRef = useRef();
 
-  const [isPending, startTransition] = useTransition();
-  // const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const stripe = useStripe();
   const elements = useElements();
@@ -96,248 +151,248 @@ const SchedulingPaymentForm = ({
       }))
     : [];
 
-  const completeEnrollmentAction = (values) => {
-    startTransition(async () => {
-      const {
-        questionnaire,
-        firstName,
-        lastName,
-        email,
-        couponCode,
-        contactPhone,
-        contactAddress,
-        contactCity,
-        contactState,
-        contactZip,
-      } = values;
+  const completeEnrollmentAction = async (values) => {
+    setLoading(true);
+    const {
+      questionnaire,
+      firstName,
+      lastName,
+      email,
+      couponCode,
+      contactPhone,
+      contactAddress,
+      contactCity,
+      contactState,
+      contactZip,
+    } = values;
 
-      if (!stripe || !elements) {
-        // Stripe.js hasn't yet loaded.
-        // Make sure to disable form submission until Stripe.js has loaded.
-        return;
-      }
+    if (!stripe || !elements) {
+      // Stripe.js hasn't yet loaded.
+      // Make sure to disable form submission until Stripe.js has loaded.
+      return;
+    }
 
-      track(
-        'add_payment_info',
-        {
-          ecommerce: {
-            currency: 'USD',
-            value: workshop?.unitPrice,
-            coupon: couponCode || '',
-            payment_type: 'credit_card/gpay/apple_pay',
-            course_format: workshop?.productTypeId,
-            course_name: workshop?.title,
-            items: [
-              {
-                item_id: workshop?.id,
-                item_name: workshop?.title,
-                affiliation: 'NA',
-                coupon: couponCode || '',
-                discount: 0.0,
-                index: 0,
-                item_brand: workshop?.businessOrg,
-                item_category: workshop?.title,
-                item_category2: workshop?.mode,
-                item_category3: 'paid',
-                item_category4: 'NA',
-                item_category5: 'NA',
-                item_list_id: workshop?.productTypeId,
-                item_list_name: workshop?.title,
-                item_variant: workshop?.workshopTotalHours,
-                location_id: workshop?.locationCity,
-                price: workshop?.unitPrice,
-                quantity: 1,
-              },
-            ],
-          },
+    track(
+      'add_payment_info',
+      {
+        ecommerce: {
+          currency: 'USD',
+          value: workshop?.unitPrice,
+          coupon: couponCode || '',
+          payment_type: 'credit_card/gpay/apple_pay',
+          course_format: workshop?.productTypeId,
+          course_name: workshop?.title,
+          items: [
+            {
+              item_id: workshop?.id,
+              item_name: workshop?.title,
+              affiliation: 'NA',
+              coupon: couponCode || '',
+              discount: 0.0,
+              index: 0,
+              item_brand: workshop?.businessOrg,
+              item_category: workshop?.title,
+              item_category2: workshop?.mode,
+              item_category3: 'paid',
+              item_category4: 'NA',
+              item_category5: 'NA',
+              item_list_id: workshop?.productTypeId,
+              item_list_name: workshop?.title,
+              item_variant: workshop?.workshopTotalHours,
+              location_id: workshop?.locationCity,
+              price: workshop?.unitPrice,
+              quantity: 1,
+            },
+          ],
         },
-        {
-          plugins: {
-            all: false,
-            'gtm-ecommerce-plugin': true,
-          },
+      },
+      {
+        plugins: {
+          all: false,
+          'gtm-ecommerce-plugin': true,
         },
-      );
+      },
+    );
 
-      // Trigger form validation and wallet collection
-      const { error: submitError } = await elements.submit();
-      if (submitError) {
-        throw submitError;
-      }
+    // Trigger form validation and wallet collection
+    const { error: submitError } = await elements.submit();
+    if (submitError) {
+      throw submitError;
+    }
 
-      const { id: productId, addOnProducts, productTypeId } = workshop;
+    const { id: productId, addOnProducts, productTypeId } = workshop;
 
-      const complianceQuestionnaire = questionnaire.reduce(
-        (res, current) => ({
-          ...res,
-          [current.key]: current.value ? 'Yes' : 'No',
-        }),
-        {},
-      );
+    const complianceQuestionnaire = questionnaire.reduce(
+      (res, current) => ({
+        ...res,
+        [current.key]: current.value ? 'Yes' : 'No',
+      }),
+      {},
+    );
 
-      try {
-        const selectedAddOn = null;
+    try {
+      const selectedAddOn = null;
 
-        let addOnProductsList = addOnProducts
-          ? addOnProducts.map((product) => {
-              if (!product.isAddOnSelectionRequired) {
-                const value = values[product.productName];
-                if (value) {
-                  return product.productSfid;
-                } else {
-                  return null;
-                }
+      let addOnProductsList = addOnProducts
+        ? addOnProducts.map((product) => {
+            if (!product.isAddOnSelectionRequired) {
+              const value = values[product.productName];
+              if (value) {
+                return product.productSfid;
+              } else {
+                return null;
               }
-              return product.productSfid;
-            })
-          : [];
+            }
+            return product.productSfid;
+          })
+        : [];
 
-        let AddOnProductIds = [selectedAddOn, ...addOnProductsList];
+      let AddOnProductIds = [selectedAddOn, ...addOnProductsList];
 
-        AddOnProductIds = AddOnProductIds.filter((AddOn) => AddOn !== null);
+      AddOnProductIds = AddOnProductIds.filter((AddOn) => AddOn !== null);
 
-        const isRegularOrder = values.comboDetailId
-          ? values.comboDetailId === productId
-          : true;
+      const isRegularOrder = values.comboDetailId
+        ? values.comboDetailId === productId
+        : true;
 
-        const products = isRegularOrder
-          ? {
+      const products = isRegularOrder
+        ? {
+            productType: 'workshop',
+            productSfId: productId,
+            AddOnProductIds: AddOnProductIds,
+          }
+        : {
+            productType: 'bundle',
+            productSfId: values.comboDetailId,
+            childProduct: {
               productType: 'workshop',
               productSfId: productId,
               AddOnProductIds: AddOnProductIds,
-            }
-          : {
-              productType: 'bundle',
-              productSfId: values.comboDetailId,
-              childProduct: {
-                productType: 'workshop',
-                productSfId: productId,
-                AddOnProductIds: AddOnProductIds,
-                complianceQuestionnaire,
-              },
-            };
-
-        let payLoad = {
-          shoppingRequest: {
-            couponCode: couponCode || '',
-            contactAddress: {
-              contactPhone,
-              contactAddress,
-              contactCity,
-              contactState,
-              contactZip,
+              complianceQuestionnaire,
             },
-            billingAddress: {
-              billingPhone: contactPhone,
-              billingAddress: contactAddress,
-              billingCity: contactCity,
-              billingState: contactState,
-              billingZip: contactZip,
+          };
+
+      let payLoad = {
+        shoppingRequest: {
+          couponCode: couponCode || '',
+          contactAddress: {
+            contactPhone,
+            contactAddress,
+            contactCity,
+            contactState,
+            contactZip,
+          },
+          billingAddress: {
+            billingPhone: contactPhone,
+            billingAddress: contactAddress,
+            billingCity: contactCity,
+            billingState: contactState,
+            billingZip: contactZip,
+          },
+          products,
+          complianceQuestionnaire,
+          isInstalmentOpted: false,
+          isStripeIntentPayment: true,
+        },
+        utm: filterAllowedParams(router.query),
+      };
+
+      if (fee <= 0) {
+        payLoad.shoppingRequest.isStripeIntentPayment = false;
+      }
+
+      payLoad = {
+        ...payLoad,
+        user: {
+          lastName: lastName,
+          firstName: firstName,
+          email: email,
+        },
+      };
+
+      //token.saveCardForFuture = true;
+      const {
+        stripeIntentObj,
+        status,
+        data,
+        error: errorMessage,
+        isError,
+      } = await api.post({
+        path: 'createAndPayOrder',
+        body: payLoad,
+        isUnauthorized: true,
+      });
+
+      if (status === 400 || isError) {
+        throw new Error(errorMessage);
+      }
+
+      if (data) {
+        if (data.totalOrderAmount > 0) {
+          let filteredParams = {
+            ctype: productTypeId,
+            page: 'ty',
+            referral: 'course_scheduling_checkout',
+            courseType,
+            ...filterAllowedParams(router.query),
+          };
+          filteredParams = removeNull(filteredParams);
+          let returnUrl = `${window.location.origin}/us-en/course/thankyou/${
+            data.attendeeId
+          }?${queryString.stringify(filteredParams)}`;
+          if (isGenericWorkshop) {
+            returnUrl = `${window.location.origin}/us-en/course/scheduling?aid=${data.attendeeId}&${queryString.stringify(filteredParams)}`;
+          }
+
+          const result = await stripe.confirmPayment({
+            //`Elements` instance that was used to create the Payment Element
+            elements,
+            clientSecret: stripeIntentObj.client_secret,
+            confirmParams: {
+              return_url: returnUrl,
             },
-            products,
-            complianceQuestionnaire,
-            isInstalmentOpted: false,
-            isStripeIntentPayment: true,
-          },
-          utm: filterAllowedParams(router.query),
-        };
-
-        if (fee <= 0) {
-          payLoad.shoppingRequest.isStripeIntentPayment = false;
-        }
-
-        payLoad = {
-          ...payLoad,
-          user: {
-            lastName: lastName,
-            firstName: firstName,
-            email: email,
-          },
-        };
-
-        //token.saveCardForFuture = true;
-        const {
-          stripeIntentObj,
-          status,
-          data,
-          error: errorMessage,
-          isError,
-        } = await api.post({
-          path: 'createAndPayOrder',
-          body: payLoad,
-          isUnauthorized: true,
-        });
-
-        if (status === 400 || isError) {
-          throw new Error(errorMessage);
-        }
-
-        if (data) {
-          if (data.totalOrderAmount > 0) {
-            let filteredParams = {
-              ctype: productTypeId,
-              page: 'ty',
-              referral: 'course_scheduling_checkout',
-              courseType,
-              ...filterAllowedParams(router.query),
-            };
-            filteredParams = removeNull(filteredParams);
-            let returnUrl = `${window.location.origin}/us-en/course/thankyou/${
-              data.attendeeId
-            }?${queryString.stringify(filteredParams)}`;
-            if (isGenericWorkshop) {
-              returnUrl = `${window.location.origin}/us-en/course/scheduling?aid=${data.attendeeId}&${queryString.stringify(filteredParams)}`;
-            }
-
-            const result = await stripe.confirmPayment({
-              //`Elements` instance that was used to create the Payment Element
-              elements,
-              clientSecret: stripeIntentObj.client_secret,
-              confirmParams: {
-                return_url: returnUrl,
+          });
+          if (result.error) {
+            // Show error to your customer (for example, payment details incomplete)
+            throw new Error(result.error.message);
+          }
+        } else {
+          if (isGenericWorkshop) {
+            replaceRouteWithUTMQuery(router, {
+              pathname: `/us-en/course/scheduling/thankyou/${data.attendeeId}`,
+              query: {
+                aid: data.attendeeId,
               },
             });
-            if (result.error) {
-              // Show error to your customer (for example, payment details incomplete)
-              throw new Error(result.error.message);
-            }
           } else {
-            if (isGenericWorkshop) {
-              replaceRouteWithUTMQuery(router, {
-                pathname: `/us-en/course/scheduling/thankyou/${data.attendeeId}`,
-                query: {
-                  aid: data.attendeeId,
-                },
-              });
-            } else {
-              replaceRouteWithUTMQuery(router, {
-                pathname: `/us-en/course/thankyou/${data.attendeeId}`,
-                query: {
-                  ctype: productTypeId,
-                  page: 'ty',
-                  courseType,
-                  referral: 'course_scheduling_checkout',
-                },
-              });
-            }
+            replaceRouteWithUTMQuery(router, {
+              pathname: `/us-en/course/thankyou/${data.attendeeId}`,
+              query: {
+                ctype: productTypeId,
+                page: 'ty',
+                courseType,
+                referral: 'course_scheduling_checkout',
+              },
+            });
           }
         }
-      } catch (ex) {
-        console.error(ex);
-        const data = ex.response?.data;
-        const { message, statusCode } = data || {};
-        showAlert(ALERT_TYPES.ERROR_ALERT, {
-          children: message ? `Error: ${message} (${statusCode})` : ex.message,
-        });
-        track('show_error', {
-          screen_name: 'course_scheduling_checkout_error',
-          course_type: courseType,
-          error_message: message
-            ? `Error: ${message} (${statusCode})`
-            : ex.message,
-        });
       }
-    });
+    } catch (ex) {
+      console.error(ex);
+      const data = ex.response?.data;
+      const { message, statusCode } = data || {};
+      showAlert(ALERT_TYPES.ERROR_ALERT, {
+        children: message ? `Error: ${message} (${statusCode})` : ex.message,
+      });
+      track('show_error', {
+        screen_name: 'course_scheduling_checkout_error',
+        course_type: courseType,
+        error_message: message
+          ? `Error: ${message} (${statusCode})`
+          : ex.message,
+      });
+    }
+    setLoading(false);
   };
 
   const formikOnChange = (values) => {
@@ -492,7 +547,7 @@ const SchedulingPaymentForm = ({
 
   return (
     <>
-      {isPending && <Loader />}
+      {loading && <Loader />}
       <Formik
         initialValues={{
           firstName: first_name,
@@ -506,71 +561,11 @@ const SchedulingPaymentForm = ({
           questionnaire: questionnaireArray,
           ppaAgreement: true,
         }}
-        validationSchema={Yup.object().shape({
-          firstName: Yup.string().when('email', {
-            is: (value) => !!value,
-            then: Yup.string()
-              .required('First Name is required')
-              .matches(/\S/, 'String should not contain empty spaces'),
-            otherwise: Yup.string().notRequired(),
-          }),
-          lastName: Yup.string().when('email', {
-            is: (value) => !!value,
-            then: Yup.string()
-              .required('Last Name is required')
-              .matches(/\S/, 'String should not contain empty spaces'),
-            otherwise: Yup.string().notRequired(),
-          }),
-          contactPhone: Yup.string().when('email', {
-            is: (value) => !!value,
-            then: Yup.string()
-              .required('Phone number required')
-              .matches(phoneRegExp, 'Phone number is not valid'),
-            otherwise: Yup.string().notRequired(),
-          }),
-          email: Yup.string()
-            .email('Email is invalid!')
-            .required('Email is required!')
-            .matches(/\S/, 'String should not contain empty spaces')
-            .email(),
-          contactAddress: Yup.string().when('email', {
-            is: (value) => !!value,
-            then: Yup.string()
-              .required('Address is required')
-              .matches(/\S/, 'String should not contain empty spaces'),
-            otherwise: Yup.string().notRequired(),
-          }),
-          contactCity: Yup.string().when(['contactAddress', 'email'], {
-            is: (address, email) => !!address && !!email,
-            then: Yup.string()
-              .required('City is required')
-              .matches(/\S/, 'String should not contain empty spaces'),
-            otherwise: Yup.string().notRequired(),
-          }),
-          contactState: Yup.string().when(['contactAddress', 'email'], {
-            is: (address, email) => !!address && !!email,
-            then: Yup.string()
-              .required('State is required')
-              .matches(/\S/, 'String should not contain empty spaces'),
-            otherwise: Yup.string().notRequired(),
-          }),
-          contactZip: Yup.string().when(['contactAddress', 'email'], {
-            is: (address, email) => !!address && !!email,
-            then: Yup.string()
-              .required('Zip code is required!')
-              .matches(/\S/, 'String should not contain empty spaces')
-              .min(2, 'Zip must be at least 2 characters')
-              .max(10, 'Zip can be at most 10 characters'),
-            otherwise: Yup.string().notRequired(),
-          }),
-          ppaAgreement: Yup.boolean()
-            .label('Terms')
-            .test(
-              'is-true',
-              'Please check the box in order to continue.',
-              (value) => value === true,
-            ),
-        })}
+        validationSchema={
+          activeStep === CheckoutStates.EMAIL_INPUT
+            ? emailStepSchema
+            : userInfoStepSchema
+        }
         innerRef={formRef}
         onSubmit={async (values) => {
           await completeEnrollmentAction(values);
@@ -715,7 +710,31 @@ const SchedulingPaymentForm = ({
                         </div>
                         <div className="info-box-details">
                           <div className="info-box-title">Location:</div>
-                          <div className="info-detail">{`${workshop?.mode} (The instructor will email you the Zoom meeting details prior to course start date)`}</div>
+                          <div className="info-detail">
+                            {workshop?.mode === COURSE_MODES.ONLINE.value ? (
+                              `${workshop?.mode} (The instructor will email you the Zoom meeting details prior to course start date)`
+                            ) : (
+                              <a
+                                href={`https://www.google.com/maps/search/?api=1&query=${
+                                  workshop.streetAddress1 || ''
+                                },${workshop.streetAddress2 || ''} ${
+                                  workshop.city
+                                } ${workshop.state} ${workshop.zip} ${
+                                  workshop.country
+                                }`}
+                                target="_blank"
+                                rel="noreferrer"
+                              >
+                                {workshop.streetAddress1 &&
+                                  workshop.streetAddress1}
+                                {workshop.streetAddress2 &&
+                                  workshop.streetAddress2}
+                                {workshop.city || ''}
+                                {', '}
+                                {workshop.state || ''} {workshop.zip || ''}
+                              </a>
+                            )}
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -881,6 +900,16 @@ const SchedulingPaymentForm = ({
                             healthinfo@us.artofliving.org
                           </a>
                         </div>
+                        {activeStep === CheckoutStates.EMAIL_INPUT && (
+                          <Field
+                            name="payment"
+                            component={StripeExpressElement}
+                            workshop={workshop}
+                            loading={loading}
+                            parentStyle={{ display: 'flex' }}
+                            email={values.email}
+                          />
+                        )}
 
                         <div className="payment-actions">
                           {activeStep === CheckoutStates.USER_INFO ? (
@@ -888,7 +917,7 @@ const SchedulingPaymentForm = ({
                               className="submit-btn"
                               id="pay-button"
                               type="button"
-                              disabled={isPending}
+                              disabled={loading}
                               form="my-form"
                               onClick={handleFormSubmit}
                             >
@@ -898,7 +927,7 @@ const SchedulingPaymentForm = ({
                             <button
                               className="submit-btn"
                               type="button"
-                              disabled={isPending}
+                              disabled={loading}
                               onClick={(e) => {
                                 if (
                                   !values.email ||
@@ -959,8 +988,6 @@ const SchedulingCheckoutFlow = () => {
     'courseType',
     parseAsString.withDefault('SKY_BREATH_MEDITATION'),
   );
-
-  const courseMode = mode === 'online' ? 'Online' : 'In Person';
 
   const { data: workshopMaster = {} } = useQuery({
     queryKey: ['workshopMaster', mode],

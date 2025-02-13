@@ -1,5 +1,5 @@
 /* eslint-disable no-inline-styles/no-inline-styles */
-import React, { useRef, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Navigation, Pagination, Scrollbar, A11y } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/react';
 // Import Swiper styles
@@ -7,7 +7,6 @@ import 'swiper/css';
 import 'swiper/css/pagination';
 import 'swiper/css/scrollbar';
 import { useAuth } from '@contexts';
-import { useEffect } from 'react';
 import { useRouter } from 'next/router';
 import {
   api,
@@ -745,8 +744,6 @@ const ProfileLanding = () => {
 
     return new Date(aStartTime) - new Date(bStartTime); // Earliest event first
   });
-
-  console.log('recommendedEventsOrdered', recommendedEventsOrdered);
 
   const upcomingEvents = [
     ...(data?.workshops || []),

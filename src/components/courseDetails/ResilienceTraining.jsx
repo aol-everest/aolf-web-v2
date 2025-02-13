@@ -163,40 +163,39 @@ export const ResilienceTraining = ({
     .replace('Silent Retreat', `${aosCount} Silent Retreat`);
 
   return (
-    <main class="sky-resilience">
-      <section class="banner-section">
-        <div class="container">
-          <div class="course-type-pill">{mode}</div>
-          <div class="banner-title">{title}</div>
-          <ul class="banner-course-features">
+    <main className="sky-resilience">
+      <section className="banner-section">
+        <div className="container">
+          <div className="course-type-pill">{mode}</div>
+          <div className="banner-title">{title}</div>
+          <ul className="banner-course-features">
             <li>
-              <span class="icon-aol iconaol-flower-1"></span>Relieve stress,
-              anxiety, and tension
+              <span className="icon-aol iconaol-flower-1"></span>Resiliency
             </li>
             <li>
-              <span class="icon-aol iconaol-flower-2"></span>Enhance mental
-              clarity and optimize performance
+              <span className="icon-aol iconaol-flower-2"></span>Enhanced
+              Wellbeing
             </li>
             <li>
-              <span class="icon-aol iconaol-flower-3"></span>Improve sleep
-              quality
+              <span className="icon-aol iconaol-flower-3"></span>Improved Sleep
+              Quality
             </li>
             <li>
-              <span class="icon-aol iconaol-flower-4"></span>Reduce symptoms of
-              chronic and traumatic stress
+              <span className="icon-aol iconaol-flower-4"></span>Increased
+              Mental Clarity and Focus
             </li>
           </ul>
         </div>
       </section>
-      <section class="section-registration-widget">
-        <div class="container">
-          <div class="registration-widget">
-            <div class=" row register-content">
-              <div class="col dates icon-money">
-                <span class="title">Course Fee</span>
+      <section className="section-registration-widget">
+        <div className="container">
+          <div className="registration-widget">
+            <div className=" row register-content">
+              <div className="col dates icon-money">
+                <span className="title">Course Fee</span>
                 <br />
 
-                <span class="content">
+                <span className="content">
                   {isUsableCreditAvailable && (
                     <span className="content">
                       ${UpdatedFeeAfterCredits}&nbsp;
@@ -219,10 +218,10 @@ export const ResilienceTraining = ({
                   )}
                 </span>
               </div>
-              <div class="col dates icon-calendar">
-                <span class="title">Dates</span>
+              <div className="col dates icon-calendar">
+                <span className="title">Dates</span>
                 <br />
-                <span class="content">
+                <span className="content">
                   {dayjs
                     .utc(eventStartDate)
                     .isSame(dayjs.utc(eventEndDate), 'month') &&
@@ -237,10 +236,10 @@ export const ResilienceTraining = ({
                       .format('M/DD/YYYY')}`}
                 </span>
               </div>
-              <div class="col location icon-location">
-                <span class="title">Location</span>
+              <div className="col location icon-location">
+                <span className="title">Location</span>
                 <br />
-                <span class="content">
+                <span className="content">
                   {mode === COURSE_MODES.ONLINE.value ? (
                     mode
                   ) : (
@@ -264,7 +263,7 @@ export const ResilienceTraining = ({
                 </span>
               </div>
             </div>
-            <div class=" row register-content">
+            <div className=" row register-content">
               {timings &&
                 timings.map((time) => {
                   return (
@@ -283,32 +282,32 @@ export const ResilienceTraining = ({
                   );
                 })}
             </div>
-            <div class=" row register-content">
-              <div class="col dates instructor">
-                <i class="icon-aol iconaol-profile"></i>
-                <div class="instructor-content">
-                  <span class="title">Instructor</span>
+            <div className=" row register-content">
+              <div className="col dates instructor">
+                <i className="icon-aol iconaol-profile"></i>
+                <div className="instructor-content">
+                  <span className="title">Instructor</span>
                   <br />
-                  <span class="content">{teachers}</span>
+                  <span className="content">{teachers}</span>
                 </div>
               </div>
-              <div class="col location contact">
-                <i class="icon-aol iconaol-call-calling"></i>
-                <div class="contact-content">
-                  <span class="title">Contact</span>
+              <div className="col location contact">
+                <i className="icon-aol iconaol-call-calling"></i>
+                <div className="contact-content">
+                  <span className="title">Contact</span>
                   <br />
-                  <span class="content">
+                  <span className="content">
                     {email} | {phone1}
                   </span>
                 </div>
               </div>
             </div>
             {(description || notes) && (
-              <div class="row register-content">
-                <div class="col dates notes-content">
-                  <i class="icon-aol iconaol-message-text"></i>
-                  <div class="notes-content">
-                    <span class="title">Notes</span>
+              <div className="row register-content">
+                <div className="col dates notes-content">
+                  <i className="icon-aol iconaol-message-text"></i>
+                  <div className="notes-content">
+                    <span className="title">Notes</span>
                     <br />
                     {description && (
                       <span
@@ -330,8 +329,8 @@ export const ResilienceTraining = ({
                 </div>
               </div>
             )}
-            <div class=" row register-content no_border">
-              <div class="col-md-12">
+            <div className=" row register-content no_border">
+              <div className="col-md-12">
                 {courseViewMode !== WORKSHOP_MODE.VIEW && (
                   <button
                     className="register-button"
@@ -344,10 +343,10 @@ export const ResilienceTraining = ({
             </div>
             {(earlyBirdFeeIncreasing ||
               (preRequisiteCondition && preRequisiteCondition.length > 0)) && (
-              <div class="additional-info-box">
+              <div className="additional-info-box">
                 {earlyBirdFeeIncreasing && (
-                  <div class="info-row">
-                    <i class="icon-aol iconaol-coin"></i>
+                  <div className="info-row">
+                    <i className="icon-aol iconaol-coin"></i>
                     <span>
                       {earlyBirdFeeIncreasing.increasingFee} starting{' '}
                       {dayjs
@@ -358,8 +357,8 @@ export const ResilienceTraining = ({
                 )}
 
                 {preRequisiteCondition && preRequisiteCondition.length > 0 && (
-                  <div class="info-row">
-                    <i class="icon-aol iconaol-shield-tick"></i>
+                  <div className="info-row">
+                    <i className="icon-aol iconaol-shield-tick"></i>
                     <span>
                       <strong>Eligibility:</strong> {preRequisiteCondition}1
                     </span>
@@ -370,60 +369,62 @@ export const ResilienceTraining = ({
           </div>
         </div>
       </section>
-      <section class="section-benefits-resilience">
-        <div class="container">
-          <h2 class="section-title">Discover the Benefits</h2>
-          <div class="section-desc">
+      <section className="section-benefits-resilience">
+        <div className="container">
+          <h2 className="section-title">Discover the Benefits</h2>
+          <div className="section-desc">
             That thousand of veterans, military service members and their
             dependents are experiencing
           </div>
-          <div class="benefits-row">
-            <div class="benefits-col">
-              <div class="benefit-item">
-                <div class="benefit-item-icon">
-                  <span class="icon-aol iconaol-flower-1"></span>
+          <div className="benefits-row">
+            <div className="benefits-col">
+              <div className="benefit-item">
+                <div className="benefit-item-icon">
+                  <span className="icon-aol iconaol-flower-1"></span>
                 </div>
-                <div class="benefit-item-title">20 years of programs</div>
-                <div class="benefit-item-text">
+                <div className="benefit-item-title">20 years of programs</div>
+                <div className="benefit-item-text">
                   Learn from the pioneers of breath-based meditation practice
                 </div>
               </div>
-              <div class="benefit-item">
-                <div class="benefit-item-icon">
-                  <span class="icon-aol iconaol-flower-2"></span>
+              <div className="benefit-item">
+                <div className="benefit-item-icon">
+                  <span className="icon-aol iconaol-flower-2"></span>
                 </div>
-                <div class="benefit-item-title">
+                <div className="benefit-item-title">
                   Backed by independent studies
                 </div>
-                <div class="benefit-item-text">
+                <div className="benefit-item-text">
                   Reduce PTSD Symptoms Relieve Depression Improve Sleep
                 </div>
               </div>
             </div>
-            <div class="benefits-col col-img">
+            <div className="benefits-col col-img">
               <img
-                src="/img/resilience-benefit.jpeg"
-                class="img-resilience-benefit"
+                src="/img/resilience-benefit1.webp"
+                className="img-resilience-benefit"
                 width="670"
               />
             </div>
-            <div class="benefits-col">
-              <div class="benefit-item">
-                <div class="benefit-item-icon">
-                  <span class="icon-aol iconaol-flower-3"></span>
+            <div className="benefits-col">
+              <div className="benefit-item">
+                <div className="benefit-item-icon">
+                  <span className="icon-aol iconaol-flower-3"></span>
                 </div>
-                <div class="benefit-item-title">5-Session Courses</div>
-                <div class="benefit-item-text">
+                <div className="benefit-item-title">5-Session Courses</div>
+                <div className="benefit-item-text">
                   2.5 - 3 hours a day live interactive sessions with certified
                   instructors
                 </div>
               </div>
-              <div class="benefit-item">
-                <div class="benefit-item-icon">
-                  <span class="icon-aol iconaol-flower-4"></span>
+              <div className="benefit-item">
+                <div className="benefit-item-icon">
+                  <span className="icon-aol iconaol-flower-4"></span>
                 </div>
-                <div class="benefit-item-title">Eligibility Requirements</div>
-                <div class="benefit-item-text">
+                <div className="benefit-item-title">
+                  Eligibility Requirements
+                </div>
+                <div className="benefit-item-text">
                   The SKY Resilience Training is free of cost to veterans,
                   military service members, and dependents over age 18. First
                   responders (Police, Fire, EMS) are also welcome to attend
@@ -433,47 +434,47 @@ export const ResilienceTraining = ({
           </div>
         </div>
       </section>
-      <section class="featured-in">
-        <div class="container">
-          <div class="section-tag">Press</div>
-          <h2 class="section-title">They're speaking about us</h2>
-          <div class="featured-listing">
-            <div class="featured-item">
-              <div class="featured-item-logo">
+      <section className="featured-in">
+        <div className="container">
+          <div className="section-tag">Press</div>
+          <h2 className="section-title">They're speaking about us</h2>
+          <div className="featured-listing">
+            <div className="featured-item">
+              <div className="featured-item-logo">
                 <img
                   src="/img/press-logo-chicago-tribune.jpg"
                   alt="Chicago Tribune"
                 />
               </div>
             </div>
-            <div class="featured-item">
-              <div class="featured-item-logo">
+            <div className="featured-item">
+              <div className="featured-item-logo">
                 <img src="/img/press-logo-us-news.jpg" alt="U.S. News" />
               </div>
             </div>
-            <div class="featured-item">
-              <div class="featured-item-logo">
+            <div className="featured-item">
+              <div className="featured-item-logo">
                 <img src="/img/press-logo-newsweek.jpg" alt="Newsweek" />
               </div>
             </div>
-            <div class="featured-item">
-              <div class="featured-item-logo">
+            <div className="featured-item">
+              <div className="featured-item-logo">
                 <img
                   src="/img/press-logo-psychology-today.jpg"
                   alt="Psychology Today"
                 />
               </div>
             </div>
-            <div class="featured-item">
-              <div class="featured-item-logo">
+            <div className="featured-item">
+              <div className="featured-item-logo">
                 <img
                   src="/img/press-logo-huffington-post.jpg"
                   alt="The Huffington Post"
                 />
               </div>
             </div>
-            <div class="featured-item">
-              <div class="featured-item-logo">
+            <div className="featured-item">
+              <div className="featured-item-logo">
                 <img
                   src="/img/press-logo-time-magazine.jpg"
                   alt="Time Magazine"
@@ -483,18 +484,20 @@ export const ResilienceTraining = ({
           </div>
         </div>
       </section>
-      <section class="section-why">
-        <div class="container">
-          <div class="why-content-box">
-            <div class="cb-image-container">
+      <section className="section-why">
+        <div className="container">
+          <div className="why-content-box">
+            <div className="cb-image-container">
               <img
-                src="/img/why-resilience-placeholder.webp"
+                src="/img/why-resilience-placeholder1.webp"
                 alt="Why Resilience"
                 width="680"
               />
             </div>
-            <div class="cb-info-container">
-              <h2 class="section-title">Why this training is so powerful</h2>
+            <div className="cb-info-container">
+              <h2 className="section-title">
+                Why this training is so powerful
+              </h2>
               <p>
                 The SKY Resilience Training is a mind-body resilience program
                 for veterans and military. It teaches science-backed
@@ -506,18 +509,18 @@ export const ResilienceTraining = ({
           </div>
         </div>
       </section>
-      <section class="how-work">
-        <div class="container">
-          <h2 class="section-title">How it works</h2>
-          <div class="how-work-features">
-            <div class="hw-item">
-              <div class="hw-icon">
-                <span class="icon-aol iconaol-meditation"></span>
+      <section className="how-work">
+        <div className="container">
+          <h2 className="section-title">How it works</h2>
+          <div className="how-work-features">
+            <div className="hw-item">
+              <div className="hw-icon">
+                <span className="icon-aol iconaol-meditation"></span>
               </div>
-              <div class="hw-title">
+              <div className="hw-title">
                 Clear chronic and traumatic stress from the body
               </div>
-              <div class="hw-text">
+              <div className="hw-text">
                 SKY Breath Meditation, the most powerful breathing technique of
                 our time, uses specific natural rhythms of the breath to clear
                 toxins and accumulated stress on a cellular level. SKY gets to
@@ -525,14 +528,14 @@ export const ResilienceTraining = ({
                 clear with improved sleep, energy, and emotional regulation.
               </div>
             </div>
-            <div class="hw-item">
-              <div class="hw-icon">
-                <span class="icon-aol iconaol-human-brain"></span>
+            <div className="hw-item">
+              <div className="hw-icon">
+                <span className="icon-aol iconaol-human-brain"></span>
               </div>
-              <div class="hw-title">
+              <div className="hw-title">
                 Unlock your resilience and self-awareness
               </div>
-              <div class="hw-text">
+              <div className="hw-text">
                 Through interactive discussions, we build a framework for
                 resilience and empowerment through self-awareness, connection
                 and community and a positive outlook.
@@ -541,34 +544,36 @@ export const ResilienceTraining = ({
           </div>
         </div>
       </section>
-      <section class="changing-lives">
-        <div class="container">
-          <div class="section-title">How This Training Is Changing Lives</div>
-          <div class="video-changing-lives">
+      <section className="changing-lives">
+        <div className="container">
+          <div className="section-title">
+            How This Training Is Changing Lives
+          </div>
+          <div className="video-changing-lives">
             <iframe
               width="1026"
               height="515"
               src="https://www.youtube.com/embed/4AuuBP_9W30?si=OClWAOcxAqbSIXrT"
               title="YouTube video player"
-              frameborder="0"
+              frameBorder="0"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-              referrerpolicy="strict-origin-when-cross-origin"
-              allowfullscreen
+              referrerPolicy="strict-origin-when-cross-origin"
+              allowFullScreen
             ></iframe>
           </div>
         </div>
       </section>
-      <section class="section-testimonials">
-        <div class="container">
-          <div class="section-tag">TESTIMONIALS</div>
-          <h2 class="section-title">What people are sharing</h2>
-          <div class="testimonials-listing">
+      <section className="section-testimonials">
+        <div className="container">
+          <div className="section-tag">TESTIMONIALS</div>
+          <h2 className="section-title">What people are sharing</h2>
+          <div className="testimonials-listing">
             {testimonials?.map((testimonial) => (
-              <div class="testimonial-item" key={testimonial.id}>
-                <div class="testimony-title">{testimonial.heading}</div>
+              <div className="testimonial-item" key={testimonial.id}>
+                <div className="testimony-title">{testimonial.heading}</div>
                 {!ellipsisTestimonialIds.includes(testimonial.id) ? (
                   <>
-                    <div class="testimony-text">
+                    <div className="testimony-text">
                       <LinesEllipsis
                         text={testimonial.text}
                         maxLine="3"
@@ -587,7 +592,7 @@ export const ResilienceTraining = ({
                   </>
                 ) : (
                   <>
-                    <div class="testimony-text">
+                    <div className="testimony-text">
                       {testimonial.text}
                       <a
                         href="#"
@@ -600,8 +605,8 @@ export const ResilienceTraining = ({
                   </>
                 )}
 
-                <div class="author-info">
-                  <div class="author-picutre">
+                <div className="author-info">
+                  <div className="author-picutre">
                     <img
                       src={testimonial.img}
                       alt="Nathan"
@@ -609,15 +614,17 @@ export const ResilienceTraining = ({
                       width="60"
                     />
                   </div>
-                  <div class="author-details">
-                    <div class="author-name">{testimonial.name}</div>
-                    <div class="author-position">{testimonial.position}</div>
+                  <div className="author-details">
+                    <div className="author-name">{testimonial.name}</div>
+                    <div className="author-position">
+                      {testimonial.position}
+                    </div>
                   </div>
                 </div>
               </div>
             ))}
           </div>
-          <div class="page-registration-action">
+          <div className="page-registration-action">
             <button className="register-button" onClick={handleRegister()}>
               Register Now
             </button>

@@ -297,3 +297,8 @@ main {
     top: 10px;
   }
 }
+.express-checkout-element-only {
+  .StripeElement {
+    width: 100%;
+  }
+}
