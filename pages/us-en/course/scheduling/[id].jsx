@@ -716,22 +716,20 @@ const SchedulingPaymentForm = ({
                             ) : (
                               <a
                                 href={`https://www.google.com/maps/search/?api=1&query=${
-                                  workshop.streetAddress1 || ''
-                                },${workshop.streetAddress2 || ''} ${
-                                  workshop.city
-                                } ${workshop.state} ${workshop.zip} ${
-                                  workshop.country
+                                  workshop.locationStreet || ''
+                                }, ${
+                                  workshop.locationCity
+                                } ${workshop.locationProvince} ${workshop.locationPostalCode} ${
+                                  workshop.locationCountry
                                 }`}
                                 target="_blank"
                                 rel="noreferrer"
                               >
-                                {workshop.streetAddress1 &&
-                                  workshop.streetAddress1}
-                                {workshop.streetAddress2 &&
-                                  workshop.streetAddress2}
-                                {workshop.city || ''}
-                                {', '}
-                                {workshop.state || ''} {workshop.zip || ''}
+                                {`${workshop.locationStreet || ''}, 
+                                ${workshop.locationCity || ''}, 
+                                ${workshop.locationProvince || ''}
+                                ${workshop.locationPostalCode || ''}, 
+                                ${workshop.locationCountry || ''}`}
                               </a>
                             )}
                           </div>
