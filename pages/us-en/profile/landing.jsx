@@ -649,8 +649,8 @@ const ProfileLanding = () => {
 
   const swiperOption = {
     modules: [Navigation, Scrollbar, A11y, Pagination],
-    slidesPerView: 3,
-    spaceBetween: 10,
+    slidesPerView: 'auto',
+    centeredSlides: true,
     pagination: { clickable: true, el: false },
     autoHeight: true,
     breakpoints: {
@@ -679,6 +679,14 @@ const ProfileLanding = () => {
     watchSlidesVisibility: true,
     pagination: { clickable: true, el: '.swiper-pagination' },
     breakpoints: {
+      640: {
+        slidesPerView: 1,
+        spaceBetween: 20,
+      },
+      768: {
+        slidesPerView: 2,
+        spaceBetween: 30,
+      },
       1024: {
         spaceBetween: 30,
       },
