@@ -68,7 +68,8 @@ const HB_MENU = [
 const AOL_MENU = [
   {
     name: 'Gurudev',
-    submenu: [
+    link: 'https://www.artofliving.org/us-en/gurudev',
+    /*submenu: [
       {
         name: 'About',
         link: 'https://www.artofliving.org/us-en/gurudev',
@@ -77,7 +78,7 @@ const AOL_MENU = [
       {
         name: 'Biography',
         link: '#',
-      },*/
+      },
       {
         name: 'Accolades',
         link: 'https://www.artofliving.org/us-en/awards-and-honours',
@@ -87,12 +88,12 @@ const AOL_MENU = [
         name: 'Work',
         link: '#',
       },*/
-      /* Link not available
+    /* Link not available
       {
         name: 'Tour',
         link: '#',
-      },*/
-    ],
+      },
+    ],*/
   },
   {
     name: 'Explore',
@@ -165,10 +166,10 @@ const AOL_MENU = [
             name: 'Sri Sri Yoga Foundation',
             link: '/us-en/lp/online-foundation-program?utm_source=organic&utm_medium=home&utm_content=menu&course_id=1004431',
           },
-          // {
-          //   name: 'Sleep and Anxiety Protocol',
-          //   link: '/us-en/courses/stress-anxiety',
-          // },
+          {
+            name: 'Sleep and Anxiety Protocol',
+            link: 'https://event.us.artofliving.org/us-en/lp1/sleep-anxiety-protocol/',
+          },
         ],
       },
       {
@@ -278,11 +279,10 @@ const AOL_MENU = [
         name: 'Blog',
         link: 'https://www.artofliving.org/us-en/sri-sri-blog',
       },
-      /* Link not available
       {
         name: 'Science',
-        link: '#',
-      },*/
+        link: 'https://www.artofliving.org/us-en/meditation/benefits/research-sudarshan-kriya',
+      },
     ],
   },
   {
