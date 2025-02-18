@@ -650,7 +650,8 @@ const ProfileLanding = () => {
   const swiperOption = {
     modules: [Navigation, Scrollbar, A11y, Pagination],
     slidesPerView: 'auto',
-    centeredSlides: true,
+    spaceBetween: 16,
+    watchSlidesVisibility: true,
     pagination: { clickable: true, el: false },
     autoHeight: true,
     breakpoints: {
