@@ -24,6 +24,13 @@ import { useQueryString } from '@hooks';
 import { useEffectOnce } from 'react-use';
 import { useAnalytics } from 'use-analytics';
 import { useEffect } from 'react';
+import {
+  getCourseDateDisplay,
+  getCourseTimeDisplay,
+  getInstructorDisplay,
+  getCourseLocationDisplay,
+  getContactDisplay,
+} from '@utils/workshopUtils';
 
 dayjs.extend(utc);
 dayjs.extend(localizedFormat);
@@ -114,6 +121,11 @@ const Thankyou = () => {
         event_target: 'register_button',
         course_type: courseType,
         location_type: workshop.mode,
+        course_dates_display: getCourseDateDisplay(workshop),
+        course_timings_display: getCourseTimeDisplay(workshop),
+        course_instructors_display: getInstructorDisplay(workshop),
+        course_location_display: getCourseLocationDisplay(workshop),
+        course_contact_details_display: getContactDisplay(workshop),
       });
       track(
         'purchase',

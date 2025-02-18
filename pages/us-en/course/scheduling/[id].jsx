@@ -14,6 +14,13 @@ import {
   parsedAddress,
   findCourseTypeByKey,
 } from '@utils';
+import {
+  getCourseDateDisplay,
+  getCourseTimeDisplay,
+  getInstructorDisplay,
+  getCourseLocationDisplay,
+  getContactDisplay,
+} from '@utils/workshopUtils';
 import { useAuth, useGlobalAlertContext } from '@contexts';
 import { useAnalytics } from 'use-analytics';
 import { ABBRS, ALERT_TYPES, COURSE_TYPES, COURSE_MODES } from '@constants';
@@ -113,6 +120,9 @@ const SchedulingPaymentForm = ({
   const { track, identify } = useAnalytics();
   const { profile = {}, passwordLess, isAuthenticated } = useAuth();
   const { signOut } = passwordLess;
+  const [defaultUserEmail] = useQueryState('email');
+  console.log(defaultUserEmail);
+
   const formRef = useRef();
 
   const [loading, setLoading] = useState(false);
@@ -465,11 +475,17 @@ const SchedulingPaymentForm = ({
         email: formRef.current.values.email,
       });
     }
+
     track('submit_email', {
       screen_name: 'course_scheduling_checkout',
       event_target: 'register_button',
       course_type: courseType,
       location_type: workshop.mode,
+      course_dates_display: getCourseDateDisplay(workshop),
+      course_timings_display: getCourseTimeDisplay(workshop),
+      course_instructors_display: getInstructorDisplay(workshop),
+      course_location_display: getCourseLocationDisplay(workshop),
+      course_contact_details_display: getContactDisplay(workshop),
     });
     track(
       'begin_checkout',
@@ -534,33 +550,38 @@ const SchedulingPaymentForm = ({
     setDiscountResponse(discount);
   };
 
-  const initialValue = {
+  let initialValue = {
     firstName: '',
     lastName: '',
-    email: '',
+    email: defaultUserEmail || '',
     contactAddress: '',
     contactCity: '',
     contactState: '',
     contactZip: '',
     contactPhone: '',
+    questionnaire: questionnaireArray,
+    ppaAgreement: true,
   };
+
+  if (isAuthenticated) {
+    initialValue = {
+      ...initialValue,
+      firstName: first_name,
+      lastName: last_name,
+      email: email,
+      contactAddress: personMailingStreet || '',
+      contactCity: personMailingCity || '',
+      contactState: personMailingState || '',
+      contactZip: personMailingPostalCode || '',
+      contactPhone: personMobilePhone,
+    };
+  }
 
   return (
     <>
       {loading && <Loader />}
       <Formik
-        initialValues={{
-          firstName: first_name,
-          lastName: last_name,
-          email: email,
-          contactAddress: personMailingStreet || '',
-          contactCity: personMailingCity || '',
-          contactState: personMailingState || '',
-          contactZip: personMailingPostalCode || '',
-          contactPhone: personMobilePhone,
-          questionnaire: questionnaireArray,
-          ppaAgreement: true,
-        }}
+        initialValues={initialValue}
         validationSchema={
           activeStep === CheckoutStates.EMAIL_INPUT
             ? emailStepSchema
@@ -725,10 +746,10 @@ const SchedulingPaymentForm = ({
                                 target="_blank"
                                 rel="noreferrer"
                               >
-                                {`${workshop.locationStreet || ''}, 
-                                ${workshop.locationCity || ''}, 
+                                {`${workshop.locationStreet || ''},
+                                ${workshop.locationCity || ''},
                                 ${workshop.locationProvince || ''}
-                                ${workshop.locationPostalCode || ''}, 
+                                ${workshop.locationPostalCode || ''},
                                 ${workshop.locationCountry || ''}`}
                               </a>
                             )}
