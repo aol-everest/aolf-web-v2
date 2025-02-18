@@ -571,7 +571,7 @@ export const Header = () => {
       const response = await api.get({
         path: 'get-started-intro-series',
       });
-      return response;
+      return response?.data;
     },
   });
 
