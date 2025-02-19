@@ -1,4 +1,5 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
+import { useQueryState } from 'nuqs';
 import { api } from '@utils';
 import { useQuery } from '@tanstack/react-query';
 import { useRouter } from 'next/router';
@@ -9,6 +10,9 @@ const ExploreCourses = () => {
   const router = useRouter();
   const { slug } = router.query;
   const [selectedVideo, setSelectedVideo] = useState({});
+  const [activeSession, setActiveSession] = useQueryState('session', {
+    defaultValue: null,
+  });
   const [playing, setPlaying] = useState(false);
 
   const { data: introData = [], isLoading } = useQuery({
@@ -20,19 +24,28 @@ const ExploreCourses = () => {
           slug: slug,
         },
       });
-      setSelectedVideo({
-        ...(response?.data?.videos?.[0] || []),
-        videoIndex: 0,
-      });
+
+      if (activeSession === null) {
+        setActiveSession(response?.data?.videos?.[0].id);
+      }
       return response.data;
     },
   });
 
+  useEffect(() => {
+    if (activeSession !== null && introData?.videos?.length > 0) {
+      setSelectedVideo({
+        ...(introData?.videos?.find((video) => video.id === activeSession) ||
+          []),
+        videoIndex: introData?.videos?.findIndex(
+          (video) => video.id === activeSession,
+        ),
+      });
+    }
+  }, [activeSession, introData]);
+
   const handlePlayVideo = (video, videoIndex) => {
-    setSelectedVideo({
-      ...video,
-      videoIndex,
-    });
+    setActiveSession(video.id);
     setPlaying(true);
   };
 

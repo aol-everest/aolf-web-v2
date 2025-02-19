@@ -560,7 +560,7 @@ export const Header = () => {
   const router = useRouter();
   const { isAuthenticated = false, profile } = useAuth();
   const [navExpanded, setNavExpanded] = useState(false);
-  const [menu, setMenu] = useState(MENU);
+  const [headerMenu, setHeaderMenu] = useState([...MENU]);
 
   const { userProfilePic: profilePic, first_name, last_name } = profile || {};
   const initials = getInitials(first_name, last_name);
@@ -574,27 +574,51 @@ export const Header = () => {
       return response?.data;
     },
   });
-
   useEffect(() => {
-    if (introData?.length && orgConfig.name === 'AOL' && isAuthenticated) {
-      const updatedMenu = [...AOL_MENU];
+    if (!isAuthenticated) {
+      // Reset to original menu when logged out
+      setHeaderMenu([...MENU]);
+      return;
+    }
 
+    if (!introData?.length) {
+      return;
+    }
+
+    setHeaderMenu((currentMenu) => {
+      // Deep clone the current menu to avoid modifying the original MENU
+      const updatedMenu = JSON.parse(JSON.stringify(currentMenu));
       const exploreMenu = updatedMenu.find(
         (menuItem) => menuItem.name === 'Explore',
       );
-      if (exploreMenu) {
-        exploreMenu.submenu = [
-          ...exploreMenu.submenu,
-          ...introData.map((item) => ({
-            name: item.title,
-            link: `/us-en/explore/${item.slug}` || '#',
-          })),
-        ];
+
+      if (!exploreMenu) {
+        return currentMenu;
       }
 
-      setMenu(updatedMenu);
-    }
-  }, [introData]);
+      // Check if items already exist to prevent duplicates
+      const existingTitles = new Set(
+        exploreMenu.submenu.map((item) => item.name),
+      );
+      const newItems = introData.filter(
+        (item) => !existingTitles.has(item.title),
+      );
+
+      if (newItems.length === 0) {
+        return currentMenu;
+      }
+
+      exploreMenu.submenu = [
+        ...exploreMenu.submenu,
+        ...newItems.map((item) => ({
+          name: item.title,
+          link: item.slug ? `/us-en/explore/${item.slug}` : '#',
+        })),
+      ];
+
+      return updatedMenu;
+    });
+  }, [introData, isAuthenticated]);
 
   document.addEventListener('click', function (event) {
     if (event?.target?.classList?.contains('back-link')) {
@@ -759,7 +783,7 @@ export const Header = () => {
               <img src="/img/ic-logo.svg" alt="logo" height="32" />
             </div>
             <Nav className="mr-auto" as="ul">
-              {MENU.map((menu) => {
+              {headerMenu.map((menu) => {
                 if (menu.link) {
                   return (
                     <Nav.Item as="li" key={menu.name}>
