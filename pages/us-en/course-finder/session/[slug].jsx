@@ -54,7 +54,7 @@ const settings = {
   ],
 };
 
-const VideoCard = ({ video, index, isAuthenticated }) => {
+const VideoCard = ({ video, index, isAuthenticated, slug }) => {
   const { title, media, isLoginRequired, thumbnail } = video;
   const router = useRouter();
   const { showVideoPlayer } = useGlobalVideoPlayerContext();
@@ -62,7 +62,7 @@ const VideoCard = ({ video, index, isAuthenticated }) => {
     if (e) e.preventDefault();
     pushRouteWithUTMQuery(
       router,
-      `/us-en/signin?next=${encodeURIComponent(location.pathname + location.search)}`,
+      `/us-en/signin?next=/us-en/explore/${slug}?session=${video.id}`,
     );
   };
 
@@ -70,7 +70,7 @@ const VideoCard = ({ video, index, isAuthenticated }) => {
     if (isLoginRequired && !isAuthenticated) {
       pushRouteWithUTMQuery(
         router,
-        `/us-en/signin?next=${encodeURIComponent(location.pathname + location.search)}`,
+        `/us-en/signin?next=/us-en/explore/${slug}?session=${video.id}`,
       );
     } else {
       showVideoPlayer({
@@ -182,6 +182,7 @@ export default function Session() {
                 <Slider {...settings} className="intro-series-slider">
                   {data?.videos?.map((video, index) => (
                     <VideoCard
+                      slug={slug}
                       video={video}
                       key={index}
                       index={index}
