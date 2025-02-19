@@ -129,14 +129,13 @@ const PasswordChangeSuccessMessage = () => (
 function LoginPage() {
   const router = useRouter();
   const authObj = useAuth();
-  console.log(authObj);
   const { fetchCurrentUser, isAuthenticated } = authObj;
   const { busy, authenticateWithPassword } = authObj.passwordLess;
   // const { identify } = useAnalytics();
   const { showAlert } = useGlobalAlertContext();
 
   const [timeLeft, setTimeLeft] = useState(20);
-  const [enableAutoRedirect, setEnableAutoRedirect] = useState(false);
+  const [enableAutoRedirect, setEnableAutoRedirect] = useState(isAuthenticated);
   const [promiseHolder, setPromiseHolder] = useState(null);
   const [loading, setLoading] = useState(false);
   const [isHolding, setHolding] = useState(false);
@@ -150,23 +149,32 @@ function LoginPage() {
   const [username, setUsername] = useState(null);
 
   useEffect(() => {
-    if (enableAutoRedirect) {
-      // Set up the countdown interval
-      const interval = setInterval(() => {
-        setTimeLeft((prevTime) => prevTime - 1);
-      }, 1000);
+    if (!enableAutoRedirect) return;
 
-      // Set up the redirection after 20 seconds
-      const timer = setTimeout(() => {
-        router.push('/target-page'); // Replace '/target-page' with your desired redirect path
-      }, 20000);
+    const REDIRECT_DELAY_MS = 20000;
+    const COUNTDOWN_INTERVAL_MS = 1000;
+    const initialTimeLeft = REDIRECT_DELAY_MS / COUNTDOWN_INTERVAL_MS;
 
-      // Clear both timeout and interval when the component unmounts
-      return () => {
-        clearInterval(interval);
-        clearTimeout(timer);
-      };
-    }
+    setTimeLeft(initialTimeLeft); // Initialize countdown
+
+    const interval = setInterval(() => {
+      console.log('interval');
+      setTimeLeft((prevTime) => {
+        if (prevTime <= 1) {
+          clearInterval(interval); // Clear interval when countdown reaches 0
+        }
+        return prevTime - 1;
+      });
+    }, COUNTDOWN_INTERVAL_MS);
+
+    const timer = setTimeout(() => {
+      backToFlowAction();
+    }, REDIRECT_DELAY_MS);
+
+    return () => {
+      clearInterval(interval);
+      clearTimeout(timer);
+    };
   }, [enableAutoRedirect]);
 
   const clearMessageAction = () => {
@@ -223,6 +231,7 @@ function LoginPage() {
         window.location.protocol + '//' + window.location.host + '/us-en';
     }
   };
+
   const newPasswordFlow = () => {
     return new Promise((resolve, reject) => {
       setMode(NEW_PASSWORD_REQUEST);
@@ -259,6 +268,7 @@ function LoginPage() {
           2000,
         );
       }
+      setEnableAutoRedirect(true);
       /* const { nextStep } = await signIn({ username, password });
       switch (nextStep.signInStep) {
         case 'CONFIRM_SIGN_IN_WITH_NEW_PASSWORD_REQUIRED':
@@ -567,6 +577,9 @@ function LoginPage() {
           loading={loading}
           backToFlowAction={backToFlowAction}
           clearMessageAction={clearMessageAction}
+          timeLeft={timeLeft}
+          enableAutoRedirect={enableAutoRedirect}
+          setEnableAutoRedirect={setEnableAutoRedirect}
         >
           {socialLoginRender()}
         </SigninForm>

@@ -29,6 +29,7 @@ import { useRouter } from 'next/router';
 import { clearInflightOAuth } from '@passwordLess/storage.js';
 import CookieStorage from '@utils/cookieStorage';
 import { parse } from 'tldts';
+import { NuqsAdapter } from 'nuqs/adapters/next/pages';
 // import { SurveyRequest } from "@components/surveyRequest";
 
 // import TopProgressBar from "@components/topProgressBar";
@@ -255,48 +256,50 @@ function App({ Component, pageProps }) {
     );
   }
   return (
-    <AnalyticsProvider instance={analytics}>
-      <QueryClientProvider client={queryClient}>
-        <AuthProvider
-          checkUserPendingAction={checkUserPendingAction}
-          userInfo={user}
-          enableLocalUserCache={true}
-        >
-          <Compose
-            components={[
-              GlobalModal,
-              GlobalAlert,
-              GlobalAudioPlayer,
-              GlobalVideoPlayer,
-              GlobalLoading,
-              GlobalBottomBanner,
-            ]}
+    <NuqsAdapter>
+      <AnalyticsProvider instance={analytics}>
+        <QueryClientProvider client={queryClient}>
+          <AuthProvider
+            checkUserPendingAction={checkUserPendingAction}
+            userInfo={user}
+            enableLocalUserCache={true}
           >
-            <Layout
-              hideHeader={Component.hideHeader}
-              noHeader={Component.noHeader}
-              hideFooter={Component.hideFooter}
-              wcfHeader={Component.wcfHeader}
-              sideGetStartedAction={Component.sideGetStartedAction}
+            <Compose
+              components={[
+                GlobalModal,
+                GlobalAlert,
+                GlobalAudioPlayer,
+                GlobalVideoPlayer,
+                GlobalLoading,
+                GlobalBottomBanner,
+              ]}
             >
-              <DefaultSeo {...SEO} />
-              {/* <UsePagesViews /> */}
-              {/* <TopProgressBar /> */}
-              {isReInstateRequired && (
-                <ReInstate subscription={reinstateRequiredSubscription} />
-              )}
-              {/* {pendingSurveyInvite && (
+              <Layout
+                hideHeader={Component.hideHeader}
+                noHeader={Component.noHeader}
+                hideFooter={Component.hideFooter}
+                wcfHeader={Component.wcfHeader}
+                sideGetStartedAction={Component.sideGetStartedAction}
+              >
+                <DefaultSeo {...SEO} />
+                {/* <UsePagesViews /> */}
+                {/* <TopProgressBar /> */}
+                {isReInstateRequired && (
+                  <ReInstate subscription={reinstateRequiredSubscription} />
+                )}
+                {/* {pendingSurveyInvite && (
                 <SurveyRequest surveyInvite={pendingSurveyInvite} />
               )} */}
-              {isCCUpdateRequired && <CardUpdateRequired />}
-              {isPendingAgreement && <PendingAgreement />}
-              <Component {...pageProps} />
-              <ReactQueryDevtools initialIsOpen={false} />
-            </Layout>
-          </Compose>
-        </AuthProvider>
-      </QueryClientProvider>
-    </AnalyticsProvider>
+                {isCCUpdateRequired && <CardUpdateRequired />}
+                {isPendingAgreement && <PendingAgreement />}
+                <Component {...pageProps} />
+                <ReactQueryDevtools initialIsOpen={false} />
+              </Layout>
+            </Compose>
+          </AuthProvider>
+        </QueryClientProvider>
+      </AnalyticsProvider>
+    </NuqsAdapter>
   );
 }
 
