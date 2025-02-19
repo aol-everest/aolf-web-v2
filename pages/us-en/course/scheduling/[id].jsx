@@ -1066,7 +1066,6 @@ const SchedulingCheckoutFlow = () => {
         ...router.query,
         productTypeId: null,
         mode: 'both',
-        courseType: null,
         ctype: null,
       },
     });
