@@ -122,7 +122,6 @@ const SchedulingPaymentForm = ({
   const { profile = {}, passwordLess, isAuthenticated } = useAuth();
   const { signOut } = passwordLess;
   const [defaultUserEmail] = useQueryState('email');
-  console.log(defaultUserEmail);
 
   const formRef = useRef();
 
@@ -487,7 +486,10 @@ const SchedulingPaymentForm = ({
       course_instructors_display: getInstructorDisplay(workshop),
       course_location_display: getCourseLocationDisplay(workshop),
       course_contact_details_display: getContactDisplay(workshop),
-      course_checkout_url: getCourseCheckoutUrl(workshop, email),
+      course_checkout_url: getCourseCheckoutUrl(
+        workshop,
+        isAuthenticated ? email : defaultUserEmail,
+      ),
     });
     track(
       'begin_checkout',
