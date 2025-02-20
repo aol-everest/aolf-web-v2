@@ -134,7 +134,7 @@ function LoginPage() {
   // const { identify } = useAnalytics();
   const { showAlert } = useGlobalAlertContext();
 
-  const [timeLeft, setTimeLeft] = useState(20);
+  const [timeLeft, setTimeLeft] = useState(10);
   const [enableAutoRedirect, setEnableAutoRedirect] = useState(isAuthenticated);
   const [promiseHolder, setPromiseHolder] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -151,14 +151,13 @@ function LoginPage() {
   useEffect(() => {
     if (!enableAutoRedirect) return;
 
-    const REDIRECT_DELAY_MS = 20000;
+    const REDIRECT_DELAY_MS = 10000;
     const COUNTDOWN_INTERVAL_MS = 1000;
     const initialTimeLeft = REDIRECT_DELAY_MS / COUNTDOWN_INTERVAL_MS;
 
     setTimeLeft(initialTimeLeft); // Initialize countdown
 
     const interval = setInterval(() => {
-      console.log('interval');
       setTimeLeft((prevTime) => {
         if (prevTime <= 1) {
           clearInterval(interval); // Clear interval when countdown reaches 0
