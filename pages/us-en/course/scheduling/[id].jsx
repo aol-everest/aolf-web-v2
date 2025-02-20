@@ -20,6 +20,7 @@ import {
   getInstructorDisplay,
   getCourseLocationDisplay,
   getContactDisplay,
+  getCourseCheckoutUrl,
 } from '@utils/workshopUtils';
 import { useAuth, useGlobalAlertContext } from '@contexts';
 import { useAnalytics } from 'use-analytics';
@@ -486,6 +487,7 @@ const SchedulingPaymentForm = ({
       course_instructors_display: getInstructorDisplay(workshop),
       course_location_display: getCourseLocationDisplay(workshop),
       course_contact_details_display: getContactDisplay(workshop),
+      course_checkout_url: getCourseCheckoutUrl(workshop, email),
     });
     track(
       'begin_checkout',

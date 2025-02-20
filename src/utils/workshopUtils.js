@@ -99,3 +99,7 @@ export const getContactDisplay = (workshop) => {
 
   return allContactInfo.length > 0 ? allContactInfo.join('<br/> ') : null;
 };
+
+export const getCourseCheckoutUrl = (workshop, email) => {
+  return `${window.location.origin}/us-en/course/scheduling/${workshop.id}?email=${email}`;
+};
