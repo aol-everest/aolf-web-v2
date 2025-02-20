@@ -14,6 +14,9 @@ import { useGlobalAlertContext } from '@contexts';
 import { useQueryState, parseAsJson } from 'nuqs';
 import ErrorPage from 'next/error';
 import { PageLoading } from '@components';
+import { z } from 'zod';
+
+const ticketSchema = z.record(z.string(), z.number());
 
 dayjs.extend(utc);
 
@@ -70,7 +73,7 @@ function TicketedEvent() {
   const router = useRouter();
   const [selectedTickets, setSelectedTickets] = useQueryState(
     'ticket',
-    parseAsJson().withDefault({}),
+    parseAsJson(ticketSchema.parse).withDefault({}),
   );
   const { showAlert } = useGlobalAlertContext();
   const { id: eventId } = router.query;

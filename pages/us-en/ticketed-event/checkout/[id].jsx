@@ -33,6 +33,9 @@ import { PageLoading } from '@components';
 import { ScheduleAgreementForm } from '@components/scheduleAgreementForm';
 import AttendeeDetails from './AttendeeDetails';
 import { FaChevronLeft } from 'react-icons/fa6';
+import { z } from 'zod';
+
+const ticketSchema = z.record(z.string(), z.number());
 
 function TicketCheckout() {
   const router = useRouter();
@@ -155,7 +158,7 @@ const TicketCheckoutForm = ({ event }) => {
   const [discountResponse, setDiscountResponse] = useState(null);
   const [selectedTickets] = useQueryState(
     'ticket',
-    parseAsJson().withDefault({}),
+    parseAsJson(ticketSchema.parse).withDefault({}),
   );
   const {
     eventImageUrl,
