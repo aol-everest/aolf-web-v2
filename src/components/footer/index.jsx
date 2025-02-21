@@ -121,7 +121,7 @@ export function Footer() {
                 />
                 <ul className="nav-details">
                   <li className="nav-item">
-                    <Link href="/us-en/daily-sky">Daily SKY</Link>
+                    <Link href="/us-en/daily-sky">Daily Practices</Link>
                   </li>
                   <li className="nav-item">
                     <Link

@@ -99,7 +99,7 @@ const DailySKY = () => {
     <main class="daily-sky">
       {loading && <Loader />}
       <section class="title-header">
-        <h1 class="page-title">Daily SKY</h1>
+        <h1 class="page-title">Daily Practices</h1>
       </section>
       <section class="section-daily-sky-courses">
         <div class="container">
