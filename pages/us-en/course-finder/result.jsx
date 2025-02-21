@@ -22,7 +22,7 @@ function CourseFinderResult() {
   useEffect(() => {
     if (questions.length === 0) {
       pushRouteWithUTMQuery(router, {
-        pathname: `/us-en/course-finder/welcome`,
+        pathname: `/us-en/course-finder`,
       });
     }
   }, []);
@@ -30,7 +30,7 @@ function CourseFinderResult() {
   const handleStartOver = () => {
     setValue({});
     pushRouteWithUTMQuery(router, {
-      pathname: `/us-en/course-finder/welcome`,
+      pathname: `/us-en/course-finder`,
     });
   };
 

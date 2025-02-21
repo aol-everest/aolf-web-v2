@@ -230,7 +230,7 @@ const AOL_MENU = [
           },
           {
             name: 'Help me choose',
-            link: '/us-en/course-finder/welcome',
+            link: '/us-en/course-finder',
           },
         ],
       },
@@ -717,8 +717,7 @@ export const Header = () => {
                                 className={
                                   menuItem.link === '/us-en/courses'
                                     ? 'active'
-                                    : menuItem.link ===
-                                        '/us-en/course-finder/welcome'
+                                    : menuItem.link === '/us-en/course-finder'
                                       ? 'help'
                                       : ''
                                 }
