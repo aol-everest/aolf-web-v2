@@ -112,7 +112,7 @@ const AOL_MENU = [
     name: 'Meditation',
     submenu: [
       {
-        name: 'Daily SKY',
+        name: 'Daily Practices',
         link: '/us-en/daily-sky',
       },
       {
