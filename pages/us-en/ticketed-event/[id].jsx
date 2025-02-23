@@ -277,7 +277,7 @@ function TicketedEvent() {
                           timings.map((time) => {
                             return (
                               <div className="info-item" key={time.startDate}>
-                                <span className="icon-aol iconaol-calendar-2"></span>
+                                <span className="icon-aol iconaol-calendar"></span>
                                 <span className="p2">
                                   {dayjs.utc(time.startDate).format('ddd')},{' '}
                                   {dayjs
@@ -349,6 +349,15 @@ function TicketedEvent() {
                             selectedTickets={selectedTickets}
                           ></TicketLineItem>
                         ))}
+                        <div className="tickets-modal__card">
+                          <div className="tickets notes">
+                            <div className="label">Notes</div>
+                            <div
+                              className="value"
+                              dangerouslySetInnerHTML={{ __html: notes }}
+                            />
+                          </div>
+                        </div>
                       </div>
 
                       <div className="tickets-modal__language"></div>
@@ -370,20 +379,6 @@ function TicketedEvent() {
                       <div className="tickets-modal__cart">
                         {renderSummary()}
                       </div>
-
-                      {notes && (
-                        <div className="tickets-modal__cart">
-                          <div className="tickets-container">
-                            <div className="tickets notes">
-                              <div className="label">Notes</div>
-                              <div
-                                className="value"
-                                dangerouslySetInnerHTML={{ __html: notes }}
-                              />
-                            </div>
-                          </div>
-                        </div>
-                      )}
 
                       <div className="tickets-modal__footer">
                         {false && event && total > 0 && (
