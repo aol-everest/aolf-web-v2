@@ -340,6 +340,11 @@ const Course = () => {
   const { slug } = router.query;
 
   const courseTypeFilter = COURSE_TYPES_OPTIONS[slug];
+  if (!courseTypeFilter) {
+    const error = new Error('Page not found');
+    error.statusCode = 404;
+    throw error;
+  }
   const [courseModeFilter, setCourseModeFilter] = useQueryState('mode');
   const [onlyWeekend, setOnlyWeekend] = useQueryState(
     'onlyWeekend',
@@ -736,8 +741,8 @@ const Course = () => {
   return (
     <main className="all-courses-find">
       <NextSeo
-        defaultTitle={`${courseTypeFilter.name} - Course Dates and Registration`}
-        description={courseTypeFilter.description}
+        defaultTitle={`${courseTypeFilter?.name} - Course Dates and Registration`}
+        description={courseTypeFilter?.description}
       />
       <Script
         id="intelliticks-script"
