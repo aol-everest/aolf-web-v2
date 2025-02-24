@@ -96,11 +96,14 @@ const MyError = ({ statusCode, hasGetInitialPropsRun, err }) => {
           <div className="tw-mt-8 tw-flex tw-justify-center tw-gap-4">
             <button
               onClick={() => window.history.back()}
-              className="btn-primary tw-max-w-[160px]"
+              className="btn-primary tw-max-w-[160px] tw-w-full tw-text-center !tw-p-2"
             >
               Go Back
             </button>
-            <Link href="/" className="btn-secondary tw-max-w-[160px]">
+            <Link
+              href="/"
+              className="btn-secondary tw-max-w-[160px] tw-w-full tw-text-center !tw-p-2 tw-justify-center"
+            >
               Return Home
             </Link>
           </div>
@@ -112,19 +115,19 @@ const MyError = ({ statusCode, hasGetInitialPropsRun, err }) => {
             <div className="tw-mt-4 tw-space-y-2">
               <Link
                 href="/us-en/daily-sky"
-                className="tw-block tw-text-blue-600 hover:tw-underline"
+                className="tw-block tw-text-amber-500 hover:tw-underline"
               >
                 Daily SKY Practices
               </Link>
               <Link
                 href="/us-en/library"
-                className="tw-block tw-text-blue-600 hover:tw-underline"
+                className="tw-block tw-text-amber-500 hover:tw-underline"
               >
                 Meditation Library
               </Link>
               <Link
                 href="/contact"
-                className="tw-block tw-text-blue-600 hover:tw-underline"
+                className="tw-block tw-text-amber-500 hover:tw-underline"
               >
                 Contact Support
               </Link>
