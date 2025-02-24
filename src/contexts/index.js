@@ -30,8 +30,4 @@ export {
   useAwaitableState,
 } from './auth.context';
 
-export {
-  MeditationContext,
-  MeditationProvider,
-  useMeditationContext,
-} from './MeditationContext';
+export { MeditationProvider, useMeditationContext } from './MeditationContext';
