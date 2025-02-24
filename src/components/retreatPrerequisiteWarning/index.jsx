@@ -3,6 +3,7 @@ import { useCallback, useRef } from 'react';
 
 export const RetreatPrerequisiteWarning = ({
   warningPayload,
+  btnText = 'Art of Living Part 1',
   closeRetreatPrerequisiteWarning,
 }) => {
   const backdropRef = useRef(null);
@@ -55,8 +56,7 @@ export const RetreatPrerequisiteWarning = ({
               <a href="mailto:app.support@us.artofliving.org">
                 app.support@us.artofliving.org
               </a>
-              . We will be happy to help you so you can sign up for the Online
-              Short SKY Meditation Meetup.
+              . We will be happy to help you so you can sign up.
             </div>
             <div className="modal-actions">
               <button
@@ -64,7 +64,7 @@ export const RetreatPrerequisiteWarning = ({
                 onClick={closeRetreatPrerequisiteWarning}
                 className="btn btn-primary find-courses submit-btn"
               >
-                Discover Art of Living Part 1
+                Discover {btnText}
               </button>
             </div>
           </div>

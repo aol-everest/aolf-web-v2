@@ -1,7 +1,7 @@
 import { createContext, useContext, useCallback } from 'react';
 import { ALERT_TYPES, MEMBERSHIP_TYPES } from '@constants';
 import { updateUserActivity, pushRouteWithUTMQuery } from '@service';
-import { api, findSlugByProductTypeId } from '@utils';
+import { api, findCourseTypeBySlug, findSlugByProductTypeId } from '@utils';
 import { useGlobalAlertContext } from './GlobalAlertContext';
 import { useGlobalAudioPlayerContext } from './GlobalAudioPlayerContext';
 import { useGlobalVideoPlayerContext } from './GlobalVideoPlayerContext';
@@ -53,17 +53,19 @@ export const MeditationProvider = ({ children }) => {
   };
 
   const handlePrerequisiteWarning = (message, productTypeId) => {
+    const slug = findSlugByProductTypeId(productTypeId);
     const closeRetreatPrerequisiteWarning = () => {
-      const slug = findSlugByProductTypeId(productTypeId);
       if (slug) {
         pushRouteWithUTMQuery(router, `/us-en/courses/${slug}`);
       }
       hideAlert();
     };
+    const courseType = findCourseTypeBySlug(slug);
     showAlert(ALERT_TYPES.ERROR_ALERT, {
       children: (
         <RetreatPrerequisiteWarning
           warningPayload={message}
+          btnText={courseType?.name}
           closeRetreatPrerequisiteWarning={closeRetreatPrerequisiteWarning}
         />
       ),
