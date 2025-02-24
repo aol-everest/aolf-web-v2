@@ -128,7 +128,7 @@ export const SKYBreathMeditation = ({
                   </div>
                   <div class="progress_content">
                     <span class="title">
-                      <strong>42</strong> Years
+                      <strong>43</strong> Years
                     </span>
                     <br />
                     <span class="content">of transforming lives</span>
@@ -156,7 +156,7 @@ export const SKYBreathMeditation = ({
                   </div>
                   <div class="progress_content">
                     <span class="title">
-                      <strong>180</strong> Countries
+                      <strong>182</strong> Countries
                     </span>
                     <br />
                     <span class="content">
