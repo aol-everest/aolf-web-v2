@@ -200,11 +200,13 @@ export default function WisdomSnippets() {
       await meditatePlayEvent({
         meditate,
         showAlert,
+        hideAlert,
         showPlayer,
         hidePlayer,
         showVideoPlayer,
         subsciptionCategories,
         purchaseMembershipAction,
+        router,
       });
       setLoading(false);
     }

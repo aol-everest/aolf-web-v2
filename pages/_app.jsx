@@ -12,7 +12,7 @@ import { GlobalBottomBanner } from '@components/globalBottomBanner';
 import { GlobalLoading } from '@components/globalLoading';
 import { GlobalModal } from '@components/globalModal';
 import { GlobalVideoPlayer } from '@components/globalVideoPlayer';
-import { AuthProvider } from '@contexts';
+import { AuthProvider, MeditationProvider } from '@contexts';
 import { orgConfig } from '@org';
 import { analytics } from '@service';
 import { Auth, Compose, Talkable, api } from '@utils';
@@ -272,6 +272,7 @@ function App({ Component, pageProps }) {
                 GlobalVideoPlayer,
                 GlobalLoading,
                 GlobalBottomBanner,
+                MeditationProvider,
               ]}
             >
               <Layout

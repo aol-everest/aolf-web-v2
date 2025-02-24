@@ -29,3 +29,9 @@ export {
   useLocalUserCache,
   useAwaitableState,
 } from './auth.context';
+
+export {
+  MeditationContext,
+  MeditationProvider,
+  useMeditationContext,
+} from './MeditationContext';

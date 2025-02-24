@@ -3,8 +3,8 @@ import {
   RetreatPrerequisiteWarning,
 } from '@components';
 import { ALERT_TYPES, MEMBERSHIP_TYPES } from '@constants';
-import { updateUserActivity } from '@service';
-import { api } from '@utils';
+import { updateUserActivity, pushRouteWithUTMQuery } from '@service';
+import { api, findSlugByProductTypeId } from '@utils';
 export const markFavoriteEvent = async ({ meditate, refetch }) => {
   try {
     const data = {
@@ -24,12 +24,24 @@ export const markFavoriteEvent = async ({ meditate, refetch }) => {
 export const meditatePlayEvent = async ({
   meditate,
   showAlert,
+  hideAlert,
   showPlayer,
   hidePlayer,
   subsciptionCategories,
   showVideoPlayer,
   purchaseMembershipAction,
+  router,
 }) => {
+  const closeRetreatPrerequisiteWarning =
+    (requiredPrerequisitWorkshopIds) => () => {
+      const [productTypeId] = requiredPrerequisitWorkshopIds;
+      const slug = findSlugByProductTypeId(productTypeId);
+      if (slug) {
+        pushRouteWithUTMQuery(router, `/us-en/courses/${slug}`);
+      }
+      hideAlert();
+    };
+
   try {
     if (!meditate.accessible) {
       const allSubscriptions = subsciptionCategories?.reduce(
@@ -74,7 +86,12 @@ export const meditatePlayEvent = async ({
         path: 'meditationDetail',
         param: { id: meditate.sfid },
       });
-      const { data, status, workshopPrerequisiteMessage = [] } = results;
+      const {
+        data,
+        status,
+        workshopPrerequisiteMessage = [],
+        requiredPrerequisitWorkshopIds,
+      } = results;
 
       if (status === 400) {
         showAlert(ALERT_TYPES.ERROR_ALERT, {
@@ -85,6 +102,9 @@ export const meditatePlayEvent = async ({
                   ? workshopPrerequisiteMessage[0]
                   : null
               }
+              closeRetreatPrerequisiteWarning={closeRetreatPrerequisiteWarning(
+                requiredPrerequisitWorkshopIds,
+              )}
             />
           ),
         });

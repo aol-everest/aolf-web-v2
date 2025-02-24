@@ -235,11 +235,13 @@ export default function Library() {
       await meditatePlayEvent({
         meditate,
         showAlert,
+        hideAlert,
         showPlayer,
         hidePlayer,
         showVideoPlayer,
         subsciptionCategories,
         purchaseMembershipAction,
+        router,
       });
       setLoading(false);
     }

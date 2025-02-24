@@ -113,12 +113,8 @@ const CourseFinder = () => {
                         onChange={(ev) => setSelectedOption(item.slug)}
                       />
                       <label htmlFor={item.slug}>
-                        {item?.iconName && (
-                          <img
-                            src={item?.iconName}
-                            alt={item.title}
-                            width={24}
-                          />
+                        {item?.icon && (
+                          <img src={item?.icon} alt={item.title} width={24} />
                         )}
                         {item.title}
                       </label>

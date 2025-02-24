@@ -199,11 +199,13 @@ export default function GuidedMeditations() {
       await meditatePlayEvent({
         meditate,
         showAlert,
+        hideAlert,
         showPlayer,
         hidePlayer,
         showVideoPlayer,
         subsciptionCategories,
         purchaseMembershipAction,
+        router,
       });
       setLoading(false);
     }
