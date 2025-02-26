@@ -383,6 +383,7 @@ export const MeetupPaymentForm = ({
     mode,
     email: contactEmail,
     isSubscriptionOfferingUsed,
+    isCCNotRequired,
   } = meetup;
 
   const { subscriptions = [] } = profile;
@@ -431,6 +432,8 @@ export const MeetupPaymentForm = ({
 
   const expenseAddOn = addOnProducts.find((product) => product.isExpenseAddOn);
   const day = meetupStartDateTime && meetupStartDateTime.split(',')[0];
+
+  let isPaymentRequired = fee !== 0 ? true : !isCCNotRequired;
 
   const hasGroupedAddOnProducts =
     groupedAddOnProducts &&
@@ -600,117 +603,122 @@ export const MeetupPaymentForm = ({
                     type="text"
                     placeholder="Discount Code"
                   /> */}
-                  <PayWith
-                    formikProps={formikProps}
-                    otherPaymentOptions={otherPaymentOptions}
-                  />
+                  {!isCCNotRequired && (
+                    <PayWith
+                      formikProps={formikProps}
+                      otherPaymentOptions={otherPaymentOptions}
+                    />
+                  )}
 
                   {formikProps.values.paymentMode ===
-                    PAYMENT_MODES.STRIPE_PAYMENT_MODE && (
-                    <div
-                      className="order__card__payment-method"
-                      data-method="card"
-                    >
-                      <>
-                        {!isRegisteredStripeCustomer && (
-                          <div className="card-element">
-                            <CardElement options={createOptions} />
-                          </div>
-                        )}
-
-                        {isRegisteredStripeCustomer && !isChangingCard && (
-                          <>
-                            <div className="bank-card-info">
-                              <input
-                                id="card-number"
-                                className="full-width"
-                                type="text"
-                                value={`**** **** **** ${cardLast4Digit}`}
-                                placeholder="Card Number"
-                              />
-                              <input
-                                id="mm-yy"
-                                type="text"
-                                placeholder="MM/YY"
-                                value={`**/**`}
-                              />
-                              <input
-                                id="cvc"
-                                type="text"
-                                placeholder="CVC"
-                                value={`****`}
-                              />
-                            </div>
-                            <div className="change-cc-detail-link">
-                              <a href="#" onClick={toggleCardChangeDetail}>
-                                Would you like to use a different credit card?
-                              </a>
-                            </div>
-                          </>
-                        )}
-
-                        {isRegisteredStripeCustomer && isChangingCard && (
-                          <>
+                    PAYMENT_MODES.STRIPE_PAYMENT_MODE &&
+                    isPaymentRequired && (
+                      <div
+                        className="order__card__payment-method"
+                        data-method="card"
+                      >
+                        <>
+                          {!isRegisteredStripeCustomer && (
                             <div className="card-element">
                               <CardElement options={createOptions} />
                             </div>
-                            <div className="change-cc-detail-link">
-                              <a href="#" onClick={toggleCardChangeDetail}>
-                                Cancel
-                              </a>
-                            </div>
-                          </>
-                        )}
-                      </>
-                    </div>
-                  )}
+                          )}
+
+                          {isRegisteredStripeCustomer && !isChangingCard && (
+                            <>
+                              <div className="bank-card-info">
+                                <input
+                                  id="card-number"
+                                  className="full-width"
+                                  type="text"
+                                  value={`**** **** **** ${cardLast4Digit}`}
+                                  placeholder="Card Number"
+                                />
+                                <input
+                                  id="mm-yy"
+                                  type="text"
+                                  placeholder="MM/YY"
+                                  value={`**/**`}
+                                />
+                                <input
+                                  id="cvc"
+                                  type="text"
+                                  placeholder="CVC"
+                                  value={`****`}
+                                />
+                              </div>
+                              <div className="change-cc-detail-link">
+                                <a href="#" onClick={toggleCardChangeDetail}>
+                                  Would you like to use a different credit card?
+                                </a>
+                              </div>
+                            </>
+                          )}
+
+                          {isRegisteredStripeCustomer && isChangingCard && (
+                            <>
+                              <div className="card-element">
+                                <CardElement options={createOptions} />
+                              </div>
+                              <div className="change-cc-detail-link">
+                                <a href="#" onClick={toggleCardChangeDetail}>
+                                  Cancel
+                                </a>
+                              </div>
+                            </>
+                          )}
+                        </>
+                      </div>
+                    )}
                   {formikProps.values.paymentMode ===
-                    PAYMENT_MODES.PAYPAL_PAYMENT_MODE && (
-                    <div
-                      className="order__card__payment-method paypal-info tw-w-[150px]"
-                      data-method="paypal"
-                    >
-                      <div className="paypal-info__sign-in tw-relative tw-z-0">
-                        <PayPalScriptProvider
-                          options={{
-                            clientId: process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID,
-                            debug: true,
-                            currency: 'USD',
-                          }}
-                        >
-                          <PayPalButtons
-                            style={{
-                              layout: 'horizontal',
-                              color: 'blue',
-                              shape: 'pill',
-                              height: 40,
-                              tagline: false,
-                              label: 'pay',
+                    PAYMENT_MODES.PAYPAL_PAYMENT_MODE &&
+                    isPaymentRequired && (
+                      <div
+                        className="order__card__payment-method paypal-info tw-w-[150px]"
+                        data-method="paypal"
+                      >
+                        <div className="paypal-info__sign-in tw-relative tw-z-0">
+                          <PayPalScriptProvider
+                            options={{
+                              clientId:
+                                process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID,
+                              debug: true,
+                              currency: 'USD',
                             }}
-                            fundingSource="paypal"
-                            forceReRender={[formikProps.values]}
-                            disabled={
-                              !(formikProps.isValid && formikProps.dirty)
-                            }
-                            createOrder={async (data, actions) => {
-                              return await createPaypalOrder(
-                                formikProps.values,
-                              );
-                            }}
-                            onApprove={paypalBuyAcknowledgement}
-                          />
-                        </PayPalScriptProvider>
+                          >
+                            <PayPalButtons
+                              style={{
+                                layout: 'horizontal',
+                                color: 'blue',
+                                shape: 'pill',
+                                height: 40,
+                                tagline: false,
+                                label: 'pay',
+                              }}
+                              fundingSource="paypal"
+                              forceReRender={[formikProps.values]}
+                              disabled={
+                                !(formikProps.isValid && formikProps.dirty)
+                              }
+                              createOrder={async (data, actions) => {
+                                return await createPaypalOrder(
+                                  formikProps.values,
+                                );
+                              }}
+                              onApprove={paypalBuyAcknowledgement}
+                            />
+                          </PayPalScriptProvider>
+                        </div>
+                        <div className="paypal-info__sign-out d-none">
+                          <button
+                            type="button"
+                            className="paypal-info__link sign-out-paypal"
+                          >
+                            Log out from Paypal
+                          </button>
+                        </div>
                       </div>
-                      <div className="paypal-info__sign-out d-none">
-                        <button
-                          type="button"
-                          className="paypal-info__link sign-out-paypal"
-                        >
-                          Log out from Paypal
-                        </button>
-                      </div>
-                    </div>
-                  )}
+                    )}
 
                   <MobileCourseOptions
                     expenseAddOn={expenseAddOn}
