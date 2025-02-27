@@ -14,7 +14,11 @@ import { removeNull } from '@utils/utmParam';
 import { useRouter } from 'next/router';
 import Style from './StripeExpressCheckoutElement.module.scss';
 
-export const StripeExpressCheckoutTicket = ({ workshop, total = 1 }) => {
+export const StripeExpressCheckoutTicket = ({
+  workshop,
+  total = 1,
+  selectedTickets,
+}) => {
   const stripePromise = loadStripe(workshop.publishableKey);
   const elementsOptions = {
     mode: 'payment',
@@ -30,7 +34,11 @@ export const StripeExpressCheckoutTicket = ({ workshop, total = 1 }) => {
   };
   return (
     <Elements stripe={stripePromise} options={elementsOptions}>
-      <CheckoutPage workshop={workshop} total={total} />
+      <CheckoutPage
+        workshop={workshop}
+        total={total}
+        selectedTickets={selectedTickets}
+      />
     </Elements>
   );
 };
@@ -47,7 +55,7 @@ const options = {
   paymentMethodOrder: ['apple_pay', 'google_pay'],
 };
 
-const CheckoutPage = ({ workshop, total }) => {
+const CheckoutPage = ({ workshop, total, selectedTickets }) => {
   const stripe = useStripe();
   const elements = useElements();
   const router = useRouter();
@@ -76,6 +84,13 @@ const CheckoutPage = ({ workshop, total }) => {
       };
       filteredParams = removeNull(filteredParams);
 
+      const tickets = Object.entries(selectedTickets).map(([key, value]) => {
+        return {
+          numberOfTickets: value,
+          pricingTierId: key,
+        };
+      });
+
       const {
         stripeIntentObj,
         status,
@@ -85,8 +100,16 @@ const CheckoutPage = ({ workshop, total }) => {
       } = await api.post({
         path: 'createIntentForExpressCheckout',
         body: {
-          ticketedEventId: workshop.id,
-          utmParams: filteredParams,
+          shoppingRequest: {
+            isStripeIntentPayment: true,
+            products: {
+              productSfId: workshop.id,
+              productType: 'ticketed_event',
+              isStripeIntentPayment: true,
+              tickets,
+            },
+            utmParams: filteredParams,
+          },
         },
         isUnauthorized: true,
       });

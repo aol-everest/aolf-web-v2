@@ -381,11 +381,12 @@ function TicketedEvent() {
                       </div>
 
                       <div className="tickets-modal__footer">
-                        {false && event && total > 0 && (
+                        {event && total > 0 && (
                           <div className="tickets-modal__footer-button-link">
                             <StripeExpressCheckoutTicket
                               workshop={event}
                               total={total}
+                              selectedTickets={selectedTickets}
                             />
                           </div>
                         )}
