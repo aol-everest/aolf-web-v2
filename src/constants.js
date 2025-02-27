@@ -283,6 +283,17 @@ export const COURSE_TYPES_MASTER = {
       },
     },
   ],
+  PWHT: [
+    {
+      name: `Beginner's Courses`,
+      courseTypes: {
+        SKY_BREATH_MEDITATION: {
+          slug: 'art-of-living-part-1',
+          name: 'Art of Living Part 1',
+        },
+      },
+    },
+  ],
 };
 
 export const COURSE_TYPES = {
