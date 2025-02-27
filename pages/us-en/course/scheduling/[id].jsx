@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect, useTransition } from 'react';
-import { useQueryState, parseAsString, parseAsStringLiteral } from 'nuqs';
+import { useQueryState, parseAsString } from 'nuqs';
 import { useRouter } from 'next/router';
 import queryString from 'query-string';
 import ErrorPage from 'next/error';
@@ -13,6 +13,7 @@ import {
   priceCalculation,
   parsedAddress,
   findCourseTypeByKey,
+  findKeyByProductTypeId,
 } from '@utils';
 import {
   getCourseDateDisplay,
@@ -114,7 +115,6 @@ const SchedulingPaymentForm = ({
   courseType,
   activeStep,
   setActiveStep,
-  discountResponse,
   setDiscountResponse,
   handleChangeDates,
 }) => {
@@ -1000,6 +1000,7 @@ const SchedulingCheckoutFlow = () => {
   const router = useRouter();
   const { track } = useAnalytics();
   const [mode] = useQueryState('mode');
+  const [ctype] = useQueryState('ctype');
   const [discountResponse, setDiscountResponse] = useState(null);
   const [activeStep, setActiveStep] = useQueryState(
     'step',
@@ -1007,10 +1008,17 @@ const SchedulingCheckoutFlow = () => {
   );
 
   const { id: workshopId } = router.query;
-  const [courseType] = useQueryState(
+  const [courseType, setCourseType] = useQueryState(
     'courseType',
     parseAsString.withDefault('SKY_BREATH_MEDITATION'),
   );
+
+  useEffect(() => {
+    if (ctype) {
+      const courseTypeKey = findKeyByProductTypeId(ctype);
+      setCourseType(courseTypeKey);
+    }
+  }, []);
 
   const { data: workshopMaster = {} } = useQuery({
     queryKey: ['workshopMaster', mode],
