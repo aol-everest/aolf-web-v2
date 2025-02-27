@@ -98,12 +98,12 @@ const allOrganizationConfig = [
   {
     name: 'PWHT',
     logo: 'PWHT-logo.png',
-    logoLink: 'https://us.iahv.org',
-    title: 'PWHT',
-    favicon180: 'iahv-favicon-96x96.png',
-    favicon: 'iahv-favicon.ico',
-    favicon32: 'iahv-favicon-32x32.png',
-    favicon16: 'iahv-favicon-16x16.png',
+    logoLink: 'https://projectwelcomehometroops.org/',
+    title: 'Project Welcome Home Troops',
+    favicon: 'favicon.ico',
+    favicon180: 'apple-touch-icon.png',
+    favicon32: 'favicon-32x32.png',
+    favicon16: 'favicon-16x16.png',
     contactNumber: '(855) 202-4400',
     contactNumberLink: '8552024400',
     seo: {
