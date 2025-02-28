@@ -1014,11 +1014,11 @@ const SchedulingCheckoutFlow = () => {
   );
 
   useEffect(() => {
-    if (ctype) {
+    if (ctype && !courseType) {
       const courseTypeKey = findKeyByProductTypeId(ctype);
       setCourseType(courseTypeKey);
     }
-  }, []);
+  }, [ctype]);
 
   const { data: workshopMaster = {} } = useQuery({
     queryKey: ['workshopMaster', mode],
