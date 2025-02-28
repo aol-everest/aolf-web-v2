@@ -1014,7 +1014,7 @@ const SchedulingCheckoutFlow = () => {
   );
 
   useEffect(() => {
-    if (ctype && !courseType) {
+    if (ctype) {
       const courseTypeKey = findKeyByProductTypeId(ctype);
       setCourseType(courseTypeKey);
     }
