@@ -5,17 +5,30 @@ import { useQuery } from '@tanstack/react-query';
 import { useRouter } from 'next/router';
 import ReactPlayer from 'react-player';
 import { Loader } from '@components/loader';
+import { useAuth } from '@contexts';
+import ErrorPage from 'next/error';
+import { PageLoading } from '@components';
+import { useSearchParams } from 'next/navigation';
+import { pushRouteWithUTMQuery } from '@service';
 
 const ExploreCourses = () => {
+  const { isAuthenticated } = useAuth();
   const router = useRouter();
   const { slug } = router.query;
   const [selectedVideo, setSelectedVideo] = useState({});
   const [activeSession, setActiveSession] = useQueryState('session', {
     defaultValue: null,
   });
+  const searchParams = useSearchParams();
+  const session = searchParams.get('session');
   const [playing, setPlaying] = useState(false);
 
-  const { data: introData = [], isLoading } = useQuery({
+  const {
+    data: introData = [],
+    isLoading,
+    isError,
+    error,
+  } = useQuery({
     queryKey: ['get-started-intro-series-details', slug],
     queryFn: async () => {
       const response = await api.get({
@@ -25,28 +38,60 @@ const ExploreCourses = () => {
         },
       });
 
-      if (activeSession === null) {
+      if (session === null) {
         setActiveSession(response?.data?.videos?.[0].id);
       }
       return response.data;
     },
+    enabled: !!slug && router.isReady,
   });
 
   useEffect(() => {
-    if (activeSession !== null && introData?.videos?.length > 0) {
+    if (
+      !router.isReady ||
+      !activeSession ||
+      !introData?.videos?.length ||
+      !slug
+    ) {
+      return;
+    }
+
+    const activeVideo = introData?.videos?.find(
+      (video) => video.id === activeSession,
+    );
+    if (!isAuthenticated && activeVideo?.isLoginRequired) {
+      login(activeVideo.id);
+    } else {
       setSelectedVideo({
-        ...(introData?.videos?.find((video) => video.id === activeSession) ||
-          []),
+        ...activeVideo,
         videoIndex: introData?.videos?.findIndex(
           (video) => video.id === activeSession,
         ),
       });
     }
-  }, [activeSession, introData]);
+  }, [slug, activeSession, introData, router.isReady]);
+
+  const stepperPercentage = useMemo(() => {
+    const totalVideos = introData?.videos?.length;
+    const currentIndex = selectedVideo?.videoIndex + 1;
+
+    return (currentIndex / totalVideos) * 100;
+  }, [selectedVideo, introData]);
+
+  if (isError) return <ErrorPage statusCode={500} title={error.message} />;
+  if (isLoading || !router.isReady) return <PageLoading />;
+
+  const login = (videoId) => {
+    router.push(`/us-en/signin?next=/us-en/explore/${slug}?session=${videoId}`);
+  };
 
   const handlePlayVideo = (video, videoIndex) => {
-    setActiveSession(video.id);
-    setPlaying(true);
+    if (!isAuthenticated && video?.isLoginRequired) {
+      login(video.id);
+    } else {
+      setActiveSession(video.id);
+      setPlaying(true);
+    }
   };
 
   const handleNextVideo = () => {
@@ -58,13 +103,6 @@ const ExploreCourses = () => {
     const previousVideo = introData?.videos?.[selectedVideo.videoIndex - 1];
     handlePlayVideo(previousVideo, selectedVideo.videoIndex - 1);
   };
-
-  const stepperPercentage = useMemo(() => {
-    const totalVideos = introData?.videos?.length;
-    const currentIndex = selectedVideo?.videoIndex + 1;
-
-    return (currentIndex / totalVideos) * 100;
-  }, [selectedVideo, introData]);
 
   return (
     <main class="explore-anxiety">
