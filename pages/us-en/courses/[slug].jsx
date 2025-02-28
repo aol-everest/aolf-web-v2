@@ -308,9 +308,11 @@ const CourseTile = ({ data, isAuthenticated }) => {
   );
 };
 
-const COURSE_TYPES_OPTIONS = COURSE_TYPES_MASTER[orgConfig.name].reduce(
+const COURSE_TYPES_OPTIONS = Object.entries(
+  COURSE_TYPES_MASTER[orgConfig.name],
+).reduce(
   (accumulator, currentValue) => {
-    const courseTypes = Object.entries(currentValue.courseTypes).reduce(
+    const courseTypes = Object.entries(currentValue[1].courseTypes).reduce(
       (courseTypes, [key, value]) => {
         if (COURSE_TYPES[key]) {
           return {
@@ -325,8 +327,21 @@ const COURSE_TYPES_OPTIONS = COURSE_TYPES_MASTER[orgConfig.name].reduce(
     );
     return { ...accumulator, ...courseTypes };
   },
-  {},
+  { all: { slug: 'all', name: 'All Courses', hidden: true } },
 );
+
+// export async function getStaticPaths() {
+//   return {
+//     paths: [{ params: { slug: 'art-of-living-part-1' } }],
+//     fallback: 'blocking', // or 'false' depending on your needs
+//   };
+// }
+
+// export async function getStaticProps({ params }) {
+//   return {
+//     props: { slug: params.slug },
+//   };
+// }
 
 const Course = () => {
   const { track, page } = useAnalytics();
@@ -340,11 +355,7 @@ const Course = () => {
   const { slug } = router.query;
 
   const courseTypeFilter = COURSE_TYPES_OPTIONS[slug];
-  if (!courseTypeFilter) {
-    const error = new Error('Page not found');
-    error.statusCode = 404;
-    throw error;
-  }
+
   const [courseModeFilter, setCourseModeFilter] = useQueryState('mode');
   const [onlyWeekend, setOnlyWeekend] = useQueryState(
     'onlyWeekend',
@@ -402,7 +413,7 @@ const Course = () => {
               mode: COURSE_MODES[courseModeFilter].value,
             };
           }
-          if (courseTypeFilter) {
+          if (courseTypeFilter && !courseTypeFilter.hidden) {
             param = {
               ...param,
               ctype: courseTypeFilter.value,
@@ -739,7 +750,7 @@ const Course = () => {
   };
 
   return (
-    <main className="all-courses-find">
+    <main className="all-courses-find" key={slug}>
       <NextSeo
         defaultTitle={`${courseTypeFilter?.name} - Course Dates and Registration`}
         description={courseTypeFilter?.description}
@@ -872,9 +883,11 @@ const Course = () => {
               </Popup>
               <Popup
                 tabIndex="3"
-                value={courseTypeFilter}
+                value={!courseTypeFilter.hidden ? courseTypeFilter : null}
                 buttonText={
-                  courseTypeFilter && courseTypeFilter.name
+                  courseTypeFilter &&
+                  !courseTypeFilter.hidden &&
+                  courseTypeFilter.name
                     ? courseTypeFilter.name
                     : null
                 }
@@ -886,6 +899,7 @@ const Course = () => {
                   <>
                     {Object.values(COURSE_TYPES_OPTIONS).map(
                       (courseType, index) => {
+                        if (courseType.hidden) return null;
                         return (
                           <li
                             className="courses-filter__list-item"
