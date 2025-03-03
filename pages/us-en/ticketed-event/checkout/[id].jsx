@@ -19,7 +19,7 @@ import {
   useElements,
   useStripe,
 } from '@stripe/react-stripe-js';
-import { useQueryState, parseAsJson } from 'nuqs';
+import { useQueryState, parseAsJson, parseAsBoolean } from 'nuqs';
 import { Auth, api, phoneRegExp, tConvert } from '@utils';
 import { UserInfoFormNewCheckout } from '@components/checkout';
 import dayjs from 'dayjs';
@@ -156,6 +156,10 @@ const TicketCheckoutForm = ({ event }) => {
   const [attendeeDetails, setAttendeeDetails] = useState([]);
   const [pricingTiersLocalState, setPricingTierLocal] = useState([]);
   const [discountResponse, setDiscountResponse] = useState(null);
+  const [skipAddressFields, setSkipAddressFields] = useQueryState(
+    'skipAddressFields',
+    parseAsBoolean,
+  );
   const [selectedTickets] = useQueryState(
     'ticket',
     parseAsJson(ticketSchema.parse).withDefault({}),
@@ -561,7 +565,7 @@ const TicketCheckoutForm = ({ event }) => {
             .required('Phone number required')
             .matches(phoneRegExp, 'Phone number is not valid'),
           contactAddress: Yup.string().when([], (obj) => {
-            if (afterDiscountPrice !== 0) {
+            if (afterDiscountPrice !== 0 && !skipAddressFields) {
               return obj
                 .required('Address is required')
                 .matches(/\S/, 'String should not contain empty spaces');
@@ -569,18 +573,38 @@ const TicketCheckoutForm = ({ event }) => {
               return obj;
             }
           }),
-          contactCity: Yup.string()
-            .required('City is required')
-            .matches(/\S/, 'String should not contain empty spaces'),
-          contactState: Yup.string()
-            .required('State is required')
-            .matches(/\S/, 'String should not contain empty spaces'),
-          contactZip: Yup.string()
-            .required('Zip is required!')
-            .matches(/\S/, 'String should not contain empty spaces')
-            //.matches(/^[0-9]+$/, { message: 'Zip is invalid' })
-            .min(2, 'Zip is invalid')
-            .max(10, 'Zip is invalid'),
+          contactCity: Yup.string().when([], (obj) => {
+            if (!skipAddressFields) {
+              return obj
+                .required('City is required')
+                .matches(/\S/, 'String should not contain empty spaces');
+            } else {
+              return obj;
+            }
+          }),
+          contactState: Yup.string().when([], (obj) => {
+            if (!skipAddressFields) {
+              return obj
+                .required('State is required')
+                .matches(/\S/, 'String should not contain empty spaces');
+            } else {
+              return obj;
+            }
+          }),
+          contactZip: Yup.string().when([], (obj) => {
+            if (!skipAddressFields) {
+              return (
+                obj
+                  .required('Zip is required!')
+                  .matches(/\S/, 'String should not contain empty spaces')
+                  //.matches(/^[0-9]+$/, { message: 'Zip is invalid' })
+                  .min(2, 'Zip is invalid')
+                  .max(10, 'Zip is invalid')
+              );
+            } else {
+              return obj;
+            }
+          }),
           ppaAgreement: Yup.boolean()
             .label('Terms')
             .test(
@@ -654,7 +678,10 @@ const TicketCheckoutForm = ({ event }) => {
                               <form id="my-form">
                                 <UserInfoFormNewCheckout
                                   formikProps={formikProps}
-                                  showStreetAddress={showStreetAddress}
+                                  showStreetAddress={!skipAddressFields}
+                                  showContactState={!skipAddressFields}
+                                  showContactCity={!skipAddressFields}
+                                  showContactZip={!skipAddressFields}
                                 />
                               </form>
                             </div>
