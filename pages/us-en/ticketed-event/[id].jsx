@@ -349,7 +349,7 @@ function TicketedEvent() {
                             selectedTickets={selectedTickets}
                           ></TicketLineItem>
                         ))}
-                        <div className="tickets-modal__card">
+                        <div className="tickets-modal__card notes-desktop">
                           <div className="tickets notes">
                             <div className="label">Notes</div>
                             <div
@@ -380,6 +380,18 @@ function TicketedEvent() {
                         {renderSummary()}
                       </div>
 
+                      {notes && (
+                        <div className="tickets-modal__card notes-mobile">
+                          <div className="tickets notes">
+                            <div className="label">Notes</div>
+                            <div
+                              className="value"
+                              dangerouslySetInnerHTML={{ __html: notes }}
+                            />
+                          </div>
+                        </div>
+                      )}
+
                       <div className="tickets-modal__footer">
                         {event && total > 0 && (
                           <div className="tickets-modal__footer-button-link">
@@ -396,7 +408,7 @@ function TicketedEvent() {
                           type="submit"
                           disabled={Object.keys(selectedTickets).length === 0}
                         >
-                          Confirm
+                          Continue to Checkout
                         </button>
                       </div>
                       {isLoading && <Loader />}
