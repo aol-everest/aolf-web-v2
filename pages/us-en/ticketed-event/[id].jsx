@@ -332,10 +332,12 @@ function TicketedEvent() {
                             {contactName}
                             <br />
                             <span className="contact-detail">
-                              {phone1}{' '}
+                              <a href={`tel:${{ phone1 }}`}>{phone1}</a>
                             </span>{' '}
                             <span>|</span>{' '}
-                            <span className="contact-detail">{email}</span>
+                            <span className="contact-detail">
+                              <a href={`mailto:${email}`}>{email}</a>
+                            </span>
                           </span>
                         </div>
                       </div>

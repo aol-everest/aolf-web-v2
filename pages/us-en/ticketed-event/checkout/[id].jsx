@@ -1040,7 +1040,7 @@ const TicketCheckoutForm = ({ event }) => {
                               >
                                 {isZeroDollarPrice === 0
                                   ? 'RSVP'
-                                  : 'Confirm and Pay'}
+                                  : 'Place order'}
                               </button>
                             </div>
                           </div>
