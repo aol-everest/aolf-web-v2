@@ -156,9 +156,9 @@ const TicketCheckoutForm = ({ event }) => {
   const [attendeeDetails, setAttendeeDetails] = useState([]);
   const [pricingTiersLocalState, setPricingTierLocal] = useState([]);
   const [discountResponse, setDiscountResponse] = useState(null);
-  const [skipAddressFields, setSkipAddressFields] = useQueryState(
+  const [skipAddressFields] = useQueryState(
     'skipAddressFields',
-    parseAsBoolean,
+    parseAsBoolean.withDefault(true),
   );
   const [selectedTickets] = useQueryState(
     'ticket',
