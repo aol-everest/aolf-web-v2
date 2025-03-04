@@ -18,7 +18,7 @@ export const StripeExpressCheckoutTicket = ({
   workshop,
   total = 1,
   selectedTickets,
-  nextPageUrl = '/us-en/ticketed-event/express/thankyou',
+  nextPageUrl = '/us-en/ticketed-event/thankyou',
 }) => {
   const stripePromise = loadStripe(workshop.publishableKey);
   const elementsOptions = {
@@ -134,7 +134,7 @@ const CheckoutPage = ({ workshop, total, selectedTickets, nextPageUrl }) => {
 
       const returnUrl = `${
         window.location.origin
-      }/us-en/payment-status/${orderId}?next=${getThankYouPageUrl()}&${queryString.stringify(
+      }/us-en/payment-status/${orderId}?nextId=order&next=${getThankYouPageUrl()}&${queryString.stringify(
         filteredParams,
       )}`;
 
