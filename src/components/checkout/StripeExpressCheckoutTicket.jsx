@@ -107,13 +107,12 @@ const CheckoutPage = ({ workshop, total, selectedTickets, nextPageUrl }) => {
         path: 'createIntentForExpressCheckout',
         body: {
           shoppingRequest: {
-            isStripeIntentPayment: true,
             products: {
               productSfId: workshop.id,
               productType: 'ticketed_event',
-              isStripeIntentPayment: true,
-              tickets,
             },
+            tickets,
+            isStripeIntentPayment: true,
             utmParams: filteredParams,
           },
         },
