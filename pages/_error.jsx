@@ -177,7 +177,7 @@ const MyError = ({ statusCode, hasGetInitialPropsRun, err }) => {
             </Link>
           </div>
 
-          {process.env.NODE_ENV !== 'production' && <ErrorDetails err={err} />}
+          <ErrorDetails err={err} />
 
           <div className="tw-mt-8 tw-text-sm tw-text-gray-500">
             <p>You might want to check out:</p>
@@ -189,13 +189,13 @@ const MyError = ({ statusCode, hasGetInitialPropsRun, err }) => {
                 Daily SKY Practices
               </Link>
               <Link
-                href="/us-en/library"
+                href="/us-en/courses"
                 className="tw-block tw-text-amber-500 hover:tw-underline"
               >
-                Meditation Library
+                All Courses
               </Link>
               <Link
-                href="/contact"
+                href="https://www.artofliving.org/us-en/contact-us"
                 className="tw-block tw-text-amber-500 hover:tw-underline"
               >
                 Contact Support

@@ -87,26 +87,26 @@ const ServerError = ({ err }) => {
             </Link>
           </div>
 
-          {process.env.NODE_ENV !== 'production' && <ErrorDetails err={err} />}
+          <ErrorDetails err={err} />
 
           <div className="tw-mt-8 tw-text-sm tw-text-gray-500">
             <p>You might want to check out:</p>
             <div className="tw-mt-4 tw-space-y-2">
               <Link
                 href="/us-en/daily-sky"
-                className="tw-block hover:tw-underline tw-text-amber-500"
+                className="tw-block tw-text-amber-500 hover:tw-underline"
               >
                 Daily SKY Practices
               </Link>
               <Link
-                href="/us-en/library"
-                className="tw-block hover:tw-underline tw-text-amber-500"
+                href="/us-en/courses"
+                className="tw-block tw-text-amber-500 hover:tw-underline"
               >
-                Meditation Library
+                All Courses
               </Link>
               <Link
-                href="/contact"
-                className="tw-block hover:tw-underline tw-text-amber-500"
+                href="https://www.artofliving.org/us-en/contact-us"
+                className="tw-block tw-text-amber-500 hover:tw-underline"
               >
                 Contact Support
               </Link>
