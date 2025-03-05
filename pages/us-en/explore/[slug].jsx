@@ -1,17 +1,34 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
+import { useQueryState } from 'nuqs';
 import { api } from '@utils';
 import { useQuery } from '@tanstack/react-query';
 import { useRouter } from 'next/router';
 import ReactPlayer from 'react-player';
 import { Loader } from '@components/loader';
+import { useAuth } from '@contexts';
+import ErrorPage from 'next/error';
+import { PageLoading } from '@components';
+import { useSearchParams } from 'next/navigation';
+import { pushRouteWithUTMQuery } from '@service';
 
 const ExploreCourses = () => {
+  const { isAuthenticated } = useAuth();
   const router = useRouter();
   const { slug } = router.query;
   const [selectedVideo, setSelectedVideo] = useState({});
+  const [activeSession, setActiveSession] = useQueryState('session', {
+    defaultValue: null,
+  });
+  const searchParams = useSearchParams();
+  const session = searchParams.get('session');
   const [playing, setPlaying] = useState(false);
 
-  const { data: introData = [], isLoading } = useQuery({
+  const {
+    data: introData = [],
+    isLoading,
+    isError,
+    error,
+  } = useQuery({
     queryKey: ['get-started-intro-series-details', slug],
     queryFn: async () => {
       const response = await api.get({
@@ -20,20 +37,61 @@ const ExploreCourses = () => {
           slug: slug,
         },
       });
-      setSelectedVideo({
-        ...(response?.data?.videos?.[0] || []),
-        videoIndex: 0,
-      });
+
+      if (session === null) {
+        setActiveSession(response?.data?.videos?.[0].id);
+      }
       return response.data;
     },
+    enabled: !!slug && router.isReady,
   });
 
+  useEffect(() => {
+    if (
+      !router.isReady ||
+      !activeSession ||
+      !introData?.videos?.length ||
+      !slug
+    ) {
+      return;
+    }
+
+    const activeVideo = introData?.videos?.find(
+      (video) => video.id === activeSession,
+    );
+    if (!isAuthenticated && activeVideo?.isLoginRequired) {
+      login(activeVideo.id);
+    } else {
+      setSelectedVideo({
+        ...activeVideo,
+        videoIndex: introData?.videos?.findIndex(
+          (video) => video.id === activeSession,
+        ),
+      });
+    }
+  }, [slug, activeSession, introData, router.isReady]);
+
+  const stepperPercentage = useMemo(() => {
+    const totalVideos = introData?.videos?.length;
+    const currentIndex = selectedVideo?.videoIndex + 1;
+
+    return (currentIndex / totalVideos) * 100;
+  }, [selectedVideo, introData]);
+
+  if (isError) return <ErrorPage statusCode={500} title={error.message} />;
+  if (isLoading || !router.isReady) return <PageLoading />;
+
+  const login = (videoId) => {
+    router.push(`/us-en/signin?next=/us-en/explore/${slug}?session=${videoId}`);
+  };
+
   const handlePlayVideo = (video, videoIndex) => {
-    setSelectedVideo({
-      ...video,
-      videoIndex,
-    });
-    setPlaying(true);
+    if (!isAuthenticated && video?.isLoginRequired) {
+      login(video.id);
+    } else {
+      setActiveSession(video.id);
+      setPlaying(true);
+    }
   };
 
   const handleNextVideo = () => {
@@ -46,13 +104,6 @@ const ExploreCourses = () => {
     handlePlayVideo(previousVideo, selectedVideo.videoIndex - 1);
   };
 
-  const stepperPercentage = useMemo(() => {
-    const totalVideos = introData?.videos?.length;
-    const currentIndex = selectedVideo?.videoIndex + 1;
-
-    return (currentIndex / totalVideos) * 100;
-  }, [selectedVideo, introData]);
-
   return (
     <main class="explore-anxiety">
       <section class="section-videos-series">
@@ -60,35 +111,6 @@ const ExploreCourses = () => {
           {isLoading && <Loader />}
           <div class="explore-video-wrap">
             <div class="video-col-left">
-              <div class="top-actions">
-                <a onClick={router.back} class="back-btn">
-                  <svg
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M9.57 5.93018L3.5 12.0002L9.57 18.0702"
-                      stroke="#31364E"
-                      strokeWidth="1.5"
-                      strokeMiterlimit="10"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                    <path
-                      d="M20.4999 12H3.66992"
-                      stroke="#31364E"
-                      strokeWidth="1.5"
-                      strokeMiterlimit="10"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                  </svg>
-                  Back
-                </a>
-              </div>
               <div class="page-title">{introData.title}</div>
               <div class="video-stepper">
                 <div class="stepper-info">

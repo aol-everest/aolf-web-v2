@@ -3,7 +3,6 @@ export { AddToCalendarModal } from './addToCalendarModal';
 export { AddressSearch } from './addressSearch';
 export { CardUpdateRequired } from './cardUpdateRequired';
 export { DateRangeInput } from './dateRangeInput';
-export { FadeInAnimation } from './fadeIn';
 export { Footer } from './footer';
 export { FormikWizard } from './formik-wizard-form';
 export { Header } from './header';

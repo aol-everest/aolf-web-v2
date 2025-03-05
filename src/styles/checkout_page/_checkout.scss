@@ -296,21 +296,40 @@
     align-items: center;
     span {
       color: #6f7283;
+      font-weight: 500;
     }
     strong {
       color: #31364e;
     }
     .icon-aol {
-      font-size: 24px;
+      font-size: 20px;
       color: #31364e;
+      background: #edf5fc;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-radius: 12px;
+      color: #3d8be8;
     }
     &.contact-person {
       .icon-aol {
         align-self: baseline;
-        margin-top: 5px;
       }
-      .contact-detail {
-        color: #fca248;
+      .p2 {
+        line-height: 20px;
+        span {
+          color: #e9e9e9;
+        }
+        .contact-detail {
+          color: #fca248;
+          font-size: 14px;
+          line-height: 18px;
+          a {
+            color: #fca248;
+          }
+        }
       }
     }
   }

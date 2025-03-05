@@ -19,7 +19,7 @@ import {
   useElements,
   useStripe,
 } from '@stripe/react-stripe-js';
-import { useQueryState, parseAsJson } from 'nuqs';
+import { useQueryState, parseAsJson, parseAsBoolean } from 'nuqs';
 import { Auth, api, phoneRegExp, tConvert } from '@utils';
 import { UserInfoFormNewCheckout } from '@components/checkout';
 import dayjs from 'dayjs';
@@ -33,6 +33,9 @@ import { PageLoading } from '@components';
 import { ScheduleAgreementForm } from '@components/scheduleAgreementForm';
 import AttendeeDetails from './AttendeeDetails';
 import { FaChevronLeft } from 'react-icons/fa6';
+import { z } from 'zod';
+
+const ticketSchema = z.record(z.string(), z.number());
 
 function TicketCheckout() {
   const router = useRouter();
@@ -153,9 +156,13 @@ const TicketCheckoutForm = ({ event }) => {
   const [attendeeDetails, setAttendeeDetails] = useState([]);
   const [pricingTiersLocalState, setPricingTierLocal] = useState([]);
   const [discountResponse, setDiscountResponse] = useState(null);
+  const [showAddressFields] = useQueryState(
+    'showAddressFields',
+    parseAsBoolean.withDefault(false),
+  );
   const [selectedTickets] = useQueryState(
     'ticket',
-    parseAsJson().withDefault({}),
+    parseAsJson(ticketSchema.parse).withDefault({}),
   );
   const {
     eventImageUrl,
@@ -558,7 +565,7 @@ const TicketCheckoutForm = ({ event }) => {
             .required('Phone number required')
             .matches(phoneRegExp, 'Phone number is not valid'),
           contactAddress: Yup.string().when([], (obj) => {
-            if (afterDiscountPrice !== 0) {
+            if (afterDiscountPrice !== 0 && showAddressFields) {
               return obj
                 .required('Address is required')
                 .matches(/\S/, 'String should not contain empty spaces');
@@ -566,18 +573,38 @@ const TicketCheckoutForm = ({ event }) => {
               return obj;
             }
           }),
-          contactCity: Yup.string()
-            .required('City is required')
-            .matches(/\S/, 'String should not contain empty spaces'),
-          contactState: Yup.string()
-            .required('State is required')
-            .matches(/\S/, 'String should not contain empty spaces'),
-          contactZip: Yup.string()
-            .required('Zip is required!')
-            .matches(/\S/, 'String should not contain empty spaces')
-            //.matches(/^[0-9]+$/, { message: 'Zip is invalid' })
-            .min(2, 'Zip is invalid')
-            .max(10, 'Zip is invalid'),
+          contactCity: Yup.string().when([], (obj) => {
+            if (showAddressFields) {
+              return obj
+                .required('City is required')
+                .matches(/\S/, 'String should not contain empty spaces');
+            } else {
+              return obj;
+            }
+          }),
+          contactState: Yup.string().when([], (obj) => {
+            if (showAddressFields) {
+              return obj
+                .required('State is required')
+                .matches(/\S/, 'String should not contain empty spaces');
+            } else {
+              return obj;
+            }
+          }),
+          contactZip: Yup.string().when([], (obj) => {
+            if (showAddressFields) {
+              return (
+                obj
+                  .required('Zip is required!')
+                  .matches(/\S/, 'String should not contain empty spaces')
+                  //.matches(/^[0-9]+$/, { message: 'Zip is invalid' })
+                  .min(2, 'Zip is invalid')
+                  .max(10, 'Zip is invalid')
+              );
+            } else {
+              return obj;
+            }
+          }),
           ppaAgreement: Yup.boolean()
             .label('Terms')
             .test(
@@ -651,7 +678,10 @@ const TicketCheckoutForm = ({ event }) => {
                               <form id="my-form">
                                 <UserInfoFormNewCheckout
                                   formikProps={formikProps}
-                                  showStreetAddress={showStreetAddress}
+                                  showStreetAddress={showAddressFields}
+                                  showContactState={showAddressFields}
+                                  showContactCity={showAddressFields}
+                                  showContactZip={showAddressFields}
                                 />
                               </form>
                             </div>
@@ -875,41 +905,7 @@ const TicketCheckoutForm = ({ event }) => {
                                   })}
                               </div>
                             </div>
-                            <div className="detail-item row">
-                              <div className="label col-5">
-                                <svg
-                                  className="detailsIcon icon-calendar"
-                                  viewBox="0 0 34 32"
-                                >
-                                  <path
-                                    fill="none"
-                                    stroke="#9598a6"
-                                    strokeLinejoin="round"
-                                    strokeLinecap="round"
-                                    strokeMiterlimit="4"
-                                    strokeWidth="2.4"
-                                    d="M16.435 14.493c-0.133-0.013-0.293-0.013-0.44 0-3.173-0.107-5.693-2.707-5.693-5.907 0-3.267 2.64-5.92 5.92-5.92 3.267 0 5.92 2.653 5.92 5.92-0.013 3.2-2.533 5.8-5.707 5.907z"
-                                  ></path>
-                                  <path
-                                    fill="none"
-                                    stroke="#9598a6"
-                                    strokeLinejoin="round"
-                                    strokeLinecap="round"
-                                    strokeMiterlimit="4"
-                                    strokeWidth="2.4"
-                                    d="M9.768 19.413c-3.227 2.16-3.227 5.68 0 7.827 3.667 2.453 9.68 2.453 13.347 0 3.227-2.16 3.227-5.68 0-7.827-3.653-2.44-9.667-2.44-13.347 0z"
-                                  ></path>
-                                </svg>{' '}
-                                Instructor(s):
-                              </div>
-                              <div className="value col-7">
-                                {primaryTeacherName && primaryTeacherName}
-                                <br />
-                                {coTeacher1Name && coTeacher1Name}
-                                <br />
-                                {coTeacher2Name && coTeacher2Name}
-                              </div>
-                            </div>
+
                             <div className="detail-item row">
                               <div className="label col-5">
                                 <svg
@@ -1044,7 +1040,7 @@ const TicketCheckoutForm = ({ event }) => {
                               >
                                 {isZeroDollarPrice === 0
                                   ? 'RSVP'
-                                  : 'Confirm and Pay'}
+                                  : 'Place order'}
                               </button>
                             </div>
                           </div>

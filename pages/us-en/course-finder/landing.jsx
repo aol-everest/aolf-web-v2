@@ -7,7 +7,7 @@ const Home = () => {
 
   const NavigateToWelcome = () => {
     pushRouteWithUTMQuery(router, {
-      pathname: `/us-en/course-finder/welcome`,
+      pathname: `/us-en/course-finder`,
     });
   };
 

@@ -1,17 +1,12 @@
 import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { api } from '@utils';
-import {
-  useAuth,
-  useGlobalAlertContext,
-  useGlobalAudioPlayerContext,
-  useGlobalVideoPlayerContext,
-} from '@contexts';
+import { useAuth } from '@contexts';
 import { navigateToLogin } from '@utils';
 import { useRouter } from 'next/router';
-import { meditatePlayEvent, pushRouteWithUTMQuery } from '@service';
+import { pushRouteWithUTMQuery } from '@service';
 import { Loader } from '@components';
-
+import { useMeditationContext } from '@contexts';
 const timeConvert = (data) => {
   const minutes = data % 60;
   const hours = (data - minutes) / 60;
@@ -24,7 +19,7 @@ const RenderItem = ({ practice, meditateClickHandle }) => {
     ? practice.coverImage.url
     : '/img/ds-course-preview-1.webp';
   return (
-    <div class="ds-course-item" onClick={meditateClickHandle}>
+    <div class="ds-course-item tw-cursor-pointer" onClick={meditateClickHandle}>
       <div class="ds-image-wrap">
         <img src={coverImageUrl} alt="course" />
       </div>
@@ -46,9 +41,7 @@ const RenderItem = ({ practice, meditateClickHandle }) => {
 
 const DailySKY = () => {
   const { isAuthenticated } = useAuth();
-  const { showAlert, hideAlert } = useGlobalAlertContext();
-  const { showPlayer, hidePlayer } = useGlobalAudioPlayerContext();
-  const { showVideoPlayer } = useGlobalVideoPlayerContext();
+  const { handleMeditationPlay, markFavorite } = useMeditationContext();
   const [loading, setLoading] = useState(false);
   const router = useRouter();
   const { data: dailyPractice = [] } = useQuery({
@@ -60,8 +53,8 @@ const DailySKY = () => {
       return response.data;
     },
   });
-  const { data: subsciptionCategories = [] } = useQuery({
-    queryKey: 'subsciption',
+  const { data: subscriptionCategories = [] } = useQuery({
+    queryKey: 'subscriptionCategories',
     queryFn: async () => {
       const response = await api.get({
         path: 'subsciption',
@@ -69,10 +62,6 @@ const DailySKY = () => {
       return response.data;
     },
   });
-  const purchaseMembershipAction = (id) => (e) => {
-    hideAlert();
-    pushRouteWithUTMQuery(router, `/us-en/membership/${id}`);
-  };
 
   const meditateClickHandle = (meditate) => async (e) => {
     if (e) e.preventDefault();
@@ -82,15 +71,7 @@ const DailySKY = () => {
       pushRouteWithUTMQuery(router, `/us-en/learn/${meditate.sfid}`);
     } else {
       setLoading(true);
-      await meditatePlayEvent({
-        meditate,
-        showAlert,
-        showPlayer,
-        hidePlayer,
-        showVideoPlayer,
-        subsciptionCategories,
-        purchaseMembershipAction,
-      });
+      await handleMeditationPlay(meditate, subscriptionCategories);
       setLoading(false);
     }
   };

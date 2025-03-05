@@ -352,6 +352,16 @@ export const findSlugByProductTypeId = (productTypeId) => {
   return 'art-of-living-part-1';
 };
 
+export const findKeyByProductTypeId = (productTypeId) => {
+  for (const courseKey in COURSE_TYPES) {
+    const course = COURSE_TYPES[courseKey];
+    if (course.value.indexOf(productTypeId) >= 0) {
+      return courseKey;
+    }
+  }
+  return 'SKY_BREATH_MEDITATION';
+};
+
 export function getFullPathWithQueryParams(router) {
   const { pathname, query } = router;
 

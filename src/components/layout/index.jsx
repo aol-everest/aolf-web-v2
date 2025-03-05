@@ -24,7 +24,7 @@ export const Layout = ({
   };
   const navigateToGetStartAction = () => {
     setShowingFindCourse(false);
-    pushRouteWithUTMQuery(router, '/us-en/course-finder/welcome');
+    pushRouteWithUTMQuery(router, '/us-en/course-finder');
   };
   return (
     <>

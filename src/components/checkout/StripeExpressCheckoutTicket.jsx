@@ -14,7 +14,12 @@ import { removeNull } from '@utils/utmParam';
 import { useRouter } from 'next/router';
 import Style from './StripeExpressCheckoutElement.module.scss';
 
-export const StripeExpressCheckoutTicket = ({ workshop, total = 1 }) => {
+export const StripeExpressCheckoutTicket = ({
+  workshop,
+  total = 1,
+  selectedTickets,
+  nextPageUrl = '/us-en/ticketed-event/thankyou',
+}) => {
   const stripePromise = loadStripe(workshop.publishableKey);
   const elementsOptions = {
     mode: 'payment',
@@ -30,7 +35,12 @@ export const StripeExpressCheckoutTicket = ({ workshop, total = 1 }) => {
   };
   return (
     <Elements stripe={stripePromise} options={elementsOptions}>
-      <CheckoutPage workshop={workshop} total={total} />
+      <CheckoutPage
+        workshop={workshop}
+        total={total}
+        selectedTickets={selectedTickets}
+        nextPageUrl={nextPageUrl}
+      />
     </Elements>
   );
 };
@@ -47,12 +57,16 @@ const options = {
   paymentMethodOrder: ['apple_pay', 'google_pay'],
 };
 
-const CheckoutPage = ({ workshop, total }) => {
+const CheckoutPage = ({ workshop, total, selectedTickets, nextPageUrl }) => {
   const stripe = useStripe();
   const elements = useElements();
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const { showAlert } = useGlobalAlertContext();
+
+  const getThankYouPageUrl = () => {
+    return encodeURIComponent(nextPageUrl);
+  };
 
   const onConfirm = async (event) => {
     if (loading) {
@@ -76,17 +90,31 @@ const CheckoutPage = ({ workshop, total }) => {
       };
       filteredParams = removeNull(filteredParams);
 
+      const tickets = Object.entries(selectedTickets).map(([key, value]) => {
+        return {
+          numberOfTickets: value,
+          pricingTierId: key,
+        };
+      });
+
       const {
         stripeIntentObj,
         status,
-        data,
+        orderId,
         error: errorMessage,
         isError,
       } = await api.post({
         path: 'createIntentForExpressCheckout',
         body: {
-          ticketedEventId: workshop.id,
-          utmParams: filteredParams,
+          shoppingRequest: {
+            products: {
+              productSfId: workshop.id,
+              productType: 'ticketed_event',
+            },
+            tickets,
+            isStripeIntentPayment: true,
+            utmParams: filteredParams,
+          },
         },
         isUnauthorized: true,
       });
@@ -106,7 +134,7 @@ const CheckoutPage = ({ workshop, total }) => {
 
       const returnUrl = `${
         window.location.origin
-      }/us-en/ticketed-event/express/thankyou/${workshop.id}?${queryString.stringify(
+      }/us-en/payment-status/${orderId}?nextId=order&next=${getThankYouPageUrl()}&${queryString.stringify(
         filteredParams,
       )}`;
 

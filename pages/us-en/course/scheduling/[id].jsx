@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect, useTransition } from 'react';
-import { useQueryState, parseAsString, parseAsStringLiteral } from 'nuqs';
+import { useQueryState, parseAsString } from 'nuqs';
 import { useRouter } from 'next/router';
 import queryString from 'query-string';
 import ErrorPage from 'next/error';
@@ -13,7 +13,16 @@ import {
   priceCalculation,
   parsedAddress,
   findCourseTypeByKey,
+  findKeyByProductTypeId,
 } from '@utils';
+import {
+  getCourseDateDisplay,
+  getCourseTimeDisplay,
+  getInstructorDisplay,
+  getCourseLocationDisplay,
+  getContactDisplay,
+  getCourseCheckoutUrl,
+} from '@utils/workshopUtils';
 import { useAuth, useGlobalAlertContext } from '@contexts';
 import { useAnalytics } from 'use-analytics';
 import { ABBRS, ALERT_TYPES, COURSE_TYPES, COURSE_MODES } from '@constants';
@@ -106,13 +115,14 @@ const SchedulingPaymentForm = ({
   courseType,
   activeStep,
   setActiveStep,
-  discountResponse,
   setDiscountResponse,
   handleChangeDates,
 }) => {
   const { track, identify } = useAnalytics();
   const { profile = {}, passwordLess, isAuthenticated } = useAuth();
   const { signOut } = passwordLess;
+  const [defaultUserEmail] = useQueryState('email');
+
   const formRef = useRef();
 
   const [loading, setLoading] = useState(false);
@@ -465,11 +475,21 @@ const SchedulingPaymentForm = ({
         email: formRef.current.values.email,
       });
     }
+
     track('submit_email', {
       screen_name: 'course_scheduling_checkout',
       event_target: 'register_button',
       course_type: courseType,
       location_type: workshop.mode,
+      course_dates_display: getCourseDateDisplay(workshop),
+      course_timings_display: getCourseTimeDisplay(workshop),
+      course_instructors_display: getInstructorDisplay(workshop),
+      course_location_display: getCourseLocationDisplay(workshop),
+      course_contact_details_display: getContactDisplay(workshop),
+      course_checkout_url: getCourseCheckoutUrl(
+        workshop,
+        isAuthenticated ? email : defaultUserEmail,
+      ),
     });
     track(
       'begin_checkout',
@@ -534,33 +554,38 @@ const SchedulingPaymentForm = ({
     setDiscountResponse(discount);
   };
 
-  const initialValue = {
+  let initialValue = {
     firstName: '',
     lastName: '',
-    email: '',
+    email: defaultUserEmail || '',
     contactAddress: '',
     contactCity: '',
     contactState: '',
     contactZip: '',
     contactPhone: '',
+    questionnaire: questionnaireArray,
+    ppaAgreement: true,
   };
+
+  if (isAuthenticated) {
+    initialValue = {
+      ...initialValue,
+      firstName: first_name,
+      lastName: last_name,
+      email: email,
+      contactAddress: personMailingStreet || '',
+      contactCity: personMailingCity || '',
+      contactState: personMailingState || '',
+      contactZip: personMailingPostalCode || '',
+      contactPhone: personMobilePhone,
+    };
+  }
 
   return (
     <>
       {loading && <Loader />}
       <Formik
-        initialValues={{
-          firstName: first_name,
-          lastName: last_name,
-          email: email,
-          contactAddress: personMailingStreet || '',
-          contactCity: personMailingCity || '',
-          contactState: personMailingState || '',
-          contactZip: personMailingPostalCode || '',
-          contactPhone: personMobilePhone,
-          questionnaire: questionnaireArray,
-          ppaAgreement: true,
-        }}
+        initialValues={initialValue}
         validationSchema={
           activeStep === CheckoutStates.EMAIL_INPUT
             ? emailStepSchema
@@ -725,10 +750,10 @@ const SchedulingPaymentForm = ({
                                 target="_blank"
                                 rel="noreferrer"
                               >
-                                {`${workshop.locationStreet || ''}, 
-                                ${workshop.locationCity || ''}, 
+                                {`${workshop.locationStreet || ''},
+                                ${workshop.locationCity || ''},
                                 ${workshop.locationProvince || ''}
-                                ${workshop.locationPostalCode || ''}, 
+                                ${workshop.locationPostalCode || ''},
                                 ${workshop.locationCountry || ''}`}
                               </a>
                             )}
@@ -975,6 +1000,7 @@ const SchedulingCheckoutFlow = () => {
   const router = useRouter();
   const { track } = useAnalytics();
   const [mode] = useQueryState('mode');
+  const [ctype] = useQueryState('ctype');
   const [discountResponse, setDiscountResponse] = useState(null);
   const [activeStep, setActiveStep] = useQueryState(
     'step',
@@ -982,10 +1008,17 @@ const SchedulingCheckoutFlow = () => {
   );
 
   const { id: workshopId } = router.query;
-  const [courseType] = useQueryState(
+  const [courseType, setCourseType] = useQueryState(
     'courseType',
     parseAsString.withDefault('SKY_BREATH_MEDITATION'),
   );
+
+  useEffect(() => {
+    if (ctype) {
+      const courseTypeKey = findKeyByProductTypeId(ctype);
+      setCourseType(courseTypeKey);
+    }
+  }, [ctype]);
 
   const { data: workshopMaster = {} } = useQuery({
     queryKey: ['workshopMaster', mode],
@@ -1045,7 +1078,6 @@ const SchedulingCheckoutFlow = () => {
         ...router.query,
         productTypeId: null,
         mode: 'both',
-        courseType: null,
         ctype: null,
       },
     });

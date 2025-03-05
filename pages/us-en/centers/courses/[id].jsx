@@ -102,6 +102,7 @@ const parseAsStartEndDate = createParser({
 const parseCourseType = (courseTypesOptions) => {
   return createParser({
     parse(queryValue) {
+      console.log('queryValue', queryValue);
       if (queryValue && courseTypesOptions[queryValue]) {
         return courseTypesOptions[queryValue];
       } else {
@@ -109,7 +110,8 @@ const parseCourseType = (courseTypesOptions) => {
       }
     },
     serialize(value) {
-      if (value) return value;
+      console.log('value', value);
+      if (value) return value?.slug;
       return null;
     },
   });
@@ -486,7 +488,7 @@ const Course = ({ centerDetail }) => {
   const onFilterChange = (field) => async (value) => {
     switch (field) {
       case 'courseTypeFilter':
-        setCourseTypeFilter(value?.slug);
+        setCourseTypeFilter(value);
         break;
       case 'courseModeFilter':
         setCourseModeFilter(value);
@@ -532,7 +534,7 @@ const Course = ({ centerDetail }) => {
     if (e) e.preventDefault();
     switch (field) {
       case 'courseTypeFilter':
-        setCourseTypeFilter(value.slug);
+        setCourseTypeFilter(value);
         break;
       case 'courseModeFilter':
         setCourseModeFilter(value);

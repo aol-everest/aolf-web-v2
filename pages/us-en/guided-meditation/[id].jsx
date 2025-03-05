@@ -155,11 +155,13 @@ const GuidedMeditation = (props) => {
       await meditatePlayEvent({
         meditate,
         showAlert,
+        hideAlert,
         showPlayer,
         hidePlayer,
         showVideoPlayer,
         subsciptionCategories,
         purchaseMembershipAction,
+        router,
       });
     }
   };

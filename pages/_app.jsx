@@ -12,7 +12,7 @@ import { GlobalBottomBanner } from '@components/globalBottomBanner';
 import { GlobalLoading } from '@components/globalLoading';
 import { GlobalModal } from '@components/globalModal';
 import { GlobalVideoPlayer } from '@components/globalVideoPlayer';
-import { AuthProvider } from '@contexts';
+import { AuthProvider, MeditationProvider } from '@contexts';
 import { orgConfig } from '@org';
 import { analytics } from '@service';
 import { Auth, Compose, Talkable, api } from '@utils';
@@ -22,13 +22,14 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { AnalyticsProvider } from 'use-analytics';
 import { Amplify } from 'aws-amplify';
-// import { cognitoUserPoolsTokenProvider } from 'aws-amplify/auth/cognito';
+import { cognitoUserPoolsTokenProvider } from 'aws-amplify/auth/cognito';
 import { Passwordless } from '@components/passwordLessAuth/passwordless';
 import { Hub } from 'aws-amplify/utils';
 import { useRouter } from 'next/router';
 import { clearInflightOAuth } from '@passwordLess/storage.js';
 import CookieStorage from '@utils/cookieStorage';
-// import { parse } from 'tldts';
+import { parse } from 'tldts';
+import { NuqsAdapter } from 'nuqs/adapters/next/pages';
 // import { SurveyRequest } from "@components/surveyRequest";
 
 // import TopProgressBar from "@components/topProgressBar";
@@ -42,9 +43,9 @@ import '@styles/old-design/style.scss';
 
 import SEO from '../next-seo.config';
 
-// const isLocal = process.env.NODE_ENV === 'development';
+const isLocal = process.env.NODE_ENV === 'development';
 
-/* const getParentDomain = () => {
+const getParentDomain = () => {
   // Check if running in a browser
   if (typeof window === 'undefined') {
     return null; // Return null on the server side
@@ -68,7 +69,7 @@ import SEO from '../next-seo.config';
   return `.${domain}`;
 };
 
-const PARENT_DOMAIN = getParentDomain(); */
+const PARENT_DOMAIN = getParentDomain();
 
 Passwordless.configure({
   clientId: process.env.NEXT_PUBLIC_COGNITO_CLIENT_ID,
@@ -80,10 +81,10 @@ Passwordless.configure({
       userVerification: 'required',
     },
   },
-  // storage: new CookieStorage({
-  //   domain: PARENT_DOMAIN,
-  //   secure: !isLocal,
-  // }),
+  storage: new CookieStorage({
+    domain: PARENT_DOMAIN,
+    secure: !isLocal,
+  }),
   // debug: console.debug,
 });
 Amplify.configure({
@@ -117,12 +118,12 @@ Amplify.configure({
   },
 });
 
-// cognitoUserPoolsTokenProvider.setKeyValueStorage(
-//   new CookieStorage({
-//     domain: PARENT_DOMAIN,
-//     secure: !isLocal,
-//   }),
-// );
+cognitoUserPoolsTokenProvider.setKeyValueStorage(
+  new CookieStorage({
+    domain: PARENT_DOMAIN,
+    secure: !isLocal,
+  }),
+);
 
 function App({ Component, pageProps }) {
   const router = useRouter();
@@ -255,48 +256,51 @@ function App({ Component, pageProps }) {
     );
   }
   return (
-    <AnalyticsProvider instance={analytics}>
-      <QueryClientProvider client={queryClient}>
-        <AuthProvider
-          checkUserPendingAction={checkUserPendingAction}
-          userInfo={user}
-          enableLocalUserCache={true}
-        >
-          <Compose
-            components={[
-              GlobalModal,
-              GlobalAlert,
-              GlobalAudioPlayer,
-              GlobalVideoPlayer,
-              GlobalLoading,
-              GlobalBottomBanner,
-            ]}
+    <NuqsAdapter>
+      <AnalyticsProvider instance={analytics}>
+        <QueryClientProvider client={queryClient}>
+          <AuthProvider
+            checkUserPendingAction={checkUserPendingAction}
+            userInfo={user}
+            enableLocalUserCache={true}
           >
-            <Layout
-              hideHeader={Component.hideHeader}
-              noHeader={Component.noHeader}
-              hideFooter={Component.hideFooter}
-              wcfHeader={Component.wcfHeader}
-              sideGetStartedAction={Component.sideGetStartedAction}
+            <Compose
+              components={[
+                GlobalModal,
+                GlobalAlert,
+                GlobalAudioPlayer,
+                GlobalVideoPlayer,
+                GlobalLoading,
+                GlobalBottomBanner,
+                MeditationProvider,
+              ]}
             >
-              <DefaultSeo {...SEO} />
-              {/* <UsePagesViews /> */}
-              {/* <TopProgressBar /> */}
-              {isReInstateRequired && (
-                <ReInstate subscription={reinstateRequiredSubscription} />
-              )}
-              {/* {pendingSurveyInvite && (
+              <Layout
+                hideHeader={Component.hideHeader}
+                noHeader={Component.noHeader}
+                hideFooter={Component.hideFooter}
+                wcfHeader={Component.wcfHeader}
+                sideGetStartedAction={Component.sideGetStartedAction}
+              >
+                <DefaultSeo {...SEO} />
+                {/* <UsePagesViews /> */}
+                {/* <TopProgressBar /> */}
+                {isReInstateRequired && (
+                  <ReInstate subscription={reinstateRequiredSubscription} />
+                )}
+                {/* {pendingSurveyInvite && (
                 <SurveyRequest surveyInvite={pendingSurveyInvite} />
               )} */}
-              {isCCUpdateRequired && <CardUpdateRequired />}
-              {isPendingAgreement && <PendingAgreement />}
-              <Component {...pageProps} />
-              <ReactQueryDevtools initialIsOpen={false} />
-            </Layout>
-          </Compose>
-        </AuthProvider>
-      </QueryClientProvider>
-    </AnalyticsProvider>
+                {isCCUpdateRequired && <CardUpdateRequired />}
+                {isPendingAgreement && <PendingAgreement />}
+                <Component {...pageProps} />
+                <ReactQueryDevtools initialIsOpen={false} />
+              </Layout>
+            </Compose>
+          </AuthProvider>
+        </QueryClientProvider>
+      </AnalyticsProvider>
+    </NuqsAdapter>
   );
 }
 

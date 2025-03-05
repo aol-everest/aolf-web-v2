@@ -273,9 +273,9 @@
 }
 .tickets-modal__title {
   font-family: Lora;
-  color: #0e0e0e;
+  color: #31364e;
   font-size: 40px;
-  font-weight: 400;
+  font-weight: 500;
   line-height: 48px;
   margin-bottom: 12px;
 }
@@ -358,6 +358,42 @@
   padding: 20px;
   border-radius: 16px;
   border: 1px solid rgba(0, 0, 0, 0.15);
+
+  &.notes-mobile {
+    display: none;
+    margin-top: 20px;
+    @media screen and (max-width: 767px) {
+      display: block;
+    }
+  }
+  &.notes-desktop {
+    @media screen and (max-width: 767px) {
+      display: none;
+    }
+  }
+  .tickets {
+    &.notes {
+      flex-direction: column;
+      align-items: flex-start;
+
+      .label {
+        color: #31364e;
+        font-weight: 600;
+        width: 100%;
+        font-size: 16px;
+        padding-bottom: 16px;
+      }
+      .value {
+        color: #6f7283;
+        font-weight: 400;
+        width: 100%;
+        word-break: break-all;
+        max-height: 100px;
+        overflow-y: auto;
+        padding: 0;
+      }
+    }
+  }
 }
 .tickets-modal__card-head {
   position: relative;
@@ -1136,6 +1172,13 @@
     &.notes {
       flex-direction: column;
       align-items: flex-start;
+
+      .label {
+        color: #31364e;
+        font-weight: 600;
+        width: 100%;
+        font-size: 16px;
+      }
       .value {
         color: #6f7283;
         font-weight: 400;

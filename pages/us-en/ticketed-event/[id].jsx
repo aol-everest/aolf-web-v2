@@ -1,6 +1,7 @@
 import { api, tConvert } from '@utils';
 import { Formik } from 'formik';
 import { useRouter } from 'next/router';
+import { useSearchParams } from 'next/navigation';
 import * as Yup from 'yup';
 import React, { useEffect, useRef } from 'react';
 import { useQuery } from '@tanstack/react-query';
@@ -14,6 +15,9 @@ import { useGlobalAlertContext } from '@contexts';
 import { useQueryState, parseAsJson } from 'nuqs';
 import ErrorPage from 'next/error';
 import { PageLoading } from '@components';
+import { z } from 'zod';
+
+const ticketSchema = z.record(z.string(), z.number());
 
 dayjs.extend(utc);
 
@@ -68,9 +72,10 @@ const TicketLineItem = ({ item, handleTicketSelect, selectedTickets }) => {
 
 function TicketedEvent() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [selectedTickets, setSelectedTickets] = useQueryState(
     'ticket',
-    parseAsJson().withDefault({}),
+    parseAsJson(ticketSchema.parse).withDefault({}),
   );
   const { showAlert } = useGlobalAlertContext();
   const { id: eventId } = router.query;
@@ -128,7 +133,7 @@ function TicketedEvent() {
           children: 'The Event is full. Please try for some other event',
           closeModalAction: () => {
             pushRouteWithUTMQuery(router, {
-              pathname: `/us-en/course`,
+              pathname: `/us-en/ticketed-event`,
             });
           },
         });
@@ -210,11 +215,17 @@ function TicketedEvent() {
       });
       return;
     }
+
+    let queryParams = { ticket: JSON.stringify(selectedTickets) };
+
+    const showAddressFields = searchParams.get('showAddressFields');
+    if (showAddressFields) {
+      queryParams = { ...queryParams, showAddressFields };
+    }
+
     pushRouteWithUTMQuery(router, {
       pathname: `/us-en/ticketed-event/checkout/${eventId}`,
-      query: {
-        ticket: JSON.stringify(selectedTickets),
-      },
+      query: queryParams,
     });
   };
 
@@ -274,7 +285,7 @@ function TicketedEvent() {
                           timings.map((time) => {
                             return (
                               <div className="info-item" key={time.startDate}>
-                                <span className="icon-aol iconaol-calendar-2"></span>
+                                <span className="icon-aol iconaol-calendar"></span>
                                 <span className="p2">
                                   {dayjs.utc(time.startDate).format('ddd')},{' '}
                                   {dayjs
@@ -329,10 +340,12 @@ function TicketedEvent() {
                             {contactName}
                             <br />
                             <span className="contact-detail">
-                              {phone1}{' '}
+                              <a href={`tel:${{ phone1 }}`}>{phone1}</a>
                             </span>{' '}
                             <span>|</span>{' '}
-                            <span className="contact-detail">{email}</span>
+                            <span className="contact-detail">
+                              <a href={`mailto:${email}`}>{email}</a>
+                            </span>
                           </span>
                         </div>
                       </div>
@@ -346,6 +359,15 @@ function TicketedEvent() {
                             selectedTickets={selectedTickets}
                           ></TicketLineItem>
                         ))}
+                        <div className="tickets-modal__card notes-desktop">
+                          <div className="tickets notes">
+                            <div className="label">Notes</div>
+                            <div
+                              className="value"
+                              dangerouslySetInnerHTML={{ __html: notes }}
+                            />
+                          </div>
+                        </div>
                       </div>
 
                       <div className="tickets-modal__language"></div>
@@ -369,25 +391,24 @@ function TicketedEvent() {
                       </div>
 
                       {notes && (
-                        <div className="tickets-modal__cart">
-                          <div className="tickets-container">
-                            <div className="tickets notes">
-                              <div className="label">Notes</div>
-                              <div
-                                className="value"
-                                dangerouslySetInnerHTML={{ __html: notes }}
-                              />
-                            </div>
+                        <div className="tickets-modal__card notes-mobile">
+                          <div className="tickets notes">
+                            <div className="label">Notes</div>
+                            <div
+                              className="value"
+                              dangerouslySetInnerHTML={{ __html: notes }}
+                            />
                           </div>
                         </div>
                       )}
 
                       <div className="tickets-modal__footer">
-                        {false && event && total > 0 && (
+                        {event && total > 0 && (
                           <div className="tickets-modal__footer-button-link">
                             <StripeExpressCheckoutTicket
                               workshop={event}
                               total={total}
+                              selectedTickets={selectedTickets}
                             />
                           </div>
                         )}
@@ -397,7 +418,7 @@ function TicketedEvent() {
                           type="submit"
                           disabled={Object.keys(selectedTickets).length === 0}
                         >
-                          Confirm
+                          Continue to Checkout
                         </button>
                       </div>
                       {isLoading && <Loader />}

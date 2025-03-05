@@ -169,6 +169,9 @@ export const SigninForm = ({
   backToFlowAction,
   clearMessageAction,
   children,
+  timeLeft,
+  enableAutoRedirect,
+  setEnableAutoRedirect,
 }) => {
   const authObj = useAuth();
   const {
@@ -190,10 +193,12 @@ export const SigninForm = ({
   const toggleShowAuthenticatorManagerAction = (e) => {
     if (e) e.preventDefault();
     toggleShowAuthenticatorManager();
+    setEnableAutoRedirect(false);
   };
 
   const signOutAction = (e) => {
     if (e) e.preventDefault();
+    setEnableAutoRedirect(false);
     signOut();
   };
 
@@ -304,6 +309,13 @@ export const SigninForm = ({
           You&apos;re currently signed-in as:{' '}
           <span className="tw-font-semibold">{authObj?.profile.email}</span>
         </div>
+        {timeLeft > 0 && enableAutoRedirect && (
+          <div className="tw-text-sm tw-text-gray-500 tw-my-4 tw-text-center">
+            You will be navigated to the previous page in{' '}
+            <strong>{timeLeft} seconds</strong> else you can click on the below
+            button.
+          </div>
+        )}
         <div className="form-action">
           <button className="submit-btn" onClick={backToFlowAction}>
             Continue where you left off
