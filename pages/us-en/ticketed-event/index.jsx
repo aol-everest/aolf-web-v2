@@ -379,6 +379,8 @@ const ItemLoaderTile = () => {
 };
 
 const CourseTile = ({ data, inIframe }) => {
+  const searchParams = useSearchParams();
+  const showAddressFields = searchParams.get('showAddressFields');
   const router = useRouter();
   const { track } = useAnalytics();
   const { showModal } = useGlobalModalContext();
@@ -405,17 +407,19 @@ const CourseTile = ({ data, inIframe }) => {
   } = data || {};
 
   const enrollAction = () => {
+    let queryParams = { ctype: productTypeId };
+    if (showAddressFields) {
+      queryParams = { ...queryParams, showAddressFields };
+    }
     if (inIframe) {
       window.open(
-        `/us-en/ticketed-event/${sfid}?ctype=${productTypeId}`,
+        `/us-en/ticketed-event/${sfid}?${queryString.stringify(queryParams)}`,
         '_blank',
       );
     } else {
       pushRouteWithUTMQuery(router, {
         pathname: `/us-en/ticketed-event/${sfid}`,
-        query: {
-          ctype: productTypeId,
-        },
+        query: queryParams,
       });
     }
   };

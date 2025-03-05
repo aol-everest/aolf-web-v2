@@ -156,9 +156,9 @@ const TicketCheckoutForm = ({ event }) => {
   const [attendeeDetails, setAttendeeDetails] = useState([]);
   const [pricingTiersLocalState, setPricingTierLocal] = useState([]);
   const [discountResponse, setDiscountResponse] = useState(null);
-  const [skipAddressFields] = useQueryState(
-    'skipAddressFields',
-    parseAsBoolean.withDefault(true),
+  const [showAddressFields] = useQueryState(
+    'showAddressFields',
+    parseAsBoolean.withDefault(false),
   );
   const [selectedTickets] = useQueryState(
     'ticket',
@@ -565,7 +565,7 @@ const TicketCheckoutForm = ({ event }) => {
             .required('Phone number required')
             .matches(phoneRegExp, 'Phone number is not valid'),
           contactAddress: Yup.string().when([], (obj) => {
-            if (afterDiscountPrice !== 0 && !skipAddressFields) {
+            if (afterDiscountPrice !== 0 && showAddressFields) {
               return obj
                 .required('Address is required')
                 .matches(/\S/, 'String should not contain empty spaces');
@@ -574,7 +574,7 @@ const TicketCheckoutForm = ({ event }) => {
             }
           }),
           contactCity: Yup.string().when([], (obj) => {
-            if (!skipAddressFields) {
+            if (showAddressFields) {
               return obj
                 .required('City is required')
                 .matches(/\S/, 'String should not contain empty spaces');
@@ -583,7 +583,7 @@ const TicketCheckoutForm = ({ event }) => {
             }
           }),
           contactState: Yup.string().when([], (obj) => {
-            if (!skipAddressFields) {
+            if (showAddressFields) {
               return obj
                 .required('State is required')
                 .matches(/\S/, 'String should not contain empty spaces');
@@ -592,7 +592,7 @@ const TicketCheckoutForm = ({ event }) => {
             }
           }),
           contactZip: Yup.string().when([], (obj) => {
-            if (!skipAddressFields) {
+            if (showAddressFields) {
               return (
                 obj
                   .required('Zip is required!')
@@ -678,10 +678,10 @@ const TicketCheckoutForm = ({ event }) => {
                               <form id="my-form">
                                 <UserInfoFormNewCheckout
                                   formikProps={formikProps}
-                                  showStreetAddress={!skipAddressFields}
-                                  showContactState={!skipAddressFields}
-                                  showContactCity={!skipAddressFields}
-                                  showContactZip={!skipAddressFields}
+                                  showStreetAddress={showAddressFields}
+                                  showContactState={showAddressFields}
+                                  showContactCity={showAddressFields}
+                                  showContactZip={showAddressFields}
                                 />
                               </form>
                             </div>

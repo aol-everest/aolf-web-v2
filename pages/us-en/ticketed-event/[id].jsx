@@ -1,6 +1,7 @@
 import { api, tConvert } from '@utils';
 import { Formik } from 'formik';
 import { useRouter } from 'next/router';
+import { useSearchParams } from 'next/navigation';
 import * as Yup from 'yup';
 import React, { useEffect, useRef } from 'react';
 import { useQuery } from '@tanstack/react-query';
@@ -71,6 +72,7 @@ const TicketLineItem = ({ item, handleTicketSelect, selectedTickets }) => {
 
 function TicketedEvent() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [selectedTickets, setSelectedTickets] = useQueryState(
     'ticket',
     parseAsJson(ticketSchema.parse).withDefault({}),
@@ -131,7 +133,7 @@ function TicketedEvent() {
           children: 'The Event is full. Please try for some other event',
           closeModalAction: () => {
             pushRouteWithUTMQuery(router, {
-              pathname: `/us-en/course`,
+              pathname: `/us-en/ticketed-event`,
             });
           },
         });
@@ -213,11 +215,17 @@ function TicketedEvent() {
       });
       return;
     }
+
+    let queryParams = { ticket: JSON.stringify(selectedTickets) };
+
+    const showAddressFields = searchParams.get('showAddressFields');
+    if (showAddressFields) {
+      queryParams = { ...queryParams, showAddressFields };
+    }
+
     pushRouteWithUTMQuery(router, {
       pathname: `/us-en/ticketed-event/checkout/${eventId}`,
-      query: {
-        ticket: JSON.stringify(selectedTickets),
-      },
+      query: queryParams,
     });
   };
 
