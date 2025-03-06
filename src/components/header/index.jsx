@@ -237,6 +237,10 @@ const AOL_MENU = [
     ],
   },
   {
+    name: 'Events',
+    link: 'https://event.us.artofliving.org/lp1/unlocking-happiness',
+  },
+  {
     name: 'Centers',
     submenu: [
       {
@@ -846,14 +850,14 @@ export const Header = () => {
 
             {isAuthenticated && (
               <>
-                <Link href="/us-en/profile" legacyBehavior>
+                {/* <Link href="/us-en/profile" legacyBehavior>
                   <a
                     href="#"
                     className="tw-no-underline tw-text-black hover:tw-text-black hover:tw-no-underline"
                   >
                     <span className="username">{first_name || last_name}</span>
                   </a>
-                </Link>
+                </Link> */}
                 <Link prefetch={false} href="/us-en/profile" legacyBehavior>
                   <a
                     className="header_profileHeaderImage"
