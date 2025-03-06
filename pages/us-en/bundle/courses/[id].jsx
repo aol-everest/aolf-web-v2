@@ -12,6 +12,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import { useQueryState, parseAsBoolean, parseAsJson, createParser } from 'nuqs';
 import { useUIDSeed } from 'react-uid';
 import { useAuth } from '@contexts';
+import { nuqsParseJson } from '@utils';
 import {
   ABBRS,
   COURSE_MODES,
@@ -387,7 +388,7 @@ const Course = ({ bundle, allowCourseTypes }) => {
   const [timeZoneFilter, setTimeZoneFilter] = useQueryState('timeZone');
   const [instructorFilter, setInstructorFilter] = useQueryState(
     'instructor',
-    parseAsJson(),
+    nuqsParseJson,
   );
 
   const [cityFilter] = useQueryState('city');

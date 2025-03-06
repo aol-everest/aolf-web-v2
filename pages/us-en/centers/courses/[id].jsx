@@ -13,6 +13,7 @@ import { useQueryState, parseAsBoolean, parseAsJson, createParser } from 'nuqs';
 import { useUIDSeed } from 'react-uid';
 import { useAuth } from '@contexts';
 import { withCenterInfo } from '@hoc';
+import { nuqsParseJson } from '@utils';
 import {
   ABBRS,
   COURSE_MODES,
@@ -324,7 +325,7 @@ const Course = ({ centerDetail }) => {
   const [timeZoneFilter, setTimeZoneFilter] = useQueryState('timeZone');
   const [instructorFilter, setInstructorFilter] = useQueryState(
     'instructor',
-    parseAsJson(),
+    nuqsParseJson,
   );
 
   const [cityFilter] = useQueryState('city');

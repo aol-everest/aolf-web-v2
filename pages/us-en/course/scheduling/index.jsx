@@ -14,6 +14,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useRouter } from 'next/router';
 import 'flatpickr/dist/flatpickr.min.css';
 import { replaceRouteWithUTMQuery } from '@service';
+import { nuqsParseJson } from '@utils';
 import { Loader } from '@components';
 import WorkshopSelectModal from '@components/scheduleWorkshopModal/ScheduleWorkshopModal';
 
@@ -83,12 +84,12 @@ const Scheduling = ({ initialLocation }) => {
   const [attendeeId] = useQueryState('aid');
   const [locationFilter, setLocationFilter] = useQueryState(
     'location',
-    parseAsJson(),
+    nuqsParseJson,
   );
   const [loading, setLoading] = useState(false);
   const [selectedDates, setSelectedDates] = useQueryState(
     'selectedDate',
-    parseAsJson(),
+    nuqsParseJson,
   );
   const [workshops, setWorkshops] = useState([]);
   const [timezoneFilter, setTimezoneFilter] = useState('');
