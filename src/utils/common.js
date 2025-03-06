@@ -715,3 +715,22 @@ export const timeConvert = (data) => {
 
   return String(hours).padStart(2, 0) + ':' + String(minutes).padStart(2, 0);
 };
+
+export const nuqsParseJson = {
+  parse: (value) => {
+    try {
+      return JSON.parse(decodeURIComponent(value || '{}'));
+    } catch (error) {
+      console.error('Failed to parse JSON from query:', error);
+      return {};
+    }
+  },
+  serialize: (value) => {
+    try {
+      return encodeURIComponent(JSON.stringify(value));
+    } catch (error) {
+      console.error('Failed to serialize JSON for query:', error);
+      return encodeURIComponent('{}');
+    }
+  },
+};

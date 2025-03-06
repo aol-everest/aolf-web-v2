@@ -9,7 +9,8 @@ import {
 import ContentLoader from 'react-content-loader';
 import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 import React, { useEffect, useRef, useState } from 'react';
-import { useQueryState, parseAsBoolean, parseAsJson, createParser } from 'nuqs';
+import { useQueryState, parseAsBoolean, createParser } from 'nuqs';
+import { nuqsParseJson } from '@utils';
 import { useUIDSeed } from 'react-uid';
 import { useAuth } from '@contexts';
 import {
@@ -500,7 +501,7 @@ const Course = () => {
   );
   const [locationFilter, setLocationFilter] = useQueryState(
     'location',
-    parseAsJson(),
+    nuqsParseJson,
   );
   const [filterStartEndDate, setFilterStartEndDate] = useQueryState(
     'startEndDate',
@@ -509,8 +510,10 @@ const Course = () => {
   const [timeZoneFilter, setTimeZoneFilter] = useQueryState('timeZone');
   const [instructorFilter, setInstructorFilter] = useQueryState(
     'instructor',
-    parseAsJson(),
+    nuqsParseJson,
   );
+
+  console.log('instructorFilter', instructorFilter);
 
   const [cityFilter] = useQueryState('city');
   const [centerFilter] = useQueryState('center');
