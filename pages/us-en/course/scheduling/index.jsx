@@ -13,7 +13,7 @@ import { useEffectOnce } from 'react-use';
 import { useQuery } from '@tanstack/react-query';
 import { useRouter } from 'next/router';
 import 'flatpickr/dist/flatpickr.min.css';
-import { replaceRouteWithUTMQuery } from '@service';
+import { replaceRouteWithUTMQuery, pushRouteWithUTMQuery } from '@service';
 import { nuqsParseJson } from '@utils';
 import { Loader } from '@components';
 import WorkshopSelectModal from '@components/scheduleWorkshopModal/ScheduleWorkshopModal';
@@ -543,29 +543,16 @@ const Scheduling = ({ initialLocation }) => {
   };
 
   const handleNavigateToDetailsPage = (isOnlineCourse, workshopId) => {
-    if (!isOnlineCourse) {
-      replaceRouteWithUTMQuery(router, {
-        pathname: `/us-en/course/scheduling/${workshopId}`,
-        query: {
-          ...router.query,
-          productTypeId: workshopMaster?.productTypeId,
-          courseType: courseTypeFilter,
-          ctype: workshopMaster?.productTypeId,
-          mode: 'inPerson',
-        },
-      });
-    } else {
-      replaceRouteWithUTMQuery(router, {
-        pathname: `/us-en/course/scheduling/${workshopId}`,
-        query: {
-          ...router.query,
-          productTypeId: workshopMaster?.productTypeId,
-          courseType: courseTypeFilter,
-          ctype: workshopMaster?.productTypeId,
-          mode: 'online',
-        },
-      });
-    }
+    pushRouteWithUTMQuery(router, {
+      pathname: `/us-en/course/scheduling/${workshopId}`,
+      query: {
+        ...router.query,
+        productTypeId: workshopMaster?.productTypeId,
+        courseType: courseTypeFilter,
+        ctype: workshopMaster?.productTypeId,
+        mode: isOnlineCourse ? 'online' : 'inPerson',
+      },
+    });
   };
 
   const productTypeId = workshopMaster?.productTypeId;
