@@ -13,3 +13,4 @@ export { SriSriYogaDeepDive } from './SriSriYogaDeepDive';
 export { MarmaTraining } from './MarmaTraining';
 export { HealingBreathSilent } from './HealingBreathSilent';
 export { ResilienceTraining } from './ResilienceTraining';
+export { SleepAnxietyProtocol } from './SleepAnxietyProtocol';
