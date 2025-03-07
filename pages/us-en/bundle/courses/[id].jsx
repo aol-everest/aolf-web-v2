@@ -526,6 +526,7 @@ const Course = ({ bundle, allowCourseTypes }) => {
     setTimeZoneFilter(null);
     setFilterStartEndDate(null);
     setCourseTypeFilter(null);
+    setSearchKey('');
     setInstructorFilter(null);
   };
 
@@ -545,6 +546,7 @@ const Course = ({ bundle, allowCourseTypes }) => {
         if (value) {
           setInstructorFilter(value);
         } else {
+          setSearchKey('');
           setInstructorFilter(null);
         }
         break;
@@ -564,6 +566,7 @@ const Course = ({ bundle, allowCourseTypes }) => {
         setTimeZoneFilter(null);
         break;
       case 'instructorFilter':
+        setSearchKey('');
         setInstructorFilter(null);
         break;
     }
@@ -585,6 +588,7 @@ const Course = ({ bundle, allowCourseTypes }) => {
         if (value) {
           setInstructorFilter(value);
         } else {
+          setSearchKey('');
           setInstructorFilter(null);
         }
         break;

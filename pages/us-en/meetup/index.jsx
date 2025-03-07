@@ -603,6 +603,7 @@ const Meetup = () => {
     setMeetupModeFilter(null);
     setLocationFilter(null);
     setTimeZoneFilter(null);
+    setSearchKey('');
     setInstructorFilter(null);
     setFilterStartEndDate(null);
     setMeetupTypeFilter(null);
@@ -669,6 +670,7 @@ const Meetup = () => {
         }, 0);
         break;
       case 'instructorFilter':
+        setSearchKey('');
         setInstructorFilter(null);
         break;
     }
