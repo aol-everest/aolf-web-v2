@@ -259,6 +259,28 @@ function TicketedEvent() {
     );
   };
 
+  const groupTimingsByDate = (timings = []) => {
+    // Group timings by date
+    const groupedTimings = timings.reduce((acc, time) => {
+      const date = dayjs.utc(time.startDate).format('YYYY-MM-DD');
+      if (!acc[date]) {
+        acc[date] = [];
+      }
+      acc[date].push({
+        startTime: time.startTime,
+        endTime: time.endTime,
+        timeZone: time.timeZone,
+      });
+      return acc;
+    }, {});
+
+    // Convert to array format
+    return Object.entries(groupedTimings).map(([date, times]) => ({
+      date: dayjs.utc(date),
+      times,
+    }));
+  };
+
   return (
     <Formik
       initialValues={{
@@ -282,18 +304,24 @@ function TicketedEvent() {
                       <h2 className="tickets-modal__title">{title}</h2>
                       <div className="section-wisdom-event-checkout-info">
                         {timings &&
-                          timings.map((time) => {
+                          groupTimingsByDate(timings).map((dateGroup) => {
                             return (
-                              <div className="info-item" key={time.startDate}>
+                              <div
+                                className="info-item"
+                                key={dateGroup.date.format('YYYY-MM-DD')}
+                              >
                                 <span className="icon-aol iconaol-calendar"></span>
                                 <span className="p2">
-                                  {dayjs.utc(time.startDate).format('ddd')},{' '}
-                                  {dayjs
-                                    .utc(time.startDate)
-                                    .format('MMM DD ○ ')}
-                                  {tConvert(time.startTime)}-
-                                  {tConvert(time.endTime)}{' '}
-                                  {ABBRS[time.timeZone]}
+                                  {dateGroup.date.format('ddd')},{' '}
+                                  {dateGroup.date.format('MMM DD ○ ')}
+                                  {dateGroup.times.map((time, index) => (
+                                    <React.Fragment key={index}>
+                                      {index > 0 && ' and '}
+                                      {tConvert(time.startTime)}-
+                                      {tConvert(time.endTime)}{' '}
+                                      {ABBRS[time.timeZone]}
+                                    </React.Fragment>
+                                  ))}
                                 </span>
                               </div>
                             );
