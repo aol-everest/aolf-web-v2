@@ -5,12 +5,42 @@ import {
   AuthenticationDetails,
   CookieStorage,
 } from 'amazon-cognito-identity-js';
+import { parse } from 'tldts';
+
+const isLocal = process.env.NODE_ENV === 'development';
+
+const getParentDomain = () => {
+  // Check if running in a browser
+  if (typeof window === 'undefined') {
+    return null; // Return null on the server side
+  }
+
+  const hostname = window.location.hostname; // e.g., "qa.members.us.artofliving.org"
+  const { domain } = parse(hostname); // Extract the root domain using tldts
+
+  // Fallback logic for cases where parsing fails or domain is undefined
+  if (!domain) {
+    const parts = hostname.split('.');
+    if (parts.length > 2) {
+      return `${parts[parts.length - 2]}.${parts[parts.length - 1]}`; // Fallback to "example.com"
+    }
+    return hostname; // Return hostname as-is
+  }
+
+  if (isLocal || domain === 'herokuapp.com') {
+    return undefined;
+  }
+  return `.${domain}`;
+};
+
+const PARENT_DOMAIN = getParentDomain();
 
 const poolData = {
   UserPoolId: process.env.NEXT_PUBLIC_COGNITO_USERPOOL,
   ClientId: process.env.NEXT_PUBLIC_COGNITO_CLIENT_ID,
   Storage: new CookieStorage({
-    domain: '.artofliving.org',
+    domain: PARENT_DOMAIN,
+    secure: !isLocal,
   }),
 };
 
