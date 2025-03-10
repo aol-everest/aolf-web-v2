@@ -1,6 +1,8 @@
 /* eslint-disable no-useless-escape */
 import { COURSE_TYPES } from '@constants';
 import dayjs from 'dayjs';
+import { parse } from 'tldts';
+import Cookies from 'js-cookie';
 
 export const isSSR = !(
   typeof window !== 'undefined' && window.document?.createElement
@@ -733,4 +735,47 @@ export const nuqsParseJson = {
       return encodeURIComponent('{}');
     }
   },
+};
+
+export const getParentDomain = () => {
+  const isLocal = process.env.NODE_ENV === 'development';
+  // Check if running in a browser
+  if (typeof window === 'undefined') {
+    return null; // Return null on the server side
+  }
+
+  const hostname = window.location.hostname; // e.g., "qa.members.us.artofliving.org"
+  const { domain } = parse(hostname); // Extract the root domain using tldts
+
+  // Fallback logic for cases where parsing fails or domain is undefined
+  if (!domain) {
+    const parts = hostname.split('.');
+    if (parts.length > 2) {
+      return `${parts[parts.length - 2]}.${parts[parts.length - 1]}`; // Fallback to "example.com"
+    }
+    return hostname; // Return hostname as-is
+  }
+
+  if (isLocal || domain === 'herokuapp.com') {
+    return undefined;
+  }
+  return `.${domain}`;
+};
+
+export const clearAuthCookies = async () => {
+  const PARENT_DOMAIN = getParentDomain();
+  const allCookies = Cookies.get();
+
+  await Promise.all(
+    Object.keys(allCookies).map(async (cookieName) => {
+      const match = cookieName.match(
+        /^(CognitoIdentityServiceProvider|Passwordless)\.(.+)$/,
+      );
+      const poolId = match?.[2];
+
+      if (match && poolId !== process.env.NEXT_PUBLIC_COGNITO_CLIENT_ID) {
+        Cookies.remove(cookieName, { path: '/', domain: PARENT_DOMAIN });
+      }
+    }),
+  );
 };
