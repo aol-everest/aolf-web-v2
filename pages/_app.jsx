@@ -81,11 +81,11 @@ Passwordless.configure({
       userVerification: 'required',
     },
   },
-  storage: new CookieStorage({
-    domain: PARENT_DOMAIN,
-    secure: !isLocal,
-  }),
-  // debug: console.debug,
+  // storage: new CookieStorage({
+  //   domain: PARENT_DOMAIN,
+  //   secure: !isLocal,
+  // }),
+  debug: console.debug,
 });
 Amplify.configure({
   Auth: {
