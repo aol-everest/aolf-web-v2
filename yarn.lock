@@ -8839,10 +8839,10 @@ nth-check@^2.0.1:
   dependencies:
     boolbase "^1.0.0"
 
-nuqs@^2.4.0:
-  version "2.4.0"
-  resolved "https://registry.yarnpkg.com/nuqs/-/nuqs-2.4.0.tgz#74001dde07a72cd35972e4bb88cee281a97464cf"
-  integrity sha512-+yOdX0q/wdYlseSYtWC8StDDt2QFcYX/zV5/E67J1cOJo3PR0mggxMx4acZGC0Hu66xFHENKQkqI2zSpH742xQ==
+nuqs@^1.17.4:
+  version "1.20.0"
+  resolved "https://registry.yarnpkg.com/nuqs/-/nuqs-1.20.0.tgz#6db62ad1276d911015248e208dc770e26275cc62"
+  integrity sha512-nGVfv7eWMNxAzOJ9n8ARTo6ObqeEr1ETYZ+dIMCg/VfGUoZoPrqyTOndIvQIgUzK3pIC41mTXg10JJxh9ziEhw==
   dependencies:
     mitt "^3.0.1"
 

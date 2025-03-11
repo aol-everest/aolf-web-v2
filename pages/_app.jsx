@@ -28,7 +28,6 @@ import { Hub } from 'aws-amplify/utils';
 import { useRouter } from 'next/router';
 import { clearInflightOAuth } from '@passwordLess/storage.js';
 import CookieStorage from '@utils/cookieStorage';
-import { NuqsAdapter } from 'nuqs/adapters/next/pages';
 // import { SurveyRequest } from "@components/surveyRequest";
 
 // import TopProgressBar from "@components/topProgressBar";
@@ -230,51 +229,49 @@ function App({ Component, pageProps }) {
     );
   }
   return (
-    <NuqsAdapter>
-      <AnalyticsProvider instance={analytics}>
-        <QueryClientProvider client={queryClient}>
-          <AuthProvider
-            checkUserPendingAction={checkUserPendingAction}
-            userInfo={user}
-            enableLocalUserCache={true}
+    <AnalyticsProvider instance={analytics}>
+      <QueryClientProvider client={queryClient}>
+        <AuthProvider
+          checkUserPendingAction={checkUserPendingAction}
+          userInfo={user}
+          enableLocalUserCache={true}
+        >
+          <Compose
+            components={[
+              GlobalModal,
+              GlobalAlert,
+              GlobalAudioPlayer,
+              GlobalVideoPlayer,
+              GlobalLoading,
+              GlobalBottomBanner,
+              MeditationProvider,
+            ]}
           >
-            <Compose
-              components={[
-                GlobalModal,
-                GlobalAlert,
-                GlobalAudioPlayer,
-                GlobalVideoPlayer,
-                GlobalLoading,
-                GlobalBottomBanner,
-                MeditationProvider,
-              ]}
+            <Layout
+              hideHeader={Component.hideHeader}
+              noHeader={Component.noHeader}
+              hideFooter={Component.hideFooter}
+              wcfHeader={Component.wcfHeader}
+              sideGetStartedAction={Component.sideGetStartedAction}
             >
-              <Layout
-                hideHeader={Component.hideHeader}
-                noHeader={Component.noHeader}
-                hideFooter={Component.hideFooter}
-                wcfHeader={Component.wcfHeader}
-                sideGetStartedAction={Component.sideGetStartedAction}
-              >
-                <DefaultSeo {...SEO} />
-                {/* <UsePagesViews /> */}
-                {/* <TopProgressBar /> */}
-                {isReInstateRequired && (
-                  <ReInstate subscription={reinstateRequiredSubscription} />
-                )}
-                {/* {pendingSurveyInvite && (
+              <DefaultSeo {...SEO} />
+              {/* <UsePagesViews /> */}
+              {/* <TopProgressBar /> */}
+              {isReInstateRequired && (
+                <ReInstate subscription={reinstateRequiredSubscription} />
+              )}
+              {/* {pendingSurveyInvite && (
                 <SurveyRequest surveyInvite={pendingSurveyInvite} />
               )} */}
-                {isCCUpdateRequired && <CardUpdateRequired />}
-                {isPendingAgreement && <PendingAgreement />}
-                <Component {...pageProps} />
-                <ReactQueryDevtools initialIsOpen={false} />
-              </Layout>
-            </Compose>
-          </AuthProvider>
-        </QueryClientProvider>
-      </AnalyticsProvider>
-    </NuqsAdapter>
+              {isCCUpdateRequired && <CardUpdateRequired />}
+              {isPendingAgreement && <PendingAgreement />}
+              <Component {...pageProps} />
+              <ReactQueryDevtools initialIsOpen={false} />
+            </Layout>
+          </Compose>
+        </AuthProvider>
+      </QueryClientProvider>
+    </AnalyticsProvider>
   );
 }
 
