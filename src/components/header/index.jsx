@@ -624,7 +624,6 @@ export const Header = () => {
       }
 
       exploreMenu.submenu = [
-        ...exploreMenu.submenu,
         ...newItems.map((item) => ({
           name: item.title,
           link: item.slug ? `/us-en/explore/${item.slug}` : '#',
