@@ -238,7 +238,18 @@ const AOL_MENU = [
   },
   {
     name: 'Events',
-    link: 'https://event.us.artofliving.org/lp1/unlocking-happiness',
+    submenu: [
+      {
+        name: 'Washigton DC',
+        link: 'https://event.us.artofliving.org/lp1/unlocking-happiness/',
+        props: { target: '_blank' },
+      },
+      {
+        name: 'Buffalo, NY',
+        link: 'https://event.us.artofliving.org/us-en/lp1/journey-within/buffalo/',
+        props: { target: '_blank' },
+      },
+    ],
   },
   {
     name: 'Centers',
@@ -613,7 +624,6 @@ export const Header = () => {
       }
 
       exploreMenu.submenu = [
-        ...exploreMenu.submenu,
         ...newItems.map((item) => ({
           name: item.title,
           link: item.slug ? `/us-en/explore/${item.slug}` : '#',

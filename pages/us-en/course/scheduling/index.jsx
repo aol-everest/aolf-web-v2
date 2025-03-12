@@ -13,8 +13,10 @@ import { useEffectOnce } from 'react-use';
 import { useQuery } from '@tanstack/react-query';
 import { useRouter } from 'next/router';
 import 'flatpickr/dist/flatpickr.min.css';
-import { replaceRouteWithUTMQuery } from '@service';
-import { nuqsParseJson } from '@utils';
+import { replaceRouteWithUTMQuery, pushRouteWithUTMQuery } from '@service';
+import { z } from 'zod';
+
+// import { nuqsParseJson } from '@utils';
 import { Loader } from '@components';
 import WorkshopSelectModal from '@components/scheduleWorkshopModal/ScheduleWorkshopModal';
 
@@ -84,18 +86,17 @@ const Scheduling = ({ initialLocation }) => {
   const [attendeeId] = useQueryState('aid');
   const [locationFilter, setLocationFilter] = useQueryState(
     'location',
-    nuqsParseJson,
+    parseAsJson(),
   );
   const [loading, setLoading] = useState(false);
   const [selectedDates, setSelectedDates] = useQueryState(
     'selectedDate',
-    nuqsParseJson,
+    parseAsJson(),
   );
   const [workshops, setWorkshops] = useState([]);
   const [timezoneFilter, setTimezoneFilter] = useState('');
-  const [currentMonthYear, setCurrentMonthYear] = useQueryState(
-    'ym',
-    parseAsString.withDefault(`${moment().year()}-${moment().month() + 1}`),
+  const [currentMonthYear, setCurrentMonthYear] = useState(
+    `${moment().year()}-${moment().month() + 1}`,
   );
   const [selectedWorkshopId, setSelectedWorkshopId] = useState('');
   const [activeWorkshop, setActiveWorkshop] = useState({});
@@ -208,10 +209,16 @@ const Scheduling = ({ initialLocation }) => {
           path: 'workshopMonthCalendar',
           param,
         });
-        const defaultDate =
-          response.data.length > 0 ? response.data[0].allDates : [];
-        if (fp?.current?.flatpickr && defaultDate.length > 0) {
-          fp.current.flatpickr.jumpToDate(defaultDate[0], true);
+        if (currentMonthYear) {
+          const currentMonthFirstDate = response.data.find((data) => {
+            return moment(data.firstDate).format('YYYY-M') === currentMonthYear;
+          });
+          if (fp?.current?.flatpickr && currentMonthFirstDate) {
+            fp.current.flatpickr.jumpToDate(
+              currentMonthFirstDate.firstDate,
+              true,
+            );
+          }
         }
         return response.data;
       }
@@ -481,9 +488,10 @@ const Scheduling = ({ initialLocation }) => {
   const resetCalender = () => {
     setActiveWorkshop({});
     setSelectedWorkshopId(null);
-    setSelectedDates([]);
+    setSelectedDates(null);
     fp.current.flatpickr.clear();
     fp.current.flatpickr.changeMonth(0);
+
     setCurrentMonthYear(
       `${fp.current.flatpickr.currentYear}-${
         fp.current.flatpickr.currentMonth + 1
@@ -543,29 +551,16 @@ const Scheduling = ({ initialLocation }) => {
   };
 
   const handleNavigateToDetailsPage = (isOnlineCourse, workshopId) => {
-    if (!isOnlineCourse) {
-      replaceRouteWithUTMQuery(router, {
-        pathname: `/us-en/course/scheduling/${workshopId}`,
-        query: {
-          ...router.query,
-          productTypeId: workshopMaster?.productTypeId,
-          courseType: courseTypeFilter,
-          ctype: workshopMaster?.productTypeId,
-          mode: 'inPerson',
-        },
-      });
-    } else {
-      replaceRouteWithUTMQuery(router, {
-        pathname: `/us-en/course/scheduling/${workshopId}`,
-        query: {
-          ...router.query,
-          productTypeId: workshopMaster?.productTypeId,
-          courseType: courseTypeFilter,
-          ctype: workshopMaster?.productTypeId,
-          mode: 'online',
-        },
-      });
-    }
+    pushRouteWithUTMQuery(router, {
+      pathname: `/us-en/course/scheduling/${workshopId}`,
+      query: {
+        ...router.query,
+        productTypeId: workshopMaster?.productTypeId,
+        courseType: courseTypeFilter,
+        ctype: workshopMaster?.productTypeId,
+        mode: isOnlineCourse ? 'online' : 'inPerson',
+      },
+    });
   };
 
   const productTypeId = workshopMaster?.productTypeId;

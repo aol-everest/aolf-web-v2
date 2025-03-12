@@ -14,7 +14,7 @@ export const PageLoading = () => {
           <div className="overlay-loader"></div>
           <div className="loading-text">
             <p className="tw-font-bold tw-py-5">{message}</p>
-            <p>We appreciate your patience during this time!</p>
+            {/* <p>We appreciate your patience during this time!</p> */}
           </div>
         </div>
       </section>

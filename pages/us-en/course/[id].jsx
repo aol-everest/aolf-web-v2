@@ -70,6 +70,11 @@ const SriSriYogaDeepDive = dynamic(() =>
 const MarmaTraining = dynamic(() =>
   import('@components/courseDetails').then((mod) => mod.MarmaTraining),
 );
+
+const SleepAnxietyProtocol = dynamic(() =>
+  import('@components/courseDetails').then((mod) => mod.SleepAnxietyProtocol),
+);
+
 /* export const getServerSideProps = async (context) => {
   const { query, req, res } = context;
   const { id } = query;
@@ -314,6 +319,9 @@ function CourseDetail() {
   const isMarmaTraining =
     COURSE_TYPES.MARMA_TRAINING.value.indexOf(data.productTypeId) >= 0;
 
+  const isSleepAnxietyProtocol =
+    COURSE_TYPES.SLEEP_ANXIETY.value.indexOf(data.productTypeId) >= 0;
+
   const handleRegister =
     (courseType = COURSE_TYPES.SKY_BREATH_MEDITATION.code) =>
     (e) => {
@@ -366,6 +374,9 @@ function CourseDetail() {
     if (isMarmaTraining) {
       return <MarmaTraining {...props} />;
     }
+    if (isSleepAnxietyProtocol) {
+      return <SleepAnxietyProtocol {...props} />;
+    }
     if (isSKYType) {
       if (isHealingBreath) {
         return <HealingBreath {...props} />;
@@ -398,6 +409,7 @@ function CourseDetail() {
     if (isSKYWithSahaj) {
       return <SKYWithSahaj {...props} />;
     }
+
     return <ErrorPage statusCode={404} />;
   };
 

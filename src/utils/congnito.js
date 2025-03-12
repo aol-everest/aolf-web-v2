@@ -6,11 +6,18 @@ import {
   CookieStorage,
 } from 'amazon-cognito-identity-js';
 
+import { getParentDomain } from '@utils';
+
+const isLocal = process.env.NODE_ENV === 'development';
+
+const PARENT_DOMAIN = getParentDomain();
+
 const poolData = {
   UserPoolId: process.env.NEXT_PUBLIC_COGNITO_USERPOOL,
   ClientId: process.env.NEXT_PUBLIC_COGNITO_CLIENT_ID,
   Storage: new CookieStorage({
-    domain: '.artofliving.org',
+    domain: PARENT_DOMAIN,
+    secure: !isLocal,
   }),
 };
 

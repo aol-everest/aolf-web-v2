@@ -15,7 +15,7 @@ import { GlobalVideoPlayer } from '@components/globalVideoPlayer';
 import { AuthProvider, MeditationProvider } from '@contexts';
 import { orgConfig } from '@org';
 import { analytics } from '@service';
-import { Auth, Compose, Talkable, api } from '@utils';
+import { Auth, Compose, Talkable, api, getParentDomain } from '@utils';
 import { DefaultSeo } from 'next-seo';
 import { useEffect, useState } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
@@ -28,8 +28,6 @@ import { Hub } from 'aws-amplify/utils';
 import { useRouter } from 'next/router';
 import { clearInflightOAuth } from '@passwordLess/storage.js';
 import CookieStorage from '@utils/cookieStorage';
-import { parse } from 'tldts';
-import { NuqsAdapter } from 'nuqs/adapters/next/pages';
 // import { SurveyRequest } from "@components/surveyRequest";
 
 // import TopProgressBar from "@components/topProgressBar";
@@ -44,31 +42,6 @@ import '@styles/old-design/style.scss';
 import SEO from '../next-seo.config';
 
 const isLocal = process.env.NODE_ENV === 'development';
-
-const getParentDomain = () => {
-  // Check if running in a browser
-  if (typeof window === 'undefined') {
-    return null; // Return null on the server side
-  }
-
-  const hostname = window.location.hostname; // e.g., "qa.members.us.artofliving.org"
-  const { domain } = parse(hostname); // Extract the root domain using tldts
-
-  // Fallback logic for cases where parsing fails or domain is undefined
-  if (!domain) {
-    const parts = hostname.split('.');
-    if (parts.length > 2) {
-      return `${parts[parts.length - 2]}.${parts[parts.length - 1]}`; // Fallback to "example.com"
-    }
-    return hostname; // Return hostname as-is
-  }
-
-  if (isLocal || domain === 'herokuapp.com') {
-    return undefined;
-  }
-  return `.${domain}`;
-};
-
 const PARENT_DOMAIN = getParentDomain();
 
 Passwordless.configure({
@@ -256,51 +229,49 @@ function App({ Component, pageProps }) {
     );
   }
   return (
-    <NuqsAdapter>
-      <AnalyticsProvider instance={analytics}>
-        <QueryClientProvider client={queryClient}>
-          <AuthProvider
-            checkUserPendingAction={checkUserPendingAction}
-            userInfo={user}
-            enableLocalUserCache={true}
+    <AnalyticsProvider instance={analytics}>
+      <QueryClientProvider client={queryClient}>
+        <AuthProvider
+          checkUserPendingAction={checkUserPendingAction}
+          userInfo={user}
+          enableLocalUserCache={true}
+        >
+          <Compose
+            components={[
+              GlobalModal,
+              GlobalAlert,
+              GlobalAudioPlayer,
+              GlobalVideoPlayer,
+              GlobalLoading,
+              GlobalBottomBanner,
+              MeditationProvider,
+            ]}
           >
-            <Compose
-              components={[
-                GlobalModal,
-                GlobalAlert,
-                GlobalAudioPlayer,
-                GlobalVideoPlayer,
-                GlobalLoading,
-                GlobalBottomBanner,
-                MeditationProvider,
-              ]}
+            <Layout
+              hideHeader={Component.hideHeader}
+              noHeader={Component.noHeader}
+              hideFooter={Component.hideFooter}
+              wcfHeader={Component.wcfHeader}
+              sideGetStartedAction={Component.sideGetStartedAction}
             >
-              <Layout
-                hideHeader={Component.hideHeader}
-                noHeader={Component.noHeader}
-                hideFooter={Component.hideFooter}
-                wcfHeader={Component.wcfHeader}
-                sideGetStartedAction={Component.sideGetStartedAction}
-              >
-                <DefaultSeo {...SEO} />
-                {/* <UsePagesViews /> */}
-                {/* <TopProgressBar /> */}
-                {isReInstateRequired && (
-                  <ReInstate subscription={reinstateRequiredSubscription} />
-                )}
-                {/* {pendingSurveyInvite && (
+              <DefaultSeo {...SEO} />
+              {/* <UsePagesViews /> */}
+              {/* <TopProgressBar /> */}
+              {isReInstateRequired && (
+                <ReInstate subscription={reinstateRequiredSubscription} />
+              )}
+              {/* {pendingSurveyInvite && (
                 <SurveyRequest surveyInvite={pendingSurveyInvite} />
               )} */}
-                {isCCUpdateRequired && <CardUpdateRequired />}
-                {isPendingAgreement && <PendingAgreement />}
-                <Component {...pageProps} />
-                <ReactQueryDevtools initialIsOpen={false} />
-              </Layout>
-            </Compose>
-          </AuthProvider>
-        </QueryClientProvider>
-      </AnalyticsProvider>
-    </NuqsAdapter>
+              {isCCUpdateRequired && <CardUpdateRequired />}
+              {isPendingAgreement && <PendingAgreement />}
+              <Component {...pageProps} />
+              <ReactQueryDevtools initialIsOpen={false} />
+            </Layout>
+          </Compose>
+        </AuthProvider>
+      </QueryClientProvider>
+    </AnalyticsProvider>
   );
 }
 

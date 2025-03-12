@@ -467,6 +467,7 @@ const Course = ({ centerDetail }) => {
     setCourseModeFilter(null);
     setOnlyWeekend(null);
     setTimeZoneFilter(null);
+    setSearchKey('');
     setInstructorFilter(null);
     setFilterStartEndDate(null);
     setCourseTypeFilter(null);
@@ -504,6 +505,7 @@ const Course = ({ centerDetail }) => {
         if (value) {
           setInstructorFilter(value);
         } else {
+          setSearchKey('');
           setInstructorFilter(null);
         }
         break;
@@ -526,6 +528,7 @@ const Course = ({ centerDetail }) => {
         setTimeZoneFilter(null);
         break;
       case 'instructorFilter':
+        setSearchKey('');
         setInstructorFilter(null);
         break;
     }
@@ -550,6 +553,7 @@ const Course = ({ centerDetail }) => {
         if (value) {
           setInstructorFilter(value);
         } else {
+          setSearchKey('');
           setInstructorFilter(null);
         }
         break;

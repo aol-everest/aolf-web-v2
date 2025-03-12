@@ -9,7 +9,7 @@ import React, {
 } from 'react';
 import { Hub } from 'aws-amplify/utils';
 import { signOut as amplifySignOut } from 'aws-amplify/auth';
-import { Auth } from '@utils';
+import { Auth, clearAuthCookies } from '@utils';
 import { signOut } from '@passwordLess/common.js';
 import { parseJwtPayload, setTimeoutWallClock } from '@passwordLess/util.js';
 import { signInWithLink, requestSignInLink } from '@passwordLess/magic-link.js';
@@ -76,6 +76,7 @@ export const AuthProvider = ({
       setError(null);
       switch (payload.event) {
         case 'signedIn':
+          await clearAuthCookies();
           console.log('user have been signedIn successfully.');
           await fetchCurrentUser();
           break;

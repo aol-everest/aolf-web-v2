@@ -605,6 +605,7 @@ const Meetup = ({ centerDetail }) => {
   const onClearAllFilter = () => {
     setMeetupModeFilter(null);
     setTimeZoneFilter(null);
+    setSearchKey('');
     setInstructorFilter(null);
     setFilterStartEndDate(null);
     setMeetupTypeFilter(null);
@@ -675,6 +676,7 @@ const Meetup = ({ centerDetail }) => {
         }, 0);
         break;
       case 'instructorFilter':
+        setSearchKey('');
         setInstructorFilter(null);
         break;
     }
