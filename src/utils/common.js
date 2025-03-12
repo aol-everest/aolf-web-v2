@@ -763,19 +763,31 @@ export const getParentDomain = () => {
 };
 
 export const clearAuthCookies = async () => {
-  const PARENT_DOMAIN = getParentDomain();
-  const allCookies = Cookies.get();
+  try {
+    const PARENT_DOMAIN = getParentDomain();
+    const allCookies = Cookies.get();
+    const poolId = process.env.NEXT_PUBLIC_COGNITO_CLIENT_ID; // Assuming currentPoolId is defined
+    const regex = new RegExp(
+      `^(CognitoIdentityServiceProvider|Passwordless)\\.(?!${poolId}\\b).+$`,
+    );
 
-  await Promise.all(
-    Object.keys(allCookies).map(async (cookieName) => {
-      const match = cookieName.match(
-        /^(CognitoIdentityServiceProvider|Passwordless)\.(.+)$/,
-      );
-      const poolId = match?.[2];
+    const cookieNames = Object.keys(allCookies).filter((cookieName) =>
+      regex.test(cookieName),
+    );
 
-      if (match && poolId !== process.env.NEXT_PUBLIC_COGNITO_CLIENT_ID) {
-        Cookies.remove(cookieName, { path: '/', domain: PARENT_DOMAIN });
-      }
-    }),
-  );
+    await Promise.all(
+      cookieNames.map(async (cookieName) => {
+        try {
+          console.log(
+            `Removing cookie: ${cookieName}, Value: ${allCookies[cookieName]}`,
+          );
+          Cookies.remove(cookieName, { path: '/', domain: PARENT_DOMAIN });
+        } catch (error) {
+          console.error(`Failed to remove cookie: ${cookieName}`, error);
+        }
+      }),
+    );
+  } catch (error) {
+    console.error('Error clearing auth cookies:', error);
+  }
 };

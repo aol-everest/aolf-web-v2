@@ -595,11 +595,11 @@ export const SleepAnxietyProtocol = ({
           </div>
           <div class="video-science">
             <Vimeo
-              video="1056932277"
+              video="51cba0dcaa"
               autoplay
               width="690"
               height="387"
-              title="Arun Yognidra, MD"
+              title="Benefits of Yoga Nidra"
             />
           </div>
           <div class="science-features">
