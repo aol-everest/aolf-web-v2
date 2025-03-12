@@ -80,7 +80,7 @@ const fillDefaultTimeZone = () => {
   if (TIME_ZONE[userTimeZoneAbbreviation.toUpperCase()]) {
     return userTimeZoneAbbreviation.toUpperCase();
   }
-  return null;
+  return 'EST';
 };
 
 const parseAsStartEndDate = createParser({
