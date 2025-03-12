@@ -109,6 +109,9 @@ export const getServerSideProps = async (context) => {
       props: {},
     };
   }
+  return {
+    props: {},
+  };
 };
 
 function LandingPage() {
