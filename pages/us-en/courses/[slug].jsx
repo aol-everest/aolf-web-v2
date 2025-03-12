@@ -63,7 +63,7 @@ const fillDefaultTimeZone = () => {
   if (TIME_ZONE[userTimeZoneAbbreviation.toUpperCase()]) {
     return userTimeZoneAbbreviation.toUpperCase();
   }
-  return null;
+  return 'EST';
 };
 
 const parseAsStartEndDate = createParser({
@@ -512,8 +512,6 @@ const Course = () => {
     'instructor',
     nuqsParseJson,
   );
-
-  console.log('instructorFilter', instructorFilter);
 
   const [cityFilter] = useQueryState('city');
   const [centerFilter] = useQueryState('center');
