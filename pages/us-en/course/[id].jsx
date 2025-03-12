@@ -228,7 +228,8 @@ function CourseDetail() {
       !isSKYWithSahaj &&
       !isSriSriYogaDeepDiveType &&
       !isMarmaTraining &&
-      !isSkyResilienceTrainingProgram
+      !isSkyResilienceTrainingProgram &&
+      !isSleepAnxietyProtocol
     ) {
       pushRouteWithUTMQuery(router, {
         pathname: `/us-en/course/checkout/${data.id}`,
