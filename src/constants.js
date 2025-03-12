@@ -18,7 +18,15 @@ export const TIME_ZONE = {
     name: 'Eastern',
     value: 'EST',
   },
+  EDT: {
+    name: 'Eastern',
+    value: 'EST',
+  },
   CST: {
+    name: 'Central',
+    value: 'CST',
+  },
+  CDT: {
     name: 'Central',
     value: 'CST',
   },
@@ -26,11 +34,23 @@ export const TIME_ZONE = {
     name: 'Mountain',
     value: 'MST',
   },
+  MDT: {
+    name: 'Mountain',
+    value: 'MST',
+  },
   PST: {
     name: 'Pacific',
     value: 'PST',
   },
+  PDT: {
+    name: 'Pacific',
+    value: 'PST',
+  },
   HST: {
+    name: 'Hawaii',
+    value: 'HST',
+  },
+  HDT: {
     name: 'Hawaii',
     value: 'HST',
   },
