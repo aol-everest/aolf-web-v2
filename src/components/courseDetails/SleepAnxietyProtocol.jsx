@@ -591,13 +591,14 @@ export const SleepAnxietyProtocol = ({
             A glimpse into a sleep-transforming practice
           </div>
           <div class="video-science">
-            <Vimeo
-              video="51cba0dcaa"
-              autoplay
+            <iframe
               width="690"
               height="387"
-              title="Benefits of Yoga Nidra"
-            />
+              src="https://player.vimeo.com/video/1056932277"
+              frameborder="0"
+              allow="autoplay; encrypted-media"
+              allowfullscreen=""
+            ></iframe>
           </div>
           <div class="science-features">
             <div class="feature-box">

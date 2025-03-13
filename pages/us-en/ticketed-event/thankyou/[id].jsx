@@ -142,14 +142,14 @@ const TicketCongratulations = () => {
     (item) => item?.pricingTierName,
   );
   const uniqueTicketTiers = [...new Set(ticketTiers)];
-  let tickets = attendeeDetail.attendees;
-  if (!attendeeDetail.ticketedEvent.isAllAttedeeInformationRequired) {
-    tickets = [
-      attendeeDetail.attendees.find(
-        (obj) => obj.firstName && obj.lastName && obj.email,
-      ),
-    ];
-  }
+  const tickets = attendeeDetail.attendees;
+  // if (!attendeeDetail.ticketedEvent.isAllAttedeeInformationRequired) {
+  //   tickets = [
+  //     attendeeDetail.attendees.find(
+  //       (obj) => obj.firstName && obj.lastName && obj.email,
+  //     ),
+  //   ];
+  // }
 
   return (
     <main className="course-filter calendar-online">
@@ -211,9 +211,7 @@ const TicketCongratulations = () => {
                               {tickets.length > 1 ? `#${index + 1}` : ''}
                             </div>
                             <div className="ticket-type">
-                              {attendeeDetail.ticketedEvent
-                                .isAllAttedeeInformationRequired &&
-                                item.pricingTierName}
+                              {item.pricingTierName}
                             </div>
                           </div>
                           <div className="ticket-body">

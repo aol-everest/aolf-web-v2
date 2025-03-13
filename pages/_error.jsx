@@ -2,16 +2,22 @@ import * as Sentry from '@sentry/nextjs';
 import NextErrorComponent from 'next/error';
 import Head from 'next/head';
 import Link from 'next/link';
-import { useState } from 'react';
+import { useState, memo } from 'react';
+import PropTypes from 'prop-types';
 
-const ErrorIcon = ({ statusCode }) => {
+const ErrorIcon = memo(({ statusCode }) => {
   return (
     <img
       src="/img/med-error.svg"
       className="tw-w-24 tw-h-24"
-      alt={statusCode}
+      alt={`Error ${statusCode}`}
     />
   );
+});
+
+ErrorIcon.displayName = 'ErrorIcon';
+ErrorIcon.propTypes = {
+  statusCode: PropTypes.number.isRequired,
 };
 
 const ErrorDetails = ({ err }) => {
@@ -23,13 +29,16 @@ const ErrorDetails = ({ err }) => {
     <div className="tw-mt-6 tw-w-full tw-max-w-2xl">
       <button
         onClick={() => setIsExpanded(!isExpanded)}
-        className="tw-flex tw-items-center tw-text-sm tw-text-gray-600 hover:tw-text-gray-800 tw-transition-colors"
+        className="tw-flex tw-items-center tw-text-xs tw-text-gray-500 hover:tw-text-gray-700 tw-transition-colors tw-px-2 tw-py-1 tw-rounded-md hover:tw-bg-gray-50"
+        aria-label="Toggle error details"
+        aria-expanded={isExpanded}
       >
         <svg
-          className={`tw-w-4 tw-h-4 tw-mr-2 tw-transition-transform ${isExpanded ? 'tw-rotate-90' : ''}`}
+          className={`tw-w-3 tw-h-3 tw-mr-1.5 tw-transition-transform ${isExpanded ? 'tw-rotate-90' : ''}`}
           viewBox="0 0 24 24"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
+          aria-hidden="true"
         >
           <path
             d="M9 18L15 12L9 6"
@@ -39,14 +48,18 @@ const ErrorDetails = ({ err }) => {
             strokeLinejoin="round"
           />
         </svg>
-        View error details
+        Technical Details
       </button>
 
       {isExpanded && (
-        <div className="tw-mt-2 tw-p-4 tw-bg-gray-50 tw-rounded-lg tw-font-mono tw-text-xs tw-overflow-auto">
-          <div className="tw-text-red-500">{err.message}</div>
+        <div
+          className="tw-mt-2 tw-p-3 tw-bg-gray-50/50 tw-rounded-md tw-font-mono tw-text-xs tw-overflow-auto tw-border tw-border-gray-100"
+          role="region"
+          aria-label="Error details"
+        >
+          <div className="tw-text-red-600 tw-font-medium">{err.message}</div>
           {err.stack && (
-            <pre className="tw-mt-2 tw-text-gray-600 tw-whitespace-pre-wrap">
+            <pre className="tw-mt-2 tw-text-gray-600 tw-whitespace-pre-wrap tw-text-[11px]">
               {err.stack}
             </pre>
           )}
@@ -54,6 +67,13 @@ const ErrorDetails = ({ err }) => {
       )}
     </div>
   );
+};
+
+ErrorDetails.propTypes = {
+  err: PropTypes.shape({
+    message: PropTypes.string,
+    stack: PropTypes.string,
+  }),
 };
 
 const ServerError = ({ err }) => {
@@ -79,18 +99,20 @@ const ServerError = ({ err }) => {
           <button
             onClick={() => window.history.back()}
             className="btn-primary tw-max-w-[160px] tw-w-full tw-text-center !tw-p-2"
+            aria-label="Go back to previous page"
           >
             Go Back
           </button>
           <Link
             href="/"
             className="btn-secondary tw-max-w-[160px] tw-w-full tw-text-center !tw-p-2 tw-justify-center"
+            aria-label="Return to home page"
           >
             Return Home
           </Link>
         </div>
 
-        {process.env.NODE_ENV !== 'production' && <ErrorDetails err={err} />}
+        <ErrorDetails err={err} />
 
         <div className="tw-mt-8 tw-text-sm tw-text-gray-500">
           <p>You might want to check out:</p>
@@ -118,6 +140,13 @@ const ServerError = ({ err }) => {
       </div>
     </div>
   );
+};
+
+ServerError.propTypes = {
+  err: PropTypes.shape({
+    message: PropTypes.string,
+    stack: PropTypes.string,
+  }),
 };
 
 const MyError = ({ statusCode, hasGetInitialPropsRun, err }) => {
@@ -166,12 +195,14 @@ const MyError = ({ statusCode, hasGetInitialPropsRun, err }) => {
             <button
               onClick={() => window.history.back()}
               className="btn-primary tw-max-w-[160px] tw-w-full tw-text-center !tw-p-2"
+              aria-label="Go back to previous page"
             >
               Go Back
             </button>
             <Link
               href="/"
               className="btn-secondary tw-max-w-[160px] tw-w-full tw-text-center !tw-p-2 tw-justify-center"
+              aria-label="Return to home page"
             >
               Return Home
             </Link>
@@ -208,6 +239,15 @@ const MyError = ({ statusCode, hasGetInitialPropsRun, err }) => {
   );
 };
 
+MyError.propTypes = {
+  statusCode: PropTypes.number.isRequired,
+  hasGetInitialPropsRun: PropTypes.bool.isRequired,
+  err: PropTypes.shape({
+    message: PropTypes.string,
+    stack: PropTypes.string,
+  }),
+};
+
 MyError.getInitialProps = async (contextData) => {
   const { res, err, asPath } = contextData;
 
@@ -225,13 +265,11 @@ MyError.getInitialProps = async (contextData) => {
     errorInitialProps.statusCode = 500;
   }
 
-  // Only include error message in non-production environments
-  if (process.env.NODE_ENV !== 'production') {
-    errorInitialProps.err = {
-      message: err?.message,
-      stack: err?.stack,
-    };
-  }
+  // Include error message in all environments
+  errorInitialProps.err = {
+    message: err?.message,
+    stack: err?.stack,
+  };
 
   errorInitialProps.hasGetInitialPropsRun = true;
 
