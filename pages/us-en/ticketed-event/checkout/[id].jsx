@@ -416,6 +416,9 @@ const TicketCheckoutForm = ({ event }) => {
       return;
     }
     let finalPrice = totalPrice;
+    if (totalDiscount > 0) {
+      finalPrice = totalPrice - totalDiscount;
+    }
     // if (values.comboDetailId && values.comboDetailId !== workshop.id) {
     //   const selectedBundle = workshop.availableBundles.find(
     //     (b) => b.comboProductSfid === values.comboDetailId,

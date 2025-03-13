@@ -19,6 +19,7 @@ export const StripeExpressCheckoutTicket = ({
   total = 1,
   selectedTickets,
   nextPageUrl = '/us-en/ticketed-event/thankyou',
+  discountResponse,
 }) => {
   const stripePromise = loadStripe(workshop.publishableKey);
   const elementsOptions = {
@@ -40,6 +41,7 @@ export const StripeExpressCheckoutTicket = ({
         total={total}
         selectedTickets={selectedTickets}
         nextPageUrl={nextPageUrl}
+        discountResponse={discountResponse}
       />
     </Elements>
   );
@@ -57,7 +59,13 @@ const options = {
   paymentMethodOrder: ['apple_pay', 'google_pay'],
 };
 
-const CheckoutPage = ({ workshop, total, selectedTickets, nextPageUrl }) => {
+const CheckoutPage = ({
+  workshop,
+  total,
+  selectedTickets,
+  nextPageUrl,
+  discountResponse,
+}) => {
   const stripe = useStripe();
   const elements = useElements();
   const router = useRouter();
@@ -107,6 +115,7 @@ const CheckoutPage = ({ workshop, total, selectedTickets, nextPageUrl }) => {
         path: 'createIntentForExpressCheckout',
         body: {
           shoppingRequest: {
+            couponCode: discountResponse?.couponCode || '',
             products: {
               productSfId: workshop.id,
               productType: 'ticketed_event',
