@@ -98,7 +98,7 @@ cognitoUserPoolsTokenProvider.setKeyValueStorage(
   }),
 );
 
-function App({ Component, pageProps }) {
+function App({ Component, pageProps, err }) {
   const router = useRouter();
   const [user, setUser] = useState({ isAuthenticated: false, profile: {} });
   const [loading, setLoading] = useState(true);
@@ -265,7 +265,7 @@ function App({ Component, pageProps }) {
               )} */}
               {isCCUpdateRequired && <CardUpdateRequired />}
               {isPendingAgreement && <PendingAgreement />}
-              <Component {...pageProps} />
+              <Component {...pageProps} err={err} />
               <ReactQueryDevtools initialIsOpen={false} />
             </Layout>
           </Compose>
@@ -274,5 +274,10 @@ function App({ Component, pageProps }) {
     </AnalyticsProvider>
   );
 }
+
+App.getInitialProps = async (appContext) => {
+  const appProps = await appContext.Component.getInitialProps?.(appContext.ctx);
+  return { ...appProps, err: appContext.ctx.err || null };
+};
 
 export default App;
