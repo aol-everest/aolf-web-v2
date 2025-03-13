@@ -275,9 +275,4 @@ function App({ Component, pageProps, err }) {
   );
 }
 
-App.getInitialProps = async (appContext) => {
-  const appProps = await appContext.Component.getInitialProps?.(appContext.ctx);
-  return { ...appProps, err: appContext.ctx.err || null };
-};
-
 export default App;
