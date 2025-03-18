@@ -411,14 +411,13 @@ const TicketCheckoutForm = ({ event }) => {
     }
   };
 
+  const finalPrice = totalPrice - totalDiscount;
+
   const formikOnChange = (values) => {
     if (!stripe || !elements) {
       return;
     }
-    let finalPrice = totalPrice;
-    if (totalDiscount > 0) {
-      finalPrice = totalPrice - totalDiscount;
-    }
+
     // if (values.comboDetailId && values.comboDetailId !== workshop.id) {
     //   const selectedBundle = workshop.availableBundles.find(
     //     (b) => b.comboProductSfid === values.comboDetailId,
@@ -510,9 +509,7 @@ const TicketCheckoutForm = ({ event }) => {
 
         <div className="total">
           <div className="label">Total:</div>
-          <div className="value">
-            ${(parseFloat(totalPrice) - totalDiscount).toFixed(2)}
-          </div>
+          <div className="value">${parseFloat(finalPrice).toFixed(2)}</div>
         </div>
       </>
     );
@@ -690,7 +687,7 @@ const TicketCheckoutForm = ({ event }) => {
                             </div>
                           </div>
                           <div className="section-box">
-                            {totalPrice > 0 && (
+                            {finalPrice > 0 && (
                               <>
                                 <h2 className="section__title d-flex">
                                   Pay with
