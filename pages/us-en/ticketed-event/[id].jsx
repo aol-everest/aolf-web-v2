@@ -12,7 +12,7 @@ import { pushRouteWithUTMQuery } from '@service';
 import { StripeExpressCheckoutTicket } from '@components/checkout/StripeExpressCheckoutTicket';
 import { Loader } from '@components/loader';
 import { useGlobalAlertContext } from '@contexts';
-import { useQueryState, parseAsJson } from 'nuqs';
+import { useQueryState, parseAsJson, parseAsString } from 'nuqs';
 import ErrorPage from 'next/error';
 import { PageLoading } from '@components';
 import { z } from 'zod';
@@ -77,6 +77,10 @@ function TicketedEvent() {
   const [selectedTickets, setSelectedTickets] = useQueryState(
     'ticket',
     parseAsJson(ticketSchema.parse).withDefault({}),
+  );
+  const [couponCode, setCouponCode] = useQueryState(
+    'couponCode',
+    parseAsString,
   );
   const { showAlert } = useGlobalAlertContext();
   const { id: eventId } = router.query;
@@ -222,6 +226,10 @@ function TicketedEvent() {
 
     let queryParams = { ticket: JSON.stringify(selectedTickets) };
 
+    if (couponCode) {
+      queryParams = { ...queryParams, couponCode };
+    }
+
     const showAddressFields = searchParams.get('showAddressFields');
     if (showAddressFields) {
       queryParams = { ...queryParams, showAddressFields };
@@ -235,6 +243,7 @@ function TicketedEvent() {
 
   const applyDiscount = (discount) => {
     setDiscountResponse(discount);
+    setCouponCode(discount?.couponCode || null);
   };
 
   const ticketsPayload = pricingTiersLocal.map((item) => {
@@ -310,7 +319,7 @@ function TicketedEvent() {
   return (
     <Formik
       initialValues={{
-        couponCode: '',
+        couponCode: couponCode || '',
       }}
       validationSchema={Yup.object().shape({})}
       innerRef={formRef}

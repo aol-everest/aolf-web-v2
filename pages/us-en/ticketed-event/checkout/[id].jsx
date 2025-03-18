@@ -19,7 +19,12 @@ import {
   useElements,
   useStripe,
 } from '@stripe/react-stripe-js';
-import { useQueryState, parseAsJson, parseAsBoolean } from 'nuqs';
+import {
+  useQueryState,
+  parseAsJson,
+  parseAsBoolean,
+  parseAsString,
+} from 'nuqs';
 import { Auth, api, phoneRegExp, tConvert } from '@utils';
 import { UserInfoFormNewCheckout } from '@components/checkout';
 import dayjs from 'dayjs';
@@ -148,6 +153,10 @@ const TicketCheckoutForm = ({ event }) => {
   const { showModal } = useGlobalModalContext();
   const stripe = useStripe();
   const formRef = useRef();
+  const [couponCode, setCouponCode] = useQueryState(
+    'couponCode',
+    parseAsString,
+  );
 
   const elements = useElements();
   const { showAlert } = useGlobalAlertContext();
@@ -477,6 +486,7 @@ const TicketCheckoutForm = ({ event }) => {
 
   const applyDiscount = (discount) => {
     setDiscountResponse(discount);
+    setCouponCode(discount?.couponCode || null);
   };
 
   const renderSummary = () => {
@@ -542,9 +552,7 @@ const TicketCheckoutForm = ({ event }) => {
           contactCity: personMailingCity || '',
           contactState: personMailingState || '',
           contactZip: personMailingPostalCode || '',
-          couponCode: discountResponse?.couponCode
-            ? discountResponse.couponCode
-            : '',
+          couponCode: couponCode || '',
           questionnaire: questionnaireArray,
           ppaAgreement: false,
           contactPhone: personMobilePhone,
