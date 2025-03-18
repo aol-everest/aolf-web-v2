@@ -108,6 +108,11 @@
     height: 45px;
     width: 115px;
 
+    &:has(img[src='/img/PWHT-logo.png']) {
+      width: 180px;
+      height: auto;
+    }
+
     &__image {
       width: 100%;
       height: 100%;
