@@ -17,6 +17,7 @@ import ErrorPage from 'next/error';
 import { PageLoading } from '@components';
 import { z } from 'zod';
 import { DiscountInputNew } from '@components/discountInputNew';
+import { AiTwotoneAlert } from 'react-icons/ai';
 
 const ticketSchema = z.record(z.string(), z.number());
 
@@ -66,6 +67,15 @@ const TicketLineItem = ({ item, handleTicketSelect, selectedTickets }) => {
           ${item.price.toFixed(2)}
           {/* <span>+ $3.31 Fee</span> */}
         </p>
+      </div>
+      <div className="tickets-modal__card-left tw-mt-2">
+        {item.increasingBy && (
+          <p className="tw-text-sm tw-text-slate-500">
+            {/* add alert icon here using react icon */}
+            <AiTwotoneAlert className="tw-w-4 tw-h-4 tw-mr-2 tw-mb-1" />
+            Fee increases by ${item.increasingFee} starting {item.increasingBy}
+          </p>
+        )}
       </div>
     </div>
   );
