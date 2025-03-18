@@ -101,12 +101,7 @@ export const SleepAnxietyProtocol = ({
                 breath’s full potential
               </li>
             </ul>
-            <div class="banner-actions">
-              <button class="banner-button btn-primary">Get Started</button>
-              <button class="banner-button btn-secondary">
-                Course Overview
-              </button>
-            </div>
+
             <div class="banner-note">Available online!</div>
           </div>
         </div>
@@ -583,7 +578,9 @@ export const SleepAnxietyProtocol = ({
             Get your Z’s—<em>naturally.</em>
           </div>
           <div class="feature-action">
-            <button class="feature-button">Start Now</button>
+            <button class="feature-button" onClick={handleRegister()}>
+              Start Now
+            </button>
           </div>
         </div>
       </section>
@@ -594,13 +591,14 @@ export const SleepAnxietyProtocol = ({
             A glimpse into a sleep-transforming practice
           </div>
           <div class="video-science">
-            <Vimeo
-              video="1056932277"
-              autoplay
+            <iframe
               width="690"
               height="387"
-              title="Arun Yognidra, MD"
-            />
+              src="https://player.vimeo.com/video/1056932277"
+              frameborder="0"
+              allow="autoplay; encrypted-media"
+              allowfullscreen=""
+            ></iframe>
           </div>
           <div class="science-features">
             <div class="feature-box">
@@ -759,7 +757,9 @@ export const SleepAnxietyProtocol = ({
             )}
 
             <div class="box-action">
-              <button class="box-button">Sleep More. Stress Less</button>
+              <button class="box-button" onClick={handleRegister()}>
+                Sleep More. Stress Less
+              </button>
             </div>
           </div>
         </div>
@@ -877,7 +877,9 @@ export const SleepAnxietyProtocol = ({
                 Protocol
               </div>
               <div class="reset-system-action">
-                <button class="reset-system-button">Start Now</button>
+                <button class="reset-system-button" onClick={handleRegister()}>
+                  Start Now
+                </button>
               </div>
             </div>
           </div>

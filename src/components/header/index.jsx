@@ -611,6 +611,8 @@ export const Header = () => {
         return currentMenu;
       }
 
+      exploreMenu.submenu = [];
+
       // Check if items already exist to prevent duplicates
       const existingTitles = new Set(
         exploreMenu.submenu.map((item) => item.name),

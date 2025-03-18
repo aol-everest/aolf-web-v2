@@ -31,7 +31,7 @@ export default class CookieStorage {
       }
       this.sameSite = data.sameSite.toLowerCase();
     } else {
-      this.sameSite = 'none';
+      this.sameSite = 'lax';
     }
   }
 

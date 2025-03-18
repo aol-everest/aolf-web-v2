@@ -3,7 +3,7 @@ import { Formik } from 'formik';
 import { useRouter } from 'next/router';
 import { useSearchParams } from 'next/navigation';
 import * as Yup from 'yup';
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
@@ -12,10 +12,11 @@ import { pushRouteWithUTMQuery } from '@service';
 import { StripeExpressCheckoutTicket } from '@components/checkout/StripeExpressCheckoutTicket';
 import { Loader } from '@components/loader';
 import { useGlobalAlertContext } from '@contexts';
-import { useQueryState, parseAsJson } from 'nuqs';
+import { useQueryState, parseAsJson, parseAsString } from 'nuqs';
 import ErrorPage from 'next/error';
 import { PageLoading } from '@components';
 import { z } from 'zod';
+import { DiscountInputNew } from '@components/discountInputNew';
 
 const ticketSchema = z.record(z.string(), z.number());
 
@@ -77,9 +78,14 @@ function TicketedEvent() {
     'ticket',
     parseAsJson(ticketSchema.parse).withDefault({}),
   );
+  const [couponCode, setCouponCode] = useQueryState(
+    'couponCode',
+    parseAsString,
+  );
   const { showAlert } = useGlobalAlertContext();
   const { id: eventId } = router.query;
   const formRef = useRef();
+  const [discountResponse, setDiscountResponse] = useState(null);
 
   const {
     data: event,
@@ -108,6 +114,7 @@ function TicketedEvent() {
     eventImageUrl,
     isEventFull,
     mode,
+    id: productId,
     isLocationEmpty,
     locationStreet,
     locationCity,
@@ -124,6 +131,7 @@ function TicketedEvent() {
     phone1,
     email,
     notes,
+    addOnProducts,
   } = event || {};
 
   useEffect(() => {
@@ -218,6 +226,10 @@ function TicketedEvent() {
 
     let queryParams = { ticket: JSON.stringify(selectedTickets) };
 
+    if (couponCode) {
+      queryParams = { ...queryParams, couponCode };
+    }
+
     const showAddressFields = searchParams.get('showAddressFields');
     if (showAddressFields) {
       queryParams = { ...queryParams, showAddressFields };
@@ -228,6 +240,20 @@ function TicketedEvent() {
       query: queryParams,
     });
   };
+
+  const applyDiscount = (discount) => {
+    setDiscountResponse(discount);
+    setCouponCode(discount?.couponCode || null);
+  };
+
+  const ticketsPayload = pricingTiersLocal.map((item) => {
+    return {
+      pricingTierId: item.pricingTierId,
+      numberOfTickets: item.numberOfTickets,
+    };
+  });
+
+  const { totalDiscount = 0 } = discountResponse || {};
 
   const renderSummary = () => {
     return (
@@ -251,9 +277,18 @@ function TicketedEvent() {
           </div>
         </div>
 
+        {totalDiscount > 0 && (
+          <div className="tickets">
+            <div className="label">Discount(-)</div>
+            <div className="value">${parseFloat(totalDiscount).toFixed(2)}</div>
+          </div>
+        )}
+
         <div className="total">
           <div className="label">Total:</div>
-          <div className="value">${parseFloat(total).toFixed(2)}</div>
+          <div className="value">
+            ${(parseFloat(total) - totalDiscount).toFixed(2)}
+          </div>
         </div>
       </>
     );
@@ -284,7 +319,7 @@ function TicketedEvent() {
   return (
     <Formik
       initialValues={{
-        couponCode: '',
+        couponCode: couponCode || '',
       }}
       validationSchema={Yup.object().shape({})}
       innerRef={formRef}
@@ -432,13 +467,42 @@ function TicketedEvent() {
 
                       <div className="tickets-modal__footer">
                         {event && total > 0 && (
-                          <div className="tickets-modal__footer-button-link">
-                            <StripeExpressCheckoutTicket
-                              workshop={event}
-                              total={total}
-                              selectedTickets={selectedTickets}
-                            />
-                          </div>
+                          <>
+                            <div className="tickets-modal__promo tw-mb-4">
+                              <div className="tickets-modal__promo-wrapper">
+                                <div className="section__body">
+                                  <div className="form-item required">
+                                    <DiscountInputNew
+                                      placeholder="Discount Code"
+                                      formikProps={formikProps}
+                                      formikKey="couponCode"
+                                      product={productId}
+                                      applyDiscount={applyDiscount}
+                                      addOnProducts={addOnProducts}
+                                      containerClass={`tickets-modal__input-label tickets-modal__input-label--top`}
+                                      selectedTickets={selectedTickets}
+                                      productType="ticketed_event"
+                                      inputClass="tickets-modal__input"
+                                      tagClass="tickets-modal__input ticket-discount"
+                                      ticketsPayload={ticketsPayload}
+                                    ></DiscountInputNew>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <div className="tickets-modal__footer-button-link">
+                              <StripeExpressCheckoutTicket
+                                discountResponse={discountResponse}
+                                workshop={event}
+                                total={
+                                  totalDiscount > 0
+                                    ? total - totalDiscount
+                                    : total
+                                }
+                                selectedTickets={selectedTickets}
+                              />
+                            </div>
+                          </>
                         )}
                         <button
                           id="next-step"
