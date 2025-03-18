@@ -346,7 +346,7 @@ const Checkout = () => {
   const renderPaymentForm = () => {
     if (isHBCheckoutPage) {
       return (
-        <div className="order">
+        <div className="order hb-checkout-page">
           <PaymentFormHB
             isStripeIntentPayment={isStripeIntentPayment}
             workshop={workshop}
@@ -362,7 +362,7 @@ const Checkout = () => {
     }
     if (isSkyHappinessRetreat) {
       return (
-        <div className="order">
+        <div className="order sky-checkout-page">
           <PaymentFormGeneric
             isStripeIntentPayment={isStripeIntentPayment}
             workshop={workshop}
@@ -377,7 +377,7 @@ const Checkout = () => {
       );
     }
     return (
-      <div className="order">
+      <div className="order eec-checkout-page">
         <PaymentFormNew
           isStripeIntentPayment={isStripeIntentPayment}
           workshop={workshop}
