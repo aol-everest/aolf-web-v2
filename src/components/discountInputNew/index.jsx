@@ -180,7 +180,7 @@ export const DiscountInputNew = ({
           onChange={onChangeAction}
           onBlur={applyCoupon}
           onKeyDown={onKeyDown}
-          placeholder="Add code"
+          placeholder="Add code & press Enter"
           disabled={loading}
         />
       )}
