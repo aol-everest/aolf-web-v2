@@ -19,7 +19,12 @@ import {
   useElements,
   useStripe,
 } from '@stripe/react-stripe-js';
-import { useQueryState, parseAsJson, parseAsBoolean } from 'nuqs';
+import {
+  useQueryState,
+  parseAsJson,
+  parseAsBoolean,
+  parseAsString,
+} from 'nuqs';
 import { Auth, api, phoneRegExp, tConvert } from '@utils';
 import { UserInfoFormNewCheckout } from '@components/checkout';
 import dayjs from 'dayjs';
@@ -148,6 +153,10 @@ const TicketCheckoutForm = ({ event }) => {
   const { showModal } = useGlobalModalContext();
   const stripe = useStripe();
   const formRef = useRef();
+  const [couponCode, setCouponCode] = useQueryState(
+    'couponCode',
+    parseAsString,
+  );
 
   const elements = useElements();
   const { showAlert } = useGlobalAlertContext();
@@ -411,14 +420,13 @@ const TicketCheckoutForm = ({ event }) => {
     }
   };
 
+  const finalPrice = totalPrice - totalDiscount;
+
   const formikOnChange = (values) => {
     if (!stripe || !elements) {
       return;
     }
-    let finalPrice = totalPrice;
-    if (totalDiscount > 0) {
-      finalPrice = totalPrice - totalDiscount;
-    }
+
     // if (values.comboDetailId && values.comboDetailId !== workshop.id) {
     //   const selectedBundle = workshop.availableBundles.find(
     //     (b) => b.comboProductSfid === values.comboDetailId,
@@ -478,6 +486,7 @@ const TicketCheckoutForm = ({ event }) => {
 
   const applyDiscount = (discount) => {
     setDiscountResponse(discount);
+    setCouponCode(discount?.couponCode || null);
   };
 
   const renderSummary = () => {
@@ -510,9 +519,7 @@ const TicketCheckoutForm = ({ event }) => {
 
         <div className="total">
           <div className="label">Total:</div>
-          <div className="value">
-            ${(parseFloat(totalPrice) - totalDiscount).toFixed(2)}
-          </div>
+          <div className="value">${parseFloat(finalPrice).toFixed(2)}</div>
         </div>
       </>
     );
@@ -545,9 +552,7 @@ const TicketCheckoutForm = ({ event }) => {
           contactCity: personMailingCity || '',
           contactState: personMailingState || '',
           contactZip: personMailingPostalCode || '',
-          couponCode: discountResponse?.couponCode
-            ? discountResponse.couponCode
-            : '',
+          couponCode: couponCode || '',
           questionnaire: questionnaireArray,
           ppaAgreement: false,
           contactPhone: personMobilePhone,
@@ -690,7 +695,7 @@ const TicketCheckoutForm = ({ event }) => {
                             </div>
                           </div>
                           <div className="section-box">
-                            {totalPrice > 0 && (
+                            {finalPrice > 0 && (
                               <>
                                 <h2 className="section__title d-flex">
                                   Pay with

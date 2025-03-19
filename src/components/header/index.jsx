@@ -160,7 +160,7 @@ const AOL_MENU = [
           },
           {
             name: 'Art Of Living Premium',
-            link: 'https://event.us.artofliving.org/us-en/premiumcourse/',
+            link: 'https://www.artofliving.org/us-en/premiumcourse',
           },
           {
             name: 'Sri Sri Yoga Foundation',

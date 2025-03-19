@@ -12,11 +12,13 @@ import { pushRouteWithUTMQuery } from '@service';
 import { StripeExpressCheckoutTicket } from '@components/checkout/StripeExpressCheckoutTicket';
 import { Loader } from '@components/loader';
 import { useGlobalAlertContext } from '@contexts';
-import { useQueryState, parseAsJson } from 'nuqs';
+import { useQueryState, parseAsJson, parseAsString } from 'nuqs';
 import ErrorPage from 'next/error';
 import { PageLoading } from '@components';
 import { z } from 'zod';
 import { DiscountInputNew } from '@components/discountInputNew';
+import { AiTwotoneAlert } from 'react-icons/ai';
+import moment from 'moment';
 
 const ticketSchema = z.record(z.string(), z.number());
 
@@ -67,6 +69,16 @@ const TicketLineItem = ({ item, handleTicketSelect, selectedTickets }) => {
           {/* <span>+ $3.31 Fee</span> */}
         </p>
       </div>
+      <div className="tickets-modal__card-left tw-mt-2">
+        {item.increasingBy && (
+          <p className="tw-text-sm tw-text-slate-500">
+            {/* add alert icon here using react icon */}
+            <AiTwotoneAlert className="tw-w-4 tw-h-4 tw-mr-2 tw-mb-1" />
+            Fee increases by ${item.increasingBy} starting{' '}
+            {moment(item.increasingByDate).format('MMM DD, YYYY')}
+          </p>
+        )}
+      </div>
     </div>
   );
 };
@@ -77,6 +89,10 @@ function TicketedEvent() {
   const [selectedTickets, setSelectedTickets] = useQueryState(
     'ticket',
     parseAsJson(ticketSchema.parse).withDefault({}),
+  );
+  const [couponCode, setCouponCode] = useQueryState(
+    'couponCode',
+    parseAsString,
   );
   const { showAlert } = useGlobalAlertContext();
   const { id: eventId } = router.query;
@@ -222,6 +238,10 @@ function TicketedEvent() {
 
     let queryParams = { ticket: JSON.stringify(selectedTickets) };
 
+    if (couponCode) {
+      queryParams = { ...queryParams, couponCode };
+    }
+
     const showAddressFields = searchParams.get('showAddressFields');
     if (showAddressFields) {
       queryParams = { ...queryParams, showAddressFields };
@@ -235,6 +255,7 @@ function TicketedEvent() {
 
   const applyDiscount = (discount) => {
     setDiscountResponse(discount);
+    setCouponCode(discount?.couponCode || null);
   };
 
   const ticketsPayload = pricingTiersLocal.map((item) => {
@@ -310,7 +331,7 @@ function TicketedEvent() {
   return (
     <Formik
       initialValues={{
-        couponCode: '',
+        couponCode: couponCode || '',
       }}
       validationSchema={Yup.object().shape({})}
       innerRef={formRef}

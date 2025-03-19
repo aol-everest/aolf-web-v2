@@ -12,6 +12,7 @@ export default function AttendeeDetails({
   const { showAlert } = useGlobalAlertContext();
   const [expanded, setExpanded] = useState(0);
   const [ticketData, setTicketData] = useState([]);
+  const [error, setError] = useState('');
 
   useEffect(() => {
     if (!tickets?.[0]?.attendeeRecordExternalId) {
@@ -121,10 +122,25 @@ export default function AttendeeDetails({
     }
   };
 
+  const validateEmail = (email) => {
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    return emailRegex.test(email);
+  };
+
+  const handleChange = (e, ticket) => {
+    const { value } = e.target;
+    if (!validateEmail(value)) {
+      setError('Invalid email format');
+    } else {
+      setError('');
+    }
+    handleInputChange(ticket, 'email')(e);
+  };
+
   const isButtonDisabled =
     detailsRequired === false
       ? false
-      : ticketData.some((item) => !item.firstName);
+      : ticketData.some((item) => !item.firstName) || error;
 
   return (
     <main className="course-filter calendar-online">
@@ -248,6 +264,7 @@ export default function AttendeeDetails({
                                           ticket,
                                           'firstName',
                                         )}
+                                        maxLength={40}
                                       />
                                     </div>
                                     <div
@@ -264,10 +281,11 @@ export default function AttendeeDetails({
                                           ticket,
                                           'lastName',
                                         )}
+                                        maxLength={40}
                                       />
                                     </div>
                                     <div
-                                      className={`form-item ${detailsRequired ? 'required' : ''}`}
+                                      className={`form-item ${detailsRequired ? 'required' : ''} ${detailsRequired && error ? 'error' : ''}`}
                                     >
                                       <label htmlFor="email">
                                         Email Address
@@ -276,10 +294,10 @@ export default function AttendeeDetails({
                                         type="email"
                                         name="email"
                                         value={ticket?.email || ''}
-                                        onChange={handleInputChange(
-                                          ticket,
-                                          'email',
-                                        )}
+                                        onChange={(e) =>
+                                          handleChange(e, ticket)
+                                        }
+                                        pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
                                       />
                                     </div>
                                     <div
