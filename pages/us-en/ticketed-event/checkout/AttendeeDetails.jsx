@@ -14,6 +14,8 @@ export default function AttendeeDetails({
   const [ticketData, setTicketData] = useState([]);
   const [error, setError] = useState('');
 
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
   useEffect(() => {
     if (!tickets?.[0]?.attendeeRecordExternalId) {
       const updatedTickets = tickets.flatMap((item) => {
@@ -92,7 +94,6 @@ export default function AttendeeDetails({
   const handelSubmitData = (showAttendee, attendeeData) => {
     if (detailsRequired) {
       const isValidEmail = (email) => {
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         return emailRegex.test(email);
       };
 
@@ -123,7 +124,7 @@ export default function AttendeeDetails({
   };
 
   const validateEmail = (email) => {
-    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    const emailRegex = /^[a-z0-9._%+-]+@[a-z0-9-]+(\.[a-z0-9-]+)*\.[a-z]{2,}$/;
     return emailRegex.test(email);
   };
 
