@@ -16,7 +16,7 @@ import { AuthProvider, MeditationProvider } from '@contexts';
 import { orgConfig } from '@org';
 import { analytics } from '@service';
 import { Auth, Compose, Talkable, api, getParentDomain } from '@utils';
-import { DefaultSeo } from 'next-seo';
+import { DefaultSeo, NextSeo } from 'next-seo';
 import { useEffect, useState, useMemo, memo } from 'react';
 import {
   QueryClient,
@@ -342,6 +342,9 @@ const AppContent = ({ Component, pageProps, err }) => {
     [Component],
   );
 
+  // Get page-specific SEO from the component if available
+  const pageSeo = Component.seo ? Component.seo(pageProps) : {};
+
   if (isLoading) {
     return <LoadingScreen />;
   }
@@ -355,7 +358,12 @@ const AppContent = ({ Component, pageProps, err }) => {
       <CombinedProviders>
         <MemoizedMeditationProvider>
           <MemoizedLayout {...layoutProps}>
+            {/* Default SEO configuration */}
             <DefaultSeo {...SEO} />
+            {/* Add page-specific SEO */}
+            {pageSeo && Object.keys(pageSeo).length > 0 && (
+              <DefaultSeo {...pageSeo} />
+            )}
             {isReInstateRequired && (
               <ReInstate subscription={reinstateRequiredSubscription} />
             )}

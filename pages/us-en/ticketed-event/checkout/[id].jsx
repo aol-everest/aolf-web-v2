@@ -52,7 +52,7 @@ function TicketCheckout() {
     isError,
     error,
   } = useQuery({
-    queryKey: 'getTicketedEvent',
+    queryKey: ['getTicketedEvent', eventId],
     queryFn: async () => {
       const response = await api.get({
         path: 'getTicketedEvent',

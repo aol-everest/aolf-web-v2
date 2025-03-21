@@ -1,8 +1,71 @@
 import { Footer, Header, NoHeader, WCFHeader } from '@components';
 import classNames from 'classnames';
-import { useState } from 'react';
+import { useState, useCallback, memo } from 'react';
 import { useRouter } from 'next/router';
 import { pushRouteWithUTMQuery } from '@service';
+import PropTypes from 'prop-types';
+
+const GetStartedFloating = memo(
+  ({ isShowingFindCourse, onShow, onHide, onNavigate }) => (
+    <div className="get-started-floating" role="complementary">
+      <ul>
+        <li>
+          <button
+            className="help-link"
+            id="gs-help-link"
+            onClick={onShow}
+            aria-expanded={isShowingFindCourse}
+            aria-controls="find-course-panel"
+          >
+            Get Started
+          </button>
+          <div
+            id="find-course-panel"
+            className={classNames('find-course', {
+              show: isShowingFindCourse,
+            })}
+            aria-hidden={!isShowingFindCourse}
+          >
+            <h2 className="title">Find the right course for you</h2>
+            <p className="desc">Answer a few quick questions...</p>
+            <div className="actions">
+              <button
+                className="btn btn-primary"
+                onClick={onNavigate}
+                aria-label="Start finding courses"
+              >
+                Get started
+              </button>
+              <button
+                className="btn btn-secondary"
+                onClick={onHide}
+                aria-label="Close find course panel"
+              >
+                Not now
+              </button>
+            </div>
+          </div>
+        </li>
+      </ul>
+    </div>
+  ),
+);
+
+GetStartedFloating.displayName = 'GetStartedFloating';
+
+GetStartedFloating.propTypes = {
+  isShowingFindCourse: PropTypes.bool.isRequired,
+  onShow: PropTypes.func.isRequired,
+  onHide: PropTypes.func.isRequired,
+  onNavigate: PropTypes.func.isRequired,
+};
+
+const getHeaderComponent = ({ hideHeader, wcfHeader, noHeader }) => {
+  if (noHeader) return null;
+  if (hideHeader) return <NoHeader />;
+  if (wcfHeader) return <WCFHeader />;
+  return <Header />;
+};
 
 export const Layout = ({
   hideHeader = false,
@@ -14,62 +77,57 @@ export const Layout = ({
 }) => {
   const router = useRouter();
   const [isShowingFindCourse, setShowingFindCourse] = useState(false);
-  const showFindCourse = (e) => {
+
+  const handleShowFindCourse = useCallback((e) => {
     if (e) e.preventDefault();
     setShowingFindCourse(true);
-  };
-  const hideFindCourse = (e) => {
+  }, []);
+
+  const handleHideFindCourse = useCallback((e) => {
     if (e) e.preventDefault();
     setShowingFindCourse(false);
-  };
-  const navigateToGetStartAction = () => {
+  }, []);
+
+  const handleNavigateToGetStart = useCallback(() => {
     setShowingFindCourse(false);
     pushRouteWithUTMQuery(router, '/us-en/course-finder');
-  };
+  }, [router]);
+
   return (
-    <>
-      {!hideHeader && !noHeader && <Header />}
-      {hideHeader && !wcfHeader && !noHeader && <NoHeader />}
-      {hideHeader && wcfHeader && <WCFHeader />}
+    <div className="layout" role="main">
+      {getHeaderComponent({ hideHeader, wcfHeader, noHeader })}
+
       {children}
+
       {sideGetStartedAction && (
-        <div className="get-started-floating">
-          <ul>
-            <li>
-              <a
-                className="help-link"
-                id="gs-help-link"
-                onClick={showFindCourse}
-              >
-                Get Started
-              </a>
-              <div
-                className={classNames('find-course', {
-                  show: isShowingFindCourse,
-                })}
-              >
-                <div className="title">Find the right course for you</div>
-                <div className="desc">Answer a few quick questions...</div>
-                <div className="actions">
-                  <button
-                    className="btn btn-primary"
-                    onClick={navigateToGetStartAction}
-                  >
-                    Get started
-                  </button>
-                  <button
-                    className="btn btn-secondary"
-                    onClick={hideFindCourse}
-                  >
-                    Not now
-                  </button>
-                </div>
-              </div>
-            </li>
-          </ul>
-        </div>
+        <GetStartedFloating
+          isShowingFindCourse={isShowingFindCourse}
+          onShow={handleShowFindCourse}
+          onHide={handleHideFindCourse}
+          onNavigate={handleNavigateToGetStart}
+        />
       )}
+
       {!hideFooter && <Footer />}
-    </>
+    </div>
   );
 };
+
+Layout.propTypes = {
+  hideHeader: PropTypes.bool,
+  hideFooter: PropTypes.bool,
+  wcfHeader: PropTypes.bool,
+  noHeader: PropTypes.bool,
+  sideGetStartedAction: PropTypes.bool,
+  children: PropTypes.node.isRequired,
+};
+
+Layout.defaultProps = {
+  hideHeader: false,
+  hideFooter: false,
+  wcfHeader: false,
+  noHeader: false,
+  sideGetStartedAction: false,
+};
+
+export default memo(Layout);
