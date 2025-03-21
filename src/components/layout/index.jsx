@@ -10,15 +10,10 @@ const GetStartedFloating = memo(
     <div className="get-started-floating" role="complementary">
       <ul>
         <li>
-          <button
-            className="help-link"
-            id="gs-help-link"
-            onClick={onShow}
-            aria-expanded={isShowingFindCourse}
-            aria-controls="find-course-panel"
-          >
+          <a className="help-link" id="gs-help-link" onClick={onShow}>
             Get Started
-          </button>
+          </a>
+
           <div
             id="find-course-panel"
             className={classNames('find-course', {
@@ -120,14 +115,6 @@ Layout.propTypes = {
   noHeader: PropTypes.bool,
   sideGetStartedAction: PropTypes.bool,
   children: PropTypes.node.isRequired,
-};
-
-Layout.defaultProps = {
-  hideHeader: false,
-  hideFooter: false,
-  wcfHeader: false,
-  noHeader: false,
-  sideGetStartedAction: false,
 };
 
 export default memo(Layout);
