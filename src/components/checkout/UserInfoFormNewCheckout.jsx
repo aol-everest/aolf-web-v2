@@ -5,6 +5,8 @@ import {
 } from '@components/checkout';
 import { US_STATES } from '@constants';
 import { DropdownNewCheckout } from './DropdownNewCheckout';
+import { useQuery } from '@tanstack/react-query';
+import { api } from '@utils';
 import { ScheduleLocationFilterOnline } from '@components/scheduleLocationFilter/ScheduleLocationFilterOnline';
 
 export const UserInfoFormNewCheckout = ({
@@ -16,9 +18,31 @@ export const UserInfoFormNewCheckout = ({
   showContactState = true,
   showContactCity = true,
   showContactZip = true,
+  isHBForm = false,
   handleLocationFilterChange,
   locationValue,
 }) => {
+  const { data: corporates = [] } = useQuery({
+    queryKey: ['corporates'],
+    queryFn: async () => {
+      const response = await api.get({
+        path: 'getCorporates',
+      });
+      return response;
+    },
+    enabled: isHBForm,
+  });
+
+  let corporateOptions = corporates?.map((corporate) => {
+    return { value: corporate.sfid, label: corporate.corporateName };
+  });
+
+  if (corporateOptions) {
+    corporateOptions = [
+      ...corporateOptions,
+      { value: 'other', label: 'Other' },
+    ];
+  }
   return (
     <Fragment>
       <div className="form-inputs checkout-fields">
@@ -124,6 +148,44 @@ export const UserInfoFormNewCheckout = ({
           type="tel"
         ></PhoneInputNewCheckout>
       </div>
+      {isHBForm && (
+        <div className="form-inputs checkout-fields">
+          <h2 className="tw-w-full tw-text-2xl tw-mb-4 tw-line-height-10 tw-mt-3">
+            Healthcare Information
+          </h2>
+          <StyledInputNewCheckout
+            className="form-item required"
+            placeholder="Title"
+            formikProps={formikProps}
+            formikKey="contactTitle"
+            label="Title"
+            fullWidth
+          ></StyledInputNewCheckout>
+          <StyledInputNewCheckout
+            className="form-item required"
+            placeholder="Degree/Qualifications"
+            formikProps={formikProps}
+            formikKey="contactDegree"
+            label="Degree/Qualifications"
+          ></StyledInputNewCheckout>
+          <DropdownNewCheckout
+            placeholder="Healthcare Organization"
+            formikProps={formikProps}
+            formikKey="contactHealthcareOrganisation"
+            options={corporateOptions}
+            containerClass="form-item required"
+          ></DropdownNewCheckout>
+          {formikProps.values.contactHealthcareOrganisation === 'other' && (
+            <StyledInputNewCheckout
+              className="form-item required"
+              placeholder="Other Healthcare Organization Name"
+              formikProps={formikProps}
+              formikKey="contactOtherHealthcareOrganization"
+              label="Other Healthcare Organization Name"
+            ></StyledInputNewCheckout>
+          )}
+        </div>
+      )}
     </Fragment>
   );
 };

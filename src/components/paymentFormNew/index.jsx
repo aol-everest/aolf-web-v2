@@ -13,7 +13,7 @@ import {
   PAYMENT_TYPES,
 } from '@constants';
 import { useAuth, useGlobalAlertContext } from '@contexts';
-import { useQueryString } from '@hooks';
+import { useQueryString, usePayment } from '@hooks';
 import { PayPalButtons, PayPalScriptProvider } from '@paypal/react-paypal-js';
 import { pushRouteWithUTMQuery } from '@service';
 import {
@@ -22,25 +22,18 @@ import {
   useElements,
   useStripe,
 } from '@stripe/react-stripe-js';
-import {
-  Auth,
-  api,
-  isEmpty,
-  priceCalculation,
-  phoneRegExp,
-  tConvert,
-} from '@utils';
+import { Auth, api, isEmpty, phoneRegExp, tConvert } from '@utils';
 import { filterAllowedParams } from '@utils/utmParam';
 import { Formik } from 'formik';
 import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import * as Yup from 'yup';
 import { DiscountInputNew } from '@components/discountInputNew';
 import { ScheduleAgreementForm } from '@components/scheduleAgreementForm';
-import { useRef } from 'react';
 import { PayWithNewCheckout } from '@components/checkout/PayWithNewCheckout';
 import CostDetailsCardNewCheckout from '@components/checkout/CostDetailsCardNewCheckout';
 import { Loader } from '@components';
+import { usePriceCalculation } from '@hooks';
 
 const advancedFormat = require('dayjs/plugin/advancedFormat');
 dayjs.extend(advancedFormat);
@@ -76,18 +69,17 @@ export const PaymentFormNew = ({
   login = () => {},
   isLoggedUser = false,
   onValidateDiscount,
+  isHBForm = false,
 }) => {
   const formRef = useRef();
   const { showAlert } = useGlobalAlertContext();
   const stripe = useStripe();
   const elements = useElements();
   const { setUser, passwordLess } = useAuth();
-  const [loading, setLoading] = useState(false);
   const [isChangingCard, setIsChangingCard] = useState(false);
   const [discount] = useQueryString('discountCode');
   const [discountResponse, setDiscountResponse] = useState(null);
   const [showCouponCodeField, setShowCouponCodeField] = useState(true);
-  const [enrollFormValues, setEnrollFormValues] = useState(null);
   const [showProgramQuestionnaireForm, setShowProgramQuestionnaireForm] =
     useState(false);
   const [programQuestionnaireResult, setProgramQuestionnaireResult] =
@@ -96,32 +88,45 @@ export const PaymentFormNew = ({
   const router = useRouter();
   const { signOut } = passwordLess;
 
-  useEffect(() => {
-    if (programQuestionnaireResult?.length > 0) {
-      if (enrollFormValues.paymentMode === PAYMENT_MODES.STRIPE_PAYMENT_MODE) {
-        completeEnrollmentAction(enrollFormValues);
-      }
-      // else if (
-      //   enrollFormValues.paymentMode === PAYMENT_MODES.PAYPAL_PAYMENT_MODE
-      // ) {
-      //   this.state.paypalPromise();
-      // }
-    }
-  }, [programQuestionnaireResult]);
+  const { loading, processPayment, handlePaypalPayment } = usePayment({
+    stripe,
+    elements,
+    enrollmentCompletionAction,
+    enrollmentCompletionLink,
+  });
+
+  const {
+    basePrice: fee,
+    displayPrice: delfee,
+    total: finalPrice,
+    isPaymentRequired,
+    subtotal,
+    discountAmount,
+  } = usePriceCalculation({
+    workshop,
+    agreementCMEAccepted: false,
+    premiumRate: workshop.premiumRate,
+    addOnProducts: workshop.addOnProducts || [],
+    hasGroupedAddOnProducts:
+      workshop.groupedAddOnProducts &&
+      !isEmpty(workshop.groupedAddOnProducts) &&
+      'Residential Add On' in workshop.groupedAddOnProducts &&
+      workshop.groupedAddOnProducts['Residential Add On'].length > 0,
+    values: formRef.current?.values || {},
+    discount: discountResponse,
+    isCCNotRequired: workshop.isCCNotRequired,
+  });
 
   const {
     id: productId,
-    premiumRate = {},
     otherPaymentOptions,
     groupedAddOnProducts,
     addOnProducts = [],
     complianceQuestionnaire,
     availableBundles,
-    usableCredit,
     programQuestionnaire,
     title,
     productTypeId,
-    isCCNotRequired,
     paymentMethod = {},
     phone1,
     eventEndDate,
@@ -155,34 +160,9 @@ export const PaymentFormNew = ({
     {},
   );
 
-  const { fee, delfee, offering } = priceCalculation({
-    workshop,
-    discount: discountResponse,
-  });
-
-  let isPaymentRequired = fee !== 0 ? true : !isCCNotRequired;
-
-  const {
-    first_name,
-    last_name,
-    email,
-    personMailingPostalCode,
-    personMailingState,
-    personMobilePhone,
-    personMailingStreet,
-    personMailingCity,
-  } = profile;
+  const cmeAddOn = addOnProducts.find(({ isCMEAddOn }) => isCMEAddOn === true);
 
   const { cardLast4Digit = null } = paymentMethod;
-
-  const questionnaire = complianceQuestionnaire
-    ? complianceQuestionnaire.map((current) => ({
-        key: current.questionSfid,
-        value: false,
-      }))
-    : [];
-
-  const expenseAddOn = addOnProducts.find((product) => product.isExpenseAddOn);
 
   const hasGroupedAddOnProducts =
     groupedAddOnProducts &&
@@ -250,629 +230,133 @@ export const PaymentFormNew = ({
     setShowProgramQuestionnaireForm(
       (showProgramQuestionnaireForm) => !showProgramQuestionnaireForm,
     );
-    // if (this.state.paypalPromiseReject) {
-    //   this.state.paypalPromiseReject();
-    // }
+  };
+
+  const validatePaymentRequirements = (values) => {
+    const { paymentMode } = values;
+
+    if (!isPaymentRequired) {
+      return true;
+    }
+
+    if (!paymentMode) {
+      showAlert(ALERT_TYPES.ERROR_ALERT, {
+        children: 'Please select a payment method',
+      });
+      return false;
+    }
+
+    if (paymentMode === PAYMENT_MODES.STRIPE_PAYMENT_MODE) {
+      if (!stripe || !elements) {
+        showAlert(ALERT_TYPES.ERROR_ALERT, {
+          children: 'Payment system is not ready. Please try again.',
+        });
+        return false;
+      }
+    }
+
+    return true;
+  };
+
+  const handleFormSubmit = async () => {
+    if (formRef.current) {
+      const { values, validateForm } = formRef.current;
+      const errors = await validateForm(values);
+
+      if (Object.keys(errors).length > 0) {
+        showAlert(ALERT_TYPES.ERROR_ALERT, {
+          children: 'Please fill in all required fields correctly.',
+        });
+        return;
+      }
+
+      if (!validatePaymentRequirements(values)) {
+        return;
+      }
+
+      formRef.current.submitForm();
+    }
   };
 
   const preEnrollValidation = async (values) => {
     const { programQuestionnaire = [] } = workshop;
-    if (programQuestionnaire.length > 0) {
-      setEnrollFormValues(values);
-      setShowProgramQuestionnaireForm(true);
-    } else {
-      await completeEnrollmentAction(values);
-    }
-  };
-
-  const paypalBuyAcknowledgement = async (paypalData) => {
-    setLoading(true);
-    const {
-      data,
-      status,
-      error: errorMessage,
-      isError,
-    } = await api.post({
-      path: 'paypalBuyAcknowledgement',
-      body: { orderID: paypalData.orderID },
-    });
-
-    setLoading(false);
-    if (status === 400 || isError) {
-      throw new Error(errorMessage);
-    } else if (data) {
-      enrollmentCompletionAction(data);
-    }
-    return true;
-  };
-
-  const stripeConfirmPayment = async (values) => {
-    if (!stripe || !elements) {
-      // Stripe.js hasn't yet loaded.
-      // Make sure to disable form submission until Stripe.js has loaded.
-      return;
-    }
-
-    // Trigger form validation and wallet collection
-    const { error: submitError } = await elements.submit();
-    if (submitError) {
-      throw submitError;
-    }
-
-    if (loading) {
-      return null;
-    }
-    const {
-      id: productId,
-      availableTimings,
-      isGenericWorkshop,
-      addOnProducts,
-    } = workshop;
-
-    const {
-      questionnaire,
-      contactPhone,
-      contactAddress,
-      contactCity,
-      contactState,
-      contactZip,
-      couponCode,
-      firstName,
-      lastName,
-      accommodation,
-      email,
-    } = values;
-
-    const complianceQuestionnaire = questionnaire.reduce(
-      (res, current) => ({
-        ...res,
-        [current.key]: current.value ? 'Yes' : 'No',
-      }),
-      {},
-    );
 
     try {
-      setLoading(true);
-
-      const selectedAddOn = accommodation?.isExpenseAddOn
-        ? null
-        : accommodation?.productSfid || null;
-
-      let addOnProductsList = addOnProducts
-        ? addOnProducts.map((product) => {
-            if (!product.isAddOnSelectionRequired) {
-              const value = values[product.productName];
-              if (value) {
-                return product.productSfid;
-              } else {
-                return null;
-              }
-            }
-            return product.productSfid;
-          })
-        : [];
-
-      let AddOnProductIds = [selectedAddOn, ...addOnProductsList];
-
-      AddOnProductIds = AddOnProductIds.filter((AddOn) => AddOn !== null);
-
-      const isRegularOrder = !workshop.bundleInfo;
-
-      const products = isRegularOrder
-        ? {
-            productType: 'workshop',
-            productSfId: productId,
-            AddOnProductIds: AddOnProductIds,
-          }
-        : {
-            productType: 'bundle',
-            productSfId: workshop.bundleInfo.comboProductSfid,
-            childProduct: {
-              productType: 'workshop',
-              productSfId: productId,
-              AddOnProductIds: AddOnProductIds,
-              complianceQuestionnaire,
-            },
-          };
-
-      let payLoad = {
-        shoppingRequest: {
-          couponCode: showCouponCodeField ? couponCode : '',
-          contactAddress: {
-            contactPhone,
-            contactAddress,
-            contactCity,
-            contactState,
-            contactZip,
-          },
-          billingAddress: {
-            billingPhone: contactPhone,
-            billingAddress: contactAddress,
-            billingCity: contactCity,
-            billingState: contactState,
-            billingZip: contactZip,
-          },
-          products,
-          complianceQuestionnaire,
-          programQuestionnaireResult,
-          isInstalmentOpted: false,
-          isStripeIntentPayment: true,
-        },
-        utm: filterAllowedParams(router.query),
-      };
-
-      if (!isPaymentRequired) {
-        payLoad.shoppingRequest.isStripeIntentPayment = false;
+      if (programQuestionnaire.length > 0) {
+        setShowProgramQuestionnaireForm(true);
+      } else {
+        await completeEnrollmentAction(values);
       }
-      if (!isLoggedUser) {
-        payLoad = {
-          ...payLoad,
-          user: {
-            lastName: lastName,
-            firstName: firstName,
-            email: email,
-          },
-        };
-      }
-
-      if (isGenericWorkshop) {
-        const timeSlot =
-          availableTimings &&
-          Object.values(availableTimings)[0] &&
-          Object.values(Object.values(availableTimings)[0])[0][0]
-            .genericWorkshopSlotSfid;
-        payLoad = {
-          ...payLoad,
-          shoppingRequest: {
-            ...payLoad.shoppingRequest,
-            genericWorkshopSlotSfid: timeSlot,
-          },
-        };
-      }
-
-      //token.saveCardForFuture = true;
-      const {
-        stripeIntentObj,
-        status,
-        data,
-        error: errorMessage,
-        isError,
-      } = await api.post({
-        path: 'createAndPayOrder',
-        body: payLoad,
-      });
-
-      if (status === 400 || isError) {
-        throw new Error(errorMessage);
-      }
-
-      if (data && data.totalOrderAmount > 0) {
-        const returnUrl = enrollmentCompletionLink(data);
-        const result = await stripe.confirmPayment({
-          //`Elements` instance that was used to create the Payment Element
-          elements,
-          clientSecret: stripeIntentObj.client_secret,
-          confirmParams: {
-            return_url: returnUrl,
-          },
-        });
-
-        if (result.error) {
-          // Show error to your customer (for example, payment details incomplete)
-          throw new Error(result.error.message);
-        }
-      }
-      if (data) {
-        enrollmentCompletionAction(data);
-      }
-      setLoading(false);
-    } catch (ex) {
-      console.error(ex);
-      const data = ex.response?.data;
-      const { message, statusCode } = data || {};
-      setLoading(false);
+    } catch (error) {
+      console.error('Pre-enrollment validation failed:', error);
       showAlert(ALERT_TYPES.ERROR_ALERT, {
-        children: message ? `Error: ${message} (${statusCode})` : ex.message,
-      });
-    }
-  };
-
-  const createPaypalOrder = async (values) => {
-    if (loading) {
-      return null;
-    }
-    const {
-      id: productId,
-      availableTimings,
-      isGenericWorkshop,
-      addOnProducts,
-    } = workshop;
-
-    const {
-      questionnaire,
-      contactPhone,
-      contactAddress,
-      contactCity,
-      contactState,
-      contactZip,
-      couponCode,
-      firstName,
-      lastName,
-      paymentOption,
-      paymentMode,
-      accommodation,
-      email,
-    } = values;
-
-    if (paymentMode !== PAYMENT_MODES.PAYPAL_PAYMENT_MODE) {
-      return null;
-    }
-
-    const complianceQuestionnaire = questionnaire.reduce(
-      (res, current) => ({
-        ...res,
-        [current.key]: current.value ? 'Yes' : 'No',
-      }),
-      {},
-    );
-
-    try {
-      setLoading(true);
-
-      const selectedAddOn = accommodation?.isExpenseAddOn
-        ? null
-        : accommodation?.productSfid || null;
-
-      let addOnProductsList = addOnProducts
-        ? addOnProducts.map((product) => {
-            if (!product.isAddOnSelectionRequired) {
-              const value = values[product.productName];
-              if (value) {
-                return product.productSfid;
-              } else {
-                return null;
-              }
-            }
-            return product.productSfid;
-          })
-        : [];
-
-      let AddOnProductIds = [selectedAddOn, ...addOnProductsList];
-
-      AddOnProductIds = AddOnProductIds.filter((AddOn) => AddOn !== null);
-
-      const isRegularOrder = !workshop.bundleInfo;
-
-      const products = isRegularOrder
-        ? {
-            productType: 'workshop',
-            productSfId: productId,
-            AddOnProductIds: AddOnProductIds,
-          }
-        : {
-            productType: 'bundle',
-            productSfId: workshop.bundleInfo.comboProductSfid,
-            childProduct: {
-              productType: 'workshop',
-              productSfId: productId,
-              AddOnProductIds: AddOnProductIds,
-              complianceQuestionnaire,
-            },
-          };
-
-      let payLoad = {
-        shoppingRequest: {
-          couponCode: showCouponCodeField ? couponCode : '',
-          contactAddress: {
-            contactPhone,
-            contactAddress,
-            contactCity,
-            contactState,
-            contactZip,
-          },
-          billingAddress: {
-            billingPhone: contactPhone,
-            billingAddress: contactAddress,
-            billingCity: contactCity,
-            billingState: contactState,
-            billingZip: contactZip,
-          },
-          products,
-          complianceQuestionnaire,
-          programQuestionnaireResult,
-          isInstalmentOpted: paymentOption === PAYMENT_TYPES.LATER,
-          isPaypalPayment: true,
-        },
-        utm: filterAllowedParams(router.query),
-      };
-
-      if (!isLoggedUser) {
-        payLoad = {
-          ...payLoad,
-          user: {
-            lastName: lastName,
-            firstName: firstName,
-            email: email,
-          },
-        };
-      }
-
-      if (isGenericWorkshop) {
-        const timeSlot =
-          availableTimings &&
-          Object.values(availableTimings)[0] &&
-          Object.values(Object.values(availableTimings)[0])[0][0]
-            .genericWorkshopSlotSfid;
-        payLoad = {
-          ...payLoad,
-          shoppingRequest: {
-            ...payLoad.shoppingRequest,
-            genericWorkshopSlotSfid: timeSlot,
-          },
-        };
-      }
-
-      //token.saveCardForFuture = true;
-      const {
-        paypalObj,
-        status,
-        error: errorMessage,
-        isError,
-      } = await api.post({
-        path: 'createAndPayOrder',
-        body: payLoad,
-      });
-      setLoading(false);
-
-      if (status === 400 || isError) {
-        throw new Error(errorMessage);
-      }
-      if (paypalObj) {
-        return paypalObj.id;
-      }
-    } catch (ex) {
-      console.error(ex);
-      const data = ex.response?.data;
-      const { message, statusCode } = data || {};
-      setLoading(false);
-      showAlert(ALERT_TYPES.ERROR_ALERT, {
-        children: message ? `Error: ${message} (${statusCode})` : ex.message,
+        children: 'Failed to process enrollment. Please try again.',
       });
     }
   };
 
   const completeEnrollmentAction = async (values) => {
-    if (loading) {
-      return null;
-    }
-
-    const {
-      id: productId,
-      availableTimings,
-      isGenericWorkshop,
-      addOnProducts,
-      paymentMethod = {},
-    } = workshop;
-
-    const {
-      questionnaire,
-      contactPhone,
-      contactAddress,
-      contactCity,
-      contactState,
-      contactZip,
-      couponCode,
-      firstName,
-      lastName,
-      paymentOption,
-      paymentMode,
-      accommodation,
-      email,
-    } = values;
-
-    if (
-      paymentMode !== PAYMENT_MODES.STRIPE_PAYMENT_MODE &&
-      isPaymentRequired
-    ) {
-      return null;
-    }
-
-    if (isStripeIntentPayment) {
-      await stripeConfirmPayment(values);
-      return null;
-    }
-
-    const complianceQuestionnaire = questionnaire.reduce(
-      (res, current) => ({
-        ...res,
-        [current.key]: current.value ? 'Yes' : 'No',
-      }),
-      {},
-    );
+    if (loading) return null;
 
     try {
-      setLoading(true);
+      const paymentData = preparePaymentData(values);
+      await processPayment(values, paymentData);
+    } catch (error) {
+      console.error('Payment failed:', error);
+      // Error is already handled by the hook
+    }
+  };
 
-      let tokenizeCC = null;
-      if (
-        isPaymentRequired &&
-        (paymentMethod.type !== 'card' || isChangingCard || !isLoggedUser)
-      ) {
-        const cardElement = elements.getElement(CardElement);
-        let createTokenRespone = await stripe.createToken(cardElement, {
-          name: profile?.name ? profile.name : firstName + ' ' + lastName,
-        });
-        let { error, token } = createTokenRespone;
-        if (error) {
-          throw error;
-        }
-        tokenizeCC = token;
-      }
+  const createPaypalOrder = async (values) => {
+    if (loading) return null;
 
-      const selectedAddOn = accommodation?.isExpenseAddOn
-        ? null
-        : accommodation?.productSfid || null;
-
-      let addOnProductsList = addOnProducts
-        ? addOnProducts.map((product) => {
-            if (!product.isAddOnSelectionRequired) {
-              const value = values[product.productName];
-              if (value) {
-                return product.productSfid;
-              } else {
-                return null;
-              }
-            }
-            return product.productSfid;
-          })
-        : [];
-
-      let AddOnProductIds = [selectedAddOn, ...addOnProductsList];
-
-      AddOnProductIds = AddOnProductIds.filter((AddOn) => AddOn !== null);
-
-      const isRegularOrder = !workshop.bundleInfo;
-
-      const products = isRegularOrder
-        ? {
-            productType: 'workshop',
-            productSfId: productId,
-            AddOnProductIds: AddOnProductIds,
-          }
-        : {
-            productType: 'bundle',
-            productSfId: workshop.bundleInfo.comboProductSfid,
-            childProduct: {
-              productType: 'workshop',
-              productSfId: productId,
-              AddOnProductIds: AddOnProductIds,
-              complianceQuestionnaire,
-            },
-          };
-
-      let payLoad = {
-        shoppingRequest: {
-          tokenizeCC,
-          couponCode,
-          contactAddress: {
-            contactPhone,
-            contactAddress,
-            contactCity,
-            contactState,
-            contactZip,
-          },
-          billingAddress: {
-            billingPhone: contactPhone,
-            billingAddress: contactAddress,
-            billingCity: contactCity,
-            billingState: contactState,
-            billingZip: contactZip,
-          },
-          products,
-          complianceQuestionnaire,
-          programQuestionnaireResult,
-          isInstalmentOpted: paymentOption === PAYMENT_TYPES.LATER,
-        },
-        utm: filterAllowedParams(router.query),
-      };
-
-      if (!isLoggedUser) {
-        payLoad = {
-          ...payLoad,
-          user: {
-            lastName: lastName,
-            firstName: firstName,
-            email: email,
-          },
-        };
-      }
-
-      if (isChangingCard) {
-        payLoad = {
-          ...payLoad,
-          shoppingRequest: {
-            ...payLoad.shoppingRequest,
-            doNotStoreCC: true,
-          },
-        };
-      }
-
-      if (isGenericWorkshop) {
-        const timeSlot =
-          availableTimings &&
-          Object.values(availableTimings)[0] &&
-          Object.values(Object.values(availableTimings)[0])[0][0]
-            .genericWorkshopSlotSfid;
-        payLoad = {
-          ...payLoad,
-          shoppingRequest: {
-            ...payLoad.shoppingRequest,
-            genericWorkshopSlotSfid: timeSlot,
-          },
-        };
-      }
-
-      const {
-        data,
-        status,
-        error: errorMessage,
-        isError,
-      } = await api.post({
-        path: 'createAndPayOrder',
-        body: payLoad,
-      });
-
-      setLoading(false);
-
-      if (status === 400 || isError) {
-        throw new Error(errorMessage);
-      } else if (data) {
-        enrollmentCompletionAction(data);
-      }
-      /*const { trackingActions } = this.props;
-      trackingActions.paymentConfirmation(
-        { ...product, ...data },
-        type,
-        couponCode || ''
-      );*/
-    } catch (ex) {
-      console.error(ex);
-      const data = ex.response?.data;
-      const { message, statusCode } = data || {};
-      setLoading(false);
-      showAlert(ALERT_TYPES.ERROR_ALERT, {
-        children: message ? `Error: ${message} (${statusCode})` : ex.message,
-      });
+    try {
+      const paymentData = preparePaymentData(values);
+      return await processPayment(values, paymentData);
+    } catch (error) {
+      console.error('PayPal order creation failed:', error);
+      return null;
     }
   };
 
   const handleComboDetailChange = (formikProps, comboDetailProductSfid) => {
-    formikProps.setFieldValue('comboDetailId', comboDetailProductSfid);
-    handleCouseSelection(comboDetailProductSfid);
-    const { isInstalmentAllowed, id } = workshop;
-    if (isInstalmentAllowed && id === comboDetailProductSfid) {
-      setShowCouponCodeField(true);
-    } else {
-      setShowCouponCodeField(false);
-      formikProps.setFieldValue('paymentOption', PAYMENT_TYPES.FULL);
-    }
+    try {
+      formikProps.setFieldValue('comboDetailId', comboDetailProductSfid);
+      handleCouseSelection(comboDetailProductSfid);
 
-    // Added logic to remove paypal option for bundle
-    if (id !== comboDetailProductSfid) {
-      const selectedBundle = availableBundles?.find(
-        (bundle) => bundle.comboProductSfid === comboDetailProductSfid,
-      );
+      const { isInstalmentAllowed, id } = workshop;
+      const isMainProduct = id === comboDetailProductSfid;
 
-      const isBundlePaypalAvailable = selectedBundle
-        ? selectedBundle.otherPaymentOptionAvailable?.indexOf('Paypal') > -1
-        : false;
-
-      if (!isBundlePaypalAvailable) {
-        formikProps.setFieldValue(
-          'paymentMode',
-          PAYMENT_MODES.STRIPE_PAYMENT_MODE,
-        );
+      // Handle coupon code visibility
+      if (isInstalmentAllowed && isMainProduct) {
+        setShowCouponCodeField(true);
+      } else {
+        setShowCouponCodeField(false);
+        formikProps.setFieldValue('paymentOption', PAYMENT_TYPES.FULL);
       }
+
+      // Handle PayPal availability for bundles
+      if (!isMainProduct) {
+        const selectedBundle = availableBundles?.find(
+          (bundle) => bundle.comboProductSfid === comboDetailProductSfid,
+        );
+
+        const isBundlePaypalAvailable =
+          selectedBundle?.otherPaymentOptionAvailable?.includes('Paypal') ??
+          false;
+
+        if (!isBundlePaypalAvailable) {
+          formikProps.setFieldValue(
+            'paymentMode',
+            PAYMENT_MODES.STRIPE_PAYMENT_MODE,
+          );
+        }
+      }
+    } catch (error) {
+      console.error('Failed to handle combo detail change:', error);
+      showAlert(ALERT_TYPES.ERROR_ALERT, {
+        children: 'Failed to update product selection. Please try again.',
+      });
     }
   };
 
@@ -913,7 +397,6 @@ export const PaymentFormNew = ({
     contactZip: Yup.string()
       .required('Zip is required!')
       .matches(/\S/, 'String should not contain empty spaces')
-      //.matches(/^[0-9]+$/, { message: 'Zip is invalid' })
       .min(2, 'Zip is invalid')
       .max(10, 'Zip is invalid'),
     contactPhone: Yup.string()
@@ -932,6 +415,68 @@ export const PaymentFormNew = ({
     paymentMode: !isPaymentRequired
       ? Yup.mixed().notRequired()
       : Yup.string().required('Payment mode is required!'),
+    ...(isHBForm && {
+      contactTitle: Yup.string()
+        .trim()
+        .min(2, 'Title must be at least 2 characters')
+        .matches(
+          /^[a-zA-Z\s.]+$/,
+          'Title must contain only letters, spaces and periods',
+        )
+        .required('Title is required'),
+      contactHealthcareOrganisation: Yup.string()
+        .trim()
+        .min(2, 'Organization name must be at least 2 characters')
+        .required('Healthcare Organization is required'),
+      contactOtherHealthcareOrganization: Yup.string()
+        .trim()
+        .ensure()
+        .when('contactHealthcareOrganisation', {
+          is: 'other',
+          then: Yup.string()
+            .min(2, 'Organization name must be at least 2 characters')
+            .required('Please specify your healthcare organization'),
+        }),
+      contactDegree: Yup.string()
+        .trim()
+        .matches(
+          /^[a-zA-Z\s.,]+$/,
+          'Degree must contain only letters, spaces, periods and commas',
+        )
+        .min(2, 'Degree must be at least 2 characters')
+        .required('Degree/Qualifications is required'),
+      claimingType: Yup.string().when('CME', {
+        is: true,
+        then: Yup.string()
+          .trim()
+          .required('Please select your CE claiming type'),
+        otherwise: Yup.string().notRequired(),
+      }),
+      certificateOfAttendance: Yup.string().when('CME', {
+        is: true,
+        then: Yup.string()
+          .trim()
+          .required('Please select your certificate preference'),
+        otherwise: Yup.string().notRequired(),
+      }),
+      contactClaimingTypeOther: cmeAddOn
+        ? Yup.string().when('claimingType', {
+            is: (claimingType) => claimingType === 'Other',
+            then: Yup.string()
+              .trim()
+              .min(2, 'Please provide a valid claiming type')
+              .required('Please specify your claiming type'),
+          })
+        : Yup.mixed().notRequired(),
+      cmeAgreeToShareData: Yup.bool().when('CME', {
+        is: true,
+        then: Yup.bool().oneOf(
+          [true],
+          'Please agree to share CME data to proceed',
+        ),
+        otherwise: Yup.bool().notRequired(),
+      }),
+    }),
   });
 
   const paymentElementOptions = {
@@ -943,64 +488,15 @@ export const PaymentFormNew = ({
     },
     defaultValues: {
       billingDetails: {
-        email: email || '',
-        name: (first_name || '') + (last_name || ''),
-        phone: personMobilePhone || '',
+        email: profile.email || '',
+        name: [profile.first_name, profile.last_name].filter(Boolean).join(' '),
+        phone: profile.personMobilePhone || '',
       },
     },
   };
 
   const formikOnChange = (values) => {
-    let finalPrice = fee;
-    if (values.comboDetailId && values.comboDetailId !== workshop.id) {
-      const selectedBundle = workshop.availableBundles.find(
-        (b) => b.comboProductSfid === values.comboDetailId,
-      );
-      if (selectedBundle) {
-        finalPrice = selectedBundle.comboUnitPrice;
-      }
-    }
-    const addOnFee = addOnProducts.reduce(
-      (
-        previousValue,
-        { unitPrice, isAddOnSelectionRequired, productName, isExpenseAddOn },
-      ) => {
-        if (!isExpenseAddOn) {
-          if (
-            (!isAddOnSelectionRequired && values[productName]) ||
-            isAddOnSelectionRequired
-          ) {
-            return previousValue + unitPrice;
-          } else {
-            return previousValue;
-          }
-        } else if (isExpenseAddOn && !hasGroupedAddOnProducts) {
-          if (
-            (!isAddOnSelectionRequired && values[productName]) ||
-            isAddOnSelectionRequired
-          ) {
-            return previousValue + unitPrice;
-          }
-          return previousValue;
-        } else {
-          return previousValue;
-        }
-      },
-      0,
-    );
-    const isRegularPrice =
-      values.priceType === null || values.priceType === 'regular';
-    const courseFee = isRegularPrice ? fee : premiumRate.unitPrice;
-
-    finalPrice =
-      courseFee +
-      (values.accommodation?.isExpenseAddOn
-        ? expenseAddOn?.unitPrice || 0
-        : (values.accommodation?.unitPrice || 0) +
-          (values.accommodation ? expenseAddOn?.unitPrice || 0 : 0)) +
-      addOnFee;
-    isPaymentRequired = finalPrice !== 0 ? true : !isCCNotRequired;
-
+    // Update Stripe elements if needed
     if (!stripe || !elements || !isStripeIntentPayment) {
       return;
     }
@@ -1010,6 +506,7 @@ export const PaymentFormNew = ({
         amount: finalPrice * 100,
       });
     }
+
     const paymentElement = elements.getElement(PaymentElement);
     if (paymentElement) {
       paymentElement.update({
@@ -1024,10 +521,159 @@ export const PaymentFormNew = ({
     }
   };
 
-  const handleFormSubmit = () => {
-    if (formRef.current) {
-      formRef.current.submitForm();
+  const preparePaymentData = (values) => {
+    const {
+      id: productId,
+      availableTimings,
+      isGenericWorkshop,
+      addOnProducts,
+    } = workshop;
+
+    const {
+      questionnaire,
+      contactPhone,
+      contactAddress,
+      contactCity,
+      contactState,
+      contactZip,
+      couponCode,
+      firstName,
+      lastName,
+      accommodation,
+      contactTitle,
+      contactHealthcareOrganisation,
+      contactOtherHealthcareOrganization,
+      contactDegree,
+      claimingType,
+      certificateOfAttendance,
+      contactClaimingTypeOther,
+      email,
+      paymentOption,
+    } = values;
+
+    const complianceQuestionnaire = questionnaire.reduce(
+      (res, current) => ({
+        ...res,
+        [current.key]: current.value ? 'Yes' : 'No',
+      }),
+      {},
+    );
+
+    const selectedAddOn = accommodation?.isExpenseAddOn
+      ? null
+      : accommodation?.productSfid || null;
+
+    let addOnProductsList = addOnProducts
+      ? addOnProducts.map((product) => {
+          if (!product.isAddOnSelectionRequired) {
+            const value = values[product.productName];
+            if (value) {
+              return product.productSfid;
+            } else {
+              return null;
+            }
+          }
+          return product.productSfid;
+        })
+      : [];
+
+    let AddOnProductIds = [selectedAddOn, ...addOnProductsList].filter(
+      (AddOn) => AddOn !== null,
+    );
+
+    const isRegularOrder = !workshop.bundleInfo;
+
+    const products = isRegularOrder
+      ? {
+          productType: 'workshop',
+          productSfId: productId,
+          AddOnProductIds,
+        }
+      : {
+          productType: 'bundle',
+          productSfId: workshop.bundleInfo.comboProductSfid,
+          childProduct: {
+            productType: 'workshop',
+            productSfId: productId,
+            AddOnProductIds,
+            complianceQuestionnaire,
+          },
+        };
+
+    let payLoad = {
+      shoppingRequest: {
+        couponCode: showCouponCodeField ? couponCode : '',
+        contactAddress: {
+          contactPhone,
+          contactAddress,
+          contactCity,
+          contactState,
+          contactZip,
+        },
+        billingAddress: {
+          billingPhone: contactPhone,
+          billingAddress: contactAddress,
+          billingCity: contactCity,
+          billingState: contactState,
+          billingZip: contactZip,
+        },
+        products,
+        ...(isHBForm && {
+          attendee: {
+            contactTitle,
+            contactHealthcareOrganisation,
+            contactOtherHealthcareOrganization,
+            contactDegree,
+            claimingType,
+            certificateOfAttendance,
+            contactClaimingTypeOther,
+          },
+        }),
+        complianceQuestionnaire,
+        programQuestionnaireResult,
+        isInstalmentOpted: paymentOption === PAYMENT_TYPES.LATER,
+        isStripeIntentPayment,
+      },
+      utm: filterAllowedParams(router.query),
+    };
+
+    if (!isLoggedUser) {
+      payLoad = {
+        ...payLoad,
+        user: {
+          lastName,
+          firstName,
+          email,
+        },
+      };
     }
+
+    if (isChangingCard) {
+      payLoad = {
+        ...payLoad,
+        shoppingRequest: {
+          ...payLoad.shoppingRequest,
+          doNotStoreCC: true,
+        },
+      };
+    }
+
+    if (isGenericWorkshop) {
+      const timeSlot =
+        availableTimings &&
+        Object.values(availableTimings)[0] &&
+        Object.values(Object.values(availableTimings)[0])[0][0]
+          .genericWorkshopSlotSfid;
+      payLoad = {
+        ...payLoad,
+        shoppingRequest: {
+          ...payLoad.shoppingRequest,
+          genericWorkshopSlotSfid: timeSlot,
+        },
+      };
+    }
+
+    return payLoad;
   };
 
   const showPaymentOptions =
@@ -1038,19 +684,19 @@ export const PaymentFormNew = ({
       {loading && <Loader />}
       <Formik
         initialValues={{
-          firstName: first_name || '',
-          lastName: last_name || '',
-          email: email || '',
-          contactPhone: personMobilePhone || '',
-          contactAddress: personMailingStreet || '',
-          contactCity: personMailingCity || '',
-          contactState: personMailingState || '',
-          contactZip: personMailingPostalCode || '',
-          couponCode: discount ? discount : '',
-          questionnaire: questionnaire,
+          firstName: profile.first_name || '',
+          lastName: profile.last_name || '',
+          email: profile.email || '',
+          contactPhone: profile.personMobilePhone || '',
+          contactAddress: profile.personMailingStreet || '',
+          contactCity: profile.personMailingCity || '',
+          contactState: profile.personMailingState || '',
+          contactZip: profile.personMailingPostalCode || '',
+          couponCode: discount || '',
+          questionnaire: questionnaireArray,
           ppaAgreement: false,
           paymentOption: PAYMENT_TYPES.FULL,
-          paymentMode: !showPaymentOptions
+          paymentMode: !otherPaymentOptions?.includes('Paypal')
             ? PAYMENT_MODES.STRIPE_PAYMENT_MODE
             : '',
           accommodation: null,
@@ -1058,65 +704,11 @@ export const PaymentFormNew = ({
         }}
         validationSchema={validationSchema}
         innerRef={formRef}
-        onSubmit={async (values) => {
-          await preEnrollValidation(values);
-        }}
+        onSubmit={preEnrollValidation}
       >
         {(formikProps) => {
           const { values } = formikProps;
           formikOnChange(values);
-          const addOnFee = addOnProducts.reduce(
-            (
-              previousValue,
-              {
-                unitPrice,
-                isAddOnSelectionRequired,
-                productName,
-                isExpenseAddOn,
-              },
-            ) => {
-              if (!isExpenseAddOn) {
-                if (
-                  (!isAddOnSelectionRequired && values[productName]) ||
-                  isAddOnSelectionRequired
-                ) {
-                  return previousValue + unitPrice;
-                } else {
-                  return previousValue;
-                }
-              } else if (isExpenseAddOn && !hasGroupedAddOnProducts) {
-                if (
-                  (!isAddOnSelectionRequired && values[productName]) ||
-                  isAddOnSelectionRequired
-                ) {
-                  return previousValue + unitPrice;
-                }
-                return previousValue;
-              } else {
-                return previousValue;
-              }
-            },
-            0,
-          );
-          const isRegularPrice =
-            values.priceType === null || values.priceType === 'regular';
-          const courseFee = isRegularPrice ? fee : premiumRate.unitPrice;
-
-          const totalFee =
-            courseFee +
-            (values.accommodation?.isExpenseAddOn
-              ? expenseAddOn?.unitPrice || 0
-              : (values.accommodation?.unitPrice || 0) +
-                (values.accommodation ? expenseAddOn?.unitPrice || 0 : 0)) +
-            addOnFee;
-
-          const selectedBundle = availableBundles?.find(
-            (bundle) => bundle.comboProductSfid === values.comboDetailId,
-          );
-
-          const isBundlePaypalAvailable = selectedBundle
-            ? selectedBundle.otherPaymentOptionAvailable?.indexOf('Paypal') > -1
-            : false;
 
           return (
             <>
@@ -1168,6 +760,7 @@ export const PaymentFormNew = ({
                             <UserInfoFormNewCheckout
                               formikProps={formikProps}
                               isLoggedUser={isLoggedUser}
+                              isHBForm={isHBForm}
                             />
                           </form>
                         </div>
@@ -1198,9 +791,13 @@ export const PaymentFormNew = ({
                                 formikProps={formikProps}
                                 otherPaymentOptions={otherPaymentOptions}
                                 isBundlePaypalAvailable={
-                                  isBundlePaypalAvailable
+                                  otherPaymentOptions &&
+                                  otherPaymentOptions.indexOf('Paypal') > -1
                                 }
-                                isBundleSelected={selectedBundle}
+                                isBundleSelected={
+                                  otherPaymentOptions &&
+                                  otherPaymentOptions.indexOf('Paypal') > -1
+                                }
                               />
                             )}
                           </>
@@ -1330,7 +927,7 @@ export const PaymentFormNew = ({
                                         formikProps.values,
                                       );
                                     }}
-                                    onApprove={paypalBuyAcknowledgement}
+                                    onApprove={handlePaypalPayment}
                                   />
                                 </PayPalScriptProvider>
                               </div>
@@ -1458,17 +1055,24 @@ export const PaymentFormNew = ({
                           paymentOptionChange={handlePaymentOptionChange}
                           discount={discountResponse}
                           onAccommodationChange={handleAccommodationChange}
+                          subtotal={subtotal}
+                          discountAmount={discountAmount}
+                          finalPrice={finalPrice}
                         />
 
                         <div className="room-board-pricing">
                           <div className="total">
                             <div className="label">Total:</div>
                             <div className="value">
-                              {' '}
                               {discountResponse && delfee && (
                                 <s>${delfee.toFixed(2)}</s>
                               )}{' '}
-                              ${totalFee.toFixed(2) || '0'.toFixed(2)}
+                              ${finalPrice.toFixed(2) || '0'.toFixed(2)}
+                              {discountAmount > 0 && (
+                                <span className="discount-amount">
+                                  (You save ${discountAmount.toFixed(2)})
+                                </span>
+                              )}
                             </div>
                           </div>
                         </div>
@@ -1833,7 +1437,7 @@ export const PaymentFormNew = ({
                                 form="my-form"
                                 onClick={handleFormSubmit}
                               >
-                                Confirm and Pay
+                                {loading ? 'Processing...' : 'Confirm and Pay'}
                               </button>
                             </div>
                           </div>
@@ -1935,7 +1539,7 @@ export const PaymentFormNew = ({
           submitResult={submitProgramQuestionnaire}
           closeModalAction={closeModalProgramQuestionnaireAction}
           productTypeId={productTypeId}
-        ></ProgramQuestionnaire>
+        />
       )}
     </>
   );
