@@ -240,13 +240,18 @@ const AOL_MENU = [
     name: 'Events',
     submenu: [
       {
-        name: 'Washigton DC',
-        link: 'https://event.us.artofliving.org/lp1/unlocking-happiness/',
+        name: 'Buffalo, NY',
+        link: 'https://event.us.artofliving.org/us-en/lp1/journey-within/buffalo/',
         props: { target: '_blank' },
       },
       {
-        name: 'Buffalo, NY',
-        link: 'https://event.us.artofliving.org/us-en/lp1/journey-within/buffalo/',
+        name: 'Los Angeles, CA',
+        link: 'https://event.us.artofliving.org/lp1/yoga-sutras-gurudev/',
+        props: { target: '_blank' },
+      },
+      {
+        name: 'Boone, NC',
+        link: 'https://event.us.artofliving.org/lp1/yoga-sutras-gurudev/',
         props: { target: '_blank' },
       },
     ],

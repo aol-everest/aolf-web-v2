@@ -111,12 +111,12 @@ function OfferingUpgradeCheckout() {
   const router = useRouter();
   const { id, ofid, cid } = router.query;
   const {
-    data: subsciption,
+    data: subscription,
     isLoading,
     isError,
     error,
   } = useQuery({
-    queryKey: 'subsciption',
+    queryKey: ['subscription', id],
     queryFn: async () => {
       const response = await api.get({
         path: 'subsciption',
@@ -145,9 +145,9 @@ function OfferingUpgradeCheckout() {
   const { track } = useAnalytics();
 
   useEffect(() => {
-    if (!router.isReady || !subsciption) return;
+    if (!router.isReady || !subscription) return;
 
-    const products = subsciption?.activeSubscriptions.map(
+    const products = subscription?.activeSubscriptions.map(
       (activeSubscription) => ({
         id: activeSubscription.sfid,
         name: activeSubscription.subscriptionName,
@@ -200,16 +200,16 @@ function OfferingUpgradeCheckout() {
         children: <RetreatPrerequisiteWarning />,
       });
     }
-  }, [router.isReady, subsciption]);
+  }, [router.isReady, subscription]);
 
   if (isError) return <ErrorPage statusCode={500} title={error.message} />;
   if (isLoading) return <PageLoading />;
 
-  const [activeSubscription] = subsciption?.activeSubscriptions || [
+  const [activeSubscription] = subscription?.activeSubscriptions || [
     { activeSubscriptions: {} },
   ];
 
-  const { name, sfid } = subsciption || {};
+  const { name, sfid } = subscription || {};
 
   const closeRetreatPrerequisiteWarning = (e) => {
     if (e) e.preventDefault();
@@ -249,11 +249,11 @@ function OfferingUpgradeCheckout() {
               },
             ]}
           >
-            {subsciption && (
+            {subscription && (
               <MembershipCheckoutStripe
                 isOfferingUpgrade
                 offeringId={offeringId}
-                subsciption={subsciption}
+                subscription={subscription}
                 activeSubscription={activeSubscription}
                 couponCode={couponCode}
                 profile={profile}

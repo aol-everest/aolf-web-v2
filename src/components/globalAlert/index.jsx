@@ -15,6 +15,15 @@ const ALERT_COMPONENTS = {
   [ALERT_TYPES.NEW_ALERT]: NewAlert,
 };
 
+// Global reference to showAlert function
+let globalShowAlert = null;
+
+export const showGlobalAlert = (message, type = ALERT_TYPES.ERROR_ALERT) => {
+  if (globalShowAlert) {
+    globalShowAlert(type, { children: message });
+  }
+};
+
 export const GlobalAlert = ({ children }) => {
   const [store, setStore] = useState();
   const { alertType, alertProps } = store || {};
@@ -33,6 +42,14 @@ export const GlobalAlert = ({ children }) => {
       }, autoHideMS);
     }
   };
+
+  // Store reference to showAlert function
+  useEffect(() => {
+    globalShowAlert = showAlert;
+    return () => {
+      globalShowAlert = null;
+    };
+  }, []);
 
   const hideAlert = () => {
     document.body.classList.remove('overflow-hidden');

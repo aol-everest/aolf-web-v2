@@ -16,10 +16,15 @@ import { AuthProvider, MeditationProvider } from '@contexts';
 import { orgConfig } from '@org';
 import { analytics } from '@service';
 import { Auth, Compose, Talkable, api, getParentDomain } from '@utils';
-import { DefaultSeo } from 'next-seo';
-import { useEffect, useState } from 'react';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+import { DefaultSeo, NextSeo } from 'next-seo';
+import { useEffect, useState, useMemo, memo } from 'react';
+import {
+  QueryClient,
+  QueryClientProvider,
+  useQuery,
+  useMutation,
+  useQueryClient,
+} from '@tanstack/react-query';
 import { AnalyticsProvider } from 'use-analytics';
 import { Amplify } from 'aws-amplify';
 import { cognitoUserPoolsTokenProvider } from 'aws-amplify/auth/cognito';
@@ -28,6 +33,7 @@ import { Hub } from 'aws-amplify/utils';
 import { useRouter } from 'next/router';
 import { clearInflightOAuth } from '@passwordLess/storage.js';
 import CookieStorage from '@utils/cookieStorage';
+import dynamic from 'next/dynamic';
 // import { SurveyRequest } from "@components/surveyRequest";
 
 // import TopProgressBar from "@components/topProgressBar";
@@ -98,178 +104,290 @@ cognitoUserPoolsTokenProvider.setKeyValueStorage(
   }),
 );
 
-function App({ Component, pageProps, err }) {
-  const router = useRouter();
-  const [user, setUser] = useState({ isAuthenticated: false, profile: {} });
-  const [loading, setLoading] = useState(true);
-  const [isReInstateRequired, setIsReInstateRequired] = useState(false);
-  // const [pendingSurveyInvite, setPendingSurveyInvite] = useState(null);
-  const [reinstateRequiredSubscription, setReinstateRequiredSubscription] =
-    useState(null);
-  const [isCCUpdateRequired, setIsCCUpdateRequired] = useState(false);
-  const [isPendingAgreement, setIsPendingAgreement] = useState(false);
-  const queryClient = new QueryClient({
-    defaultOptions: {
-      queries: {
-        refetchOnWindowFocus: false, // default: true
-      },
+const useOAuthCleanup = () => {
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      clearInflightOAuth();
+    }, 5000);
+    return () => clearTimeout(timer);
+  }, []);
+};
+
+const useAuthHub = (router) => {
+  useEffect(() => {
+    const unsubscribe = Hub.listen('auth', ({ payload }) => {
+      if (payload.event === 'customOAuthState' && payload.data) {
+        router.push(payload.data);
+      }
+    });
+    return unsubscribe;
+  }, [router]);
+};
+
+// Dynamically import heavy components
+const ReactQueryDevtools = dynamic(
+  () =>
+    import('@tanstack/react-query-devtools').then(
+      (mod) => mod.ReactQueryDevtools,
+    ),
+  { ssr: false },
+);
+
+// Create a HOC to ensure valid React components
+const withProvider = (WrappedComponent) => {
+  const Provider = ({ children, ...props }) => {
+    return <WrappedComponent {...props}>{children}</WrappedComponent>;
+  };
+  Provider.displayName = `Provider(${WrappedComponent.displayName || WrappedComponent.name || 'Component'})`;
+  return memo(Provider);
+};
+
+// Memoize static components
+const MemoizedLayout = memo(Layout);
+const MemoizedGlobalModal = withProvider(GlobalModal);
+const MemoizedGlobalAlert = withProvider(GlobalAlert);
+const MemoizedGlobalAudioPlayer = withProvider(GlobalAudioPlayer);
+const MemoizedGlobalVideoPlayer = withProvider(GlobalVideoPlayer);
+const MemoizedGlobalLoading = withProvider(GlobalLoading);
+const MemoizedGlobalBottomBanner = withProvider(GlobalBottomBanner);
+const MemoizedMeditationProvider = withProvider(MeditationProvider);
+
+// Memoize the loading component
+const LoadingScreen = memo(function LoadingScreen() {
+  return (
+    <div className="global-loader-container-full">
+      <div className="global-loader-container-inner">
+        <div className="global-loader-container">
+          <img
+            src={`/img/${orgConfig.logo}`}
+            alt="logo"
+            className="logo__image"
+          />
+        </div>
+        <div className="message">
+          <div className="dot-flashing dot"></div>
+          please wait!
+        </div>
+      </div>
+    </div>
+  );
+});
+
+// Memoize the compose components array
+const globalComponents = [
+  MemoizedGlobalModal,
+  MemoizedGlobalAlert,
+  MemoizedGlobalAudioPlayer,
+  MemoizedGlobalVideoPlayer,
+  MemoizedGlobalLoading,
+  MemoizedGlobalBottomBanner,
+];
+
+const useUserProfile = () => {
+  const queryClient = useQueryClient();
+
+  const { data: userInfo, isLoading } = useQuery({
+    queryKey: ['userProfile'],
+    queryFn: Auth.fetchUserProfile,
+    onError: async (error) => {
+      console.error('Profile fetch error:', error);
+      await Auth.logout();
+    },
+    retry: 1,
+    // Add suspense mode for better loading handling
+    suspense: false,
+    // Add error boundary handling
+    useErrorBoundary: true,
+  });
+
+  const { mutate: checkPendingAction } = useMutation({
+    mutationFn: async (userInfo) => {
+      const [pendingAgreementRes] = await Promise.all([
+        api.get({ path: 'getPendingHealthQuestionAgreement' }),
+      ]);
+      return {
+        pendingAgreement: pendingAgreementRes && pendingAgreementRes.length > 0,
+        ccUpdateRequired: userInfo.profile.isCCUpdateRequiredForSubscription,
+        reinstateRequired: userInfo.profile.subscriptions?.find(
+          ({ isReinstateRequiredForSubscription }) =>
+            isReinstateRequiredForSubscription,
+        ),
+      };
+    },
+    onSuccess: (data) => {
+      if (!userInfo?.profile) return data;
+
+      // Move these side effects to a separate function for better organization
+      handleUserAuthentication(userInfo.profile);
+      return data;
     },
   });
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      clearInflightOAuth();
-    }, 5000); // 5000ms = 5 seconds
-
-    // Cleanup the timeout when the component unmounts or when useEffect re-runs
-    return () => clearTimeout(timer);
-  }, []);
-
-  useEffect(() => {
-    const unsubscribe = Hub.listen('auth', ({ payload }) => {
-      switch (payload.event) {
-        case 'customOAuthState':
-          if (payload.data && payload.data !== '') {
-            router.push(payload.data);
-          }
-          break;
-      }
-    });
-
-    return unsubscribe;
-  }, []);
-
-  useEffect(() => {
-    fetchProfile();
-  }, []);
-
-  const fetchProfile = async () => {
-    try {
-      const userInfo = await Auth.fetchUserProfile();
-      setUser(userInfo);
-      await checkUserPendingAction(userInfo);
-    } catch (ex) {
-      console.error(ex);
-      await Auth.logout();
+    if (userInfo) {
+      checkPendingAction(userInfo);
     }
-    setLoading(false);
+  }, [userInfo, checkPendingAction]);
+
+  return {
+    userInfo: userInfo || { isAuthenticated: false, profile: {} },
+    isLoading,
   };
+};
 
-  const checkUserPendingAction = async (userInfo) => {
-    const pendingAgreementRes = await api.get({
-      path: 'getPendingHealthQuestionAgreement',
-    });
+// Separate authentication handling
+const handleUserAuthentication = (profile) => {
+  Talkable.authenticate({
+    email: profile.email,
+    first_name: profile.first_name,
+    last_name: profile.last_name,
+  });
 
-    setIsPendingAgreement(
-      pendingAgreementRes && pendingAgreementRes.length > 0,
-    );
+  const userSubscriptions = profile.subscriptions
+    ? JSON.stringify(
+        profile.subscriptions.map(({ sfid, name }) => ({
+          id: sfid,
+          name,
+        })),
+      )
+    : '';
 
-    const { subscriptions = [], isCCUpdateRequiredForSubscription } =
-      userInfo.profile;
-    // setPendingSurveyInvite(userInfo.profile.surveyInvite);
-    setIsCCUpdateRequired(isCCUpdateRequiredForSubscription);
-    const reinstateRequiredForSubscription = subscriptions.find(
-      ({ isReinstateRequiredForSubscription }) =>
-        isReinstateRequiredForSubscription,
-    );
-    if (reinstateRequiredForSubscription) {
-      setIsReInstateRequired(true);
-      setReinstateRequiredSubscription(reinstateRequiredForSubscription);
-    }
-    Talkable.authenticate({
-      email: userInfo.profile.email,
-      first_name: userInfo.profile.first_name,
-      last_name: userInfo.profile.last_name,
-    });
-    let userSubscriptions = '';
-    if (userInfo.profile.subscriptions) {
-      userSubscriptions = JSON.stringify(
-        userInfo.profile.subscriptions.map(({ sfid, name }) => {
-          return {
-            id: sfid,
-            name,
-          };
-        }),
+  analytics.identify(profile.email, {
+    id: profile.username,
+    sfid: profile.id,
+    email: profile.email,
+    name: profile.name,
+    first_name: profile.first_name,
+    last_name: profile.last_name,
+    avatar: profile.userProfilePic,
+    state: profile.personMailingState,
+    country: profile.personMailingCountry,
+    subscriptions: userSubscriptions,
+    sky_flag: profile.isMandatoryWorkshopAttended,
+    sahaj_flag: profile.isSahajGraduate,
+    silence_course_count: profile.aosCountTotal,
+  });
+};
+
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false,
+      refetchOnMount: false,
+      refetchOnReconnect: false,
+      retry: 1,
+      staleTime: 5 * 60 * 1000, // 5 minutes
+      cacheTime: 10 * 60 * 1000, // 10 minutes
+      retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
+    },
+    mutations: {
+      retry: 2,
+      retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
+    },
+  },
+});
+
+// Create a memoized provider component that combines all providers
+const CombinedProviders = memo(function CombinedProviders({ children }) {
+  return <Compose components={globalComponents}>{children}</Compose>;
+});
+
+// Add display names
+LoadingScreen.displayName = 'LoadingScreen';
+CombinedProviders.displayName = 'CombinedProviders';
+
+const AppContent = ({ Component, pageProps, err }) => {
+  const router = useRouter();
+  const [isReInstateRequired, setIsReInstateRequired] = useState(false);
+  const [reinstateRequiredSubscription, setReinstateRequiredSubscription] =
+    useState(null);
+  const [isCCUpdateRequired, setIsCCUpdateRequired] = useState(false);
+  const [isPendingAgreement, setIsPendingAgreement] = useState(false);
+
+  useOAuthCleanup();
+  useAuthHub(router);
+  const { userInfo, isLoading } = useUserProfile();
+
+  const checkUserPendingAction = useMemo(
+    () => async (userInfo) => {
+      const pendingAgreementRes = await api.get({
+        path: 'getPendingHealthQuestionAgreement',
+      });
+      setIsPendingAgreement(
+        pendingAgreementRes && pendingAgreementRes.length > 0,
       );
-    }
-    analytics.identify(userInfo.profile.email, {
-      id: userInfo.profile.username,
-      sfid: userInfo.profile.id,
-      email: userInfo.profile.email,
-      name: userInfo.profile.name,
-      first_name: userInfo.profile.first_name,
-      last_name: userInfo.profile.last_name,
-      avatar: userInfo.profile.userProfilePic,
-      state: userInfo.profile.personMailingState, // State
-      country: userInfo.profile.personMailingCountry, // Country
-      subscriptions: userSubscriptions,
-      sky_flag: userInfo.profile.isMandatoryWorkshopAttended,
-      sahaj_flag: userInfo.profile.isSahajGraduate,
-      silence_course_count: userInfo.profile.aosCountTotal,
-    });
-  };
+      setIsCCUpdateRequired(userInfo.profile.isCCUpdateRequiredForSubscription);
 
-  if (loading) {
-    return (
-      <div className="global-loader-container-full">
-        <div className="global-loader-container-inner">
-          <div className="global-loader-container">
-            <img
-              src={`/img/${orgConfig.logo}`}
-              alt="logo"
-              className="logo__image"
-            />
-          </div>
-          <div className="message">
-            <div className="dot-flashing dot"></div>
-            please wait!
-          </div>
-        </div>
-      </div>
-    );
+      const reinstateRequired = userInfo.profile.subscriptions?.find(
+        ({ isReinstateRequiredForSubscription }) =>
+          isReinstateRequiredForSubscription,
+      );
+      if (reinstateRequired) {
+        setIsReInstateRequired(true);
+        setReinstateRequiredSubscription(reinstateRequired);
+      }
+    },
+    [],
+  );
+
+  // Memoize layout props
+  const layoutProps = useMemo(
+    () => ({
+      hideHeader: Component.hideHeader,
+      noHeader: Component.noHeader,
+      hideFooter: Component.hideFooter,
+      wcfHeader: Component.wcfHeader,
+      sideGetStartedAction: Component.sideGetStartedAction,
+    }),
+    [Component],
+  );
+
+  // Get page-specific SEO from the component if available
+  const pageSeo = Component.seo ? Component.seo(pageProps) : {};
+
+  if (isLoading) {
+    return <LoadingScreen />;
   }
+
+  return (
+    <AuthProvider
+      checkUserPendingAction={checkUserPendingAction}
+      userInfo={userInfo}
+      enableLocalUserCache={true}
+    >
+      <CombinedProviders>
+        <MemoizedMeditationProvider>
+          <MemoizedLayout {...layoutProps}>
+            {/* Default SEO configuration */}
+            <DefaultSeo {...SEO} />
+            {/* Add page-specific SEO */}
+            {pageSeo && Object.keys(pageSeo).length > 0 && (
+              <DefaultSeo {...pageSeo} />
+            )}
+            {isReInstateRequired && (
+              <ReInstate subscription={reinstateRequiredSubscription} />
+            )}
+            {isCCUpdateRequired && <CardUpdateRequired />}
+            {isPendingAgreement && <PendingAgreement />}
+            <Component {...pageProps} err={err} />
+            {process.env.NODE_ENV === 'development' && (
+              <ReactQueryDevtools initialIsOpen={false} />
+            )}
+          </MemoizedLayout>
+        </MemoizedMeditationProvider>
+      </CombinedProviders>
+    </AuthProvider>
+  );
+};
+
+// Memoize the entire AppContent component
+const MemoizedAppContent = memo(AppContent);
+
+function App(props) {
   return (
     <AnalyticsProvider instance={analytics}>
       <QueryClientProvider client={queryClient}>
-        <AuthProvider
-          checkUserPendingAction={checkUserPendingAction}
-          userInfo={user}
-          enableLocalUserCache={true}
-        >
-          <Compose
-            components={[
-              GlobalModal,
-              GlobalAlert,
-              GlobalAudioPlayer,
-              GlobalVideoPlayer,
-              GlobalLoading,
-              GlobalBottomBanner,
-              MeditationProvider,
-            ]}
-          >
-            <Layout
-              hideHeader={Component.hideHeader}
-              noHeader={Component.noHeader}
-              hideFooter={Component.hideFooter}
-              wcfHeader={Component.wcfHeader}
-              sideGetStartedAction={Component.sideGetStartedAction}
-            >
-              <DefaultSeo {...SEO} />
-              {/* <UsePagesViews /> */}
-              {/* <TopProgressBar /> */}
-              {isReInstateRequired && (
-                <ReInstate subscription={reinstateRequiredSubscription} />
-              )}
-              {/* {pendingSurveyInvite && (
-                <SurveyRequest surveyInvite={pendingSurveyInvite} />
-              )} */}
-              {isCCUpdateRequired && <CardUpdateRequired />}
-              {isPendingAgreement && <PendingAgreement />}
-              <Component {...pageProps} err={err} />
-              <ReactQueryDevtools initialIsOpen={false} />
-            </Layout>
-          </Compose>
-        </AuthProvider>
+        <MemoizedAppContent {...props} />
       </QueryClientProvider>
     </AnalyticsProvider>
   );

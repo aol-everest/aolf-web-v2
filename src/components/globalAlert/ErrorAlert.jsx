@@ -7,7 +7,7 @@ export const ErrorAlert = () => {
   const { alertProps } = store || {};
   const {
     closeModalAction,
-    confirmBtnText = 'Close',
+    confirmBtnText = 'Got it',
     title = 'Error',
     children,
     className,
@@ -19,54 +19,66 @@ export const ErrorAlert = () => {
       closeModalAction();
     }
   };
+
+  const handleOverlayClick = (e) => {
+    if (e.target === e.currentTarget) {
+      handleAlertToggle();
+    }
+  };
+
   return (
-    <div className="alert__modal modal-window modal-window_no-log active show">
+    <div
+      className="alert__modal modal-window modal-window_no-log active show tw-z-[9999]"
+      onClick={handleOverlayClick}
+    >
       <div
-        id="retreat-prerequisite"
         className={classNames(
-          `digital-member-join digital-member-join_journey course-join-card retreat-prerequisite active show`,
+          'tw-fixed tw-left-4 tw-right-4 md:tw-right-auto md:tw-left-4 tw-bottom-4 tw-bg-white tw-rounded-lg tw-shadow-lg tw-border tw-border-red-100 md:tw-max-w-sm tw-w-auto',
           className,
         )}
       >
-        <div className="close-modal d-lg-none" onClick={handleAlertToggle}>
-          <div className="close-line"></div>
-          <div className="close-line"></div>
-        </div>
-        <div className="course-join-card__body alert__body">
-          <h2
-            className={classNames(
-              'course-join-card__title section-title',
-              Style.title,
-            )}
-          >
-            {title}
-          </h2>
-
-          <div className="f-modal-alert">
-            <div className="f-modal-icon f-modal-error animate">
-              <span className="f-modal-x-mark">
-                <span className="f-modal-line f-modal-left animateXLeft"></span>
-                <span className="f-modal-line f-modal-right animateXRight"></span>
-              </span>
-              <div className="f-modal-placeholder"></div>
-              <div className="f-modal-fix"></div>
+        <div className="tw-p-3 md:tw-p-4">
+          <div className="tw-flex tw-items-start tw-gap-2 md:tw-gap-3">
+            <div className="tw-flex-shrink-0">
+              <svg
+                className="tw-h-5 tw-w-5 tw-text-red-400"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                  clipRule="evenodd"
+                />
+              </svg>
+            </div>
+            <div className="tw-flex-1 tw-min-w-0">
+              <p className="tw-text-sm tw-font-medium tw-text-gray-800 tw-break-words">
+                {children}
+              </p>
+            </div>
+            <div className="tw-flex-shrink-0">
+              <button
+                className="tw-bg-white tw-rounded-md tw-inline-flex tw-text-gray-400 hover:tw-text-gray-500 focus:tw-outline-none tw-p-1"
+                onClick={handleAlertToggle}
+              >
+                <span className="tw-sr-only">Close</span>
+                <svg
+                  className="tw-h-5 tw-w-5"
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+              </button>
             </div>
           </div>
-          <div className="course-join-card__text-container text-center font-weight-light">
-            {children}
-          </div>
-        </div>
-        <div className={classNames('course-join-card__footer', Style.footer)}>
-          <button className="btn-secondary" onClick={handleAlertToggle}>
-            {confirmBtnText}
-          </button>
-        </div>
-        <div
-          className="close-modal d-none d-lg-flex"
-          onClick={handleAlertToggle}
-        >
-          <div className="close-line"></div>
-          <div className="close-line"></div>
         </div>
       </div>
     </div>

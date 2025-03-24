@@ -103,8 +103,8 @@ export const PaymentFormGeneric = ({
 
   const router = useRouter();
 
-  const { data: corporates } = useQuery({
-    queryKey: 'corporates',
+  const { data: corporates = [] } = useQuery({
+    queryKey: ['corporates'],
     queryFn: async () => {
       const response = await api.get({
         path: 'getCorporates',
