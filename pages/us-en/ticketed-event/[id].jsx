@@ -24,7 +24,13 @@ const ticketSchema = z.record(z.string(), z.number());
 
 dayjs.extend(utc);
 
-const TicketLineItem = ({ item, handleTicketSelect, selectedTickets }) => {
+const TicketLineItem = ({
+  item,
+  handleTicketSelect,
+  selectedTickets,
+  totalTickets,
+  maxTicketsWithOneOrder,
+}) => {
   let count = 0;
   if (item.pricingTierId in selectedTickets) {
     count = selectedTickets[item.pricingTierId];
@@ -50,12 +56,17 @@ const TicketLineItem = ({ item, handleTicketSelect, selectedTickets }) => {
             id={item.pricingTierId}
             value={count}
             min="0"
+            max={item.availableSeats}
             onChange={handleTicketSelect('input', item)}
+            disabled={totalTickets >= maxTicketsWithOneOrder}
           />
           <button
             className="tickets-modal__counter-button"
             type="button"
-            disabled={count >= item.availableSeats}
+            disabled={
+              count >= item.availableSeats ||
+              totalTickets >= maxTicketsWithOneOrder
+            }
             onClick={handleTicketSelect('add', item)}
           >
             +
@@ -426,14 +437,23 @@ function TicketedEvent() {
                       </div>
 
                       <div className="tickets-modal__list">
-                        {pricingTiers?.map((item, index) => (
-                          <TicketLineItem
-                            key={item.pricingTierId}
-                            item={item}
-                            handleTicketSelect={handleTicketSelect}
-                            selectedTickets={selectedTickets}
-                          ></TicketLineItem>
-                        ))}
+                        {pricingTiers?.map((item) => {
+                          const totalTickets = Object.keys(
+                            selectedTickets,
+                          ).reduce((total, item) => {
+                            return total + (selectedTickets[item] || 0);
+                          }, 0);
+                          return (
+                            <TicketLineItem
+                              key={item.pricingTierId}
+                              item={item}
+                              handleTicketSelect={handleTicketSelect}
+                              selectedTickets={selectedTickets}
+                              totalTickets={totalTickets}
+                              maxTicketsWithOneOrder={maxTicketsWithOneOrder}
+                            ></TicketLineItem>
+                          );
+                        })}
                         <div className="tickets-modal__card notes-desktop">
                           <div className="tickets notes">
                             <div className="label">Notes</div>
