@@ -33,7 +33,8 @@ $dodger-blue: #4287f5;
 
 //Button vars
 $button-primary: linear-gradient(to top, $blue, $blue-hover);
-$button-primary-hover: linear-gradient(
+$button-primary-hover:
+  linear-gradient(
     to bottom,
     rgba(255, 255, 255, 0.2),
     rgba(255, 255, 255, 0.2)
@@ -42,7 +43,8 @@ $button-primary-hover: linear-gradient(
 $button-primary-active: linear-gradient(to top, #1374e8, #70bafa);
 
 $button-secondary: linear-gradient(to bottom, #ffd16f, #ff865b);
-$button-secondary-hover: linear-gradient(
+$button-secondary-hover:
+  linear-gradient(
     to bottom,
     rgba(255, 255, 255, 0.2),
     rgba(255, 255, 255, 0.2)

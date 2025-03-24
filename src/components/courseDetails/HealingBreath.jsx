@@ -73,7 +73,8 @@ export const HealingBreath = ({
                     <li>Reconnect to the joy in medicine</li>
                     <li>Boost energy & alertness</li>
                     <li>
-                      Cultivate inner calm & connectedness with self & others{' '}
+                      Cultivate inner calm & connectedness with self &
+                      others{' '}
                     </li>
                   </ul>
                 </div>

@@ -683,7 +683,8 @@ export const ResearchFindingSource = () => {
                     Qu, S., et al.,{' '}
                     <em>
                       Rapid gene expression changes in peripheral blood
-                      lymphocytes upon practice of a comprehensive yoga program.{' '}
+                      lymphocytes upon practice of a comprehensive yoga
+                      program.{' '}
                     </em>
                     PLoS One, 2013. 8(4): p. e61910.
                   </li>
