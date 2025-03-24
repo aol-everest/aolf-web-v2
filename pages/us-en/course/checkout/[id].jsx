@@ -18,7 +18,6 @@ import {
 import { useQueryState, parseAsBoolean, parseAsString } from 'nuqs';
 import { pushRouteWithUTMQuery, replaceRouteWithUTMQuery } from '@service';
 import { Elements } from '@stripe/react-stripe-js';
-import { loadStripe } from '@stripe/stripe-js';
 import { api, convertToUpperCaseAndReplaceSpacesForURL } from '@utils';
 import dayjs from 'dayjs';
 import { NextSeo } from 'next-seo';
@@ -585,12 +584,11 @@ const Checkout = () => {
               </>
             )}
 
-            {!isStripeReady && isStripeIntentPayment && (
+            {!isStripeReady && (
               <div className="tw-p-4 tw-text-center tw-text-red-600">
                 Unable to initialize payment system. Please try again later.
               </div>
             )}
-            {!isStripeReady && !isStripeIntentPayment && renderPaymentForm()}
           </div>
         </section>
       </main>

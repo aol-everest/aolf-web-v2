@@ -202,6 +202,7 @@ export const PaymentFormNew = ({
   };
 
   const applyDiscount = (discount) => {
+    console.log('discount', discount);
     setDiscountResponse(discount);
   };
 
