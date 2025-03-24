@@ -1,0 +1,27 @@
+.modalMessageContainer {
+  text-align: center;
+  padding: 40px 0;
+
+  .loaderSpinner {
+    display: inline-block;
+    width: 40px;
+    height: 40px;
+    border: 3px solid rgba(0, 0, 0, 0.1);
+    border-radius: 50%;
+    border-top-color: #3d8be8;
+    animation: spin 1s ease-in-out infinite;
+    margin-bottom: 15px;
+  }
+
+  p {
+    color: #666;
+    font-size: 16px;
+    margin: 0;
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
