@@ -1,0 +1,26 @@
+export const FEATURES_DATA = [
+  {
+    icon: '/img/inner-peace-icon.svg',
+    title: 'Evidence-Based Practice',
+    content:
+      'Scientifically proven to reduce stress, anxiety, and improve sleep through hundreds of scientific studies.',
+  },
+  {
+    icon: '/img/calm-icon.svg',
+    title: 'Authentic Meditation Practice',
+    content:
+      'Drawing from Vedic principles of meditation, SKY offers an authentic and deeply profound experience, effortlessly allowing anyone to connect with the depth of their being.',
+  },
+  {
+    icon: '/img/spirituality-icon.svg',
+    title: 'Certified SKY Instructors',
+    content:
+      'Learn from the best! Our SKY instructors are certified and go through over 500 hours of training to provide you with an interactive and enriching learning experience.',
+  },
+  {
+    icon: '/img/experience-icon.svg',
+    title: 'Millions of Lives Touched',
+    content:
+      'Join a community of over 800 million people whose lives have been positively transformed through SKY Breath Meditation and other events.',
+  },
+];
