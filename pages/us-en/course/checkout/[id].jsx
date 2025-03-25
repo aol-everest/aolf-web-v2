@@ -256,6 +256,8 @@ const Checkout = () => {
     }
   }, [profile, workshop]);
 
+  const businessOrg = workshop?.businessOrg || 'AOL';
+
   const closeRetreatPrerequisiteWarning =
     (firstPreRequisiteFailedReason) => (e) => {
       if (e) e.preventDefault();
@@ -383,7 +385,7 @@ const Checkout = () => {
           login={login}
           isLoggedUser={isAuthenticated}
           onValidateDiscount={handleValidateDiscount}
-          isHBForm={isHBCheckoutPage}
+          isHBForm={businessOrg === 'HB'}
         />
       </div>
     );

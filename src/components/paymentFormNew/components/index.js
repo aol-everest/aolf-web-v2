@@ -7,3 +7,5 @@ export { default as StripeCardSection } from './StripeCardSection';
 export { default as DetailsSection } from './DetailsSection';
 export { FEATURES_DATA } from './featuresData';
 export { getGoogleMapsUrl, formatAddress } from './locationUtils';
+export { CMEAddon } from './CMEAddon';
+export { AddonProduct } from './AddonProduct';

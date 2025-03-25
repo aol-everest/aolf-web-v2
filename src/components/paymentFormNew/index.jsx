@@ -14,10 +14,8 @@ import {
 } from '@constants';
 import { useAuth, useGlobalAlertContext } from '@contexts';
 import { useQueryString, usePayment } from '@hooks';
-import { PayPalButtons, PayPalScriptProvider } from '@paypal/react-paypal-js';
 import { pushRouteWithUTMQuery } from '@service';
 import {
-  CardElement,
   PaymentElement,
   useElements,
   useStripe,
@@ -39,41 +37,14 @@ import {
   SSLSecuredIcon,
   TrustScore,
   FeaturesList,
-  LocationDisplay,
   PayPalSection,
   StripeCardSection,
   DetailsSection,
+  AddonProduct,
 } from './components';
 
 const advancedFormat = require('dayjs/plugin/advancedFormat');
 dayjs.extend(advancedFormat);
-
-const FEATURES_DATA = [
-  {
-    icon: '/img/inner-peace-icon.svg',
-    title: 'Evidence-Based Practice',
-    content:
-      'Scientifically proven to reduce stress, anxiety, and improve sleep through hundreds of scientific studies.',
-  },
-  {
-    icon: '/img/calm-icon.svg',
-    title: 'Authentic Meditation Practice',
-    content:
-      'Drawing from Vedic principles of meditation, SKY offers an authentic and deeply profound experience, effortlessly allowing anyone to connect with the depth of their being.',
-  },
-  {
-    icon: '/img/spirituality-icon.svg',
-    title: 'Certified SKY Instructors',
-    content:
-      'Learn from the best! Our SKY instructors are certified and go through over 500 hours of training to provide you with an interactive and enriching learning experience.',
-  },
-  {
-    icon: '/img/experience-icon.svg',
-    title: 'Millions of Lives Touched',
-    content:
-      'Join a community of over 800 million people whose lives have been positively transformed through SKY Breath Meditation and other events.',
-  },
-];
 
 const createOptions = {
   style: {
@@ -121,6 +92,7 @@ export const PaymentFormNew = ({
     useState(false);
   const [programQuestionnaireResult, setProgramQuestionnaireResult] =
     useState(null);
+  const [currentFormValues, setCurrentFormValues] = useState({});
 
   const router = useRouter();
   const { signOut } = passwordLess;
@@ -149,7 +121,7 @@ export const PaymentFormNew = ({
       !isEmpty(workshop.groupedAddOnProducts) &&
       'Residential Add On' in workshop.groupedAddOnProducts &&
       workshop.groupedAddOnProducts['Residential Add On'].length > 0,
-    values: formRef.current?.values || {},
+    values: currentFormValues,
     discount: discountResponse,
     isCCNotRequired: workshop.isCCNotRequired,
   });
@@ -557,6 +529,9 @@ export const PaymentFormNew = ({
         },
       });
     }
+
+    // Update current form values for price calculation
+    setCurrentFormValues(values);
   };
 
   const preparePaymentData = (values) => {
@@ -722,6 +697,7 @@ export const PaymentFormNew = ({
       {loading && <Loader />}
       <Formik
         initialValues={{
+          CME: cmeAddOn ? true : false,
           firstName: profile.first_name || '',
           lastName: profile.last_name || '',
           email: profile.email || '',
@@ -747,7 +723,6 @@ export const PaymentFormNew = ({
         {(formikProps) => {
           const { values } = formikProps;
           formikOnChange(values);
-
           return (
             <>
               <main className="checkout-aol">
@@ -800,6 +775,19 @@ export const PaymentFormNew = ({
                               isLoggedUser={isLoggedUser}
                               isHBForm={isHBForm}
                             />
+
+                            {cmeAddOn && (
+                              <div className="form-inputs checkout-fields">
+                                <h2 className="tw-w-full tw-text-2xl tw-mb-4 tw-line-height-10 tw-mt-3">
+                                  Addon Information
+                                </h2>
+                                <AddonProduct
+                                  addOnProducts={addOnProducts}
+                                  formikProps={formikProps}
+                                  cmeAddOn={cmeAddOn}
+                                />
+                              </div>
+                            )}
                           </form>
                         </div>
                       </div>
