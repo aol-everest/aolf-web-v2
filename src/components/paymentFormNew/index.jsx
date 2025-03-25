@@ -715,6 +715,8 @@ export const PaymentFormNew = ({
             : '',
           accommodation: null,
           priceType: 'regular',
+          shouldTokenize:
+            !isLoggedUser || isChangingCard || paymentMethod.type !== 'card',
         }}
         validationSchema={validationSchema}
         innerRef={formRef}
