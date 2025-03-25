@@ -337,7 +337,7 @@ const Checkout = () => {
 
   const isStripeIntentPayment = !!workshop.isStripeIntentPaymentEnabled;
 
-  const isHBCheckoutPage = isHealingBreath;
+  const isHBCheckoutPage = businessOrg === 'HB';
 
   const renderPaymentForm = () => {
     if (isOldCheckout) {
@@ -385,7 +385,7 @@ const Checkout = () => {
           login={login}
           isLoggedUser={isAuthenticated}
           onValidateDiscount={handleValidateDiscount}
-          isHBForm={businessOrg === 'HB'}
+          isHBForm={isHBCheckoutPage}
         />
       </div>
     );
@@ -530,10 +530,10 @@ const Checkout = () => {
         )}
 
         <section
-          className={isHBCheckoutPage || isSkyHappinessRetreat ? 'order' : ''}
+          className={isOldCheckout || isSkyHappinessRetreat ? 'order' : ''}
         >
           <div className="container">
-            {(isHBCheckoutPage || isSkyHappinessRetreat) && (
+            {(isOldCheckout || isSkyHappinessRetreat) && (
               <>
                 <h1 className="title">{workshop.title}</h1>
                 {workshop.isGenericWorkshop ? (
