@@ -460,7 +460,7 @@ export const DiscountInputNew = ({
           </div>
         )}
       </div>
-      {hasError && (
+      {false && hasError && (
         <div
           className={classNames(
             'tw-text-xs tw-text-red-500 tw-mt-1',
