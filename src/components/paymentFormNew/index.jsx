@@ -879,11 +879,12 @@ export const PaymentFormNew = ({
                                   ${delfee.toFixed(2)}
                                 </s>
                               )}{' '}
-                              ${finalPrice.toFixed(2) || '0'.toFixed(2)}
+                              ${finalPrice.toFixed(2)}
                               <div className="tw-text-sm tw-font-normal">
                                 {discountAmount > 0 && (
                                   <span className="discount-amount">
-                                    (You save ${discountAmount.toFixed(2)})
+                                    (You save ${discountAmount.toFixed(2)} on
+                                    course fee)
                                   </span>
                                 )}
                               </div>

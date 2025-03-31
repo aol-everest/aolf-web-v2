@@ -178,16 +178,40 @@ export const usePriceCalculation = ({
   // Calculate subtotal before discount
   const subtotal = courseFee + addOnFees + accommodationFee;
 
-  // Calculate discount amount
-  const discountAmount = calculateDiscountAmount(discount, subtotal);
+  // Calculate discount amount - only apply to course fee, not add-ons
+  let discountAmount = 0;
+  let total = subtotal;
+  let originalPrice = null;
 
-  // Calculate final total after discount
-  const total = Math.max(0, subtotal - discountAmount);
+  if (discount) {
+    // Store the original course price for display
+    originalPrice = courseFee;
+
+    // Handle non-discounted products
+    const nonDiscountedAmount = (discount.nonDiscountedProducts || []).reduce(
+      (sum, product) => {
+        return sum + (product.unitPrice || 0);
+      },
+      0,
+    );
+
+    // Apply discount only to course fee
+    if (discount.newPrice != null) {
+      discountAmount = Math.max(0, courseFee - discount.newPrice);
+      total = discount.newPrice + addOnFees + accommodationFee;
+    } else if (discount.amount != null) {
+      discountAmount = Math.min(courseFee, discount.amount);
+      total = courseFee - discountAmount + addOnFees + accommodationFee;
+    } else if (discount.percentage != null) {
+      discountAmount = (courseFee * discount.percentage) / 100;
+      total = courseFee - discountAmount + addOnFees + accommodationFee;
+    }
+  }
 
   // Update display price if discount is available
-  if (discount && discount.oldPrice > total) {
-    displayPrice = discount.oldPrice;
-  }
+  displayPrice = discount
+    ? originalPrice
+    : getDisplayPrice(workshop, initialBasePrice);
 
   // Determine if payment is required
   const isPaymentRequired = total !== 0 ? true : !isCCNotRequired;
@@ -202,6 +226,7 @@ export const usePriceCalculation = ({
     discountAmount,
     total,
     isPaymentRequired,
+    originalPrice,
   });
 
   return {
