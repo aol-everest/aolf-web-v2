@@ -256,6 +256,8 @@ const Checkout = () => {
     }
   }, [profile, workshop]);
 
+  const businessOrg = workshop?.businessOrg || 'AOL';
+
   const closeRetreatPrerequisiteWarning =
     (firstPreRequisiteFailedReason) => (e) => {
       if (e) e.preventDefault();
@@ -335,7 +337,7 @@ const Checkout = () => {
 
   const isStripeIntentPayment = !!workshop.isStripeIntentPaymentEnabled;
 
-  const isHBCheckoutPage = isHealingBreath;
+  const isHBCheckoutPage = businessOrg === 'HB';
 
   const renderPaymentForm = () => {
     if (isOldCheckout) {
@@ -528,10 +530,10 @@ const Checkout = () => {
         )}
 
         <section
-          className={isHBCheckoutPage || isSkyHappinessRetreat ? 'order' : ''}
+          className={isOldCheckout || isSkyHappinessRetreat ? 'order' : ''}
         >
           <div className="container">
-            {(isHBCheckoutPage || isSkyHappinessRetreat) && (
+            {(isOldCheckout || isSkyHappinessRetreat) && (
               <>
                 <h1 className="title">{workshop.title}</h1>
                 {workshop.isGenericWorkshop ? (

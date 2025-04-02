@@ -141,7 +141,7 @@ export const DiscountInputNew = ({
 
   const validateCouponFormat = (code) => {
     if (!code) return false;
-    const isValidFormat = /^[A-Z0-9]{4,20}$/.test(code);
+    const isValidFormat = /^[A-Z0-9_-]{4,20}$/.test(code);
     if (!isValidFormat) {
       debugLog('Invalid coupon format', { code });
       return false;
@@ -273,7 +273,7 @@ export const DiscountInputNew = ({
       await handleStatusTransition(DISCOUNT_STATUS.INVALID_FORMAT);
       formikProps.setFieldError(
         formikKey,
-        'Invalid coupon format. Please use only letters and numbers (4-20 characters).',
+        'Invalid coupon format. Please use only letters, numbers, hyphens, and underscores (4-20 characters).',
       );
       return;
     }
@@ -460,7 +460,7 @@ export const DiscountInputNew = ({
           </div>
         )}
       </div>
-      {hasError && (
+      {false && hasError && (
         <div
           className={classNames(
             'tw-text-xs tw-text-red-500 tw-mt-1',

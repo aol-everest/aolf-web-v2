@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useState, useEffect } from 'react';
 import { COURSE_TYPES } from '@constants';
 
 const getBasePrice = (workshop, agreementCMEAccepted) => {
@@ -41,20 +41,48 @@ const getDisplayPrice = (workshop, basePrice) => {
 };
 
 const calculateAddOnFees = (addOnProducts, values, hasGroupedAddOnProducts) => {
+  console.log('Calculating addon fees with:', {
+    addOnProducts,
+    values,
+    hasGroupedAddOnProducts,
+  });
+
   return addOnProducts.reduce((total, addOn) => {
-    const { unitPrice, isAddOnSelectionRequired, productName, isExpenseAddOn } =
-      addOn;
+    const {
+      unitPrice,
+      isAddOnSelectionRequired,
+      productName,
+      isExpenseAddOn,
+      isCMEAddOn,
+    } = addOn;
 
     // Skip expense add-ons if we have grouped add-ons
     if (isExpenseAddOn && hasGroupedAddOnProducts) {
+      console.log('Skipping expense addon:', addOn);
       return total;
     }
 
+    // For CME addon, check the CME field instead of productName
+    const isSelected = isCMEAddOn ? values['CME'] : values[productName];
+
     // Add price if product is required or selected
-    if (isAddOnSelectionRequired || values[productName]) {
+    if (isAddOnSelectionRequired || isSelected) {
+      console.log('Adding addon fee for:', {
+        productName,
+        unitPrice,
+        isRequired: isAddOnSelectionRequired,
+        isSelected,
+        isCMEAddOn,
+      });
       return total + (unitPrice || 0);
     }
 
+    console.log('Skipping addon:', {
+      productName,
+      reason: 'not required and not selected',
+      isCMEAddOn,
+      isSelected,
+    });
     return total;
   }, 0);
 };
@@ -105,66 +133,111 @@ export const usePriceCalculation = ({
   discount,
   isCCNotRequired,
 }) => {
-  return useMemo(() => {
-    // Get initial base price and display price
-    const initialBasePrice = getBasePrice(workshop, agreementCMEAccepted);
-    let displayPrice = getDisplayPrice(workshop, initialBasePrice);
+  const [currentValues, setCurrentValues] = useState(values);
 
-    // Calculate course fee with premium rate if applicable
-    const isRegularPrice = !values.priceType || values.priceType === 'regular';
-    const courseFee = isRegularPrice
-      ? initialBasePrice
-      : premiumRate?.unitPrice || initialBasePrice;
+  useEffect(() => {
+    setCurrentValues(values);
+  }, [values]);
 
-    // Add fees for add-on products
-    const addOnFees = calculateAddOnFees(
-      addOnProducts,
-      values,
-      hasGroupedAddOnProducts,
-    );
-
-    // Add accommodation fees
-    const accommodationFee = calculateAccommodationFee(
-      values.accommodation,
-      addOnProducts.find((product) => product.isExpenseAddOn),
-    );
-
-    // Calculate subtotal before discount
-    const subtotal = courseFee + addOnFees + accommodationFee;
-
-    // Calculate discount amount
-    const discountAmount = calculateDiscountAmount(discount, subtotal);
-
-    // Calculate final total after discount
-    const total = Math.max(0, subtotal - discountAmount);
-
-    // Update display price if discount is available
-    if (discount && discount.oldPrice > total) {
-      displayPrice = discount.oldPrice;
-    }
-
-    // Determine if payment is required
-    const isPaymentRequired = total !== 0 ? true : !isCCNotRequired;
-
-    return {
-      basePrice: initialBasePrice,
-      displayPrice,
-      courseFee,
-      addOnFees,
-      accommodationFee,
-      subtotal,
-      discountAmount,
-      total,
-      isPaymentRequired,
-    };
-  }, [
-    workshop,
+  // Add logging to track values
+  console.log('usePriceCalculation called with values:', {
+    workshopId: workshop?.id,
     agreementCMEAccepted,
     premiumRate,
-    addOnProducts,
+    addOnProductsCount: addOnProducts.length,
     hasGroupedAddOnProducts,
-    values,
-    discount,
+    formValues: currentValues,
+    discountApplied: !!discount,
     isCCNotRequired,
-  ]);
+  });
+
+  // Get initial base price and display price
+  const initialBasePrice = getBasePrice(workshop, agreementCMEAccepted);
+  let displayPrice = getDisplayPrice(workshop, initialBasePrice);
+
+  // Calculate course fee with premium rate if applicable
+  const isRegularPrice =
+    !currentValues.priceType || currentValues.priceType === 'regular';
+  const courseFee = isRegularPrice
+    ? initialBasePrice
+    : premiumRate?.unitPrice || initialBasePrice;
+
+  // Add fees for add-on products
+  const addOnFees = calculateAddOnFees(
+    addOnProducts,
+    currentValues,
+    hasGroupedAddOnProducts,
+  );
+
+  // Add accommodation fees
+  const accommodationFee = calculateAccommodationFee(
+    currentValues.accommodation,
+    addOnProducts.find((product) => product.isExpenseAddOn),
+  );
+
+  // Calculate subtotal before discount
+  const subtotal = courseFee + addOnFees + accommodationFee;
+
+  // Calculate discount amount - only apply to course fee, not add-ons
+  let discountAmount = 0;
+  let total = subtotal;
+  let originalPrice = null;
+
+  if (discount) {
+    // Store the original course price for display
+    originalPrice = courseFee;
+
+    // Handle non-discounted products
+    const nonDiscountedAmount = (discount.nonDiscountedProducts || []).reduce(
+      (sum, product) => {
+        return sum + (product.unitPrice || 0);
+      },
+      0,
+    );
+
+    // Apply discount only to course fee
+    if (discount.newPrice != null) {
+      discountAmount = Math.max(0, courseFee - discount.newPrice);
+      total = discount.newPrice + addOnFees + accommodationFee;
+    } else if (discount.amount != null) {
+      discountAmount = Math.min(courseFee, discount.amount);
+      total = courseFee - discountAmount + addOnFees + accommodationFee;
+    } else if (discount.percentage != null) {
+      discountAmount = (courseFee * discount.percentage) / 100;
+      total = courseFee - discountAmount + addOnFees + accommodationFee;
+    }
+  }
+
+  // Update display price if discount is available
+  displayPrice = discount
+    ? originalPrice
+    : getDisplayPrice(workshop, initialBasePrice);
+
+  // Determine if payment is required
+  const isPaymentRequired = total !== 0 ? true : !isCCNotRequired;
+
+  console.log('Price calculation result:', {
+    initialBasePrice,
+    displayPrice,
+    courseFee,
+    addOnFees,
+    accommodationFee,
+    subtotal,
+    discountAmount,
+    total,
+    isPaymentRequired,
+    originalPrice,
+  });
+
+  return {
+    basePrice: initialBasePrice,
+    displayPrice,
+    courseFee,
+    addOnFees,
+    accommodationFee,
+    subtotal,
+    discountAmount,
+    total,
+    isPaymentRequired,
+  };
 };
