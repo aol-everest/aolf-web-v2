@@ -37,7 +37,7 @@ export const ErrorAlert = () => {
       >
         <div
           className={classNames(
-            'tw-fixed tw-left-4 tw-right-4 md:tw-right-auto md:tw-left-4 tw-bottom-4 tw-bg-white tw-rounded-lg tw-shadow-lg tw-border tw-border-red-100 md:tw-max-w-sm tw-w-auto',
+            'tw-bg-red-50 tw-fixed tw-left-4 tw-right-4 md:tw-right-auto md:tw-left-4 tw-bottom-4 tw-bg-white tw-rounded-lg tw-shadow-lg tw-border tw-border-red-100 md:tw-max-w-sm tw-w-auto',
             className,
           )}
         >

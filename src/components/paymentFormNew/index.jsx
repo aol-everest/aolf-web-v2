@@ -279,12 +279,23 @@ export const PaymentFormNew = ({
   const handleFormSubmit = async () => {
     if (formRef.current) {
       const { values, validateForm } = formRef.current;
+
+      // Touch all fields dynamically from form values
+      const fields = Object.keys(values);
+
+      // Set all fields as touched
+      await Promise.all(
+        fields.map((field) =>
+          formRef.current.setFieldTouched(field, true, false),
+        ),
+      );
+
       const errors = await validateForm(values);
 
       if (Object.keys(errors).length > 0) {
         const errorFields = Object.keys(errors);
         console.log('errorFields', errorFields);
-        showAlert(ALERT_TYPES.ERROR_ALERT, {
+        showAlert(ALERT_TYPES.INLINE_ERROR_ALERT, {
           children: (
             <div>
               <p className="tw-text-sm tw-font-medium tw-mb-1">
@@ -455,7 +466,7 @@ export const PaymentFormNew = ({
         (value) => value === true,
       ),
     accommodation: isAccommodationRequired
-      ? Yup.object().required('Expense Type is required!')
+      ? Yup.object().nullable().required('Expense Type is required!')
       : Yup.mixed().notRequired(),
     paymentMode: !isPaymentRequired
       ? Yup.mixed().notRequired()

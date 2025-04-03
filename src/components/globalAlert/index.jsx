@@ -6,6 +6,7 @@ import { ErrorAlert } from './ErrorAlert';
 import { SuccessAlert } from './SuccessAlert';
 import { WarningAlert } from './WarningAlert';
 import { NewAlert } from './NewAlert';
+import { InlineErrorAlert } from './InlineErrorAlert';
 
 const ALERT_COMPONENTS = {
   [ALERT_TYPES.SUCCESS_ALERT]: SuccessAlert,
@@ -13,6 +14,7 @@ const ALERT_COMPONENTS = {
   [ALERT_TYPES.ERROR_ALERT]: ErrorAlert,
   [ALERT_TYPES.WARNING_ALERT]: WarningAlert,
   [ALERT_TYPES.NEW_ALERT]: NewAlert,
+  [ALERT_TYPES.INLINE_ERROR_ALERT]: InlineErrorAlert,
 };
 
 // Global reference to showAlert function
@@ -42,7 +44,11 @@ export const GlobalAlert = ({ children }) => {
       children: typeof props.children === 'string' ? undefined : props.children,
     };
 
-    document.body.classList.add('overflow-hidden');
+    // Only add overflow-hidden for modal alerts
+    if (alertType !== ALERT_TYPES.INLINE_ERROR_ALERT) {
+      document.body.classList.add('overflow-hidden');
+    }
+
     setStore({
       ...store,
       alertType,
@@ -65,7 +71,11 @@ export const GlobalAlert = ({ children }) => {
   }, []);
 
   const hideAlert = () => {
-    document.body.classList.remove('overflow-hidden');
+    // Only remove overflow-hidden if it was a modal alert
+    if (store?.alertType !== ALERT_TYPES.INLINE_ERROR_ALERT) {
+      document.body.classList.remove('overflow-hidden');
+    }
+
     setStore({
       ...store,
       alertType: null,

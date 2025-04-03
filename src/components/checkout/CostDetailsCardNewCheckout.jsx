@@ -426,6 +426,7 @@ export const CostDetailsCardNewCheckout = ({
                   },
                 )}
               </select>
+
               <h6 className="room__board__sub-heading">
                 *Expense includes meals
               </h6>
