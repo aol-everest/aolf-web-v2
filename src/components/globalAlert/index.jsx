@@ -18,9 +18,13 @@ const ALERT_COMPONENTS = {
 // Global reference to showAlert function
 let globalShowAlert = null;
 
-export const showGlobalAlert = (message, type = ALERT_TYPES.ERROR_ALERT) => {
+export const showGlobalAlert = (
+  message,
+  description,
+  type = ALERT_TYPES.ERROR_ALERT,
+) => {
   if (globalShowAlert) {
-    globalShowAlert(type, { children: message });
+    globalShowAlert(type, { message, description });
   }
 };
 
@@ -28,7 +32,16 @@ export const GlobalAlert = ({ children }) => {
   const [store, setStore] = useState();
   const { alertType, alertProps } = store || {};
 
-  const showAlert = (alertType, alertProps, autoHideMS) => {
+  const showAlert = (alertType, props, autoHideMS) => {
+    // Convert string children to message format
+    const alertProps = {
+      ...props,
+      message:
+        typeof props.children === 'string' ? props.children : props.message,
+      description: props.description,
+      children: typeof props.children === 'string' ? undefined : props.children,
+    };
+
     document.body.classList.add('overflow-hidden');
     setStore({
       ...store,

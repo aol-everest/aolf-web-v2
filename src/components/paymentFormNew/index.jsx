@@ -93,9 +93,16 @@ export const PaymentFormNew = ({
   const [programQuestionnaireResult, setProgramQuestionnaireResult] =
     useState(null);
   const [currentFormValues, setCurrentFormValues] = useState({});
-
+  const [isProgramQuestionnaireSubmitted, setIsProgramQuestionnaireSubmitted] =
+    useState(false);
   const router = useRouter();
   const { signOut } = passwordLess;
+
+  useEffect(() => {
+    if (isProgramQuestionnaireSubmitted) {
+      completeEnrollmentAction(currentFormValues);
+    }
+  }, [isProgramQuestionnaireSubmitted]);
 
   const { loading, processPayment, handlePaypalPayment } = usePayment({
     stripe,
@@ -234,6 +241,7 @@ export const PaymentFormNew = ({
   const submitProgramQuestionnaire = async (programQuestionnaireResult) => {
     setProgramQuestionnaireResult(programQuestionnaireResult);
     setShowProgramQuestionnaireForm(false);
+    setIsProgramQuestionnaireSubmitted(true);
   };
 
   const closeModalProgramQuestionnaireAction = () => {
@@ -251,7 +259,7 @@ export const PaymentFormNew = ({
 
     if (!paymentMode) {
       showAlert(ALERT_TYPES.ERROR_ALERT, {
-        children: 'Please select a payment method',
+        message: 'Please select a payment method',
       });
       return false;
     }
@@ -259,7 +267,7 @@ export const PaymentFormNew = ({
     if (paymentMode === PAYMENT_MODES.STRIPE_PAYMENT_MODE) {
       if (!stripe || !elements) {
         showAlert(ALERT_TYPES.ERROR_ALERT, {
-          children: 'Payment system is not ready. Please try again.',
+          message: 'Payment system is not ready. Please try again.',
         });
         return false;
       }
@@ -274,8 +282,29 @@ export const PaymentFormNew = ({
       const errors = await validateForm(values);
 
       if (Object.keys(errors).length > 0) {
+        const errorFields = Object.keys(errors);
+        console.log('errorFields', errorFields);
         showAlert(ALERT_TYPES.ERROR_ALERT, {
-          children: 'Please fill in all required fields correctly.',
+          children: (
+            <div>
+              <p className="tw-text-sm tw-font-medium tw-mb-1">
+                Please fix the following errors:
+              </p>
+              <ul className="tw-space-y-0.5">
+                {errorFields.map((field, index) => (
+                  <li
+                    key={index}
+                    className="tw-text-xs tw-text-gray-600 tw-flex tw-items-start"
+                  >
+                    <span className="tw-text-red-400 tw-mr-1.5 tw-mt-0.5">
+                      •
+                    </span>
+                    {errors[field]}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ),
         });
         return;
       }
@@ -292,7 +321,7 @@ export const PaymentFormNew = ({
     const { programQuestionnaire = [] } = workshop;
 
     try {
-      if (programQuestionnaire.length > 0) {
+      if (programQuestionnaire.length > 0 && !isProgramQuestionnaireSubmitted) {
         setShowProgramQuestionnaireForm(true);
       } else {
         await completeEnrollmentAction(values);
@@ -300,7 +329,8 @@ export const PaymentFormNew = ({
     } catch (error) {
       console.error('Pre-enrollment validation failed:', error);
       showAlert(ALERT_TYPES.ERROR_ALERT, {
-        children: 'Failed to process enrollment. Please try again.',
+        message: 'Failed to process enrollment.',
+        description: error?.message || 'Please try again.',
       });
     }
   };
@@ -313,6 +343,10 @@ export const PaymentFormNew = ({
       await processPayment(values, paymentData);
     } catch (error) {
       console.error('Payment failed:', error);
+      showAlert(ALERT_TYPES.ERROR_ALERT, {
+        message: 'Payment failed.',
+        description: error?.message || 'Please try again.',
+      });
       // Error is already handled by the hook
     }
   };
@@ -365,7 +399,8 @@ export const PaymentFormNew = ({
     } catch (error) {
       console.error('Failed to handle combo detail change:', error);
       showAlert(ALERT_TYPES.ERROR_ALERT, {
-        children: 'Failed to update product selection. Please try again.',
+        message: 'Failed to update product selection.',
+        description: error?.message || 'Please try again.',
       });
     }
   };

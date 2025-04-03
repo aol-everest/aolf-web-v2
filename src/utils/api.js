@@ -42,6 +42,7 @@ const handleApiError = (error) => {
   if (!error.response) {
     showGlobalAlert(
       'Network error. Please check your internet connection.',
+      'Please check your internet connection and try again.',
       ALERT_TYPES.WARNING_ALERT,
     );
     return Promise.reject(error);
@@ -62,7 +63,11 @@ const handleApiError = (error) => {
       errorMap[status] ||
       (data?.message ? data.message.split('(')[0].trim() : 'Unknown error');
 
-    showGlobalAlert(message, ALERT_TYPES.WARNING_ALERT);
+    showGlobalAlert(
+      'Something went wrong.',
+      message,
+      ALERT_TYPES.WARNING_ALERT,
+    );
   }
   return Promise.reject(error);
 };
