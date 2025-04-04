@@ -766,27 +766,57 @@ export const clearAuthCookies = async () => {
   try {
     const PARENT_DOMAIN = getParentDomain();
     const allCookies = Cookies.get();
-    const poolId = process.env.NEXT_PUBLIC_COGNITO_CLIENT_ID; // Assuming currentPoolId is defined
-    const regex = new RegExp(
-      `^(CognitoIdentityServiceProvider|Passwordless)\\.(?!${poolId}\\b).+$`,
-    );
+    const poolId = process.env.NEXT_PUBLIC_COGNITO_CLIENT_ID;
+
+    // Match any Cognito, Passwordless, or amplify-related cookies
+    const regexPatterns = [
+      new RegExp(
+        `^(CognitoIdentityServiceProvider|Passwordless)\\.(?!${poolId}\\b).+$`,
+      ),
+      new RegExp(`^(CognitoIdentityServiceProvider|Passwordless)\\.${poolId}`),
+      new RegExp('^amplify-signin-with-hostedUI'),
+      new RegExp('^LastAuthUser'),
+      new RegExp('^aws\\.cognito\\.'),
+    ];
 
     const cookieNames = Object.keys(allCookies).filter((cookieName) =>
-      regex.test(cookieName),
+      regexPatterns.some((regex) => regex.test(cookieName)),
     );
 
+    // Remove cookies from both root and current path
+    const paths = ['/', window.location.pathname];
+
     await Promise.all(
-      cookieNames.map(async (cookieName) => {
-        try {
-          console.log(
-            `Removing cookie: ${cookieName}, Value: ${allCookies[cookieName]}`,
-          );
-          Cookies.remove(cookieName, { path: '/', domain: PARENT_DOMAIN });
-        } catch (error) {
-          console.error(`Failed to remove cookie: ${cookieName}`, error);
-        }
+      cookieNames.flatMap(async (cookieName) => {
+        return paths.map(async (path) => {
+          try {
+            console.log(`Removing cookie: ${cookieName} from path: ${path}`);
+            // Try removing with specific domain
+            Cookies.remove(cookieName, { path, domain: PARENT_DOMAIN });
+            // Also try removing without domain specification
+            Cookies.remove(cookieName, { path });
+          } catch (error) {
+            console.error(
+              `Failed to remove cookie: ${cookieName} from path: ${path}`,
+              error,
+            );
+          }
+        });
       }),
     );
+
+    // Clear any localStorage items related to auth
+    try {
+      const authKeys = Object.keys(localStorage).filter(
+        (key) =>
+          key.includes('CognitoIdentityServiceProvider') ||
+          key.includes('Passwordless') ||
+          key.includes('amplify-signin-with-hostedUI'),
+      );
+      authKeys.forEach((key) => localStorage.removeItem(key));
+    } catch (error) {
+      console.error('Error clearing localStorage:', error);
+    }
   } catch (error) {
     console.error('Error clearing auth cookies:', error);
   }

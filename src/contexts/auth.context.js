@@ -34,6 +34,7 @@ import {
 } from '@passwordLess/storage.js';
 import { busyState } from '@passwordLess/model.js';
 import { scheduleRefresh, refreshTokens } from '@passwordLess/refresh.js';
+import { clearInflightOAuth } from '@passwordLess/storage.js';
 
 // Create a context for managing authentication state
 const AuthContext = createContext();
@@ -62,6 +63,14 @@ export const AuthProvider = ({
     } catch (error) {
       setCurrentUser({ isAuthenticated: false });
       console.log('Error fetching current user:', error);
+      // Clear cookies if we get specific auth-related errors
+      if (
+        error.message?.includes('NotAuthorizedException') ||
+        error.message?.includes('Invalid session') ||
+        error.message?.includes('Token expired')
+      ) {
+        await clearAuthCookies();
+      }
       throw new Error(
         'Unable to load your profile details. Please refresh the page or contact support if the issue persists.',
       );
@@ -69,9 +78,31 @@ export const AuthProvider = ({
   };
 
   useEffect(() => {
-    // fetchCurrentUser();
+    // Clean up any stale auth state on mount
+    const cleanup = async () => {
+      try {
+        // Clear any stale OAuth state
+        await clearInflightOAuth();
 
-    // Subscribe to Hub events for authentication
+        // If we have corrupted/invalid tokens, clear them
+        const tokens = await retrieveTokens();
+        if (tokens) {
+          try {
+            parseJwtPayload(tokens.idToken);
+            parseJwtPayload(tokens.accessToken);
+          } catch (e) {
+            console.log('Found invalid tokens, clearing auth state');
+            await clearAuthCookies();
+            await clearStorage();
+          }
+        }
+      } catch (err) {
+        console.error('Error during auth cleanup:', err);
+      }
+    };
+    cleanup();
+
+    let customState;
     const hubListenerCancelToken = Hub.listen('auth', async ({ payload }) => {
       setError(null);
       switch (payload.event) {
@@ -90,8 +121,10 @@ export const AuthProvider = ({
           console.log('auth tokens have been refreshed.');
           break;
         case 'tokenRefresh_failure':
-          setError('An error has occurred during token refresh.');
           console.log('failure while refreshing auth tokens.');
+          await clearAuthCookies();
+          setError('An error has occurred during token refresh.');
+          setCurrentUser({ isAuthenticated: false });
           break;
         case 'signInWithRedirect':
           console.log('signInWithRedirect API has successfully been resolved.');
@@ -102,10 +135,10 @@ export const AuthProvider = ({
           console.log(
             'failure while trying to resolve signInWithRedirect API.',
           );
+          await clearAuthCookies();
           break;
         case 'customOAuthState':
-          // eslint-disable-next-line no-case-declarations
-          const state = payload.data; // this will be customState provided on signInWithRedirect function
+          customState = payload.data;
           console.info('custom state returned from CognitoHosted UI');
           break;
       }
