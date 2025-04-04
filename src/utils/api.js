@@ -39,10 +39,10 @@ axiosClient.interceptors.request.use(async function (config) {
 });
 
 const handleApiError = (error) => {
+  console.log('error', error);
   if (!error.response) {
     showGlobalAlert(
       'Network error. Please check your internet connection.',
-      'Please check your internet connection and try again.',
       ALERT_TYPES.WARNING_ALERT,
     );
     return Promise.reject(error);
@@ -50,7 +50,7 @@ const handleApiError = (error) => {
 
   const { status, data } = error.response;
   const errorMap = {
-    400: 'Invalid request. Please check your input.',
+    // 400: 'Invalid request. Please check your input.',
     401: 'Your session has expired. Please refresh the page to continue.',
     403: 'You do not have permission to perform this action.',
     404: 'The requested resource was not found.',
@@ -63,11 +63,7 @@ const handleApiError = (error) => {
       errorMap[status] ||
       (data?.message ? data.message.split('(')[0].trim() : 'Unknown error');
 
-    showGlobalAlert(
-      'Something went wrong.',
-      message,
-      ALERT_TYPES.WARNING_ALERT,
-    );
+    showGlobalAlert(message, ALERT_TYPES.WARNING_ALERT);
   }
   return Promise.reject(error);
 };

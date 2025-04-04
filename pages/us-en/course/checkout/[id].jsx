@@ -32,6 +32,7 @@ import { PaymentFormNew } from '@components/paymentFormNew';
 import { orgConfig } from '@org';
 import { navigateToLogin } from '@utils';
 import { useStripeLoader } from '@hooks';
+import CourseNotFoundError from '@components/errors/CourseNotFoundError';
 
 const RetreatPrerequisiteWarning = ({ firstPreRequisiteFailedReason }) => {
   return (
@@ -326,7 +327,12 @@ const Checkout = () => {
     }
   };
 
-  if (isError) return <ErrorPage statusCode={500} title={error.message} />;
+  if (isError) {
+    if (error?.response?.data?.message === 'No Workshop found') {
+      return <CourseNotFoundError />;
+    }
+    return <ErrorPage statusCode={500} title={error.message} />;
+  }
   if (isLoading || !workshopId) return <PageLoading />;
 
   const isHealingBreath = orgConfig.name === 'HB';
