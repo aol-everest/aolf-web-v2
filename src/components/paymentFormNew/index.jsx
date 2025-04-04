@@ -691,7 +691,7 @@ export const PaymentFormNew = ({
         complianceQuestionnaire,
         programQuestionnaireResult,
         isInstalmentOpted: paymentOption === PAYMENT_TYPES.LATER,
-        isStripeIntentPayment,
+        ...(isPaymentRequired && { isStripeIntentPayment }),
       },
       utm: filterAllowedParams(router.query),
     };
