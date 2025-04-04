@@ -296,6 +296,7 @@ const Centers = ({ initialLocation = null, initialCenters }) => {
         <div
           class="suggestion-item smart-input--list-item"
           role="option"
+          aria-selected="false"
           onClick={selectAddressAction(placePrediction)}
         >
           <strong>{structured_formatting.main_text}</strong>{' '}
