@@ -276,6 +276,43 @@ const AOL_MENU = [
     ],
   },
   {
+    name: 'Account',
+    submenu: [
+      {
+        name: 'Account overview',
+        link: '#',
+      },
+      {
+        name: 'Upcoming courses',
+        link: '#',
+      },
+      {
+        name: 'Past courses',
+        link: '#',
+      },
+      {
+        name: 'Profile',
+        link: '#',
+      },
+      {
+        name: 'Payment',
+        link: '#',
+      },
+      {
+        name: 'Change password',
+        link: '#',
+      },
+      {
+        name: 'Preferences',
+        link: '#',
+      },
+      {
+        name: 'Refer a friend',
+        link: '#',
+      },
+    ],
+  },
+  {
     name: 'Resources',
     submenu: [
       {
