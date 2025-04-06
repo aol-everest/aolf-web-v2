@@ -280,7 +280,7 @@ const AOL_MENU = [
     submenu: [
       {
         name: 'Account overview',
-        link: '/us-en/profile/update-profile',
+        link: '/us-en/profile/landing',
       },
       {
         name: 'Upcoming courses',
