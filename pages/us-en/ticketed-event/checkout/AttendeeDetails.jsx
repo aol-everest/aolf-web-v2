@@ -77,7 +77,7 @@ export default function AttendeeDetails({
     setExpanded(ticket.attendeeRecordExternalId);
   };
 
-  const handleCopyData = (formik, ticket) => (e) => {
+  const handleCopyData = (formik, ticket, index) => (e) => {
     const value = e.target.value;
     if (value !== null) {
       const fromTicket = formik.values.tickets.find(
@@ -85,26 +85,26 @@ export default function AttendeeDetails({
       );
       if (fromTicket) {
         formik.setFieldValue(
-          `tickets.${ticket.number - 1}.firstName`,
+          `tickets.${index}.firstName`,
           fromTicket.firstName,
         );
+        formik.setFieldValue(`tickets.${index}.lastName`, fromTicket.lastName);
         formik.setFieldValue(
-          `tickets.${ticket.number - 1}.lastName`,
-          fromTicket.lastName,
-        );
-        formik.setFieldValue(
-          `tickets.${ticket.number - 1}.contactPhone`,
+          `tickets.${index}.contactPhone`,
           fromTicket.contactPhone,
         );
-        formik.setFieldValue(
-          `tickets.${ticket.number - 1}.email`,
-          fromTicket.email,
-        );
-      } else {
-        formik.setFieldValue(`tickets.${ticket.number - 1}.firstName`, '');
-        formik.setFieldValue(`tickets.${ticket.number - 1}.lastName`, '');
-        formik.setFieldValue(`tickets.${ticket.number - 1}.contactPhone`, '');
-        formik.setFieldValue(`tickets.${ticket.number - 1}.email`, '');
+        formik.setFieldValue(`tickets.${index}.email`, fromTicket.email);
+        // Trigger validation after copying
+        formik.validateForm().then(() => {
+          formik.setTouched({
+            tickets: formik.values.tickets.map(() => ({
+              firstName: true,
+              lastName: true,
+              email: true,
+              contactPhone: true,
+            })),
+          });
+        });
       }
     }
   };
@@ -122,12 +122,17 @@ export default function AttendeeDetails({
               <Formik
                 initialValues={{ tickets: initialTickets }}
                 validationSchema={detailsRequired ? validationSchema : null}
-                enableReinitialize={false}
+                enableReinitialize={true}
+                validateOnMount={true}
                 onSubmit={(values) => {
                   handleSubmitAttendees(false, values.tickets);
                 }}
               >
                 {(formik) => {
+                  console.log('formik.errors', formik.errors);
+                  console.log('formik.isValid', formik.isValid);
+                  console.log('formik.dirty', formik.dirty);
+
                   const ticketByTier = groupBy(
                     formik.values.tickets,
                     'pricingTierName',
@@ -155,6 +160,12 @@ export default function AttendeeDetails({
                               id="programAccordion"
                             >
                               {value.map((ticket, index) => {
+                                const actualIndex =
+                                  formik.values.tickets.findIndex(
+                                    (t) =>
+                                      t.attendeeRecordExternalId ===
+                                      ticket.attendeeRecordExternalId,
+                                  );
                                 const isExpanded =
                                   expanded === ticket.attendeeRecordExternalId;
                                 const ticketId =
@@ -208,6 +219,7 @@ export default function AttendeeDetails({
                                                 onChange={handleCopyData(
                                                   formik,
                                                   ticket,
+                                                  actualIndex,
                                                 )}
                                               >
                                                 <option value="">
@@ -255,32 +267,35 @@ export default function AttendeeDetails({
                                           )}
                                         >
                                           <label
-                                            htmlFor={`tickets.${index}.firstName`}
+                                            htmlFor={`tickets.${actualIndex}.firstName`}
                                           >
                                             First Name
                                           </label>
                                           <Field
                                             type="text"
-                                            name={`tickets.${index}.firstName`}
+                                            name={`tickets.${actualIndex}.firstName`}
                                             maxLength={40}
                                             className={classNames({
                                               [styles.inputError]:
-                                                formik.touched.tickets?.[index]
-                                                  ?.firstName &&
-                                                formik.errors.tickets?.[index]
-                                                  ?.firstName,
+                                                formik.touched.tickets?.[
+                                                  actualIndex
+                                                ]?.firstName &&
+                                                formik.errors.tickets?.[
+                                                  actualIndex
+                                                ]?.firstName,
                                             })}
                                           />
-                                          {formik.touched.tickets?.[index]
+                                          {formik.touched.tickets?.[actualIndex]
                                             ?.firstName &&
-                                            formik.errors.tickets?.[index]
+                                            formik.errors.tickets?.[actualIndex]
                                               ?.firstName && (
                                               <div
                                                 className={styles.errorMessage}
                                               >
                                                 {
-                                                  formik.errors.tickets[index]
-                                                    .firstName
+                                                  formik.errors.tickets[
+                                                    actualIndex
+                                                  ].firstName
                                                 }
                                               </div>
                                             )}
@@ -296,32 +311,35 @@ export default function AttendeeDetails({
                                           )}
                                         >
                                           <label
-                                            htmlFor={`tickets.${index}.lastName`}
+                                            htmlFor={`tickets.${actualIndex}.lastName`}
                                           >
                                             Last Name
                                           </label>
                                           <Field
                                             type="text"
-                                            name={`tickets.${index}.lastName`}
+                                            name={`tickets.${actualIndex}.lastName`}
                                             maxLength={40}
                                             className={classNames({
                                               [styles.inputError]:
-                                                formik.touched.tickets?.[index]
-                                                  ?.lastName &&
-                                                formik.errors.tickets?.[index]
-                                                  ?.lastName,
+                                                formik.touched.tickets?.[
+                                                  actualIndex
+                                                ]?.lastName &&
+                                                formik.errors.tickets?.[
+                                                  actualIndex
+                                                ]?.lastName,
                                             })}
                                           />
-                                          {formik.touched.tickets?.[index]
+                                          {formik.touched.tickets?.[actualIndex]
                                             ?.lastName &&
-                                            formik.errors.tickets?.[index]
+                                            formik.errors.tickets?.[actualIndex]
                                               ?.lastName && (
                                               <div
                                                 className={styles.errorMessage}
                                               >
                                                 {
-                                                  formik.errors.tickets[index]
-                                                    .lastName
+                                                  formik.errors.tickets[
+                                                    actualIndex
+                                                  ].lastName
                                                 }
                                               </div>
                                             )}
@@ -337,31 +355,34 @@ export default function AttendeeDetails({
                                           )}
                                         >
                                           <label
-                                            htmlFor={`tickets.${index}.email`}
+                                            htmlFor={`tickets.${actualIndex}.email`}
                                           >
                                             Email Address
                                           </label>
                                           <Field
                                             type="email"
-                                            name={`tickets.${index}.email`}
+                                            name={`tickets.${actualIndex}.email`}
                                             className={classNames({
                                               [styles.inputError]:
-                                                formik.touched.tickets?.[index]
-                                                  ?.email &&
-                                                formik.errors.tickets?.[index]
-                                                  ?.email,
+                                                formik.touched.tickets?.[
+                                                  actualIndex
+                                                ]?.email &&
+                                                formik.errors.tickets?.[
+                                                  actualIndex
+                                                ]?.email,
                                             })}
                                           />
-                                          {formik.touched.tickets?.[index]
+                                          {formik.touched.tickets?.[actualIndex]
                                             ?.email &&
-                                            formik.errors.tickets?.[index]
+                                            formik.errors.tickets?.[actualIndex]
                                               ?.email && (
                                               <div
                                                 className={styles.errorMessage}
                                               >
                                                 {
-                                                  formik.errors.tickets[index]
-                                                    .email
+                                                  formik.errors.tickets[
+                                                    actualIndex
+                                                  ].email
                                                 }
                                               </div>
                                             )}
@@ -377,33 +398,36 @@ export default function AttendeeDetails({
                                           )}
                                         >
                                           <label
-                                            htmlFor={`tickets.${index}.contactPhone`}
+                                            htmlFor={`tickets.${actualIndex}.contactPhone`}
                                           >
                                             Phone Number
                                           </label>
                                           <Field
                                             type="tel"
-                                            name={`tickets.${index}.contactPhone`}
+                                            name={`tickets.${actualIndex}.contactPhone`}
                                             minLength={11}
                                             maxLength={15}
                                             className={classNames({
                                               [styles.inputError]:
-                                                formik.touched.tickets?.[index]
-                                                  ?.contactPhone &&
-                                                formik.errors.tickets?.[index]
-                                                  ?.contactPhone,
+                                                formik.touched.tickets?.[
+                                                  actualIndex
+                                                ]?.contactPhone &&
+                                                formik.errors.tickets?.[
+                                                  actualIndex
+                                                ]?.contactPhone,
                                             })}
                                           />
-                                          {formik.touched.tickets?.[index]
+                                          {formik.touched.tickets?.[actualIndex]
                                             ?.contactPhone &&
-                                            formik.errors.tickets?.[index]
+                                            formik.errors.tickets?.[actualIndex]
                                               ?.contactPhone && (
                                               <div
                                                 className={styles.errorMessage}
                                               >
                                                 {
-                                                  formik.errors.tickets[index]
-                                                    .contactPhone
+                                                  formik.errors.tickets[
+                                                    actualIndex
+                                                  ].contactPhone
                                                 }
                                               </div>
                                             )}
@@ -421,7 +445,15 @@ export default function AttendeeDetails({
                         type="submit"
                         className={styles.submitButton}
                         disabled={
-                          detailsRequired && (!formik.isValid || !formik.dirty)
+                          detailsRequired &&
+                          (!formik.isValid ||
+                            formik.values.tickets.some(
+                              (ticket) =>
+                                !ticket.firstName ||
+                                !ticket.lastName ||
+                                !ticket.email ||
+                                !ticket.contactPhone,
+                            ))
                         }
                       >
                         Continue
