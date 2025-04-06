@@ -280,35 +280,35 @@ const AOL_MENU = [
     submenu: [
       {
         name: 'Account overview',
-        link: '#',
+        link: '/us-en/profile/update-profile',
       },
       {
         name: 'Upcoming courses',
-        link: '#',
+        link: '/us-en/profile/upcoming-courses',
       },
       {
         name: 'Past courses',
-        link: '#',
+        link: '/us-en/profile/past-courses',
       },
       {
         name: 'Profile',
-        link: '#',
+        link: '/us-en/profile/update-profile',
       },
       {
         name: 'Payment',
-        link: '#',
+        link: '/us-en/profile/card-details',
       },
       {
         name: 'Change password',
-        link: '#',
+        link: '/us-en/profile/change-password',
       },
       {
         name: 'Preferences',
-        link: '#',
+        link: '/us-en/profile/preferences',
       },
       {
         name: 'Refer a friend',
-        link: '#',
+        link: '/us-en/profile/refer-a-friend',
       },
     ],
   },
@@ -434,6 +434,43 @@ const IAHV_MENU = [
       {
         name: 'Live meetups',
         link: '/us-en/meetup',
+      },
+    ],
+  },
+  {
+    name: 'Account',
+    submenu: [
+      {
+        name: 'Account overview',
+        link: '/us-en/profile/update-profile',
+      },
+      {
+        name: 'Upcoming courses',
+        link: '/us-en/profile/upcoming-courses',
+      },
+      {
+        name: 'Past courses',
+        link: '/us-en/profile/past-courses',
+      },
+      {
+        name: 'Profile',
+        link: '/us-en/profile/update-profile',
+      },
+      {
+        name: 'Payment',
+        link: '/us-en/profile/card-details',
+      },
+      {
+        name: 'Change password',
+        link: '/us-en/profile/change-password',
+      },
+      {
+        name: 'Preferences',
+        link: '/us-en/profile/preferences',
+      },
+      {
+        name: 'Refer a friend',
+        link: '/us-en/profile/refer-a-friend',
       },
     ],
   },
@@ -629,7 +666,8 @@ export const Header = () => {
   useEffect(() => {
     if (!isAuthenticated) {
       // Reset to original menu when logged out
-      setHeaderMenu([...MENU]);
+      const updatedMenu = [...MENU].filter((item) => item.name !== 'Account');
+      setHeaderMenu(updatedMenu);
       return;
     }
 
