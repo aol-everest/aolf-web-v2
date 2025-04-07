@@ -27,7 +27,7 @@ export async function clearInflightOAuth() {
 
 export async function storeTokens(tokens) {
   console.log('Storing tokens...');
-  await clearAuthCookies();
+  // await clearAuthCookies();
   const { clientId, storage } = configure();
   const {
     sub,
