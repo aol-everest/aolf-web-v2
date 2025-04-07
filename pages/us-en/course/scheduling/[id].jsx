@@ -474,23 +474,23 @@ const SchedulingPaymentForm = ({
       identify(formRef.current.values.email, {
         email: formRef.current.values.email,
       });
-    }
 
-    track('submit_email', {
-      screen_name: 'course_scheduling_checkout',
-      event_target: 'register_button',
-      course_type: courseType,
-      location_type: workshop.mode,
-      course_dates_display: getCourseDateDisplay(workshop),
-      course_timings_display: getCourseTimeDisplay(workshop),
-      course_instructors_display: getInstructorDisplay(workshop),
-      course_location_display: getCourseLocationDisplay(workshop),
-      course_contact_details_display: getContactDisplay(workshop),
-      course_checkout_url: getCourseCheckoutUrl(
-        workshop,
-        isAuthenticated ? email : defaultUserEmail,
-      ),
-    });
+      track('submit_email', {
+        screen_name: 'course_scheduling_checkout',
+        event_target: 'register_button',
+        course_type: courseType,
+        location_type: workshop.mode,
+        course_dates_display: getCourseDateDisplay(workshop),
+        course_timings_display: getCourseTimeDisplay(workshop),
+        course_instructors_display: getInstructorDisplay(workshop),
+        course_location_display: getCourseLocationDisplay(workshop),
+        course_contact_details_display: getContactDisplay(workshop),
+        course_checkout_url: getCourseCheckoutUrl(
+          workshop,
+          formRef.current.values.email,
+        ),
+      });
+    }
     track(
       'begin_checkout',
       {
