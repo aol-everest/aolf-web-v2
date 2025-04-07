@@ -359,7 +359,7 @@ main.all-courses-find {
           right: 10px;
           z-index: 1;
           border-radius: 32px;
-          bottom: calc(70vh + 8px);
+          bottom: calc(100dvh - 40px);
           z-index: 101;
           &::after,
           &::before {
@@ -453,7 +453,7 @@ main.all-courses-find {
         }
       }
       .filter--box {
-        height: 70dvh;
+        height: calc(100dvh - 50px);
         display: flex;
         z-index: 102;
         position: fixed;
