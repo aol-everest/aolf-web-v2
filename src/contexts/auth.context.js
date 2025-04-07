@@ -107,7 +107,7 @@ export const AuthProvider = ({
       setError(null);
       switch (payload.event) {
         case 'signedIn':
-          await clearAuthCookies();
+          // await clearAuthCookies();
           console.log('user have been signedIn successfully.');
           await fetchCurrentUser();
           break;
@@ -116,6 +116,7 @@ export const AuthProvider = ({
           setCurrentUser({ isAuthenticated: false });
           localStorage.clear();
           clearStorage();
+          await clearAuthCookies();
           break;
         case 'tokenRefresh':
           console.log('auth tokens have been refreshed.');

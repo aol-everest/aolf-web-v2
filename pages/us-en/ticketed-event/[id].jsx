@@ -19,6 +19,7 @@ import { z } from 'zod';
 import { DiscountInputNew } from '@components/discountInputNew';
 import { AiTwotoneAlert } from 'react-icons/ai';
 import moment from 'moment';
+import CourseNotFoundError from '@components/errors/CourseNotFoundError';
 
 const ticketSchema = z.record(z.string(), z.number());
 
@@ -199,7 +200,12 @@ function TicketedEvent() {
     return accumulator;
   }, 0);
 
-  if (isError) return <ErrorPage statusCode={500} title={error.message} />;
+  if (isError) {
+    if (error?.response?.data?.message === 'No Event found') {
+      return <CourseNotFoundError type="event" browseLink="/us-en/courses" />;
+    }
+    return <ErrorPage statusCode={500} title={error.message} />;
+  }
   if (isLoading || !router.isReady) return <PageLoading />;
 
   const handleTicketSelect = (type, item) => (e) => {
