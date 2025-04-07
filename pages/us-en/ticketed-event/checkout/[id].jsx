@@ -39,6 +39,7 @@ import { ScheduleAgreementForm } from '@components/scheduleAgreementForm';
 import AttendeeDetails from './AttendeeDetails';
 import { FaChevronLeft } from 'react-icons/fa6';
 import { z } from 'zod';
+import CourseNotFoundError from '@components/errors/CourseNotFoundError';
 
 const ticketSchema = z.record(z.string(), z.number());
 
@@ -64,6 +65,13 @@ function TicketCheckout() {
     },
     enabled: !!eventId,
   });
+
+  if (isError) {
+    if (error?.response?.data?.message === 'No Event found') {
+      return <CourseNotFoundError type="event" browseLink="/us-en/courses" />;
+    }
+    return <ErrorPage statusCode={500} title={error.message} />;
+  }
 
   if (isError) return <ErrorPage statusCode={500} title={error.message} />;
   if (isLoading || !router.isReady) return <PageLoading />;

@@ -286,7 +286,7 @@ function CourseDetail() {
 
   if (isError) {
     if (error?.response?.data?.message === 'No Workshop found') {
-      return <CourseNotFoundError />;
+      return <CourseNotFoundError type="course" browseLink="/us-en/courses" />;
     }
     return <ErrorPage statusCode={500} title={error.message} />;
   }

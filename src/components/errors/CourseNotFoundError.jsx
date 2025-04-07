@@ -14,7 +14,10 @@ const ErrorIcon = memo(() => {
 
 ErrorIcon.displayName = 'ErrorIcon';
 
-const CourseNotFoundError = () => {
+const CourseNotFoundError = ({
+  type = 'course',
+  browseLink = '/us-en/courses',
+}) => {
   return (
     <>
       <Head>
@@ -26,15 +29,15 @@ const CourseNotFoundError = () => {
           <ErrorIcon />
 
           <h1 className="tw-text-4xl tw-font-bold tw-mt-6 tw-text-gray-800">
-            Course Not Found
+            {type.charAt(0).toUpperCase() + type.slice(1)} Not Found
           </h1>
 
           <h2 className="tw-mt-2 tw-text-lg tw-text-gray-600">
-            This course is not valid or currently unavailable
+            This {type} is not valid or currently unavailable
           </h2>
 
           <p className="tw-mt-4 tw-text-sm tw-text-gray-500">
-            Please try again later, choose a different course, or contact
+            Please try again later, choose a different {type}, or contact
             support for assistance.
           </p>
 
@@ -46,10 +49,10 @@ const CourseNotFoundError = () => {
               Go Back
             </button>
             <Link
-              href="/us-en/courses"
+              href={browseLink}
               className="btn-secondary tw-max-w-[160px] tw-w-full tw-text-center !tw-p-2 tw-justify-center"
             >
-              Browse Courses
+              Browse {type.charAt(0).toUpperCase() + type.slice(1)}s
             </Link>
           </div>
 
