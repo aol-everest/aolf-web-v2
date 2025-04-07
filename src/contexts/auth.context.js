@@ -69,6 +69,7 @@ export const AuthProvider = ({
         error.message?.includes('Invalid session') ||
         error.message?.includes('Token expired')
       ) {
+        console.log('Clearing auth cookies for NotAuthorizedException...');
         await clearAuthCookies();
       }
       throw new Error(
@@ -116,6 +117,7 @@ export const AuthProvider = ({
           setCurrentUser({ isAuthenticated: false });
           localStorage.clear();
           clearStorage();
+          console.log('Clearing auth cookies for signedOut...');
           await clearAuthCookies();
           break;
         case 'tokenRefresh':
