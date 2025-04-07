@@ -64,14 +64,8 @@ export const AuthProvider = ({
       setCurrentUser({ isAuthenticated: false });
       console.log('Error fetching current user:', error);
       // Clear cookies if we get specific auth-related errors
-      if (
-        error.message?.includes('NotAuthorizedException') ||
-        error.message?.includes('Invalid session') ||
-        error.message?.includes('Token expired')
-      ) {
-        console.log('Clearing auth cookies for NotAuthorizedException...');
-        await clearAuthCookies();
-      }
+      console.log('Clearing auth cookies for NotAuthorizedException...');
+      await clearAuthCookies();
       throw new Error(
         'Unable to load your profile details. Please refresh the page or contact support if the issue persists.',
       );
