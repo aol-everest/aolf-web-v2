@@ -13,6 +13,7 @@ import { useQueryState, parseAsBoolean, parseAsJson, createParser } from 'nuqs';
 import { useUIDSeed } from 'react-uid';
 import { useAuth } from '@contexts';
 import { withCenterInfo } from '@hoc';
+import { nuqsParseJson } from '@utils';
 import {
   ABBRS,
   COURSE_MODES,
@@ -73,7 +74,7 @@ const fillDefaultTimeZone = () => {
   if (TIME_ZONE[userTimeZoneAbbreviation.toUpperCase()]) {
     return userTimeZoneAbbreviation.toUpperCase();
   }
-  return null;
+  return 'EST';
 };
 
 const parseAsStartEndDate = createParser({
@@ -102,6 +103,7 @@ const parseAsStartEndDate = createParser({
 const parseCourseType = (courseTypesOptions) => {
   return createParser({
     parse(queryValue) {
+      console.log('queryValue', queryValue);
       if (queryValue && courseTypesOptions[queryValue]) {
         return courseTypesOptions[queryValue];
       } else {
@@ -109,7 +111,8 @@ const parseCourseType = (courseTypesOptions) => {
       }
     },
     serialize(value) {
-      if (value) return value;
+      console.log('value', value);
+      if (value) return value?.slug;
       return null;
     },
   });
@@ -322,7 +325,7 @@ const Course = ({ centerDetail }) => {
   const [timeZoneFilter, setTimeZoneFilter] = useQueryState('timeZone');
   const [instructorFilter, setInstructorFilter] = useQueryState(
     'instructor',
-    parseAsJson(),
+    nuqsParseJson,
   );
 
   const [cityFilter] = useQueryState('city');
@@ -464,6 +467,7 @@ const Course = ({ centerDetail }) => {
     setCourseModeFilter(null);
     setOnlyWeekend(null);
     setTimeZoneFilter(null);
+    setSearchKey('');
     setInstructorFilter(null);
     setFilterStartEndDate(null);
     setCourseTypeFilter(null);
@@ -486,7 +490,7 @@ const Course = ({ centerDetail }) => {
   const onFilterChange = (field) => async (value) => {
     switch (field) {
       case 'courseTypeFilter':
-        setCourseTypeFilter(value?.slug);
+        setCourseTypeFilter(value);
         break;
       case 'courseModeFilter':
         setCourseModeFilter(value);
@@ -501,6 +505,7 @@ const Course = ({ centerDetail }) => {
         if (value) {
           setInstructorFilter(value);
         } else {
+          setSearchKey('');
           setInstructorFilter(null);
         }
         break;
@@ -523,6 +528,7 @@ const Course = ({ centerDetail }) => {
         setTimeZoneFilter(null);
         break;
       case 'instructorFilter':
+        setSearchKey('');
         setInstructorFilter(null);
         break;
     }
@@ -532,7 +538,7 @@ const Course = ({ centerDetail }) => {
     if (e) e.preventDefault();
     switch (field) {
       case 'courseTypeFilter':
-        setCourseTypeFilter(value.slug);
+        setCourseTypeFilter(value);
         break;
       case 'courseModeFilter':
         setCourseModeFilter(value);
@@ -547,6 +553,7 @@ const Course = ({ centerDetail }) => {
         if (value) {
           setInstructorFilter(value);
         } else {
+          setSearchKey('');
           setInstructorFilter(null);
         }
         break;

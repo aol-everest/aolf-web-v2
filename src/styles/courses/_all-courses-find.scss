@@ -9,8 +9,8 @@ main.all-courses-find {
     align-items: center;
     flex-direction: column;
     justify-content: center;
-    background-image: url(/img/center-header-bg-1.webp),
-      url(/img/center-header-bg-2.webp);
+    background-image:
+      url(/img/center-header-bg-1.webp), url(/img/center-header-bg-2.webp);
     background-position:
       left center,
       right center;
@@ -359,7 +359,7 @@ main.all-courses-find {
           right: 10px;
           z-index: 1;
           border-radius: 32px;
-          bottom: calc(70vh + 8px);
+          bottom: calc(100dvh - 40px);
           z-index: 101;
           &::after,
           &::before {
@@ -453,7 +453,7 @@ main.all-courses-find {
         }
       }
       .filter--box {
-        height: 70dvh;
+        height: calc(100dvh - 50px);
         display: flex;
         z-index: 102;
         position: fixed;
@@ -693,6 +693,7 @@ main.all-courses-find {
         font-size: 24px;
         font-weight: 600;
         line-height: 28px;
+        white-space: nowrap;
       }
       .course-university,
       .course-instructors,

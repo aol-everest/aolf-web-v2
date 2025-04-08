@@ -1,10 +1,22 @@
 import Head from 'next/head';
 import Link from 'next/link';
-import { useState } from 'react';
+import { useState, memo } from 'react';
+import PropTypes from 'prop-types';
 
-const ErrorIcon = () => (
-  <img src="/img/med-error.svg" className="tw-w-24 tw-h-24" alt="500" />
-);
+const ErrorIcon = memo(({ statusCode }) => {
+  return (
+    <img
+      src="/img/med-error.svg"
+      className="tw-w-24 tw-h-24"
+      alt={`Error ${statusCode}`}
+    />
+  );
+});
+
+ErrorIcon.displayName = 'ErrorIcon';
+ErrorIcon.propTypes = {
+  statusCode: PropTypes.number.isRequired,
+};
 
 const ErrorDetails = ({ err }) => {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -15,30 +27,36 @@ const ErrorDetails = ({ err }) => {
     <div className="tw-mt-6 tw-w-full tw-max-w-2xl">
       <button
         onClick={() => setIsExpanded(!isExpanded)}
-        className="tw-flex tw-items-center tw-text-sm tw-text-gray-600 hover:tw-text-gray-800 tw-transition-colors"
+        className="tw-text-gray-300 hover:tw-text-gray-400 tw-transition-colors tw-p-0.5 tw-rounded-full hover:tw-bg-gray-50/50 tw-absolute tw-right-4"
+        aria-label="Toggle error details"
+        aria-expanded={isExpanded}
       >
         <svg
-          className={`tw-w-4 tw-h-4 tw-mr-2 tw-transition-transform ${isExpanded ? 'tw-rotate-90' : ''}`}
+          className="tw-w-4 tw-h-4"
           viewBox="0 0 24 24"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
+          aria-hidden="true"
         >
           <path
-            d="M9 18L15 12L9 6"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
+            fillRule="evenodd"
+            clipRule="evenodd"
+            d="M12 2C6.477 2 2 6.477 2 12C2 17.523 6.477 22 12 22C17.523 22 22 17.523 22 12C22 6.477 17.523 2 12 2ZM11 17V11H13V17H11ZM11 7V9H13V7H11Z"
+            fill="currentColor"
           />
         </svg>
-        View error details
+        <span className="tw-sr-only">Technical Details</span>
       </button>
 
       {isExpanded && (
-        <div className="tw-mt-2 tw-p-4 tw-bg-gray-50 tw-rounded-lg tw-font-mono tw-text-xs tw-overflow-auto">
-          <div className="tw-text-red-500">{err.message}</div>
+        <div
+          className="tw-mt-2 tw-p-3 tw-bg-gray-50/50 tw-rounded-md tw-font-mono tw-text-xs tw-overflow-auto tw-border tw-border-gray-100"
+          role="region"
+          aria-label="Error details"
+        >
+          <div className="tw-text-red-600 tw-font-medium">{err.message}</div>
           {err.stack && (
-            <pre className="tw-mt-2 tw-text-gray-600 tw-whitespace-pre-wrap">
+            <pre className="tw-mt-2 tw-text-gray-600 tw-whitespace-pre-wrap tw-text-[11px]">
               {err.stack}
             </pre>
           )}
@@ -46,6 +64,13 @@ const ErrorDetails = ({ err }) => {
       )}
     </div>
   );
+};
+
+ErrorDetails.propTypes = {
+  err: PropTypes.shape({
+    message: PropTypes.string,
+    stack: PropTypes.string,
+  }),
 };
 
 const ServerError = ({ err }) => {
@@ -87,26 +112,26 @@ const ServerError = ({ err }) => {
             </Link>
           </div>
 
-          {process.env.NODE_ENV !== 'production' && <ErrorDetails err={err} />}
+          <ErrorDetails err={err} />
 
           <div className="tw-mt-8 tw-text-sm tw-text-gray-500">
             <p>You might want to check out:</p>
             <div className="tw-mt-4 tw-space-y-2">
               <Link
                 href="/us-en/daily-sky"
-                className="tw-block hover:tw-underline tw-text-amber-500"
+                className="tw-block tw-text-amber-500 hover:tw-underline"
               >
                 Daily SKY Practices
               </Link>
               <Link
-                href="/us-en/library"
-                className="tw-block hover:tw-underline tw-text-amber-500"
+                href="/us-en/courses"
+                className="tw-block tw-text-amber-500 hover:tw-underline"
               >
-                Meditation Library
+                All Courses
               </Link>
               <Link
-                href="/contact"
-                className="tw-block hover:tw-underline tw-text-amber-500"
+                href="https://www.artofliving.org/us-en/contact-us"
+                className="tw-block tw-text-amber-500 hover:tw-underline"
               >
                 Contact Support
               </Link>

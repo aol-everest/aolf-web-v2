@@ -108,6 +108,11 @@
     height: 45px;
     width: 115px;
 
+    &:has(img[src='/img/PWHT-logo.png']) {
+      width: 220px;
+      height: auto;
+    }
+
     &__image {
       width: 100%;
       height: 100%;
@@ -436,6 +441,12 @@
     padding: 15px 0;
     justify-content: space-between;
     display: flex;
+    max-width: 1304px;
+    @media (width >= 992px) and (width <= 1199px) {
+      max-width: unset;
+      padding-left: 15px;
+      padding-right: 15px;
+    }
     .logo {
       @media screen and (max-width: 991px) {
         width: 120px;
@@ -464,8 +475,16 @@
   .navbar {
     padding: 0;
     z-index: 101;
+    @media (width >= 992px) and (width <= 1199px) {
+      flex: 1;
+    }
     .navbar-nav {
       gap: 28px;
+      @media (width >= 992px) and (width <= 1199px) {
+        flex: 1;
+        gap: 0;
+        justify-content: space-evenly;
+      }
       @media screen and (max-width: 991px) {
         gap: 0px;
       }
@@ -851,6 +870,10 @@
         font-weight: 500;
         border-radius: 40px;
         padding: 0 24px;
+        white-space: nowrap;
+        @media (width >= 992px) and (width <= 1199px) {
+          padding: 0 10px;
+        }
       }
     }
     .header_profileHeaderImage {

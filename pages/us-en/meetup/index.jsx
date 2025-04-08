@@ -11,6 +11,7 @@ import ContentLoader from 'react-content-loader';
 import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 import React, { useEffect, useState, useRef } from 'react';
 import { useQueryState, parseAsJson, createParser } from 'nuqs';
+import { nuqsParseJson } from '@utils';
 import { useUIDSeed } from 'react-uid';
 import { navigateToLogin } from '@utils';
 import { useAuth, useGlobalAlertContext } from '@contexts';
@@ -66,7 +67,7 @@ const fillDefaultTimeZone = () => {
   if (TIME_ZONE[userTimeZoneAbbreviation.toUpperCase()]) {
     return userTimeZoneAbbreviation.toUpperCase();
   }
-  return null;
+  return 'EST';
 };
 
 const parseAsStartEndDate = createParser({
@@ -438,7 +439,7 @@ const Meetup = () => {
   });
   const [locationFilter, setLocationFilter] = useQueryState(
     'location',
-    parseAsJson(),
+    nuqsParseJson,
   );
   const [filterStartEndDate, setFilterStartEndDate] = useQueryState(
     'startEndDate',
@@ -447,7 +448,7 @@ const Meetup = () => {
   const [timeZoneFilter, setTimeZoneFilter] = useQueryState('timeZone');
   const [instructorFilter, setInstructorFilter] = useQueryState(
     'instructor',
-    parseAsJson(),
+    nuqsParseJson,
   );
 
   const [cityFilter] = useQueryState('city');
@@ -602,6 +603,7 @@ const Meetup = () => {
     setMeetupModeFilter(null);
     setLocationFilter(null);
     setTimeZoneFilter(null);
+    setSearchKey('');
     setInstructorFilter(null);
     setFilterStartEndDate(null);
     setMeetupTypeFilter(null);
@@ -668,6 +670,7 @@ const Meetup = () => {
         }, 0);
         break;
       case 'instructorFilter':
+        setSearchKey('');
         setInstructorFilter(null);
         break;
     }

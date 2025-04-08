@@ -30,7 +30,7 @@ import utc from 'dayjs/plugin/utc';
 import { useRouter } from 'next/router';
 import { useAnalytics } from 'use-analytics';
 import { pushRouteWithUTMQuery } from '@service';
-import queryString from 'query-string';
+import { nuqsParseJson } from '@utils';
 import { useInView } from 'react-intersection-observer';
 import classNames from 'classnames';
 import { orgConfig } from '@org';
@@ -77,7 +77,7 @@ const fillDefaultTimeZone = () => {
   if (TIME_ZONE[userTimeZoneAbbreviation.toUpperCase()]) {
     return userTimeZoneAbbreviation.toUpperCase();
   }
-  return null;
+  return 'EST';
 };
 
 const parseAsStartEndDate = createParser({
@@ -451,7 +451,7 @@ const Meetup = ({ centerDetail }) => {
   const [timeZoneFilter, setTimeZoneFilter] = useQueryState('timeZone');
   const [instructorFilter, setInstructorFilter] = useQueryState(
     'instructor',
-    parseAsJson(),
+    nuqsParseJson,
   );
 
   const [cityFilter] = useQueryState('city');
@@ -605,6 +605,7 @@ const Meetup = ({ centerDetail }) => {
   const onClearAllFilter = () => {
     setMeetupModeFilter(null);
     setTimeZoneFilter(null);
+    setSearchKey('');
     setInstructorFilter(null);
     setFilterStartEndDate(null);
     setMeetupTypeFilter(null);
@@ -675,6 +676,7 @@ const Meetup = ({ centerDetail }) => {
         }, 0);
         break;
       case 'instructorFilter':
+        setSearchKey('');
         setInstructorFilter(null);
         break;
     }

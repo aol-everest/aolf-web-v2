@@ -244,7 +244,7 @@ export function Footer() {
                   </li>
                   <li className="nav-item">
                     <Link href="https://members.us.artofliving.org/us-en/referral-offer?traffic&#95;source=footer">
-                      Referral Offer
+                      Refer a Friend
                     </Link>
                   </li>
                   <li className="nav-item">

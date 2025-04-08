@@ -14,7 +14,7 @@
  */
 import { parseJwtPayload } from './util.js';
 import { configure } from './config.js';
-
+import { clearAuthCookies } from '@utils';
 export async function clearInflightOAuth() {
   const { clientId, storage } = configure();
   const amplifyKeyPrefix = `CognitoIdentityServiceProvider.${clientId}`;
@@ -26,6 +26,8 @@ export async function clearInflightOAuth() {
 }
 
 export async function storeTokens(tokens) {
+  console.log('Storing tokens...');
+  // await clearAuthCookies();
   const { clientId, storage } = configure();
   const {
     sub,

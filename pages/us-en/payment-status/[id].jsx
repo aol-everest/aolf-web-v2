@@ -54,6 +54,7 @@ const PaymentStatus = () => {
   const searchParams = useSearchParams();
   const router = useRouter();
   const { id } = router.query;
+  const nextId = searchParams.get('nextId');
   const next = searchParams.get('next');
 
   useEffect(() => {
@@ -61,7 +62,11 @@ const PaymentStatus = () => {
       const fetchStatus = async () => {
         try {
           const data = await retryPaymentStatusCheck(id);
-          router.replace(`${next}/${data.attendeeExternalId}`);
+          if (nextId === 'order') {
+            router.replace(`${next}/${id}`);
+          } else {
+            router.replace(`${next}/${data.attendeeExternalId}`);
+          }
         } catch (error) {
           console.error(error.message);
         }

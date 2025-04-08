@@ -488,7 +488,7 @@ const SchedulingPaymentForm = ({
       course_contact_details_display: getContactDisplay(workshop),
       course_checkout_url: getCourseCheckoutUrl(
         workshop,
-        isAuthenticated ? email : defaultUserEmail,
+        formRef.current.values.email,
       ),
     });
     track(

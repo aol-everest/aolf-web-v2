@@ -160,7 +160,7 @@ const AOL_MENU = [
           },
           {
             name: 'Art Of Living Premium',
-            link: 'https://event.us.artofliving.org/us-en/premiumcourse/',
+            link: 'https://www.artofliving.org/us-en/premiumcourse',
           },
           {
             name: 'Sri Sri Yoga Foundation',
@@ -237,6 +237,21 @@ const AOL_MENU = [
     ],
   },
   {
+    name: 'Events',
+    submenu: [
+      {
+        name: 'Boone, NC',
+        link: 'https://event.us.artofliving.org/lp1/yoga-sutras-gurudev/',
+        props: { target: '_blank' },
+      },
+      {
+        name: 'Mobile, AL',
+        link: 'https://event.us.artofliving.org/us-en/lp1/journey-within-alabama/',
+        props: { target: '_blank' },
+      },
+    ],
+  },
+  {
     name: 'Centers',
     submenu: [
       {
@@ -257,6 +272,43 @@ const AOL_MENU = [
         name: 'Washington DC',
         link: 'https://dc.artofliving.org',
         props: { target: '_blank' },
+      },
+    ],
+  },
+  {
+    name: 'Account',
+    submenu: [
+      {
+        name: 'Account overview',
+        link: '/us-en/profile/landing',
+      },
+      {
+        name: 'Upcoming courses',
+        link: '/us-en/profile/upcoming-courses',
+      },
+      {
+        name: 'Past courses',
+        link: '/us-en/profile/past-courses',
+      },
+      {
+        name: 'Profile',
+        link: '/us-en/profile/update-profile',
+      },
+      {
+        name: 'Payment',
+        link: '/us-en/profile/card-details',
+      },
+      {
+        name: 'Change password',
+        link: '/us-en/profile/change-password',
+      },
+      {
+        name: 'Preferences',
+        link: '/us-en/profile/preferences',
+      },
+      {
+        name: 'Refer a friend',
+        link: '/us-en/profile/refer-a-friend',
       },
     ],
   },
@@ -382,6 +434,43 @@ const IAHV_MENU = [
       {
         name: 'Live meetups',
         link: '/us-en/meetup',
+      },
+    ],
+  },
+  {
+    name: 'Account',
+    submenu: [
+      {
+        name: 'Account overview',
+        link: '/us-en/profile/update-profile',
+      },
+      {
+        name: 'Upcoming courses',
+        link: '/us-en/profile/upcoming-courses',
+      },
+      {
+        name: 'Past courses',
+        link: '/us-en/profile/past-courses',
+      },
+      {
+        name: 'Profile',
+        link: '/us-en/profile/update-profile',
+      },
+      {
+        name: 'Payment',
+        link: '/us-en/profile/card-details',
+      },
+      {
+        name: 'Change password',
+        link: '/us-en/profile/change-password',
+      },
+      {
+        name: 'Preferences',
+        link: '/us-en/profile/preferences',
+      },
+      {
+        name: 'Refer a friend',
+        link: '/us-en/profile/refer-a-friend',
       },
     ],
   },
@@ -577,7 +666,8 @@ export const Header = () => {
   useEffect(() => {
     if (!isAuthenticated) {
       // Reset to original menu when logged out
-      setHeaderMenu([...MENU]);
+      const updatedMenu = [...MENU].filter((item) => item.name !== 'Account');
+      setHeaderMenu(updatedMenu);
       return;
     }
 
@@ -596,6 +686,8 @@ export const Header = () => {
         return currentMenu;
       }
 
+      exploreMenu.submenu = [];
+
       // Check if items already exist to prevent duplicates
       const existingTitles = new Set(
         exploreMenu.submenu.map((item) => item.name),
@@ -609,7 +701,6 @@ export const Header = () => {
       }
 
       exploreMenu.submenu = [
-        ...exploreMenu.submenu,
         ...newItems.map((item) => ({
           name: item.title,
           link: item.slug ? `/us-en/explore/${item.slug}` : '#',
@@ -846,14 +937,14 @@ export const Header = () => {
 
             {isAuthenticated && (
               <>
-                <Link href="/us-en/profile" legacyBehavior>
+                {/* <Link href="/us-en/profile" legacyBehavior>
                   <a
                     href="#"
                     className="tw-no-underline tw-text-black hover:tw-text-black hover:tw-no-underline"
                   >
                     <span className="username">{first_name || last_name}</span>
                   </a>
-                </Link>
+                </Link> */}
                 <Link prefetch={false} href="/us-en/profile" legacyBehavior>
                   <a
                     className="header_profileHeaderImage"

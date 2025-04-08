@@ -44,7 +44,7 @@ const VideoPlayer = () => {
   const {
     title,
     artist,
-    image = 'http://html5videoformatconverter.com/data/images/screen.jpg',
+    image = 'https://vumbnail.com/304592334.jpg',
     audioSrc,
     description = '',
   } = track || {};

@@ -11,6 +11,7 @@ import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 import React, { useEffect, useState, useRef } from 'react';
 import { useQueryState, parseAsBoolean, parseAsJson, createParser } from 'nuqs';
 import { useSearchParams } from 'next/navigation';
+import { nuqsParseJson } from '@utils';
 import { useUIDSeed } from 'react-uid';
 import { useAuth } from '@contexts';
 import {
@@ -69,290 +70,6 @@ const parseAsStartEndDate = createParser({
   },
 });
 
-const { allowedMaxDays, beforeToday, combine } = DateRangePicker;
-
-const SmartDropDown = (props) => {
-  const { buttonText, children, value } = props;
-  const [visible, setVisibility] = useState(false);
-
-  function handleDropdownClick(event) {
-    setVisibility(!visible);
-  }
-
-  function closeHandler(value) {
-    return function () {
-      if (props.closeEvent) {
-        props.closeEvent(value);
-      }
-      setVisibility(false);
-    };
-  }
-  return (
-    <div className="dropdown">
-      <button
-        className="custom-dropdown"
-        type="button"
-        id="dropdownCourseButton"
-        data-toggle="dropdown"
-        aria-haspopup="true"
-        aria-expanded="false"
-        onClick={handleDropdownClick}
-      >
-        {buttonText}
-      </button>
-      <ul className={classNames('dropdown-menu', { show: visible })}>
-        {visible &&
-          children({
-            props,
-            closeHandler,
-          })}
-      </ul>
-    </div>
-  );
-};
-
-const MobileFilterModal = (props) => {
-  const [isHidden, setIsHidden] = useState(true);
-
-  const showModal = () => {
-    setIsHidden(false);
-    document.body.classList.add('overflow-hidden');
-  };
-
-  const hideModal = () => {
-    setIsHidden(true);
-    document.body.classList.remove('overflow-hidden');
-  };
-
-  const clearAction = () => {
-    if (props.clearEvent) {
-      props.clearEvent();
-    }
-    setIsHidden(true);
-    document.body.classList.remove('overflow-hidden');
-  };
-
-  const { label, value, children, hideClearOption = false } = props;
-  return (
-    <>
-      <label>{label}</label>
-      <div
-        className="btn_outline_box btn-modal_dropdown full-btn mt-3"
-        onClick={showModal}
-      >
-        <a className="btn" href="#">
-          {value || label}
-        </a>
-      </div>
-      <div
-        className={classNames('mobile-modal', {
-          active: !isHidden,
-        })}
-      >
-        <div className="mobile-modal--header">
-          <div
-            id="course-close_mobile"
-            className="mobile-modal--close"
-            onClick={hideModal}
-          >
-            <img src="/img/ic-close.svg" alt="close" />
-          </div>
-          <h2 className="mobile-modal--title">{label}</h2>
-          {children}
-        </div>
-        <div className="mobile-modal--body">
-          <div className="row m-0 align-items-center justify-content-between">
-            {!hideClearOption && (
-              <div className="clear" onClick={clearAction}>
-                Clear
-              </div>
-            )}
-            <div
-              className="filter-save-button btn_box_primary select-btn"
-              onClick={hideModal}
-            >
-              Select
-            </div>
-          </div>
-        </div>
-      </div>
-    </>
-  );
-};
-
-const Popup = (props) => {
-  const {
-    buttonText,
-    tabindex,
-    children,
-    value,
-    containerClassName = '',
-    showId,
-    parentClassName = '',
-    showList = true,
-    label,
-    hideClearOption = false,
-  } = props;
-
-  const [visible, setVisibility] = useState(false);
-  const referenceRef = useRef(null);
-  const popperRef = useRef(null);
-  const arrowRef = useRef(null);
-
-  const { styles, attributes } = usePopper(
-    referenceRef.current,
-    popperRef.current,
-    {
-      placement: 'bottom',
-      modifiers: [
-        {
-          name: 'arrow',
-          enabled: true,
-          options: {
-            element: arrowRef.current,
-          },
-        },
-        {
-          name: 'offset',
-          enabled: true,
-          options: {
-            offset: [0, 10],
-          },
-        },
-      ],
-    },
-  );
-  useEffect(() => {
-    // listen for clicks and close dropdown on body
-    document.addEventListener('mousedown', handleDocumentClick);
-    return () => {
-      document.removeEventListener('mousedown', handleDocumentClick);
-    };
-  }, []);
-
-  function handleDropdownClick() {
-    setVisibility(!visible);
-  }
-
-  function handleSelectFilter() {
-    props.closeEvent(!value ? true : null);
-  }
-
-  function handleDocumentClick(event) {
-    if (
-      referenceRef.current.contains(event.target) ||
-      popperRef?.current?.contains(event.target)
-    ) {
-      return;
-    }
-    setVisibility(false);
-  }
-
-  function closeHandler(value) {
-    return function () {
-      if (props.closeEvent) {
-        props.closeEvent(value);
-      }
-      setVisibility(false);
-    };
-  }
-
-  return (
-    <>
-      <div
-        data-filter="event-type"
-        ref={referenceRef}
-        tabIndex={tabindex}
-        className={classNames('courses-filter', parentClassName, {
-          active: visible,
-          'with-selected': value,
-        })}
-      >
-        {value && !hideClearOption && (
-          <button
-            className="courses-filter__remove"
-            data-filter="event-type"
-            data-placeholder="Online"
-            onClick={closeHandler(null)}
-          >
-            <svg
-              width="20"
-              height="21"
-              viewBox="0 0 20 21"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <rect
-                x="0.5"
-                y="1"
-                width="19"
-                height="19"
-                rx="9.5"
-                fill="#ABB1BA"
-              />
-              <rect
-                x="0.5"
-                y="1"
-                width="19"
-                height="19"
-                rx="9.5"
-                stroke="white"
-              />
-              <path
-                d="M13.5 7L6.5 14"
-                stroke="white"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-              <path
-                d="M13.5 14L6.5 7"
-                stroke="white"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
-          </button>
-        )}
-        <label>{label}</label>
-        <button
-          className={classNames('courses-filter__button', {
-            '!tw-text-slate-300': !buttonText,
-          })}
-          data-filter="event-type"
-          onClick={!showList ? handleSelectFilter : handleDropdownClick}
-        >
-          {buttonText || 'Select...'}
-        </button>
-        {showList && (
-          <div className="courses-filter__wrapper-list">
-            <ul
-              id={showId ? 'time-tooltip' : ''}
-              className={classNames(
-                'courses-filter__list',
-                containerClassName,
-                {
-                  active: visible,
-                },
-              )}
-              data-filter="event-type"
-              ref={popperRef}
-              {...attributes.popper}
-            >
-              {visible &&
-                children({
-                  props,
-                  closeHandler,
-                })}
-            </ul>
-          </div>
-        )}
-      </div>
-    </>
-  );
-};
-
 const ItemLoaderTile = () => {
   return (
     <div className="course-item">
@@ -379,6 +96,8 @@ const ItemLoaderTile = () => {
 };
 
 const CourseTile = ({ data, inIframe }) => {
+  const searchParams = useSearchParams();
+  const showAddressFields = searchParams.get('showAddressFields');
   const router = useRouter();
   const { track } = useAnalytics();
   const { showModal } = useGlobalModalContext();
@@ -405,17 +124,19 @@ const CourseTile = ({ data, inIframe }) => {
   } = data || {};
 
   const enrollAction = () => {
+    let queryParams = { ctype: productTypeId };
+    if (showAddressFields) {
+      queryParams = { ...queryParams, showAddressFields };
+    }
     if (inIframe) {
       window.open(
-        `/us-en/ticketed-event/${sfid}?ctype=${productTypeId}`,
+        `/us-en/ticketed-event/${sfid}?${queryString.stringify(queryParams)}`,
         '_blank',
       );
     } else {
       pushRouteWithUTMQuery(router, {
         pathname: `/us-en/ticketed-event/${sfid}`,
-        query: {
-          ctype: productTypeId,
-        },
+        query: queryParams,
       });
     }
   };
@@ -532,7 +253,7 @@ const TicketedEvent = () => {
   const [ctypeFilter] = useQueryState('ctype');
   const [locationFilter, setLocationFilter] = useQueryState(
     'location',
-    parseAsJson(),
+    nuqsParseJson,
   );
   const [filterStartEndDate, setFilterStartEndDate] = useQueryState(
     'startEndDate',
@@ -540,8 +261,6 @@ const TicketedEvent = () => {
   );
 
   const centerFilter = searchParams.get('center');
-  const centerNameFilter = searchParams.get('center-name');
-  const [searchKey, setSearchKey] = useState('');
   const [showFilterModal, setShowFilterModal] = useState(false);
   const [inIframe, setInIframe] = useState(false);
 
@@ -650,24 +369,6 @@ const TicketedEvent = () => {
     setFilterStartEndDate(null);
   };
 
-  const onFilterChange = (field) => async (value) => {
-    switch (field) {
-      case 'courseTypeFilter':
-        //setCourseTypeFilter(value);
-        break;
-      case 'courseModeFilter':
-        setCourseModeFilter(value);
-        break;
-      case 'locationFilter':
-        if (value) {
-          setLocationFilter(value);
-        } else {
-          setLocationFilter(null);
-        }
-        break;
-    }
-  };
-
   const onFilterClearEvent = (field) => async (e) => {
     if (e) e.preventDefault();
     switch (field) {
@@ -683,51 +384,12 @@ const TicketedEvent = () => {
     }
   };
 
-  const onFilterChangeEvent = (field) => (value) => async (e) => {
-    if (e) e.preventDefault();
-    switch (field) {
-      case 'courseTypeFilter':
-        // setCourseTypeFilter(value);
-        break;
-      case 'courseModeFilter':
-        setCourseModeFilter(value);
-        break;
-      case 'locationFilter':
-        if (value) {
-          setLocationFilter(value);
-        } else {
-          setLocationFilter(null);
-        }
-        break;
-    }
-  };
-
-  const changeCourseType = (courseType) => {
-    const { slug, ...rest } = router.query;
-    router.push(
-      {
-        ...router,
-        query: {
-          slug: courseType.slug,
-          ...rest,
-        },
-      },
-      undefined,
-      { shallow: true },
-    );
-  };
-
   const onDatesChange = async (date) => {
     if (Array.isArray(date)) {
       setFilterStartEndDate(date);
     } else {
       setFilterStartEndDate(null);
     }
-  };
-
-  const toggleFilter = (e) => {
-    if (e) e.preventDefault();
-    setShowFilterModal((showFilterModal) => !showFilterModal);
   };
 
   let filterCount = 0;

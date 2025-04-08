@@ -9,7 +9,8 @@ import {
 import ContentLoader from 'react-content-loader';
 import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 import React, { useEffect, useRef, useState } from 'react';
-import { useQueryState, parseAsBoolean, parseAsJson, createParser } from 'nuqs';
+import { useQueryState, parseAsBoolean, createParser } from 'nuqs';
+import { nuqsParseJson } from '@utils';
 import { useUIDSeed } from 'react-uid';
 import { useAuth } from '@contexts';
 import {
@@ -59,10 +60,11 @@ const queryInstructor = async ({ queryKey: [_, term] }) => {
 
 const fillDefaultTimeZone = () => {
   const userTimeZoneAbbreviation = getUserTimeZoneAbbreviation() || '';
+  console.log('userTimeZoneAbbreviation', userTimeZoneAbbreviation);
   if (TIME_ZONE[userTimeZoneAbbreviation.toUpperCase()]) {
     return userTimeZoneAbbreviation.toUpperCase();
   }
-  return null;
+  return 'EST';
 };
 
 const parseAsStartEndDate = createParser({
@@ -308,6 +310,143 @@ const CourseTile = ({ data, isAuthenticated }) => {
   );
 };
 
+const CourseTileWithTitle = ({ data, isAuthenticated }) => {
+  const router = useRouter();
+  const { track } = useAnalytics();
+  const {
+    title,
+    mode,
+    primaryTeacherName,
+    productTypeId,
+    eventStartDate,
+    eventEndDate,
+    eventTimeZone,
+    sfid,
+    locationPostalCode,
+    locationCity,
+    locationProvince,
+    locationStreet,
+    isGuestCheckoutEnabled = false,
+    coTeacher1Name,
+    timings,
+    unitPrice,
+    listPrice,
+    isEventFull,
+    isPurchased,
+    category,
+  } = data || {};
+
+  const enrollAction = () => {
+    track('allcourses_enroll_click', {
+      course_format: data?.productTypeId,
+      course_name: data?.title,
+      course_id: data?.sfid,
+      course_price: data?.unitPrice,
+    });
+    if (isGuestCheckoutEnabled || isAuthenticated) {
+      pushRouteWithUTMQuery(router, {
+        pathname: `/us-en/course/checkout/${sfid}`,
+        query: {
+          ctype: productTypeId,
+          page: 'c-o',
+        },
+      });
+    } else {
+      navigateToLogin(
+        router,
+        `/us-en/course/checkout/${sfid}?ctype=${productTypeId}&page=c-o&${queryString.stringify(
+          router.query,
+        )}`,
+      );
+    }
+
+    // showAlert(ALERT_TYPES.SUCCESS_ALERT, { title: "Success" });
+  };
+
+  const detailAction = () => {
+    track('allcourses_details_click', {
+      course_format: data?.productTypeId,
+      course_name: data?.title,
+      course_id: data?.sfid,
+      course_price: data?.unitPrice,
+    });
+    pushRouteWithUTMQuery(router, {
+      pathname: `/us-en/course/${sfid}`,
+      query: {
+        ctype: productTypeId,
+      },
+    });
+  };
+
+  return (
+    <div
+      className={classNames('course-item', {
+        'course-full': isEventFull,
+        registered: isPurchased,
+      })}
+    >
+      <div className="course-item-header">
+        <div className="course-title-duration">
+          <div className="course-title">{title}</div>
+          <div
+            class={classNames('course-type in-person', {
+              'in-person': mode === COURSE_MODES.IN_PERSON.value,
+              online: mode === COURSE_MODES.ONLINE.value,
+            })}
+          >
+            {COURSE_MODES_MAP[mode]}
+          </div>
+        </div>
+        {!isPurchased && (
+          <div className="course-price">
+            {listPrice === unitPrice ? (
+              <span>${unitPrice}</span>
+            ) : (
+              <>
+                <s>${listPrice}</s> <span>${unitPrice}</span>
+              </>
+            )}
+          </div>
+        )}
+      </div>
+      {mode !== 'Online' && locationCity && (
+        <div className="course-location">
+          {concatenateStrings([
+            locationStreet,
+            locationCity,
+            locationProvince,
+            locationPostalCode,
+          ])}
+        </div>
+      )}
+      <div className="course-instructors">
+        {concatenateStrings([primaryTeacherName, coTeacher1Name])}
+      </div>
+      <div className="course-timings">
+        {timings?.length > 0 &&
+          timings.map((time, i) => {
+            return (
+              <div className="course-timing" key={i}>
+                <span>{dayjs.utc(time.startDate).format('M/D dddd')}</span>
+                {`, ${tConvert(time.startTime)} - ${tConvert(time.endTime)} ${
+                  ABBRS[time.timeZone]
+                }`}
+              </div>
+            );
+          })}
+      </div>
+      <div className="course-actions">
+        <button className="btn-secondary" onClick={detailAction}>
+          Details
+        </button>
+        <button className="btn-primary" onClick={enrollAction}>
+          Register
+        </button>
+      </div>
+    </div>
+  );
+};
+
 const COURSE_TYPES_OPTIONS = Object.entries(
   COURSE_TYPES_MASTER[orgConfig.name],
 ).reduce(
@@ -363,7 +502,7 @@ const Course = () => {
   );
   const [locationFilter, setLocationFilter] = useQueryState(
     'location',
-    parseAsJson(),
+    nuqsParseJson,
   );
   const [filterStartEndDate, setFilterStartEndDate] = useQueryState(
     'startEndDate',
@@ -372,7 +511,7 @@ const Course = () => {
   const [timeZoneFilter, setTimeZoneFilter] = useQueryState('timeZone');
   const [instructorFilter, setInstructorFilter] = useQueryState(
     'instructor',
-    parseAsJson(),
+    nuqsParseJson,
   );
 
   const [cityFilter] = useQueryState('city');
@@ -723,13 +862,21 @@ const Course = () => {
         {isSuccess &&
           data.pages.map((page) => (
             <React.Fragment key={seed(page)}>
-              {page.data?.map((course) => (
-                <CourseTile
-                  key={course.sfid}
-                  data={course}
-                  isAuthenticated={isAuthenticated}
-                />
-              ))}
+              {page.data?.map((course) =>
+                courseTypeFilter.hidden ? (
+                  <CourseTileWithTitle
+                    key={course.sfid}
+                    data={course}
+                    isAuthenticated={isAuthenticated}
+                  />
+                ) : (
+                  <CourseTile
+                    key={course.sfid}
+                    data={course}
+                    isAuthenticated={isAuthenticated}
+                  />
+                ),
+              )}
             </React.Fragment>
           ))}
         {(isFetchingNextPage || !isSuccess) && (

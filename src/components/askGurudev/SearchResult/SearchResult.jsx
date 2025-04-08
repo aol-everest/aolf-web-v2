@@ -2,6 +2,7 @@
 import React, { useMemo, useState } from 'react';
 import { motion } from 'framer-motion';
 import YouTube from 'react-youtube';
+import { useRouter } from 'next/router';
 import {
   extractFacebookVideoId,
   extractInstagramVideoId,
@@ -130,6 +131,8 @@ const SearchResult = React.forwardRef(function SearchResult(
   const [showToast, setShowToast] = useState(false);
   const [showSharePopup, setShowSharePopup] = useState(false);
   const [activeKey, setActiveKey] = useState('unknown');
+  const router = useRouter();
+  const currentUrl = `${window.location.origin}${router.asPath}`;
   const onPlayAction = (id) => {
     setPlayingId(id);
   };
@@ -146,8 +149,8 @@ const SearchResult = React.forwardRef(function SearchResult(
       });
   };
 
-  const getFormattedText = () => {
-    return result?.content?.replace(/\n/g, '<br />');
+  const getFormattedText = (text) => {
+    return text?.replace(/\n/g, '<br />');
   };
 
   const isFeedbackSelected = selectedVotes[selectedPageIndex];
@@ -177,6 +180,7 @@ const SearchResult = React.forwardRef(function SearchResult(
         index: String(index),
         question: parts[0],
         answer: parts.slice(1).join('\n\n'),
+        source: item.source,
       };
     });
   }, [results]);
@@ -224,12 +228,15 @@ const SearchResult = React.forwardRef(function SearchResult(
               {query && <div className="pretext">{<CustomMessage />}</div>}
             </div>
             <div className="tab-content-text">
-              <p dangerouslySetInnerHTML={{ __html: getFormattedText() }} />
+              <p
+                dangerouslySetInnerHTML={{
+                  __html: getFormattedText(result.content),
+                }}
+              />
             </div>
             <div class="tab-content-footer">
               <div class="source-info">
-                <strong>Source:</strong> This wisdom sheet is from the book An
-                Intimate Note to the Sincere Seeker.
+                <strong>Source:</strong> {result.source}
               </div>
               <div class="tab-content-action">
                 <button
@@ -306,37 +313,71 @@ const SearchResult = React.forwardRef(function SearchResult(
                 </div>
               </div>
             </div>
-            <div class="related-questions-wrap">
-              <div class="box-title">
-                <span class="icon-aol iconaol-chat-flower"></span>Related
-              </div>
-              <Accordion className="accordion" defaultActiveKey={activeKey}>
-                {relatedData.map((data) => {
-                  return (
-                    <div class="question-item" key={data.index}>
-                      <div class="question-header">
-                        <h2>
-                          <Accordion.Toggle
-                            as={Button}
-                            className="btn btn-link"
-                            variant="link"
-                            eventKey={data.index}
-                            aria-expanded={data.index === activeKey}
-                            onClick={() => handleToggle(data.index)}
-                          >
-                            {data.question}
-                          </Accordion.Toggle>
-                        </h2>
-                      </div>
+            {relatedData?.length && (
+              <div class="related-questions-wrap">
+                <div class="box-title">
+                  <span class="icon-aol iconaol-chat-flower"></span>Related
+                </div>
+                <Accordion className="accordion" defaultActiveKey={activeKey}>
+                  {relatedData.map((data) => {
+                    if (data.question) {
+                      return (
+                        <div class="question-item" key={data.index}>
+                          <div class="question-header">
+                            <h2>
+                              <Accordion.Toggle
+                                as={Button}
+                                className="btn btn-link"
+                                variant="link"
+                                eventKey={data.index}
+                                aria-expanded={data.index === activeKey}
+                                onClick={() => handleToggle(data.index)}
+                              >
+                                {data.question}
+                              </Accordion.Toggle>
+                            </h2>
+                          </div>
 
-                      <Accordion.Collapse eventKey={data.index}>
-                        <div class="question-body">{data.answer}</div>
-                      </Accordion.Collapse>
-                    </div>
-                  );
-                })}
-              </Accordion>
-            </div>
+                          <Accordion.Collapse eventKey={data.index}>
+                            <>
+                              <div class="question-body">
+                                <p
+                                  dangerouslySetInnerHTML={{
+                                    __html: getFormattedText(data?.answer),
+                                  }}
+                                />
+                              </div>
+                              <div class="tab-content-footer">
+                                <div class="source-info">
+                                  <strong>Source:</strong> {data.source}
+                                </div>
+                                <div class="tab-content-action">
+                                  <button
+                                    class="tc-action-btn"
+                                    id="share-button"
+                                    onClick={handleShare}
+                                  >
+                                    <span class="icon-aol iconaol-export"></span>
+                                  </button>
+                                  <button
+                                    class="tc-action-btn copy-btn"
+                                    onClick={() =>
+                                      copyToClipboard(data?.answer)
+                                    }
+                                  >
+                                    <span class="icon-aol iconaol-copy"></span>
+                                  </button>
+                                </div>
+                              </div>
+                            </>
+                          </Accordion.Collapse>
+                        </div>
+                      );
+                    }
+                  })}
+                </Accordion>
+              </div>
+            )}
           </div>
         )
       )}
@@ -360,25 +401,18 @@ const SearchResult = React.forwardRef(function SearchResult(
             </button>
             <h3>Share this link</h3>
             <div class="copy-link-container">
-              <input
-                type="text"
-                id="copy-input"
-                value="https://www.artofliving.com/to/hUbGFdw239"
-                readonly
-              />
+              <input type="text" id="copy-input" value={currentUrl} readonly />
               <button
                 id="copy-button"
                 class="copy-button"
-                onClick={() =>
-                  copyToClipboard('https://www.artofliving.com/to/hUbGFdw239')
-                }
+                onClick={() => copyToClipboard(currentUrl)}
               >
                 <span class="icon-aol iconaol-copy"></span>
               </button>
             </div>
             <div class="share-icons">
               <a
-                href="https://twitter.com/intent/tweet?url=https://www.artofliving.com/to/hUbGFdw239"
+                href={`https://twitter.com/intent/tweet?url=${currentUrl}`}
                 target="_blank"
                 class="share-icon twitter"
               >
@@ -391,7 +425,7 @@ const SearchResult = React.forwardRef(function SearchResult(
                 Twitter
               </a>
               <a
-                href="https://www.linkedin.com/sharing/share-offsite/?url=https://www.artofliving.com/to/hUbGFdw239"
+                href={`https://www.linkedin.com/sharing/share-offsite/?url=${currentUrl}`}
                 target="_blank"
                 class="share-icon linkedin"
               >
@@ -404,7 +438,7 @@ const SearchResult = React.forwardRef(function SearchResult(
                 LinkedIn
               </a>
               <a
-                href="https://reddit.com/submit?url=https://www.artofliving.com/to/hUbGFdw239"
+                href={`https://reddit.com/submit?url=${currentUrl}`}
                 target="_blank"
                 class="share-icon reddit"
               >
@@ -417,7 +451,7 @@ const SearchResult = React.forwardRef(function SearchResult(
                 Reddit
               </a>
               <a
-                href="https://pinterest.com/pin/create/button/?url=https://www.artofliving.com/to/hUbGFdw239"
+                href={`https://pinterest.com/pin/create/button/?url=${currentUrl}`}
                 target="_blank"
                 class="share-icon pinterest"
               >
@@ -430,7 +464,7 @@ const SearchResult = React.forwardRef(function SearchResult(
                 Pinterest
               </a>
               <a
-                href="https://www.facebook.com/sharer/sharer.php?u=https://www.artofliving.com/to/hUbGFdw239"
+                href={`https://www.facebook.com/sharer/sharer.php?u=${currentUrl}`}
                 target="_blank"
                 class="share-icon facebook"
               >

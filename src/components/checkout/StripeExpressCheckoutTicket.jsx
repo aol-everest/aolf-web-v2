@@ -18,6 +18,8 @@ export const StripeExpressCheckoutTicket = ({
   workshop,
   total = 1,
   selectedTickets,
+  nextPageUrl = '/us-en/ticketed-event/thankyou',
+  discountResponse,
 }) => {
   const stripePromise = loadStripe(workshop.publishableKey);
   const elementsOptions = {
@@ -38,6 +40,8 @@ export const StripeExpressCheckoutTicket = ({
         workshop={workshop}
         total={total}
         selectedTickets={selectedTickets}
+        nextPageUrl={nextPageUrl}
+        discountResponse={discountResponse}
       />
     </Elements>
   );
@@ -55,12 +59,22 @@ const options = {
   paymentMethodOrder: ['apple_pay', 'google_pay'],
 };
 
-const CheckoutPage = ({ workshop, total, selectedTickets }) => {
+const CheckoutPage = ({
+  workshop,
+  total,
+  selectedTickets,
+  nextPageUrl,
+  discountResponse,
+}) => {
   const stripe = useStripe();
   const elements = useElements();
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const { showAlert } = useGlobalAlertContext();
+
+  const getThankYouPageUrl = () => {
+    return encodeURIComponent(nextPageUrl);
+  };
 
   const onConfirm = async (event) => {
     if (loading) {
@@ -94,20 +108,20 @@ const CheckoutPage = ({ workshop, total, selectedTickets }) => {
       const {
         stripeIntentObj,
         status,
-        data,
+        orderId,
         error: errorMessage,
         isError,
       } = await api.post({
         path: 'createIntentForExpressCheckout',
         body: {
           shoppingRequest: {
-            isStripeIntentPayment: true,
+            couponCode: discountResponse?.couponCode || '',
             products: {
               productSfId: workshop.id,
               productType: 'ticketed_event',
-              isStripeIntentPayment: true,
-              tickets,
             },
+            tickets,
+            isStripeIntentPayment: true,
             utmParams: filteredParams,
           },
         },
@@ -129,7 +143,7 @@ const CheckoutPage = ({ workshop, total, selectedTickets }) => {
 
       const returnUrl = `${
         window.location.origin
-      }/us-en/ticketed-event/express/thankyou/${workshop.id}?${queryString.stringify(
+      }/us-en/payment-status/${orderId}?nextId=order&next=${getThankYouPageUrl()}&${queryString.stringify(
         filteredParams,
       )}`;
 

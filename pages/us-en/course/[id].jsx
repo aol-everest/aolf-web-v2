@@ -11,6 +11,7 @@ import { NextSeo } from 'next-seo';
 import { useQuery } from '@tanstack/react-query';
 import { A11y, Navigation, Scrollbar } from 'swiper';
 import { useAnalytics } from 'use-analytics';
+import CourseNotFoundError from '@components/errors/CourseNotFoundError';
 
 import 'swiper/css';
 import 'swiper/css/a11y';
@@ -70,6 +71,11 @@ const SriSriYogaDeepDive = dynamic(() =>
 const MarmaTraining = dynamic(() =>
   import('@components/courseDetails').then((mod) => mod.MarmaTraining),
 );
+
+const SleepAnxietyProtocol = dynamic(() =>
+  import('@components/courseDetails').then((mod) => mod.SleepAnxietyProtocol),
+);
+
 /* export const getServerSideProps = async (context) => {
   const { query, req, res } = context;
   const { id } = query;
@@ -223,7 +229,8 @@ function CourseDetail() {
       !isSKYWithSahaj &&
       !isSriSriYogaDeepDiveType &&
       !isMarmaTraining &&
-      !isSkyResilienceTrainingProgram
+      !isSkyResilienceTrainingProgram &&
+      !isSleepAnxietyProtocol
     ) {
       pushRouteWithUTMQuery(router, {
         pathname: `/us-en/course/checkout/${data.id}`,
@@ -277,7 +284,13 @@ function CourseDetail() {
     }
   }
 
-  if (isError) return <ErrorPage statusCode={500} title={error.message} />;
+  if (isError) {
+    if (error?.response?.data?.message === 'No Workshop found') {
+      return <CourseNotFoundError type="course" browseLink="/us-en/courses" />;
+    }
+    return <ErrorPage statusCode={500} title={error.message} />;
+  }
+
   if (isLoading || !router.isReady) return <PageLoading />;
 
   const isHealingBreath = orgConfig.name === 'HB';
@@ -313,6 +326,9 @@ function CourseDetail() {
     COURSE_TYPES.SRI_SRI_YOGA_DEEP_DIVE.value.indexOf(data.productTypeId) >= 0;
   const isMarmaTraining =
     COURSE_TYPES.MARMA_TRAINING.value.indexOf(data.productTypeId) >= 0;
+
+  const isSleepAnxietyProtocol =
+    COURSE_TYPES.SLEEP_ANXIETY.value.indexOf(data.productTypeId) >= 0;
 
   const handleRegister =
     (courseType = COURSE_TYPES.SKY_BREATH_MEDITATION.code) =>
@@ -366,6 +382,9 @@ function CourseDetail() {
     if (isMarmaTraining) {
       return <MarmaTraining {...props} />;
     }
+    if (isSleepAnxietyProtocol) {
+      return <SleepAnxietyProtocol {...props} />;
+    }
     if (isSKYType) {
       if (isHealingBreath) {
         return <HealingBreath {...props} />;
@@ -398,6 +417,7 @@ function CourseDetail() {
     if (isSKYWithSahaj) {
       return <SKYWithSahaj {...props} />;
     }
+
     return <ErrorPage statusCode={404} />;
   };
 

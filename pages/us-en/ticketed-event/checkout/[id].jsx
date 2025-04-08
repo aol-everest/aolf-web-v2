@@ -19,7 +19,12 @@ import {
   useElements,
   useStripe,
 } from '@stripe/react-stripe-js';
-import { useQueryState, parseAsJson } from 'nuqs';
+import {
+  useQueryState,
+  parseAsJson,
+  parseAsBoolean,
+  parseAsString,
+} from 'nuqs';
 import { Auth, api, phoneRegExp, tConvert } from '@utils';
 import { UserInfoFormNewCheckout } from '@components/checkout';
 import dayjs from 'dayjs';
@@ -34,6 +39,7 @@ import { ScheduleAgreementForm } from '@components/scheduleAgreementForm';
 import AttendeeDetails from './AttendeeDetails';
 import { FaChevronLeft } from 'react-icons/fa6';
 import { z } from 'zod';
+import CourseNotFoundError from '@components/errors/CourseNotFoundError';
 
 const ticketSchema = z.record(z.string(), z.number());
 
@@ -47,7 +53,7 @@ function TicketCheckout() {
     isError,
     error,
   } = useQuery({
-    queryKey: 'getTicketedEvent',
+    queryKey: ['getTicketedEvent', eventId],
     queryFn: async () => {
       const response = await api.get({
         path: 'getTicketedEvent',
@@ -59,6 +65,13 @@ function TicketCheckout() {
     },
     enabled: !!eventId,
   });
+
+  if (isError) {
+    if (error?.response?.data?.message === 'No Event found') {
+      return <CourseNotFoundError type="event" browseLink="/us-en/courses" />;
+    }
+    return <ErrorPage statusCode={500} title={error.message} />;
+  }
 
   if (isError) return <ErrorPage statusCode={500} title={error.message} />;
   if (isLoading || !router.isReady) return <PageLoading />;
@@ -148,6 +161,10 @@ const TicketCheckoutForm = ({ event }) => {
   const { showModal } = useGlobalModalContext();
   const stripe = useStripe();
   const formRef = useRef();
+  const [couponCode, setCouponCode] = useQueryState(
+    'couponCode',
+    parseAsString,
+  );
 
   const elements = useElements();
   const { showAlert } = useGlobalAlertContext();
@@ -156,6 +173,10 @@ const TicketCheckoutForm = ({ event }) => {
   const [attendeeDetails, setAttendeeDetails] = useState([]);
   const [pricingTiersLocalState, setPricingTierLocal] = useState([]);
   const [discountResponse, setDiscountResponse] = useState(null);
+  const [showAddressFields] = useQueryState(
+    'showAddressFields',
+    parseAsBoolean.withDefault(false),
+  );
   const [selectedTickets] = useQueryState(
     'ticket',
     parseAsJson(ticketSchema.parse).withDefault({}),
@@ -407,11 +428,13 @@ const TicketCheckoutForm = ({ event }) => {
     }
   };
 
+  const finalPrice = totalPrice - totalDiscount;
+
   const formikOnChange = (values) => {
     if (!stripe || !elements) {
       return;
     }
-    let finalPrice = totalPrice;
+
     // if (values.comboDetailId && values.comboDetailId !== workshop.id) {
     //   const selectedBundle = workshop.availableBundles.find(
     //     (b) => b.comboProductSfid === values.comboDetailId,
@@ -471,6 +494,7 @@ const TicketCheckoutForm = ({ event }) => {
 
   const applyDiscount = (discount) => {
     setDiscountResponse(discount);
+    setCouponCode(discount?.couponCode || null);
   };
 
   const renderSummary = () => {
@@ -503,9 +527,7 @@ const TicketCheckoutForm = ({ event }) => {
 
         <div className="total">
           <div className="label">Total:</div>
-          <div className="value">
-            ${(parseFloat(totalPrice) - totalDiscount).toFixed(2)}
-          </div>
+          <div className="value">${parseFloat(finalPrice).toFixed(2)}</div>
         </div>
       </>
     );
@@ -538,9 +560,7 @@ const TicketCheckoutForm = ({ event }) => {
           contactCity: personMailingCity || '',
           contactState: personMailingState || '',
           contactZip: personMailingPostalCode || '',
-          couponCode: discountResponse?.couponCode
-            ? discountResponse.couponCode
-            : '',
+          couponCode: couponCode || '',
           questionnaire: questionnaireArray,
           ppaAgreement: false,
           contactPhone: personMobilePhone,
@@ -561,7 +581,7 @@ const TicketCheckoutForm = ({ event }) => {
             .required('Phone number required')
             .matches(phoneRegExp, 'Phone number is not valid'),
           contactAddress: Yup.string().when([], (obj) => {
-            if (afterDiscountPrice !== 0) {
+            if (afterDiscountPrice !== 0 && showAddressFields) {
               return obj
                 .required('Address is required')
                 .matches(/\S/, 'String should not contain empty spaces');
@@ -569,18 +589,38 @@ const TicketCheckoutForm = ({ event }) => {
               return obj;
             }
           }),
-          contactCity: Yup.string()
-            .required('City is required')
-            .matches(/\S/, 'String should not contain empty spaces'),
-          contactState: Yup.string()
-            .required('State is required')
-            .matches(/\S/, 'String should not contain empty spaces'),
-          contactZip: Yup.string()
-            .required('Zip is required!')
-            .matches(/\S/, 'String should not contain empty spaces')
-            //.matches(/^[0-9]+$/, { message: 'Zip is invalid' })
-            .min(2, 'Zip is invalid')
-            .max(10, 'Zip is invalid'),
+          contactCity: Yup.string().when([], (obj) => {
+            if (showAddressFields) {
+              return obj
+                .required('City is required')
+                .matches(/\S/, 'String should not contain empty spaces');
+            } else {
+              return obj;
+            }
+          }),
+          contactState: Yup.string().when([], (obj) => {
+            if (showAddressFields) {
+              return obj
+                .required('State is required')
+                .matches(/\S/, 'String should not contain empty spaces');
+            } else {
+              return obj;
+            }
+          }),
+          contactZip: Yup.string().when([], (obj) => {
+            if (showAddressFields) {
+              return (
+                obj
+                  .required('Zip is required!')
+                  .matches(/\S/, 'String should not contain empty spaces')
+                  //.matches(/^[0-9]+$/, { message: 'Zip is invalid' })
+                  .min(2, 'Zip is invalid')
+                  .max(10, 'Zip is invalid')
+              );
+            } else {
+              return obj;
+            }
+          }),
           ppaAgreement: Yup.boolean()
             .label('Terms')
             .test(
@@ -654,13 +694,16 @@ const TicketCheckoutForm = ({ event }) => {
                               <form id="my-form">
                                 <UserInfoFormNewCheckout
                                   formikProps={formikProps}
-                                  showStreetAddress={showStreetAddress}
+                                  showStreetAddress={showAddressFields}
+                                  showContactState={showAddressFields}
+                                  showContactCity={showAddressFields}
+                                  showContactZip={showAddressFields}
                                 />
                               </form>
                             </div>
                           </div>
                           <div className="section-box">
-                            {totalPrice > 0 && (
+                            {finalPrice > 0 && (
                               <>
                                 <h2 className="section__title d-flex">
                                   Pay with
@@ -1013,7 +1056,7 @@ const TicketCheckoutForm = ({ event }) => {
                               >
                                 {isZeroDollarPrice === 0
                                   ? 'RSVP'
-                                  : 'Confirm and Pay'}
+                                  : 'Place order'}
                               </button>
                             </div>
                           </div>

@@ -5,3 +5,41 @@
   // padding: 20px 25px !important;
   margin: 0px !important;
 }
+
+.alert__modal {
+  z-index: 9999;
+  pointer-events: none;
+}
+
+.alert__modal > div {
+  pointer-events: auto;
+  animation: slideIn 0.3s ease-out;
+  max-width: calc(100% - 32px); // Ensure padding on mobile
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+// Add auto-hide animation
+@keyframes slideOut {
+  from {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+}
+
+.hiding {
+  animation: slideOut 0.3s ease-in forwards;
+}

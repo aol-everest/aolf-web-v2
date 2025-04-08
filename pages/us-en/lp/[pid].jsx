@@ -99,9 +99,25 @@ const PAGES = {
   },
 };
 
+export const getServerSideProps = async (context) => {
+  if (context.query.pid === 'donations') {
+    return {
+      redirect: {
+        permanent: false,
+        destination: PAGES[context.query.pid].url,
+      },
+      props: {},
+    };
+  }
+  return {
+    props: {},
+  };
+};
+
 function LandingPage() {
   const router = useRouter();
   const { pid, ...rest } = router.query;
+
   const queryString = Object.keys(rest || {})
     .map((key) => {
       return encodeURIComponent(key) + '=' + encodeURIComponent(rest[key]);

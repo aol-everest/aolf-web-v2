@@ -12,6 +12,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import { useQueryState, parseAsBoolean, parseAsJson, createParser } from 'nuqs';
 import { useUIDSeed } from 'react-uid';
 import { useAuth } from '@contexts';
+import { nuqsParseJson } from '@utils';
 import {
   ABBRS,
   COURSE_MODES,
@@ -140,7 +141,7 @@ const fillDefaultTimeZone = () => {
   if (TIME_ZONE[userTimeZoneAbbreviation.toUpperCase()]) {
     return userTimeZoneAbbreviation.toUpperCase();
   }
-  return null;
+  return 'EST';
 };
 
 const parseAsStartEndDate = createParser({
@@ -387,7 +388,7 @@ const Course = ({ bundle, allowCourseTypes }) => {
   const [timeZoneFilter, setTimeZoneFilter] = useQueryState('timeZone');
   const [instructorFilter, setInstructorFilter] = useQueryState(
     'instructor',
-    parseAsJson(),
+    nuqsParseJson,
   );
 
   const [cityFilter] = useQueryState('city');
@@ -525,6 +526,7 @@ const Course = ({ bundle, allowCourseTypes }) => {
     setTimeZoneFilter(null);
     setFilterStartEndDate(null);
     setCourseTypeFilter(null);
+    setSearchKey('');
     setInstructorFilter(null);
   };
 
@@ -544,6 +546,7 @@ const Course = ({ bundle, allowCourseTypes }) => {
         if (value) {
           setInstructorFilter(value);
         } else {
+          setSearchKey('');
           setInstructorFilter(null);
         }
         break;
@@ -563,6 +566,7 @@ const Course = ({ bundle, allowCourseTypes }) => {
         setTimeZoneFilter(null);
         break;
       case 'instructorFilter':
+        setSearchKey('');
         setInstructorFilter(null);
         break;
     }
@@ -584,6 +588,7 @@ const Course = ({ bundle, allowCourseTypes }) => {
         if (value) {
           setInstructorFilter(value);
         } else {
+          setSearchKey('');
           setInstructorFilter(null);
         }
         break;

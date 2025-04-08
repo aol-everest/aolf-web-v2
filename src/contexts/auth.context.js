@@ -9,7 +9,7 @@ import React, {
 } from 'react';
 import { Hub } from 'aws-amplify/utils';
 import { signOut as amplifySignOut } from 'aws-amplify/auth';
-import { Auth } from '@utils';
+import { Auth, clearAuthCookies } from '@utils';
 import { signOut } from '@passwordLess/common.js';
 import { parseJwtPayload, setTimeoutWallClock } from '@passwordLess/util.js';
 import { signInWithLink, requestSignInLink } from '@passwordLess/magic-link.js';
@@ -34,6 +34,7 @@ import {
 } from '@passwordLess/storage.js';
 import { busyState } from '@passwordLess/model.js';
 import { scheduleRefresh, refreshTokens } from '@passwordLess/refresh.js';
+import { clearInflightOAuth } from '@passwordLess/storage.js';
 
 // Create a context for managing authentication state
 const AuthContext = createContext();
@@ -62,6 +63,9 @@ export const AuthProvider = ({
     } catch (error) {
       setCurrentUser({ isAuthenticated: false });
       console.log('Error fetching current user:', error);
+      // Clear cookies if we get specific auth-related errors
+      console.log('Clearing auth cookies for NotAuthorizedException...');
+      await clearAuthCookies();
       throw new Error(
         'Unable to load your profile details. Please refresh the page or contact support if the issue persists.',
       );
@@ -69,13 +73,36 @@ export const AuthProvider = ({
   };
 
   useEffect(() => {
-    // fetchCurrentUser();
+    // Clean up any stale auth state on mount
+    const cleanup = async () => {
+      try {
+        // Clear any stale OAuth state
+        await clearInflightOAuth();
 
-    // Subscribe to Hub events for authentication
+        // If we have corrupted/invalid tokens, clear them
+        const tokens = await retrieveTokens();
+        if (tokens) {
+          try {
+            parseJwtPayload(tokens.idToken);
+            parseJwtPayload(tokens.accessToken);
+          } catch (e) {
+            console.log('Found invalid tokens, clearing auth state');
+            await clearAuthCookies();
+            await clearStorage();
+          }
+        }
+      } catch (err) {
+        console.error('Error during auth cleanup:', err);
+      }
+    };
+    cleanup();
+
+    let customState;
     const hubListenerCancelToken = Hub.listen('auth', async ({ payload }) => {
       setError(null);
       switch (payload.event) {
         case 'signedIn':
+          // await clearAuthCookies();
           console.log('user have been signedIn successfully.');
           await fetchCurrentUser();
           break;
@@ -84,13 +111,17 @@ export const AuthProvider = ({
           setCurrentUser({ isAuthenticated: false });
           localStorage.clear();
           clearStorage();
+          console.log('Clearing auth cookies for signedOut...');
+          await clearAuthCookies();
           break;
         case 'tokenRefresh':
           console.log('auth tokens have been refreshed.');
           break;
         case 'tokenRefresh_failure':
-          setError('An error has occurred during token refresh.');
           console.log('failure while refreshing auth tokens.');
+          await clearAuthCookies();
+          setError('An error has occurred during token refresh.');
+          setCurrentUser({ isAuthenticated: false });
           break;
         case 'signInWithRedirect':
           console.log('signInWithRedirect API has successfully been resolved.');
@@ -101,10 +132,10 @@ export const AuthProvider = ({
           console.log(
             'failure while trying to resolve signInWithRedirect API.',
           );
+          await clearAuthCookies();
           break;
         case 'customOAuthState':
-          // eslint-disable-next-line no-case-declarations
-          const state = payload.data; // this will be customState provided on signInWithRedirect function
+          customState = payload.data;
           console.info('custom state returned from CognitoHosted UI');
           break;
       }
@@ -118,7 +149,7 @@ export const AuthProvider = ({
   return (
     <AuthContext.Provider
       value={{
-        passwordLess: _usePasswordless(fetchCurrentUser),
+        passwordLess: usePasswordlessAuth(fetchCurrentUser),
         fetchCurrentUser,
         ...currentUser,
         error,
@@ -135,15 +166,243 @@ export const AuthProvider = ({
   );
 };
 
+const useLocalUserCacheInternal = () => {
+  const auth = useAuth();
+  const { tokensParsed } = auth;
+  const { passwordLess } = auth;
+  const idToken = tokensParsed?.idToken;
+  const hasFido2Credentials =
+    passwordLess.fido2Credentials && !!passwordLess.fido2Credentials.length;
+  const justSignedInWithMagicLink =
+    passwordLess.signingInStatus === 'SIGNED_IN_WITH_LINK';
+  const [lastSignedInUsers, setLastSignedInUsers] = useState();
+  const [currentUser, setCurrentUser] = useState();
+  const [fidoPreferenceOverride, setFidoPreferenceOverride] = useState();
+
+  // 1 populate lastSignedInUsers from local storage
+  useEffect(() => {
+    getLastSignedInUsers()
+      .then(setLastSignedInUsers)
+      .catch((err) => {
+        const { debug } = configure();
+        debug?.('Failed to determine last signed-in users:', err);
+      });
+  }, []);
+
+  // 2 populate currentUser from lastSignedInUsers OR init currentUser
+  useEffect(() => {
+    if (!idToken) {
+      setCurrentUser(undefined);
+      return;
+    }
+    const user = {
+      username: idToken['cognito:username'],
+      email: idToken.email,
+    };
+    if (lastSignedInUsers) {
+      const found = lastSignedInUsers.find(
+        (lastUser) =>
+          lastUser.username &&
+          lastUser.username === idToken['cognito:username'],
+      );
+      if (found) {
+        user.useFido = found.useFido;
+        user.credentials = found.credentials;
+        if (!idToken.email_verified) {
+          user.email = found.email;
+        }
+      }
+    }
+    setCurrentUser((state) =>
+      JSON.stringify(state) === JSON.stringify(user) ? state : user,
+    );
+  }, [lastSignedInUsers, idToken]);
+
+  // 3 If user is updated, store in lastSignedInUsers
+  useEffect(() => {
+    if (currentUser) {
+      registerSignedInUser(currentUser).catch((err) => {
+        const { debug } = configure();
+        debug?.('Failed to register last signed-in user:', err);
+      });
+      setLastSignedInUsers((state) => {
+        const update = [currentUser];
+        for (const user of state ?? []) {
+          if (user.username !== currentUser.username) {
+            update.push(user);
+          }
+        }
+        return JSON.stringify(state) === JSON.stringify(update)
+          ? state
+          : update;
+      });
+    }
+  }, [currentUser]);
+
+  const determineFido = useCallback(
+    (user) => {
+      const { fido2 } = configure();
+      if (!fido2) {
+        return 'NO';
+      }
+      if (hasFido2Credentials === undefined) {
+        return 'INDETERMINATE';
+      }
+      if (fidoPreferenceOverride) {
+        return fidoPreferenceOverride;
+      }
+      if (user.useFido === 'NO') {
+        if (justSignedInWithMagicLink) {
+          return 'ASK';
+        }
+        return 'NO';
+      }
+      if (hasFido2Credentials) {
+        return 'YES';
+      }
+      if (passwordLess.creatingCredential) {
+        return user.useFido ?? 'INDETERMINATE';
+      }
+      return 'ASK';
+    },
+    [
+      passwordLess.creatingCredential,
+      hasFido2Credentials,
+      fidoPreferenceOverride,
+      justSignedInWithMagicLink,
+    ],
+  );
+
+  // 4 Update user FIDO preference
+  useEffect(() => {
+    if (currentUser) {
+      const useFido = determineFido(currentUser);
+      if (useFido === 'INDETERMINATE') return;
+      setCurrentUser((state) => {
+        const update = {
+          ...currentUser,
+          useFido,
+          credentials: passwordLess.fido2Credentials?.map((c) => ({
+            id: c.credentialId,
+            transports: c.transports,
+          })),
+        };
+        return JSON.stringify(state) === JSON.stringify(update)
+          ? state
+          : update;
+      });
+    }
+  }, [currentUser, determineFido, passwordLess.fido2Credentials]);
+
+  // 5 reset state on signOut
+  useEffect(() => {
+    if (!currentUser) setFidoPreferenceOverride(undefined);
+  }, [currentUser]);
+
+  return {
+    /** The current signed-in user */
+    currentUser,
+    /** Update the current user's FIDO2 preference */
+    updateFidoPreference: ({ useFido }) => {
+      setFidoPreferenceOverride(useFido);
+    },
+    /** The list of the 10 last signed-in users in your configured storage (e.g. localStorage) */
+    lastSignedInUsers,
+    /** Clear the last signed in users from your configured storage (e.g. localStorage) */
+    clearLastSignedInUsers: () => {
+      clearLastSignedInUsers().catch((err) => {
+        const { debug } = configure();
+        debug?.('Failed to clear last signed-in users:', err);
+      });
+      setLastSignedInUsers(undefined);
+    },
+  };
+};
+
 const LocalUserCacheContextProvider = (props) => {
   return (
-    <LocalUserCacheContext.Provider value={_useLocalUserCache()}>
+    <LocalUserCacheContext.Provider value={useLocalUserCacheInternal()}>
       {props.children}
     </LocalUserCacheContext.Provider>
   );
 };
 
-function _usePasswordless(fetchCurrentUser) {
+/** React hook that stores and gives access to the last 10 signed in users (from your configured storage) */
+export function useLocalUserCache() {
+  const context = useContext(LocalUserCacheContext);
+  if (!context) {
+    throw new Error(
+      'The localUserCache must be enabled in the PasswordlessContextProvider: <PasswordlessContextProvider enableLocalUserCache={true}>',
+    );
+  }
+  return context;
+}
+
+/** Retrieve the last signed in users from your configured storage (e.g. localStorage) */
+async function getLastSignedInUsers() {
+  const { clientId, storage } = configure();
+  const lastUsers = await storage.getItem(`Passwordless.${clientId}.lastUsers`);
+  if (!lastUsers) return [];
+  const users = JSON.parse(lastUsers);
+  return users;
+}
+
+/** Clear the last signed in users from your configured storage (e.g. localStorage) */
+async function clearLastSignedInUsers() {
+  const { clientId, storage } = configure();
+  await storage.removeItem(`Passwordless.${clientId}.lastUsers`);
+}
+
+/** Register a signed in user in your configured storage (e.g. localStorage) */
+async function registerSignedInUser(user) {
+  const { clientId, debug, storage } = configure();
+  debug?.(`Registering user in storage: ${JSON.stringify(user)}`);
+  const lastUsers = await getLastSignedInUsers();
+  const index = lastUsers.findIndex(
+    (lastUser) => lastUser.username === user.username,
+  );
+  if (index !== -1) {
+    lastUsers.splice(index, 1);
+  }
+  lastUsers.unshift(user);
+  await storage.setItem(
+    `Passwordless.${clientId}.lastUsers`,
+    JSON.stringify(lastUsers.slice(0, 10)),
+  );
+}
+
+/** React hook to turn state (or any variable) into a promise that can be awaited */
+export function useAwaitableState(state) {
+  const resolve = useRef();
+  const reject = useRef();
+  const awaitable = useRef();
+  const [awaited, setAwaited] = useState();
+  const renewPromise = useCallback(() => {
+    awaitable.current = new Promise((_resolve, _reject) => {
+      resolve.current = _resolve;
+      reject.current = _reject;
+    })
+      .then((value) => {
+        setAwaited({ value });
+        return value;
+      })
+      .finally(renewPromise);
+  }, []);
+  useEffect(renewPromise, [renewPromise]);
+  useEffect(() => setAwaited(undefined), [state]);
+  return {
+    /** Call to get the current awaitable (promise) */
+    awaitable: () => awaitable.current,
+    /** Resolve the current awaitable (promise) with the current value of state */
+    resolve: () => resolve.current(state),
+    /** Reject the current awaitable (promise) */
+    reject: (reason) => reject.current(reason),
+    /** That value of awaitable (promise) once it resolves. This is undefined if (1) awaitable is not yet resolved or (2) the state has changed since awaitable was resolved */
+    awaited,
+  };
+}
+
+const usePasswordlessAuth = (fetchCurrentUser) => {
   const [signingInStatus, setSigninInStatus] = useState(
     'CHECKING_FOR_SIGNIN_LINK',
   );
@@ -597,233 +856,4 @@ function _usePasswordless(fetchCurrentUser) {
       [],
     ),
   };
-}
-
-function _useLocalUserCache() {
-  const {
-    tokensParsed,
-    creatingCredential,
-    fido2Credentials,
-    signingInStatus,
-  } = useAuth().passwordLess;
-  const idToken = tokensParsed?.idToken;
-  const hasFido2Credentials = fido2Credentials && !!fido2Credentials.length;
-  const justSignedInWithMagicLink = signingInStatus === 'SIGNED_IN_WITH_LINK';
-  const [lastSignedInUsers, setLastSignedInUsers] = useState();
-  const [currentUser, setCurrentUser] = useState();
-  const [fidoPreferenceOverride, setFidoPreferenceOverride] = useState();
-
-  // 1 populate lastSignedInUsers from local storage
-  useEffect(() => {
-    getLastSignedInUsers()
-      .then(setLastSignedInUsers)
-      .catch((err) => {
-        const { debug } = configure();
-        debug?.('Failed to determine last signed-in users:', err);
-      });
-  }, []);
-
-  // 2 populate currentUser from lastSignedInUsers OR init currentUser
-  useEffect(() => {
-    if (!idToken) {
-      setCurrentUser(undefined);
-      return;
-    }
-    const user = {
-      username: idToken['cognito:username'],
-      email: idToken.email,
-    };
-    if (lastSignedInUsers) {
-      const found = lastSignedInUsers.find(
-        (lastUser) =>
-          lastUser.username &&
-          lastUser.username === idToken['cognito:username'],
-      );
-      if (found) {
-        user.useFido = found.useFido;
-        user.credentials = found.credentials;
-        if (!idToken.email_verified) {
-          user.email = found.email;
-        }
-      }
-    }
-    setCurrentUser((state) =>
-      JSON.stringify(state) === JSON.stringify(user) ? state : user,
-    );
-  }, [lastSignedInUsers, idToken]);
-
-  // 3 If user is updated, store in lastSignedInUsers
-  useEffect(() => {
-    if (currentUser) {
-      registerSignedInUser(currentUser).catch((err) => {
-        const { debug } = configure();
-        debug?.('Failed to register last signed-in user:', err);
-      });
-      setLastSignedInUsers((state) => {
-        const update = [currentUser];
-        for (const user of state ?? []) {
-          if (user.username !== currentUser.username) {
-            update.push(user);
-          }
-        }
-        return JSON.stringify(state) === JSON.stringify(update)
-          ? state
-          : update;
-      });
-    }
-  }, [currentUser]);
-
-  const determineFido = useCallback(
-    (user) => {
-      const { fido2 } = configure();
-      if (!fido2) {
-        return 'NO';
-      }
-      if (hasFido2Credentials === undefined) {
-        return 'INDETERMINATE';
-      }
-      if (fidoPreferenceOverride) {
-        return fidoPreferenceOverride;
-      }
-      if (user.useFido === 'NO') {
-        if (justSignedInWithMagicLink) {
-          return 'ASK';
-        }
-        return 'NO';
-      }
-      if (hasFido2Credentials) {
-        return 'YES';
-      }
-      if (creatingCredential) {
-        return user.useFido ?? 'INDETERMINATE';
-      }
-      return 'ASK';
-    },
-    [
-      creatingCredential,
-      hasFido2Credentials,
-      fidoPreferenceOverride,
-      justSignedInWithMagicLink,
-    ],
-  );
-
-  // 4 Update user FIDO preference
-  useEffect(() => {
-    if (currentUser) {
-      const useFido = determineFido(currentUser);
-      if (useFido === 'INDETERMINATE') return;
-      setCurrentUser((state) => {
-        const update = {
-          ...currentUser,
-          useFido,
-          credentials: fido2Credentials?.map((c) => ({
-            id: c.credentialId,
-            transports: c.transports,
-          })),
-        };
-        return JSON.stringify(state) === JSON.stringify(update)
-          ? state
-          : update;
-      });
-    }
-  }, [currentUser, determineFido, fido2Credentials]);
-
-  // 5 reset state on signOut
-  useEffect(() => {
-    if (!currentUser) setFidoPreferenceOverride(undefined);
-  }, [currentUser]);
-
-  return {
-    /** The current signed-in user */
-    currentUser,
-    /** Update the current user's FIDO2 preference */
-    updateFidoPreference: ({ useFido }) => {
-      setFidoPreferenceOverride(useFido);
-    },
-    /** The list of the 10 last signed-in users in your configured storage (e.g. localStorage) */
-    lastSignedInUsers,
-    /** Clear the last signed in users from your configured storage (e.g. localStorage) */
-    clearLastSignedInUsers: () => {
-      clearLastSignedInUsers().catch((err) => {
-        const { debug } = configure();
-        debug?.('Failed to clear last signed-in users:', err);
-      });
-      setLastSignedInUsers(undefined);
-    },
-  };
-}
-
-/** Retrieve the last signed in users from your configured storage (e.g. localStorage) */
-async function getLastSignedInUsers() {
-  const { clientId, storage } = configure();
-  const lastUsers = await storage.getItem(`Passwordless.${clientId}.lastUsers`);
-  if (!lastUsers) return [];
-  const users = JSON.parse(lastUsers);
-  return users;
-}
-
-/** Clear the last signed in users from your configured storage (e.g. localStorage) */
-async function clearLastSignedInUsers() {
-  const { clientId, storage } = configure();
-  await storage.removeItem(`Passwordless.${clientId}.lastUsers`);
-}
-
-/** React hook that stores and gives access to the last 10 signed in users (from your configured storage) */
-export function useLocalUserCache() {
-  const context = useContext(LocalUserCacheContext);
-  if (!context) {
-    throw new Error(
-      'The localUserCache must be enabled in the PasswordlessContextProvider: <PasswordlessContextProvider enableLocalUserCache={true}>',
-    );
-  }
-  return context;
-}
-
-/** Register a signed in user in your configured storage (e.g. localStorage) */
-async function registerSignedInUser(user) {
-  const { clientId, debug, storage } = configure();
-  debug?.(`Registering user in storage: ${JSON.stringify(user)}`);
-  const lastUsers = await getLastSignedInUsers();
-  const index = lastUsers.findIndex(
-    (lastUser) => lastUser.username === user.username,
-  );
-  if (index !== -1) {
-    lastUsers.splice(index, 1);
-  }
-  lastUsers.unshift(user);
-  await storage.setItem(
-    `Passwordless.${clientId}.lastUsers`,
-    JSON.stringify(lastUsers.slice(0, 10)),
-  );
-}
-
-/** React hook to turn state (or any variable) into a promise that can be awaited */
-export function useAwaitableState(state) {
-  const resolve = useRef();
-  const reject = useRef();
-  const awaitable = useRef();
-  const [awaited, setAwaited] = useState();
-  const renewPromise = useCallback(() => {
-    awaitable.current = new Promise((_resolve, _reject) => {
-      resolve.current = _resolve;
-      reject.current = _reject;
-    })
-      .then((value) => {
-        setAwaited({ value });
-        return value;
-      })
-      .finally(renewPromise);
-  }, []);
-  useEffect(renewPromise, [renewPromise]);
-  useEffect(() => setAwaited(undefined), [state]);
-  return {
-    /** Call to get the current awaitable (promise) */
-    awaitable: () => awaitable.current,
-    /** Resolve the current awaitable (promise) with the current value of state */
-    resolve: () => resolve.current(state),
-    /** Reject the current awaitable (promise) */
-    reject: (reason) => reject.current(reason),
-    /** That value of awaitable (promise) once it resolves. This is undefined if (1) awaitable is not yet resolved or (2) the state has changed since awaitable was resolved */
-    awaited,
-  };
-}
+};

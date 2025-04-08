@@ -18,3 +18,4 @@ export { StyledInputNewCheckout } from './StyledInputNewCheckout';
 export { UserInfoForm } from './UserInfoForm';
 export { UserInfoFormNewCheckout } from './UserInfoFormNewCheckout';
 export { PhoneInputNewCheckout } from './PhoneInputNewCheckout';
+export { DropdownNewCheckout } from './DropdownNewCheckout';

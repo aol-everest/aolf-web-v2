@@ -432,6 +432,7 @@
     }
     .swiper-slide {
       width: auto;
+      min-width: 60px;
     }
     .swiper-pagination {
       top: 0;
@@ -451,10 +452,11 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      top: 56px;
+      top: 40px;
       transform: translateY(-50%);
       position: absolute;
       left: 10px;
+      z-index: 9;
       &.slide-button-next {
         right: 10px;
         left: auto;

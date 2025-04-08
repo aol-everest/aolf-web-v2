@@ -12,6 +12,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import { useQueryState, parseAsBoolean, parseAsJson, createParser } from 'nuqs';
 import { useUIDSeed } from 'react-uid';
 import { useAuth } from '@contexts';
+import { nuqsParseJson } from '@utils';
 import {
   ABBRS,
   COURSE_MODES,
@@ -79,7 +80,7 @@ const fillDefaultTimeZone = () => {
   if (TIME_ZONE[userTimeZoneAbbreviation.toUpperCase()]) {
     return userTimeZoneAbbreviation.toUpperCase();
   }
-  return null;
+  return 'EST';
 };
 
 const parseAsStartEndDate = createParser({
@@ -332,7 +333,7 @@ const Course = () => {
   );
   const [locationFilter, setLocationFilter] = useQueryState(
     'location',
-    parseAsJson(),
+    nuqsParseJson,
   );
   const [filterStartEndDate, setFilterStartEndDate] = useQueryState(
     'startEndDate',

@@ -1,9 +1,16 @@
+/* eslint-disable react/no-unescaped-entities */
 /* eslint-disable no-inline-styles/no-inline-styles */
 import { ScheduleLocationFilterNew } from '@components/scheduleLocationFilter/ScheduleLocationFilterNew';
 import { useQueryState, parseAsString, parseAsJson } from 'nuqs';
 import moment from 'moment';
 import { api, findCourseTypeByKey, findSlugByProductTypeId } from '@utils';
-import React, { useEffect, useRef, useState } from 'react';
+import React, {
+  useEffect,
+  useRef,
+  useState,
+  useMemo,
+  useCallback,
+} from 'react';
 import dayjs from 'dayjs';
 import { sortBy } from 'lodash';
 import Flatpickr from 'react-flatpickr';
@@ -13,7 +20,10 @@ import { useEffectOnce } from 'react-use';
 import { useQuery } from '@tanstack/react-query';
 import { useRouter } from 'next/router';
 import 'flatpickr/dist/flatpickr.min.css';
-import { replaceRouteWithUTMQuery } from '@service';
+import { replaceRouteWithUTMQuery, pushRouteWithUTMQuery } from '@service';
+import { z } from 'zod';
+
+// import { nuqsParseJson } from '@utils';
 import { Loader } from '@components';
 import WorkshopSelectModal from '@components/scheduleWorkshopModal/ScheduleWorkshopModal';
 
@@ -92,9 +102,8 @@ const Scheduling = ({ initialLocation }) => {
   );
   const [workshops, setWorkshops] = useState([]);
   const [timezoneFilter, setTimezoneFilter] = useState('');
-  const [currentMonthYear, setCurrentMonthYear] = useQueryState(
-    'ym',
-    parseAsString.withDefault(`${moment().year()}-${moment().month() + 1}`),
+  const [currentMonthYear, setCurrentMonthYear] = useState(
+    `${moment().year()}-${moment().month() + 1}`,
   );
   const [selectedWorkshopId, setSelectedWorkshopId] = useState('');
   const [activeWorkshop, setActiveWorkshop] = useState({});
@@ -109,6 +118,36 @@ const Scheduling = ({ initialLocation }) => {
 
   const [teacherFilter] = useQueryState('teacher');
   const [cityFilter, setCityFilter] = useQueryState('city');
+
+  // Remove duplicate state
+  const [workshopSelection, setWorkshopSelection] = useState({
+    selectedId: null,
+    activeWorkshop: {},
+    workshops: [],
+  });
+
+  // Memoize workshop selection handlers
+  const workshopHandlers = useMemo(
+    () => ({
+      setSelectedId: (id) => {
+        setWorkshopSelection((prev) => ({ ...prev, selectedId: id }));
+      },
+      setActiveWorkshop: (workshop) => {
+        setWorkshopSelection((prev) => ({ ...prev, activeWorkshop: workshop }));
+      },
+      setWorkshops: (workshops) => {
+        setWorkshopSelection((prev) => ({ ...prev, workshops: workshops }));
+      },
+      resetSelection: () => {
+        setWorkshopSelection({
+          selectedId: null,
+          activeWorkshop: {},
+          workshops: [],
+        });
+      },
+    }),
+    [],
+  );
 
   useEffectOnce(() => {
     page({
@@ -126,9 +165,7 @@ const Scheduling = ({ initialLocation }) => {
       if (workshops?.length > 0) {
         setWorkshops([]);
       }
-      if (!showWorkshopSelectModal) {
-        setShowWorkshopSelectModal(true);
-      }
+      setShowWorkshopSelectModal(true);
       getWorkshops();
     }
   }, [selectedDates]);
@@ -161,21 +198,13 @@ const Scheduling = ({ initialLocation }) => {
     }
   }, [attendeeRecord]);
 
-  const { data: dateAvailable = [], isLoading } = useQuery({
-    queryKey: [
-      'workshopMonthCalendar',
-      currentMonthYear,
-      courseTypeFilter,
-      timezoneFilter,
-      mode,
-      locationFilter || {},
-    ],
-    queryFn: async () => {
+  const getWorkshopMonthParams = useCallback(
+    (monthYear) => {
       let param = {
         ctype:
           findCourseTypeByKey(courseTypeFilter)?.value ||
           COURSE_TYPES.SKY_BREATH_MEDITATION?.value,
-        month: currentMonthYear,
+        month: monthYear,
       };
       if (mode !== COURSE_MODES.IN_PERSON.value) {
         param = { ...param, timeZone: timezoneFilter };
@@ -202,20 +231,55 @@ const Scheduling = ({ initialLocation }) => {
           };
         }
       }
+      return param;
+    },
+    [
+      courseTypeFilter,
+      mode,
+      timezoneFilter,
+      milesFilter,
+      teacherFilter,
+      cityFilter,
+      locationFilter,
+    ],
+  );
+
+  const { data: dateAvailable = [], isLoading } = useQuery({
+    queryKey: [
+      'workshopMonthCalendar',
+      currentMonthYear,
+      courseTypeFilter,
+      timezoneFilter,
+      mode,
+      locationFilter || {},
+    ],
+    queryFn: async () => {
+      const param = getWorkshopMonthParams(currentMonthYear);
+
       if (locationFilter?.lat || cityFilter) {
         const response = await api.get({
           path: 'workshopMonthCalendar',
           param,
         });
-        const defaultDate =
-          response.data.length > 0 ? response.data[0].allDates : [];
-        if (fp?.current?.flatpickr && defaultDate.length > 0) {
-          fp.current.flatpickr.jumpToDate(defaultDate[0], true);
+
+        if (currentMonthYear) {
+          const currentMonthFirstDate = response.data.find((data) => {
+            return moment(data.firstDate).format('YYYY-M') === currentMonthYear;
+          });
+          if (fp?.current?.flatpickr && currentMonthFirstDate) {
+            fp.current.flatpickr.jumpToDate(
+              currentMonthFirstDate.firstDate,
+              true,
+            );
+          }
         }
         return response.data;
       }
       return [];
     },
+    staleTime: 5 * 60 * 1000, // 5 minutes
+    cacheTime: 30 * 60 * 1000, // 30 minutes
+    keepPreviousData: true,
   });
 
   const { data: workshopMaster = {} } = useQuery({
@@ -318,7 +382,7 @@ const Scheduling = ({ initialLocation }) => {
     return closestEventIds;
   }
 
-  const getWorkshops = async () => {
+  const getWorkshops = useCallback(async () => {
     setLoading(true);
     let param = {
       sdate: mode !== COURSE_MODES.IN_PERSON.value ? selectedDates?.[0] : null,
@@ -359,39 +423,50 @@ const Scheduling = ({ initialLocation }) => {
       setLoading(false);
       return [];
     }
-    const response = await api.get({
-      path: 'workshops',
-      param,
-    });
-    if (response?.data && selectedDates?.length > 0) {
-      const selectedSfids = getGroupedUniqueEventIds(response);
-      const finalWorkshops =
-        mode === COURSE_MODES.IN_PERSON.value
-          ? response?.data
-          : response?.data.filter((item) => selectedSfids.includes(item.sfid));
 
-      setTimeout(() => {
-        const timeContainer = document.querySelector(
-          '.scheduling-modal__content-option',
-        );
-        if (timeContainer) {
-          timeContainer.scrollIntoView({
-            behavior: 'smooth',
-            block: 'center',
-          });
-        }
-      }, 100);
-      track('click_calendar', {
-        screen_name: 'course_search_scheduling',
-        course_type:
-          courseTypeFilter || COURSE_MODES.SKY_BREATH_MEDITATION.code,
-        location_type: mode,
-        num_results: response?.data.length,
+    try {
+      const response = await api.get({
+        path: 'workshops',
+        param,
       });
+
+      if (response?.data && selectedDates?.length > 0) {
+        const selectedSfids = getGroupedUniqueEventIds(response);
+        const finalWorkshops =
+          mode === COURSE_MODES.IN_PERSON.value
+            ? response?.data
+            : response?.data.filter((item) =>
+                selectedSfids.includes(item.sfid),
+              );
+
+        setTimeout(() => {
+          const timeContainer = document.querySelector(
+            '.scheduling-modal__content-option',
+          );
+          if (timeContainer) {
+            timeContainer.scrollIntoView({
+              behavior: 'smooth',
+              block: 'center',
+            });
+          }
+        }, 100);
+
+        track('click_calendar', {
+          screen_name: 'course_search_scheduling',
+          course_type:
+            courseTypeFilter || COURSE_MODES.SKY_BREATH_MEDITATION.code,
+          location_type: mode,
+          num_results: response?.data.length,
+        });
+
+        workshopHandlers.setWorkshops(finalWorkshops);
+      }
+    } catch (error) {
+      console.error('Error fetching workshops:', error);
+    } finally {
       setLoading(false);
-      setWorkshops(finalWorkshops);
     }
-  };
+  }, [mode, selectedDates, courseTypeFilter, track, workshopHandlers]);
 
   const handleLocationFilterChange = (value) => {
     resetCalender();
@@ -408,64 +483,100 @@ const Scheduling = ({ initialLocation }) => {
     setShowLocationModal(!showLocationModal);
   };
 
-  const handleFlatpickrOnChange = (selectedDates, dateStr, instance) => {
-    setActiveWorkshop({});
-    setSelectedWorkshopId(null);
-    let isEventAvailable = false;
-    if (dateStr && dateStr !== '') {
-      track('cmodal_date_pick');
-    }
+  let enableDates = dateAvailable.map((da) => {
+    return da.firstDate;
+  });
+  enableDates = [...enableDates, ...(selectedDates || [])];
 
-    if (selectedDates?.length > 0 && dateStr !== 'update') {
-      const today = moment(selectedDates[0]);
-      let intervalSelected = [];
-      for (const enableItem of dateAvailable) {
-        const fromMoment = moment(enableItem.firstDate);
-        const toMoment = moment(
-          enableItem.allDates[enableItem.allDates.length - 1],
+  const flatpickrOptions = useMemo(
+    () => ({
+      allowInput: false,
+      altInput: false,
+      inline: true,
+      mode: 'single',
+      enableTime: false,
+      monthSelectorType: 'static',
+      dateFormat: 'Y-m-d',
+      minDate: 'today',
+      enable: enableDates || [],
+      onMonthChange: (selectedDates, dateStr, instance) => {
+        setCurrentMonthYear(
+          `${instance.currentYear}-${instance.currentMonth + 1}`,
         );
-        const isWithinRange = today.isSame(fromMoment, 'date');
-        if (isWithinRange) {
-          intervalSelected = getDates(fromMoment, toMoment);
-          isEventAvailable = true;
-          break; // Exit the loop when the condition is true
-        }
+      },
+    }),
+    [enableDates, dateAvailable, selectedDates],
+  );
+
+  const handleFlatpickrOnChange = useCallback(
+    (selectedDates, dateStr, instance) => {
+      setActiveWorkshop({});
+      setSelectedWorkshopId(null);
+
+      if (dateStr && dateStr !== '') {
+        track('cmodal_date_pick');
       }
-      if (!isEventAvailable) {
+
+      if (selectedDates?.length > 0 && dateStr !== 'update') {
+        const today = moment(selectedDates[0]);
+
+        // Find the matching date range
         for (const enableItem of dateAvailable) {
           const fromMoment = moment(enableItem.firstDate);
           const toMoment = moment(
             enableItem.allDates[enableItem.allDates.length - 1],
           );
-          const isWithinRange = today.isBetween(
-            fromMoment,
-            toMoment,
-            'days',
-            '[]',
-          );
-          if (isWithinRange) {
-            intervalSelected = getDates(fromMoment, toMoment);
-            isEventAvailable = true;
-            break; // Exit the loop when the condition is true
+
+          // Check if selected date is the start date or within range
+          if (
+            today.isSame(fromMoment, 'date') ||
+            today.isBetween(fromMoment, toMoment, 'days', '[]')
+          ) {
+            const intervalSelected = getDates(fromMoment, toMoment);
+
+            // Set the dates without triggering onChange
+            instance.setDate(intervalSelected, false);
+
+            // Update our state
+            setSelectedDates(
+              intervalSelected.map((d) => moment(d).format('YYYY-MM-DD')),
+            );
+            break;
           }
         }
       }
-      if (isEventAvailable) {
-        instance.selectedDates = [...intervalSelected];
+    },
+    [dateAvailable, track, setSelectedDates],
+  );
 
-        selectedDates = [...intervalSelected];
+  const handleWorkshopModalCalendarMonthChange = useCallback(
+    (backPressed = false, targetDate = null) => {
+      if (!fp.current?.flatpickr) return;
 
-        instance.setDate(intervalSelected);
-        setSelectedDates(
-          intervalSelected.map((d) => moment(d).format('YYYY-MM-DD')),
+      if (targetDate) {
+        // If we have a target date, jump directly to that month
+        const targetMoment = moment(targetDate);
+        const currentDate = moment(
+          `${fp.current.flatpickr.currentYear}-${fp.current.flatpickr.currentMonth + 1}`,
+          'YYYY-M',
+        );
+
+        const monthDiff = targetMoment.diff(currentDate, 'months');
+        if (monthDiff !== 0) {
+          fp.current.flatpickr.changeMonth(monthDiff, false);
+          setCurrentMonthYear(targetMoment.format('YYYY-M'));
+        }
+      } else {
+        // Simple next/previous month navigation
+        fp.current.flatpickr.changeMonth(backPressed ? -1 : 1, false);
+        const instance = fp.current.flatpickr;
+        setCurrentMonthYear(
+          `${instance.currentYear}-${instance.currentMonth + 1}`,
         );
       }
-    }
-  };
-
-  const onMonthChangeAction = (e, d, instance) => {
-    setCurrentMonthYear(`${instance.currentYear}-${instance.currentMonth + 1}`);
-  };
+    },
+    [],
+  );
 
   const getDates = (startDate, stopDate) => {
     let dateArray = [];
@@ -477,18 +588,19 @@ const Scheduling = ({ initialLocation }) => {
     return dateArray;
   };
 
-  const resetCalender = () => {
-    setActiveWorkshop({});
-    setSelectedWorkshopId(null);
-    setSelectedDates([]);
-    fp.current.flatpickr.clear();
-    fp.current.flatpickr.changeMonth(0);
-    setCurrentMonthYear(
-      `${fp.current.flatpickr.currentYear}-${
-        fp.current.flatpickr.currentMonth + 1
-      }`,
-    );
-  };
+  const resetCalender = useCallback(() => {
+    workshopHandlers.resetSelection();
+    setSelectedDates(null);
+    if (fp.current?.flatpickr) {
+      fp.current.flatpickr.clear();
+      fp.current.flatpickr.changeMonth(0);
+      setCurrentMonthYear(
+        `${fp.current.flatpickr.currentYear}-${
+          fp.current.flatpickr.currentMonth + 1
+        }`,
+      );
+    }
+  }, [workshopHandlers, setSelectedDates]);
 
   const handleSelectMode = (value) => {
     track('course_type_change');
@@ -496,38 +608,25 @@ const Scheduling = ({ initialLocation }) => {
     resetCalender();
   };
 
-  let enableDates = dateAvailable.map((da) => {
-    return da.firstDate;
-  });
+  const handelDayCreate = useCallback(
+    (dObj, dStr, fp, dayElem) => {
+      const day = dayElem.innerHTML?.toString()?.padStart(2, '0');
+      const parsedDate = `${moment(currentMonthYear, 'YYYY-MM')?.format('YYYY-MM')}-${day}`;
 
-  enableDates = [...enableDates, ...(selectedDates || [])];
-
-  const handelDayCreate = (dObj, dStr, fp, dayElem) => {
-    const day = dayElem.innerHTML?.toString()?.padStart(2, '0');
-    const parsedDate = `${moment(currentMonthYear, 'YYYY-MM')?.format('YYYY-MM')}-${day}`;
-
-    dateAvailable.map((da) => {
-      if (da?.firstDate === parsedDate) {
-        if (da?.mode?.includes('Online') && da?.mode?.includes('In Person')) {
-          dayElem?.classList?.add('online', 'in-person');
-        } else if (da?.mode.includes('Online')) {
-          dayElem.classList.add('online');
-        } else if (da?.mode.includes('In Person')) {
-          dayElem.classList.add('in-person');
+      dateAvailable.map((da) => {
+        if (da?.firstDate === parsedDate) {
+          if (da?.mode?.includes('Online') && da?.mode?.includes('In Person')) {
+            dayElem?.classList?.add('online', 'in-person');
+          } else if (da?.mode.includes('Online')) {
+            dayElem.classList.add('online');
+          } else if (da?.mode.includes('In Person')) {
+            dayElem.classList.add('in-person');
+          }
         }
-      }
-    });
-  };
-
-  const handleWorkshopModalCalendarMonthChange = (backPressed = false) => {
-    const parsedDate = moment(currentMonthYear, 'YYYY-M');
-    const newMonthDate = backPressed
-      ? parsedDate.subtract(1, 'month')
-      : parsedDate.add(1, 'month');
-    const formattedDate = newMonthDate.format('YYYY-M');
-    setCurrentMonthYear(formattedDate);
-    fp.current.flatpickr.changeMonth(backPressed ? -1 : 1);
-  };
+      });
+    },
+    [currentMonthYear, dateAvailable],
+  );
 
   const handleAutoScrollForMobile = () => {
     setTimeout(() => {
@@ -542,29 +641,16 @@ const Scheduling = ({ initialLocation }) => {
   };
 
   const handleNavigateToDetailsPage = (isOnlineCourse, workshopId) => {
-    if (!isOnlineCourse) {
-      replaceRouteWithUTMQuery(router, {
-        pathname: `/us-en/course/scheduling/${workshopId}`,
-        query: {
-          ...router.query,
-          productTypeId: workshopMaster?.productTypeId,
-          courseType: courseTypeFilter,
-          ctype: workshopMaster?.productTypeId,
-          mode: 'inPerson',
-        },
-      });
-    } else {
-      replaceRouteWithUTMQuery(router, {
-        pathname: `/us-en/course/scheduling/${workshopId}`,
-        query: {
-          ...router.query,
-          productTypeId: workshopMaster?.productTypeId,
-          courseType: courseTypeFilter,
-          ctype: workshopMaster?.productTypeId,
-          mode: 'online',
-        },
-      });
-    }
+    pushRouteWithUTMQuery(router, {
+      pathname: `/us-en/course/scheduling/${workshopId}`,
+      query: {
+        ...router.query,
+        productTypeId: workshopMaster?.productTypeId,
+        courseType: courseTypeFilter,
+        ctype: workshopMaster?.productTypeId,
+        mode: isOnlineCourse ? 'online' : 'inPerson',
+      },
+    });
   };
 
   const productTypeId = workshopMaster?.productTypeId;
@@ -661,19 +747,8 @@ const Scheduling = ({ initialLocation }) => {
                     data-enable-time
                     onChange={handleFlatpickrOnChange}
                     value={selectedDates}
-                    options={{
-                      allowInput: false,
-                      altInput: false,
-                      inline: true,
-                      mode: 'single',
-                      enableTime: false,
-                      monthSelectorType: 'static',
-                      dateFormat: 'Y-m-d',
-                      minDate: 'today',
-                      enable: enableDates || [],
-                    }}
+                    options={flatpickrOptions}
                     onDayCreate={handelDayCreate}
-                    onMonthChange={onMonthChangeAction}
                   />
                   <div className="event-type-pills">
                     <div className="online">
@@ -702,7 +777,7 @@ const Scheduling = ({ initialLocation }) => {
                           In-Person{' '}
                         </h4>
                         <p>
-                          Within a relaxing venue, you’ll leave everyday
+                          Within a relaxing venue, you'll leave everyday
                           distractions and stresses behind, enabling an
                           immersive journey and connection to a like-minded
                           community in real life.
@@ -770,8 +845,8 @@ const Scheduling = ({ initialLocation }) => {
                   />
                 </div>
                 <div className="testimony-text">
-                  “Wow. It made a significant impression on me, was very very
-                  enjoyable, at times profound, and I plan to keep practicing.”
+                  "Wow. It made a significant impression on me, was very very
+                  enjoyable, at times profound, and I plan to keep practicing."
                 </div>
                 <div className="author-name">Adinah</div>
               </div>
@@ -785,9 +860,9 @@ const Scheduling = ({ initialLocation }) => {
                   />
                 </div>
                 <div className="testimony-text">
-                  “It was awesome! I regained my mental health. And I also feel
+                  "It was awesome! I regained my mental health. And I also feel
                   so much lighter and happier. I got out of my funk that was
-                  getting me unmotivated.”
+                  getting me unmotivated."
                 </div>
                 <div className="author-name">Joanna</div>
               </div>
@@ -801,9 +876,9 @@ const Scheduling = ({ initialLocation }) => {
                   />
                 </div>
                 <div className="testimony-text">
-                  “It was liberating. Any time my mind is wiggling between the
+                  "It was liberating. Any time my mind is wiggling between the
                   past and the future, I notice it and have found a hack to
-                  bring myself back to the present.”
+                  bring myself back to the present."
                 </div>
                 <div className="author-name">Vijitha</div>
               </div>
@@ -813,20 +888,19 @@ const Scheduling = ({ initialLocation }) => {
 
         <WorkshopSelectModal
           setShowWorkshopSelectModal={setShowWorkshopSelectModal}
-          setSelectedWorkshopId={setSelectedWorkshopId}
+          setSelectedWorkshopId={workshopHandlers.setSelectedId}
           setSelectedDates={setSelectedDates}
           setShowLocationModal={setShowLocationModal}
           dateAvailable={dateAvailable}
           selectedDates={selectedDates}
           showWorkshopSelectModal={showWorkshopSelectModal}
-          workshops={workshops}
+          workshops={workshopSelection.workshops}
           handleWorkshopModalCalendarMonthChange={
             handleWorkshopModalCalendarMonthChange
           }
-          setWorkshops={setWorkshops}
           currentMonthYear={currentMonthYear}
           loading={loading || isLoading}
-          setActiveWorkshop={setActiveWorkshop}
+          setActiveWorkshop={workshopHandlers.setActiveWorkshop}
           handleAutoScrollForMobile={handleAutoScrollForMobile}
           slug={slug}
           workshopMaster={workshopMaster}
