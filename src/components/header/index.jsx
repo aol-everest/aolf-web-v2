@@ -245,7 +245,7 @@ const AOL_MENU = [
         props: { target: '_blank' },
       },
       {
-        name: 'Fairhope, Alabama',
+        name: 'Mobile, AL',
         link: 'https://event.us.artofliving.org/us-en/lp1/journey-within-alabama/',
         props: { target: '_blank' },
       },
