@@ -7,7 +7,7 @@ import { SuccessAlert } from './SuccessAlert';
 import { WarningAlert } from './WarningAlert';
 import { NewAlert } from './NewAlert';
 import { InlineErrorAlert } from './InlineErrorAlert';
-
+import { InlineSuccessAlert } from './InlineSuccessAlert';
 const ALERT_COMPONENTS = {
   [ALERT_TYPES.SUCCESS_ALERT]: SuccessAlert,
   [ALERT_TYPES.CUSTOM_ALERT]: CustomAlert,
@@ -15,6 +15,7 @@ const ALERT_COMPONENTS = {
   [ALERT_TYPES.WARNING_ALERT]: WarningAlert,
   [ALERT_TYPES.NEW_ALERT]: NewAlert,
   [ALERT_TYPES.INLINE_ERROR_ALERT]: InlineErrorAlert,
+  [ALERT_TYPES.INLINE_SUCCESS_ALERT]: InlineSuccessAlert,
 };
 
 // Global reference to showAlert function
