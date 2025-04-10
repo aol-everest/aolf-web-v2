@@ -18,17 +18,9 @@ const schema = object().shape({
     [ref('password'), null],
     'Passwords must match',
   ),
-  code: number()
-    .positive('Verification code is invalid')
-    .integer('Verification code is invalid')
-    .typeError('Verification code is invalid')
-    .test(
-      'len',
-      'Must be exactly 6 characters',
-      (val) => val.toString().length === 6,
-    )
-    .required('Verification code is required')
-    .nullable(),
+  code: string()
+    .matches(/^\d{6}$/, 'Must be exactly 6 digits')
+    .required('Verification code is required'),
 });
 
 export const ResetPasswordForm = ({
