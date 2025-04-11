@@ -54,7 +54,7 @@ function ProcessPayment() {
             message: errorMessage,
           });
           replaceRouteWithUTMQuery(router, {
-            pathname: '/us-en/payment-failed',
+            pathname: `/us-en/payment-failed/${id}`,
             query: {
               error: encodeURIComponent(errorMessage),
               previous,
@@ -62,6 +62,8 @@ function ProcessPayment() {
           });
           return;
         }
+
+        console.log('paymentIntent', paymentIntent);
 
         switch (paymentIntent.status) {
           case 'succeeded':
@@ -71,7 +73,7 @@ function ProcessPayment() {
             router.replace(next);
             break;
           case 'requires_payment_method':
-            router.replace('/us-en/payment-failed', {
+            router.replace(`/us-en/payment-failed/${id}`, {
               query: {
                 error: encodeURIComponent('Payment failed. Please try again.'),
                 previous,
@@ -79,7 +81,7 @@ function ProcessPayment() {
             });
             break;
           case 'canceled':
-            router.replace('/us-en/payment-failed', {
+            router.replace(`/us-en/payment-failed/${id}`, {
               query: {
                 error: encodeURIComponent('Payment was canceled by the user.'),
                 previous,
@@ -91,7 +93,7 @@ function ProcessPayment() {
             setTimeout(checkPaymentStatus, 5000);
             break;
           default:
-            router.replace('/us-en/payment-failed', {
+            router.replace(`/us-en/payment-failed/${id}`, {
               query: {
                 error: encodeURIComponent('Unexpected payment status.'),
                 previous,
@@ -105,7 +107,7 @@ function ProcessPayment() {
         showAlert(ALERT_TYPES.INLINE_ERROR_ALERT, {
           message: errorMessage,
         });
-        router.replace('/us-en/payment-failed', {
+        router.replace(`/us-en/payment-failed/${id}`, {
           query: {
             error: encodeURIComponent(errorMessage),
             previous,
