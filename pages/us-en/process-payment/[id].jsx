@@ -65,41 +65,41 @@ function ProcessPayment() {
 
         console.log('paymentIntent', paymentIntent);
 
-        switch (paymentIntent.status) {
-          case 'succeeded':
-            showAlert(ALERT_TYPES.INLINE_SUCCESS_ALERT, {
-              message: 'Payment Successful!',
-            });
-            router.replace(next);
-            break;
-          case 'requires_payment_method':
-            router.replace(`/us-en/payment-failed/${id}`, {
-              query: {
-                error: encodeURIComponent('Payment failed. Please try again.'),
-                previous,
-              },
-            });
-            break;
-          case 'canceled':
-            router.replace(`/us-en/payment-failed/${id}`, {
-              query: {
-                error: encodeURIComponent('Payment was canceled by the user.'),
-                previous,
-              },
-            });
-            break;
-          case 'processing':
-            // recheck payment status in 5 seconds
-            setTimeout(checkPaymentStatus, 5000);
-            break;
-          default:
-            router.replace(`/us-en/payment-failed/${id}`, {
-              query: {
-                error: encodeURIComponent('Unexpected payment status.'),
-                previous,
-              },
-            });
-        }
+        // switch (paymentIntent.status) {
+        //   case 'succeeded':
+        //     showAlert(ALERT_TYPES.INLINE_SUCCESS_ALERT, {
+        //       message: 'Payment Successful!',
+        //     });
+        //     router.replace(next);
+        //     break;
+        //   case 'requires_payment_method':
+        //     router.replace(`/us-en/payment-failed/${id}`, {
+        //       query: {
+        //         error: encodeURIComponent('Payment failed. Please try again.'),
+        //         previous,
+        //       },
+        //     });
+        //     break;
+        //   case 'canceled':
+        //     router.replace(`/us-en/payment-failed/${id}`, {
+        //       query: {
+        //         error: encodeURIComponent('Payment was canceled by the user.'),
+        //         previous,
+        //       },
+        //     });
+        //     break;
+        //   case 'processing':
+        //     // recheck payment status in 5 seconds
+        //     setTimeout(checkPaymentStatus, 5000);
+        //     break;
+        //   default:
+        //     router.replace(`/us-en/payment-failed/${id}`, {
+        //       query: {
+        //         error: encodeURIComponent('Unexpected payment status.'),
+        //         previous,
+        //       },
+        //     });
+        // }
       } catch (err) {
         const errorMessage =
           err.message || 'Something went wrong. Please try again.';
