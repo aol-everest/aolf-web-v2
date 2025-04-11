@@ -5,7 +5,6 @@ import { useGlobalAlertContext } from '@contexts';
 import { api } from '@utils';
 import { ALERT_TYPES } from '@constants';
 import { useSearchParams } from 'next/navigation';
-import { replaceRouteWithUTMQuery } from '@service';
 
 function ProcessPayment() {
   const router = useRouter();
