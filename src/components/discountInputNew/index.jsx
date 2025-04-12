@@ -45,6 +45,9 @@ export const DiscountInputNew = ({
   userId = null,
   isBackendRequest = false,
   ticketsPayload,
+  inputClass = '',
+  tagClass = '',
+  selectedTickets = {},
   ...rest
 }) => {
   const { showAlert } = useGlobalAlertContext();
@@ -193,6 +196,9 @@ export const DiscountInputNew = ({
 
       if (ticketsPayload) {
         payload.shoppingRequest.tickets = ticketsPayload;
+      } else if (Object.keys(selectedTickets).length > 0) {
+        // If ticketsPayload is not provided but selectedTickets is, use that
+        payload.shoppingRequest.tickets = selectedTickets;
       }
 
       if (isBackendRequest) {
@@ -214,6 +220,7 @@ export const DiscountInputNew = ({
       userId,
       isBackendRequest,
       ticketsPayload,
+      selectedTickets,
       formikKey,
     ],
   );
@@ -406,6 +413,7 @@ export const DiscountInputNew = ({
             className={classNames(
               'discount-text-input badge',
               'react-tag',
+              tagClass,
               getStatusColor(status),
               getStatusAnimation(),
               {
@@ -440,6 +448,7 @@ export const DiscountInputNew = ({
               disabled={loading || status === DISCOUNT_STATUS.RATE_LIMITED}
               className={classNames(
                 'discount-input-field !pr-8 w-full',
+                inputClass,
                 getStatusAnimation(),
                 {
                   'has-error': hasError,
