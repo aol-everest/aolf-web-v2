@@ -137,6 +137,11 @@ const SearchResult = React.forwardRef(function SearchResult(
     setPlayingId(id);
   };
 
+  const isSourceUrl =
+    result.source &&
+    typeof result.source === 'string' &&
+    result.source.match(/^(https?:\/\/[^\s]+)/);
+
   const copyToClipboard = (data) => {
     navigator.clipboard
       .writeText(data)
@@ -236,7 +241,19 @@ const SearchResult = React.forwardRef(function SearchResult(
             </div>
             <div class="tab-content-footer">
               <div class="source-info">
-                <strong>Source:</strong> {result.source}
+                <strong>Source:</strong>{' '}
+                {isSourceUrl ? (
+                  <a
+                    href={result.source}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="source-link"
+                  >
+                    {result.source}
+                  </a>
+                ) : (
+                  result.source
+                )}
               </div>
               <div class="tab-content-action">
                 <button
@@ -320,6 +337,10 @@ const SearchResult = React.forwardRef(function SearchResult(
                 </div>
                 <Accordion className="accordion" defaultActiveKey={activeKey}>
                   {relatedData.map((data) => {
+                    const isSourceUrl =
+                      data.source &&
+                      typeof data.source === 'string' &&
+                      data.source.match(/^(https?:\/\/[^\s]+)/);
                     if (data.question) {
                       return (
                         <div class="question-item" key={data.index}>
@@ -349,7 +370,19 @@ const SearchResult = React.forwardRef(function SearchResult(
                               </div>
                               <div class="tab-content-footer">
                                 <div class="source-info">
-                                  <strong>Source:</strong> {data.source}
+                                  <strong>Source:</strong>{' '}
+                                  {isSourceUrl ? (
+                                    <a
+                                      href={data.source}
+                                      target="_blank"
+                                      rel="noopener noreferrer"
+                                      className="source-link"
+                                    >
+                                      {data.source}
+                                    </a>
+                                  ) : (
+                                    data.source
+                                  )}
                                 </div>
                                 <div class="tab-content-action">
                                   <button
