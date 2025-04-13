@@ -198,6 +198,92 @@ const SearchResult = React.forwardRef(function SearchResult(
     setShowSharePopup(true);
   };
 
+  const RelatedData = () => {
+    return (
+      <>
+        {relatedData?.length && (
+          <div class="related-questions-wrap">
+            <div class="box-title">
+              <span class="icon-aol iconaol-chat-flower"></span>Related
+            </div>
+            <Accordion className="accordion" defaultActiveKey={activeKey}>
+              {relatedData.map((data) => {
+                const isSourceUrl =
+                  data.source &&
+                  typeof data.source === 'string' &&
+                  data.source.match(/^(https?:\/\/[^\s]+)/);
+                if (data.question) {
+                  return (
+                    <div class="question-item" key={data.index}>
+                      <div class="question-header">
+                        <h2>
+                          <Accordion.Toggle
+                            as={Button}
+                            className="btn btn-link"
+                            variant="link"
+                            eventKey={data.index}
+                            aria-expanded={data.index === activeKey}
+                            onClick={() => handleToggle(data.index)}
+                          >
+                            {data.question}
+                          </Accordion.Toggle>
+                        </h2>
+                      </div>
+
+                      <Accordion.Collapse eventKey={data.index}>
+                        <>
+                          <div class="question-body">
+                            <p
+                              dangerouslySetInnerHTML={{
+                                __html: getFormattedText(data?.answer),
+                              }}
+                            />
+                          </div>
+                          <div class="tab-content-footer">
+                            <div class="source-info">
+                              <strong>Source:</strong>{' '}
+                              {isSourceUrl ? (
+                                <a
+                                  href={data.source}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="source-link"
+                                >
+                                  {data.source}
+                                </a>
+                              ) : (
+                                data.source
+                              )}
+                            </div>
+                            <div class="tab-content-action">
+                              <button
+                                class="tc-action-btn"
+                                id="share-button"
+                                onClick={handleShare}
+                              >
+                                <span class="icon-aol iconaol-export"></span>
+                              </button>
+                              <button
+                                class="tc-action-btn copy-btn"
+                                onClick={() => copyToClipboard(data?.answer)}
+                              >
+                                <span class="icon-aol iconaol-copy"></span>
+                              </button>
+                            </div>
+                          </div>
+                        </>
+                      </Accordion.Collapse>
+                    </div>
+                  );
+                }
+              })}
+            </Accordion>
+          </div>
+        )}
+      </>
+    );
+  };
+
   return (
     <motion.div
       // className={['searchResult']}
@@ -221,6 +307,7 @@ const SearchResult = React.forwardRef(function SearchResult(
               className="youtube-iframe"
             ></VideoItemComp>
           </div>
+          <RelatedData />
         </div>
       ) : (
         result.content && (
@@ -330,87 +417,7 @@ const SearchResult = React.forwardRef(function SearchResult(
                 </div>
               </div>
             </div>
-            {relatedData?.length && (
-              <div class="related-questions-wrap">
-                <div class="box-title">
-                  <span class="icon-aol iconaol-chat-flower"></span>Related
-                </div>
-                <Accordion className="accordion" defaultActiveKey={activeKey}>
-                  {relatedData.map((data) => {
-                    const isSourceUrl =
-                      data.source &&
-                      typeof data.source === 'string' &&
-                      data.source.match(/^(https?:\/\/[^\s]+)/);
-                    if (data.question) {
-                      return (
-                        <div class="question-item" key={data.index}>
-                          <div class="question-header">
-                            <h2>
-                              <Accordion.Toggle
-                                as={Button}
-                                className="btn btn-link"
-                                variant="link"
-                                eventKey={data.index}
-                                aria-expanded={data.index === activeKey}
-                                onClick={() => handleToggle(data.index)}
-                              >
-                                {data.question}
-                              </Accordion.Toggle>
-                            </h2>
-                          </div>
-
-                          <Accordion.Collapse eventKey={data.index}>
-                            <>
-                              <div class="question-body">
-                                <p
-                                  dangerouslySetInnerHTML={{
-                                    __html: getFormattedText(data?.answer),
-                                  }}
-                                />
-                              </div>
-                              <div class="tab-content-footer">
-                                <div class="source-info">
-                                  <strong>Source:</strong>{' '}
-                                  {isSourceUrl ? (
-                                    <a
-                                      href={data.source}
-                                      target="_blank"
-                                      rel="noopener noreferrer"
-                                      className="source-link"
-                                    >
-                                      {data.source}
-                                    </a>
-                                  ) : (
-                                    data.source
-                                  )}
-                                </div>
-                                <div class="tab-content-action">
-                                  <button
-                                    class="tc-action-btn"
-                                    id="share-button"
-                                    onClick={handleShare}
-                                  >
-                                    <span class="icon-aol iconaol-export"></span>
-                                  </button>
-                                  <button
-                                    class="tc-action-btn copy-btn"
-                                    onClick={() =>
-                                      copyToClipboard(data?.answer)
-                                    }
-                                  >
-                                    <span class="icon-aol iconaol-copy"></span>
-                                  </button>
-                                </div>
-                              </div>
-                            </>
-                          </Accordion.Collapse>
-                        </div>
-                      );
-                    }
-                  })}
-                </Accordion>
-              </div>
-            )}
+            <RelatedData />
           </div>
         )
       )}
