@@ -27,26 +27,25 @@ const ErrorDetails = ({ err }) => {
     <div className="tw-mt-6 tw-w-full tw-max-w-2xl">
       <button
         onClick={() => setIsExpanded(!isExpanded)}
-        className="tw-flex tw-items-center tw-text-xs tw-text-gray-500 hover:tw-text-gray-700 tw-transition-colors tw-px-2 tw-py-1 tw-rounded-md hover:tw-bg-gray-50"
+        className="tw-text-gray-300 hover:tw-text-gray-400 tw-transition-colors tw-p-0.5 tw-rounded-full hover:tw-bg-gray-50/50 tw-absolute tw-right-4"
         aria-label="Toggle error details"
         aria-expanded={isExpanded}
       >
         <svg
-          className={`tw-w-3 tw-h-3 tw-mr-1.5 tw-transition-transform ${isExpanded ? 'tw-rotate-90' : ''}`}
+          className="tw-w-4 tw-h-4"
           viewBox="0 0 24 24"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
           aria-hidden="true"
         >
           <path
-            d="M9 18L15 12L9 6"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
+            fillRule="evenodd"
+            clipRule="evenodd"
+            d="M12 2C6.477 2 2 6.477 2 12C2 17.523 6.477 22 12 22C17.523 22 22 17.523 22 12C22 6.477 17.523 2 12 2ZM11 17V11H13V17H11ZM11 7V9H13V7H11Z"
+            fill="currentColor"
           />
         </svg>
-        Technical Details
+        <span className="tw-sr-only">Technical Details</span>
       </button>
 
       {isExpanded && (

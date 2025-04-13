@@ -52,7 +52,7 @@ const StepInputUserName = ({ showMessage, message, children, onSubmit }) => {
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="form-login-register">
           <div className="form-item">
-            <label for="email">Email address</label>
+            <label htmlFor="email">Email address</label>
             <input
               id="email"
               type="email"
@@ -116,7 +116,7 @@ const StepInputPassword = ({
           <p>{username}</p>
         </div> */}
         <div className="form-item password">
-          <label for="pass">Password</label>
+          <label htmlFor="pass">Password</label>
           <input
             type={type}
             className={classNames('input-field password', {

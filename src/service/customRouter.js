@@ -13,10 +13,11 @@ export function pushRouteWithUTMQuery(router, params) {
       ...filteredParams,
       ...query,
     };
+    const filterNullQuery = removeNull(allParams);
 
     router.push({
       pathname: url,
-      query: allParams,
+      query: filterNullQuery,
     });
   } else if (isObject(params)) {
     const { pathname, query = {} } = params;
@@ -25,11 +26,11 @@ export function pushRouteWithUTMQuery(router, params) {
       ...filteredParams,
       ...query,
     };
-    const newQuery = removeNull(allParams);
+    const filterNullQuery = removeNull(allParams);
 
     router.push({
       pathname: pathname,
-      query: newQuery,
+      query: filterNullQuery,
     });
   }
 }
@@ -44,10 +45,11 @@ export function replaceRouteWithUTMQuery(router, params) {
       ...filteredParams,
       ...query,
     };
+    const filterNullQuery = removeNull(allParams);
 
     router.replace({
       pathname: url,
-      query: allParams,
+      query: filterNullQuery,
     });
   } else if (isObject(params)) {
     const { pathname, query = {} } = params;
@@ -57,12 +59,42 @@ export function replaceRouteWithUTMQuery(router, params) {
       ...query,
     };
 
-    const newQuery = removeNull(allParams);
+    const filterNullQuery = removeNull(allParams);
 
     router.replace({
       pathname: pathname,
-      query: newQuery,
+      query: filterNullQuery,
     });
+  }
+}
+
+export function returnRouteWithUTMQuery(router, params) {
+  if (isNil(params)) {
+    throw new Error('Route url missing');
+  }
+
+  if (isString(params)) {
+    const { url, query = {} } = queryString.parseUrl(params);
+    const filteredParams = filterAllowedParams(router.query);
+    const allParams = {
+      ...filteredParams,
+      ...query,
+    };
+
+    const filterNullQuery = removeNull(allParams);
+
+    return `${url}?${queryString.stringify(filterNullQuery)}`;
+  } else if (isObject(params)) {
+    const { pathname, query = {} } = params;
+    const filteredParams = filterAllowedParams(router.query);
+    const allParams = {
+      ...filteredParams,
+      ...query,
+    };
+
+    const filterNullQuery = removeNull(allParams);
+
+    return `${pathname}?${queryString.stringify(filterNullQuery)}`;
   }
 }
 

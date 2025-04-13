@@ -64,13 +64,8 @@ export const AuthProvider = ({
       setCurrentUser({ isAuthenticated: false });
       console.log('Error fetching current user:', error);
       // Clear cookies if we get specific auth-related errors
-      if (
-        error.message?.includes('NotAuthorizedException') ||
-        error.message?.includes('Invalid session') ||
-        error.message?.includes('Token expired')
-      ) {
-        await clearAuthCookies();
-      }
+      console.log('Clearing auth cookies for NotAuthorizedException...');
+      await clearAuthCookies();
       throw new Error(
         'Unable to load your profile details. Please refresh the page or contact support if the issue persists.',
       );
@@ -107,7 +102,7 @@ export const AuthProvider = ({
       setError(null);
       switch (payload.event) {
         case 'signedIn':
-          await clearAuthCookies();
+          // await clearAuthCookies();
           console.log('user have been signedIn successfully.');
           await fetchCurrentUser();
           break;
@@ -116,6 +111,8 @@ export const AuthProvider = ({
           setCurrentUser({ isAuthenticated: false });
           localStorage.clear();
           clearStorage();
+          console.log('Clearing auth cookies for signedOut...');
+          await clearAuthCookies();
           break;
         case 'tokenRefresh':
           console.log('auth tokens have been refreshed.');
