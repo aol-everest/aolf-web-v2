@@ -32,7 +32,9 @@ function ProcessPayment() {
 
       const data = await api.get({
         path: 'getStripePublishableKey',
-        query: { stripeOrg },
+        param: {
+          stripeOrg,
+        },
       });
       const { publishableKey } = data;
 
