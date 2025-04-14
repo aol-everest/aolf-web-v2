@@ -174,9 +174,9 @@ function ProcessPayment() {
 
         switch (paymentIntent.status) {
           case 'succeeded':
-            showAlert(ALERT_TYPES.INLINE_SUCCESS_ALERT, {
-              message: 'Payment Successful!',
-            });
+            // showAlert(ALERT_TYPES.INLINE_SUCCESS_ALERT, {
+            //   message: 'Payment Successful!',
+            // });
             router.replace(next);
             break;
           case 'requires_payment_method':
