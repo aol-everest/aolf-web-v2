@@ -258,7 +258,6 @@ const TicketCheckoutForm = ({ event }) => {
     let nextUrl = returnRouteWithUTMQuery(router, {
       pathname: `/us-en/ticketed-event/thankyou/${attendeeId}`,
       query: {
-        stripeOrg: event.stripeOrg,
         ctype: productTypeId,
         page: 'ty',
         referral: 'ticketed_event_checkout',
@@ -277,6 +276,7 @@ const TicketCheckoutForm = ({ event }) => {
     }${processPaymentLink}?${queryString.stringify({
       next: nextUrl,
       previous: previousUrl,
+      stripeOrg: event.stripeOrg,
     })}`;
 
     return returnUrl;
