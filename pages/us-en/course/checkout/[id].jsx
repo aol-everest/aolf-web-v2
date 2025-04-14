@@ -304,6 +304,7 @@ const Checkout = () => {
     const nextUrl = returnRouteWithUTMQuery(router, {
       pathname: `/us-en/course/thankyou/${attendeeId}`,
       query: {
+        stripeOrg: workshop.stripeOrg,
         ctype: workshop.productTypeId,
         comboId: comboProductSfid,
         page: 'ty',

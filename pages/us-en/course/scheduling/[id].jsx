@@ -166,6 +166,7 @@ const SchedulingPaymentForm = ({
     let nextUrl = returnRouteWithUTMQuery(router, {
       pathname: `/us-en/course/thankyou/${attendeeId}`,
       query: {
+        stripeOrg: workshop.stripeOrg,
         ctype: workshop.productTypeId,
         page: 'ty',
         referral: 'course_scheduling_checkout',
