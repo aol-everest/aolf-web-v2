@@ -28,12 +28,12 @@ function PaymentFailed() {
         <ErrorIcon />
 
         <h1 className="tw-text-4xl tw-font-bold tw-mt-6 tw-text-gray-800">
-          Payment Failed
+          Order Failed
         </h1>
 
         <h2 className="tw-mt-2 tw-text-lg tw-text-gray-600">
-          The course you are trying to purchase is got failed. you can try again
-          by clicking the button below.
+          An error occurred while processing your payment, please try again
+          using another payment method
         </h2>
 
         <p className="tw-mt-4 tw-text-sm tw-text-gray-500">{errorMessage}</p>

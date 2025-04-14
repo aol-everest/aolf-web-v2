@@ -268,6 +268,7 @@ const TicketCheckoutForm = ({ event }) => {
       pathname: `/us-en/ticketed-event/checkout/${productId}`,
       query: {
         ctype: productTypeId,
+        ticket: JSON.stringify(selectedTickets),
       },
     });
 
