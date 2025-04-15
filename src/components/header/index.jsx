@@ -652,73 +652,98 @@ export const Header = () => {
   const { data: introData = [] } = useQuery({
     queryKey: ['get-started-intro-series'],
     queryFn: async () => {
-      const response = await api.get({
-        path: 'get-started-intro-series',
-      });
-      return response?.data;
+      try {
+        const response = await api.get({
+          path: 'get-started-intro-series',
+        });
+        return response?.data;
+      } catch (error) {
+        // Handle authentication errors gracefully
+        if (error.message?.includes('User needs to be authenticated')) {
+          console.log('User not authenticated, skipping intro series fetch');
+          return [];
+        }
+        throw error;
+      }
     },
+    // Only fetch this data if the user is authenticated
+    enabled: isAuthenticated,
+    // Prevent unnecessary refetches
+    staleTime: 5 * 60 * 1000, // 5 minutes
+    cacheTime: 10 * 60 * 1000, // 10 minutes
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
   });
+
+  // Handle authentication state changes
   useEffect(() => {
     if (!isAuthenticated) {
       // Reset to original menu when logged out
       const updatedMenu = [...MENU].filter((item) => item.name !== 'Account');
       setHeaderMenu(updatedMenu);
+    }
+  }, [isAuthenticated]);
+
+  // Handle intro data changes separately
+  useEffect(() => {
+    if (!isAuthenticated || !introData?.length) {
       return;
     }
 
-    if (!introData?.length) {
+    // Get the original menu structure first
+    const updatedMenu = JSON.parse(JSON.stringify([...MENU]));
+    const exploreMenu = updatedMenu.find(
+      (menuItem) => menuItem.name === 'Explore',
+    );
+
+    if (!exploreMenu) {
       return;
     }
 
-    setHeaderMenu((currentMenu) => {
-      // Deep clone the current menu to avoid modifying the original MENU
-      const updatedMenu = JSON.parse(JSON.stringify(currentMenu));
-      const exploreMenu = updatedMenu.find(
-        (menuItem) => menuItem.name === 'Explore',
-      );
+    // Check if items already exist to prevent duplicates
+    const existingTitles = new Set(
+      exploreMenu.submenu ? exploreMenu.submenu.map((item) => item.name) : [],
+    );
+    const newItems = introData.filter(
+      (item) => !existingTitles.has(item.title),
+    );
 
-      if (!exploreMenu) {
-        return currentMenu;
-      }
+    if (newItems.length === 0) {
+      return;
+    }
 
-      exploreMenu.submenu = [];
+    exploreMenu.submenu = [
+      ...newItems.map((item) => ({
+        name: item.title,
+        link: item.slug ? `/us-en/explore/${item.slug}` : '#',
+      })),
+    ];
 
-      // Check if items already exist to prevent duplicates
-      const existingTitles = new Set(
-        exploreMenu.submenu.map((item) => item.name),
-      );
-      const newItems = introData.filter(
-        (item) => !existingTitles.has(item.title),
-      );
-
-      if (newItems.length === 0) {
-        return currentMenu;
-      }
-
-      exploreMenu.submenu = [
-        ...newItems.map((item) => ({
-          name: item.title,
-          link: item.slug ? `/us-en/explore/${item.slug}` : '#',
-        })),
-      ];
-
-      return updatedMenu;
-    });
+    setHeaderMenu(updatedMenu);
   }, [introData, isAuthenticated]);
 
-  document.addEventListener('click', function (event) {
-    if (event?.target?.classList?.contains('back-link')) {
-      // Find the immediate parent element and remove it
-      var parent = event.target?.closest('.show');
-      if (parent) {
-        parent.style.transition = 'all 0.3s ease-in-out';
-        // After a short delay, remove the parent class
-        setTimeout(function () {
-          parent.classList?.remove('show');
-        }, 3);
+  useEffect(() => {
+    const handleBackLinkClick = function (event) {
+      if (event?.target?.classList?.contains('back-link')) {
+        // Find the immediate parent element and remove it
+        var parent = event.target?.closest('.show');
+        if (parent) {
+          parent.style.transition = 'all 0.3s ease-in-out';
+          // After a short delay, remove the parent class
+          setTimeout(function () {
+            parent.classList?.remove('show');
+          }, 3);
+        }
       }
-    }
-  });
+    };
+
+    document.addEventListener('click', handleBackLinkClick);
+
+    // Clean up the event listener when component unmounts
+    return () => {
+      document.removeEventListener('click', handleBackLinkClick);
+    };
+  }, []);
 
   const loginAction = () => {
     setNavExpanded(false);
