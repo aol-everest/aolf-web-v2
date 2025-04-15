@@ -196,6 +196,7 @@ const SchedulingPaymentForm = ({
     }${processPaymentLink}?${queryString.stringify({
       next: nextUrl,
       previous: previousUrl,
+      stripeOrg: workshop.stripeOrg,
     })}`;
 
     return returnUrl;

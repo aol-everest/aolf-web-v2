@@ -10,19 +10,32 @@ function ProcessPayment() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { showAlert } = useGlobalAlertContext();
-  const { id } = router.query;
+  const { id, stripeOrg } = router.query;
+  console.log('stripeOrg', stripeOrg);
   const next = searchParams.get('next');
   const previous = searchParams.get('previous');
   const clientSecret = searchParams.get('payment_intent_client_secret');
 
   useEffect(() => {
+    if (!router.isReady) return;
+    if (!stripeOrg) {
+      //router.replace(next);
+      console.log('stripeOrg not found');
+      return;
+    }
+
     async function checkPaymentStatus() {
       if (!clientSecret) {
         router.replace(next);
         return;
       }
 
-      const data = await api.get({ path: 'getStripePublishableKey' });
+      const data = await api.get({
+        path: 'getStripePublishableKey',
+        param: {
+          stripeOrg,
+        },
+      });
       const { publishableKey } = data;
 
       if (!publishableKey) {
@@ -161,9 +174,9 @@ function ProcessPayment() {
 
         switch (paymentIntent.status) {
           case 'succeeded':
-            showAlert(ALERT_TYPES.INLINE_SUCCESS_ALERT, {
-              message: 'Payment Successful!',
-            });
+            // showAlert(ALERT_TYPES.INLINE_SUCCESS_ALERT, {
+            //   message: 'Payment Successful!',
+            // });
             router.replace(next);
             break;
           case 'requires_payment_method':
@@ -221,7 +234,7 @@ function ProcessPayment() {
     }
 
     checkPaymentStatus();
-  }, [router]);
+  }, [router.isReady, stripeOrg]);
 
   return (
     <main className="login-register-page">

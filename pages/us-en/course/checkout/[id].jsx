@@ -325,6 +325,7 @@ const Checkout = () => {
     }${processPaymentLink}?${queryString.stringify({
       next: nextUrl,
       previous: previousUrl,
+      stripeOrg: workshop.stripeOrg,
     })}`;
     return returnUrl;
   };

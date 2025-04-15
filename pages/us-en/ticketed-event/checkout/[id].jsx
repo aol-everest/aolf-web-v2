@@ -268,6 +268,7 @@ const TicketCheckoutForm = ({ event }) => {
       pathname: `/us-en/ticketed-event/checkout/${productId}`,
       query: {
         ctype: productTypeId,
+        ticket: JSON.stringify(selectedTickets),
       },
     });
 
@@ -276,6 +277,7 @@ const TicketCheckoutForm = ({ event }) => {
     }${processPaymentLink}?${queryString.stringify({
       next: nextUrl,
       previous: previousUrl,
+      stripeOrg: event.stripeOrg,
     })}`;
 
     return returnUrl;
