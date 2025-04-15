@@ -126,6 +126,32 @@ const Checkout = () => {
     }, 2000);
     if (!workshop) return;
 
+    if (
+      workshop.isInitialRequisiteCompleted === false &&
+      workshop.initialBusinessRules.length > 0
+    ) {
+      const reason = workshop.initialBusinessRules[0];
+
+      showAlert(ALERT_TYPES.CUSTOM_ALERT, {
+        className: 'retreat-prerequisite-big',
+        title: 'Prerequisite',
+        closeModalAction: closeRetreatPrerequisiteWarning(reason),
+        footer: () => {
+          return (
+            <button
+              className="btn-secondary"
+              onClick={closeRetreatPrerequisiteWarning(reason)}
+            >
+              {reason.actionButtonText}
+            </button>
+          );
+        },
+        children: (
+          <RetreatPrerequisiteWarning firstPreRequisiteFailedReason={reason} />
+        ),
+      });
+    }
+
     if (workshop?.bundleInfo) {
       workshop.listPrice = workshop?.bundleInfo.comboListPrice;
       workshop.unitPrice = workshop?.bundleInfo.comboUnitPrice;
