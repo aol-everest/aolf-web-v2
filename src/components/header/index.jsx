@@ -236,16 +236,16 @@ const AOL_MENU = [
       },
     ],
   },
-  {
-    name: 'Events',
-    // submenu: [
-    //   {
-    //     name: 'Mobile, AL',
-    //     link: 'https://event.us.artofliving.org/us-en/lp1/journey-within-alabama/',
-    //     props: { target: '_blank' },
-    //   },
-    // ],
-  },
+  // {
+  //   name: 'Events',
+  //   submenu: [
+  //     {
+  //       name: 'Mobile, AL',
+  //       link: 'https://event.us.artofliving.org/us-en/lp1/journey-within-alabama/',
+  //       props: { target: '_blank' },
+  //     },
+  //   ],
+  // },
   {
     name: 'Centers',
     submenu: [
