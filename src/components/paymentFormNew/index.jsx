@@ -351,7 +351,7 @@ export const PaymentFormNew = ({
 
     try {
       const paymentData = preparePaymentData(values);
-      await processPayment(values, paymentData);
+      await processPayment(values, paymentData, isPaymentRequired);
     } catch (error) {
       console.error('Payment failed:', error);
       showAlert(ALERT_TYPES.ERROR_ALERT, {
@@ -367,7 +367,7 @@ export const PaymentFormNew = ({
 
     try {
       const paymentData = preparePaymentData(values);
-      return await processPayment(values, paymentData);
+      return await processPayment(values, paymentData, isPaymentRequired);
     } catch (error) {
       console.error('PayPal order creation failed:', error);
       return null;

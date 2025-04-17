@@ -75,65 +75,69 @@ export const usePayment = ({
     }
   };
 
-  const handleStripePayment = async (values, paymentData) => {
+  const handleStripePayment = async (
+    values,
+    paymentData,
+    isPaymentRequired,
+  ) => {
     if (!stripe || !elements) {
       throw new Error('Stripe has not been initialized');
     }
 
-    try {
-      setLoading(true);
+    // try {
+    setLoading(true);
 
-      let tokenizeCC = null;
-      if (values.shouldTokenize) {
-        const cardElement = elements.getElement('card');
-        const createTokenResponse = await stripe.createToken(cardElement, {
-          name: values.cardHolderName,
-        });
-        const { error, token } = createTokenResponse;
-        if (error) {
-          throw error;
-        }
-        tokenizeCC = token;
-      }
-
-      const finalPaymentData = {
-        ...paymentData,
-        shoppingRequest: {
-          ...paymentData.shoppingRequest,
-          tokenizeCC,
-        },
-      };
-
-      const {
-        data,
-        status,
-        error: errorMessage,
-        isError,
-      } = await api.post({
-        path: 'createAndPayOrder',
-        body: finalPaymentData,
+    let tokenizeCC = null;
+    if (values.shouldTokenize && isPaymentRequired) {
+      const cardElement = elements.getElement('card');
+      const createTokenResponse = await stripe.createToken(cardElement, {
+        name: values.cardHolderName,
       });
-
-      if (status === 400 || isError) {
-        throw new Error(errorMessage);
+      const { error, token } = createTokenResponse;
+      if (error) {
+        throw error;
       }
-
-      if (data) {
-        enrollmentCompletionAction(data);
-      }
-
-      setLoading(false);
-      return data;
-    } catch (ex) {
-      console.error(ex);
-      const data = ex.response?.data;
-      const { message, statusCode } = data || {};
-      setLoading(false);
-      showAlert(ALERT_TYPES.ERROR_ALERT, {
-        children: message ? `Error: ${message} (${statusCode})` : ex.message,
-      });
-      throw ex;
+      tokenizeCC = token;
     }
+
+    const finalPaymentData = {
+      ...paymentData,
+      shoppingRequest: {
+        ...paymentData.shoppingRequest,
+        tokenizeCC,
+      },
+    };
+
+    const {
+      data,
+      status,
+      error: errorMessage,
+      isError,
+    } = await api.post({
+      path: 'createAndPayOrder',
+      body: finalPaymentData,
+    });
+
+    if (status === 400 || isError) {
+      throw new Error(errorMessage);
+    }
+
+    if (data) {
+      enrollmentCompletionAction(data);
+    }
+
+    setLoading(false);
+    return data;
+    // } catch (ex) {
+    //   console.error(ex);
+    //   const data = ex.response?.data;
+    //   const { message, statusCode } = data || {};
+    //   setLoading(false);
+    //   showAlert(ALERT_TYPES.ERROR_ALERT, {
+    //     children: message ? `Error: ${message} (${statusCode})` : ex.message,
+    //   });
+    //   throw ex;
+    // }
   };
 
   const createPaypalOrder = async (paymentData) => {
@@ -211,7 +215,7 @@ export const usePayment = ({
     }
   };
 
-  const processPayment = async (values, paymentData) => {
+  const processPayment = async (values, paymentData, isPaymentRequired) => {
     const { paymentMode } = values;
 
     switch (paymentMode) {
@@ -219,7 +223,7 @@ export const usePayment = ({
         if (paymentData.shoppingRequest.isStripeIntentPayment) {
           return handleStripeIntentPayment(values, paymentData);
         }
-        return handleStripePayment(values, paymentData);
+        return handleStripePayment(values, paymentData, isPaymentRequired);
 
       case PAYMENT_MODES.PAYPAL_PAYMENT_MODE:
         return createPaypalOrder(paymentData);
