@@ -1,0 +1,384 @@
+main.free-guided-meditations {
+  @media (width <= 991px) {
+    margin: 0;
+  }
+  .container {
+    max-width: 1334px;
+  }
+  .title-header {
+    padding: 100px 0 48px;
+    @media (width <= 991px) {
+      padding: 42px 0 28px;
+    }
+    .page-title {
+      font-family: lora;
+      font-size: 56px;
+      line-height: 68px;
+      text-align: center;
+      font-weight: 400;
+      max-width: 690px;
+      margin: auto;
+      @media (width <= 991px) {
+        font-size: 30px;
+        line-height: 38px;
+      }
+    }
+  }
+  .section-courses {
+    padding-bottom: 100px;
+    @media (width <= 991px) {
+      padding-bottom: 40px;
+    }
+  }
+  .filter-wrapper {
+    margin-bottom: 48px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    @media (width <= 991px) {
+      flex-direction: column;
+      gap: 20px;
+      justify-content: center;
+      margin-bottom: 40px;
+    }
+    .filters {
+      display: flex;
+      gap: 24px;
+      @media (width <= 991px) {
+        gap: 10px;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+    }
+    .courses-filter__remove {
+      display: none;
+    }
+    .courses-filter__button {
+      border: 1.5px solid #e9e9e9;
+      background-color: #f7f7f7;
+      padding: 10px 20px;
+      height: 44px;
+      border-radius: 40px;
+      color: #31364e;
+      font-size: 18px;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      @media (width <= 991px) {
+        padding: 8px 12px;
+        font-size: 14px;
+        gap: 4px;
+        min-width: unset;
+        height: 36px;
+      }
+      &::before {
+        display: none;
+      }
+      &::after {
+        content: '\e938';
+        font-family: 'iconaol';
+        color: #6f7283;
+        font-size: 20px;
+        transform: rotate(90deg);
+        @media (width <= 991px) {
+          font-size: 16px;
+        }
+      }
+    }
+    .courses-filter.active {
+      .courses-filter__button {
+        border: #3d8be8 1.5px solid;
+        background: #edf5fc;
+        color: #3d8be8;
+        &::after {
+          color: #3d8be8;
+          transform: rotate(-90deg);
+        }
+      }
+    }
+    .courses-filter__wrapper-list {
+      box-shadow: 0px 4px 93.6px 8px #75757526;
+      background: white;
+      border: none;
+      border-radius: 16px;
+      padding: 8px;
+      top: 72px;
+      @media (width <= 991px) {
+        top: 62px;
+      }
+      &::before {
+        display: none;
+      }
+    }
+    .courses-filter__list {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      @media (width <= 991px) {
+        min-width: 101px;
+      }
+    }
+    .courses-filter__list-item {
+      border-radius: 12px;
+      color: #6f7283;
+      font-size: 18px;
+      line-height: 24px;
+      font-weight: 500;
+      background: white;
+      padding: 6px;
+      &:hover {
+        background-color: #f7f7f7;
+        color: #31364e;
+      }
+      @media (width <= 991px) {
+        font-size: 14px;
+        line-height: 18px;
+      }
+    }
+  }
+  .fgm-courses-listing {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    @media (width <= 991px) {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px 10px;
+    }
+    .fgm-course-item {
+      position: relative;
+      box-shadow: 0px 0px 46.6px 0px #d0cccc40;
+      background: white;
+      border-radius: 16px;
+      cursor: pointer;
+      .play-time {
+        position: absolute;
+        top: 20px;
+        left: 20px;
+        background: linear-gradient(
+          102.78deg,
+          #ffd16f -37.89%,
+          #ff865b 100.28%
+        );
+        border-radius: 8px;
+        padding: 2px 8px;
+        color: #fff;
+        font-size: 16px;
+        line-height: 24px;
+        font-weight: 500;
+        @media (width <= 991px) {
+          top: 8px;
+          left: 8px;
+          font-size: 12px;
+          line-height: 18px;
+        }
+      }
+    }
+    .fgm-image-wrap {
+      img {
+        max-width: 100%;
+        border-radius: 16px 16px 0 0;
+        height: 240px;
+        object-fit: cover;
+        @media (width <= 991px) {
+          width: 100%;
+          height: 140px;
+        }
+      }
+    }
+    .fgm-course-title {
+      font-family: lora;
+      font-size: 24px;
+      line-height: 31px;
+      font-weight: 500;
+      padding: 20px 16px 24px;
+      @media (width <= 991px) {
+        font-size: 16px;
+        line-height: 21px;
+        padding: 12px 10px;
+      }
+    }
+  }
+  .total-count {
+    color: #6f7283;
+    font-size: 18px;
+    line-height: 24px;
+    font-weight: 500;
+    @media (width <= 991px) {
+      font-size: 16px;
+    }
+  }
+  .QR-wrapper {
+    position: fixed;
+    right: 90px;
+    bottom: 100px;
+    @media (width <= 991px) {
+      display: none;
+    }
+    img {
+      width: 120px;
+      height: 120px;
+    }
+  }
+  .app-download {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    padding-bottom: 40px;
+    img {
+      height: 40px;
+      border-radius: 10px;
+    }
+    @media (width >= 992px) {
+      display: none;
+    }
+  }
+  .meditation-video-modal {
+    @media (width <= 991px) {
+      padding: 80px 0 0 0;
+    }
+    .modal-dialog {
+      max-width: 924px;
+    }
+    .modal-content {
+      border-radius: 24px;
+      border: none;
+      padding: 32px;
+      @media (width <= 991px) {
+        border-radius: 0;
+        padding: 0;
+      }
+    }
+    .modal-header {
+      .close {
+        height: 40px;
+        width: 40px;
+        box-shadow:
+          0px 2px 4px -2px #0000000f,
+          0px 4px 8px -2px #0000001a;
+        top: -8px;
+        right: -8px;
+        @media (width <= 991px) {
+          border-radius: 0;
+          top: -32px;
+          left: 20px;
+          right: unset;
+          background: none;
+          height: 24px;
+          width: 24px;
+          box-shadow: none;
+        }
+        span {
+          display: none;
+        }
+        &::before,
+        &::after {
+          content: '';
+          display: block;
+          height: 15px;
+          width: 2px;
+          background: #9598a6;
+          border-radius: 2px;
+          position: absolute;
+          left: 50%;
+          top: 12px;
+        }
+        &::before {
+          transform: rotate(45deg);
+          @media (width <= 991px) {
+            display: none;
+          }
+        }
+        &::after {
+          transform: rotate(-45deg);
+          @media (width <= 991px) {
+            position: static;
+            top: 0;
+            left: 0;
+            transform: unset;
+            background: unset;
+            height: unset;
+            width: unset;
+            content: '\e934';
+            color: #fff;
+            font-family: 'iconaol';
+            font-weight: 300;
+            font-size: 24px;
+          }
+        }
+      }
+    }
+    .modal-body {
+      margin: 0;
+    }
+    .modal-video-wrap {
+      border-radius: 20px;
+      overflow: hidden;
+      margin-bottom: 24px;
+      @media (width <= 991px) {
+        border-radius: 0;
+      }
+    }
+    .video-title {
+      font-size: 32px;
+      line-height: 38px;
+      font-weight: 500;
+      font-family: lora;
+      margin-bottom: 12px;
+      @media (width <= 991px) {
+        padding-left: 20px;
+        padding-right: 20px;
+        font-size: 24px;
+        line-height: 31px;
+        margin-bottom: 8px;
+      }
+    }
+    .video-desc {
+      color: #6f7283;
+      font-size: 18px;
+      line-height: 24px;
+      @media (width <= 991px) {
+        padding-left: 20px;
+        padding-right: 20px;
+        font-size: 16px;
+      }
+    }
+    .video-other-info {
+      margin-top: 16px;
+      padding-top: 16px;
+      border-top: #e9e9e9 1px solid;
+      display: flex;
+      justify-content: space-between;
+      @media (width <= 991px) {
+        margin-left: 20px;
+        margin-right: 20px;
+      }
+    }
+    .other-info-item {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      @media (width <= 991px) {
+        gap: 4px;
+      }
+      label {
+        color: #9598a6;
+        font-size: 14px;
+        line-height: 20px;
+        font-weight: 600;
+        @media (width <= 991px) {
+          font-size: 12px;
+          line-height: 18px;
+        }
+      }
+      .text {
+        font-size: 18px;
+        line-height: 24px;
+        font-weight: 500;
+        @media (width <= 991px) {
+          font-size: 16px;
+        }
+      }
+    }
+  }
+}
