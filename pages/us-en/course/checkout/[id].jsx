@@ -16,7 +16,11 @@ import {
   useGlobalModalContext,
 } from '@contexts';
 import { useQueryState, parseAsBoolean, parseAsString } from 'nuqs';
-import { pushRouteWithUTMQuery, replaceRouteWithUTMQuery } from '@service';
+import {
+  pushRouteWithUTMQuery,
+  replaceRouteWithUTMQuery,
+  returnRouteWithUTMQuery,
+} from '@service';
 import { Elements } from '@stripe/react-stripe-js';
 import { api, convertToUpperCaseAndReplaceSpacesForURL } from '@utils';
 import dayjs from 'dayjs';
@@ -121,6 +125,32 @@ const Checkout = () => {
       setLoading(false);
     }, 2000);
     if (!workshop) return;
+
+    if (
+      workshop.isInitialRequisiteCompleted === false &&
+      workshop.initialBusinessRules.length > 0
+    ) {
+      const reason = workshop.initialBusinessRules[0];
+
+      showAlert(ALERT_TYPES.CUSTOM_ALERT, {
+        className: 'retreat-prerequisite-big',
+        title: 'Prerequisite',
+        closeModalAction: closeRetreatPrerequisiteWarning(reason),
+        footer: () => {
+          return (
+            <button
+              className="btn-secondary"
+              onClick={closeRetreatPrerequisiteWarning(reason)}
+            >
+              {reason.actionButtonText}
+            </button>
+          );
+        },
+        children: (
+          <RetreatPrerequisiteWarning firstPreRequisiteFailedReason={reason} />
+        ),
+      });
+    }
 
     if (workshop?.bundleInfo) {
       workshop.listPrice = workshop?.bundleInfo.comboListPrice;
@@ -296,22 +326,33 @@ const Checkout = () => {
 
   const enrollmentCompletionLink = ({ attendeeId }) => {
     const title = convertToUpperCaseAndReplaceSpacesForURL(workshop.title);
-    let filteredParams = {
-      ctype: workshop.productTypeId,
-      comboId: comboProductSfid,
-      page: 'ty',
-      referral: 'course_checkout',
-      type: `local${mbsy_source ? '&mbsy_source=' + mbsy_source : ''}`,
-      campaignid,
-      mbsy,
-      ...filterAllowedParams(router.query),
-    };
-    filteredParams = removeNull(filteredParams);
+    const processPaymentLink = `/us-en/process-payment/${attendeeId}`;
+    const nextUrl = returnRouteWithUTMQuery(router, {
+      pathname: `/us-en/course/thankyou/${attendeeId}`,
+      query: {
+        ctype: workshop.productTypeId,
+        comboId: comboProductSfid,
+        page: 'ty',
+        referral: 'course_checkout',
+        type: `local${mbsy_source ? '&mbsy_source=' + mbsy_source : ''}`,
+        campaignid,
+        mbsy,
+      },
+    });
+    const previousUrl = returnRouteWithUTMQuery(router, {
+      pathname: `/us-en/course/checkout/${workshopId}`,
+      query: {
+        ctype: workshop.productTypeId,
+        comboId: comboProductSfid,
+      },
+    });
     const returnUrl = `${
       window.location.origin
-    }/us-en/course/thankyou/${attendeeId}?${queryString.stringify(
-      filteredParams,
-    )}`;
+    }${processPaymentLink}?${queryString.stringify({
+      next: nextUrl,
+      previous: previousUrl,
+      stripeOrg: workshop.stripeOrg,
+    })}`;
     return returnUrl;
   };
 

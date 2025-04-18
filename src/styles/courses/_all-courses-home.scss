@@ -111,5 +111,29 @@
       text-decoration: none;
       display: inline-block;
     }
+    a.course-link-pwht {
+      font-size: 18px;
+      font-weight: 600;
+      line-height: 24px;
+      color: #0e59a3;
+      padding: 5px 0 5px 0;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+
+      &::after {
+        content: '\e933';
+        font-family: 'iconaol';
+        background: #0e59a3;
+        height: 32px;
+        width: 32px;
+        display: inline-flex;
+        justify-content: center;
+        align-items: center;
+        color: white;
+        border-radius: 100%;
+      }
+    }
   }
 }

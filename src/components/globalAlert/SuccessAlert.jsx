@@ -11,6 +11,7 @@ export const SuccessAlert = () => {
     title = 'Success',
     children,
     className,
+    message,
   } = alertProps || {};
 
   const handleAlertToggle = () => {
@@ -55,7 +56,7 @@ export const SuccessAlert = () => {
             </div>
             <div className="tw-flex-1 tw-min-w-0">
               <p className="tw-text-sm tw-font-medium tw-text-gray-800 tw-break-words">
-                {children}
+                {message || children}
               </p>
             </div>
             <div className="tw-flex-shrink-0">
