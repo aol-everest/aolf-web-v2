@@ -470,17 +470,7 @@ const COURSE_TYPES_OPTIONS = Object.entries(
 );
 
 // export async function getStaticPaths() {
-//   return {
-//     paths: [{ params: { slug: 'art-of-living-part-1' } }],
-//     fallback: 'blocking', // or 'false' depending on your needs
-//   };
-// }
-
-// export async function getStaticProps({ params }) {
-//   return {
-//     props: { slug: params.slug },
-//   };
-// }
+const hideFiltersForPwht = orgConfig.name === 'PWHT';
 
 const Course = () => {
   const { track, page } = useAnalytics();
@@ -653,7 +643,10 @@ const Course = () => {
     track('Product List Viewed', {
       category: 'Course',
     });
-    if (orgConfig.name === 'AOL' && !timeZoneFilter) {
+    if (
+      (orgConfig.name === 'AOL' || orgConfig.name === 'PWHT') &&
+      !timeZoneFilter
+    ) {
       setTimeZoneFilter(fillDefaultTimeZone());
     }
   }, [router.isReady]);
@@ -938,49 +931,53 @@ const Course = () => {
               className="course-filter-listing search-form col-12 d-flex align-items-center"
             >
               <button className="filter-save-button">Save Changes</button>
-              <Popup
-                tabIndex="2"
-                value={COURSE_MODES[courseModeFilter] && courseModeFilter}
-                buttonText={
-                  courseModeFilter && COURSE_MODES[courseModeFilter]
-                    ? COURSE_MODES[courseModeFilter].name
-                    : null
-                }
-                closeEvent={onFilterChange('courseModeFilter')}
-                label="Course Format"
-              >
-                {({ closeHandler }) => (
-                  <>
-                    {orgConfig.courseModes.map((courseMode, index) => {
-                      return (
-                        <li
-                          key={index}
-                          className="courses-filter__list-item"
-                          onClick={closeHandler(courseMode)}
-                        >
-                          {COURSE_MODES[courseMode].name}
-                        </li>
-                      );
-                    })}
-                  </>
-                )}
-              </Popup>
-              <Popup
-                tabIndex="1"
-                value={locationFilter}
-                buttonText={
-                  locationFilter ? `${locationFilter.locationName}` : null
-                }
-                closeEvent={onFilterChange('locationFilter')}
-                label="Location"
-              >
-                {({ closeHandler }) => (
-                  <AddressSearch
-                    closeHandler={closeHandler}
-                    placeholder="Search for Location"
-                  />
-                )}
-              </Popup>
+              {!hideFiltersForPwht && (
+                <>
+                  <Popup
+                    tabIndex="2"
+                    value={COURSE_MODES[courseModeFilter] && courseModeFilter}
+                    buttonText={
+                      courseModeFilter && COURSE_MODES[courseModeFilter]
+                        ? COURSE_MODES[courseModeFilter].name
+                        : null
+                    }
+                    closeEvent={onFilterChange('courseModeFilter')}
+                    label="Course Format"
+                  >
+                    {({ closeHandler }) => (
+                      <>
+                        {orgConfig.courseModes.map((courseMode, index) => {
+                          return (
+                            <li
+                              key={index}
+                              className="courses-filter__list-item"
+                              onClick={closeHandler(courseMode)}
+                            >
+                              {COURSE_MODES[courseMode].name}
+                            </li>
+                          );
+                        })}
+                      </>
+                    )}
+                  </Popup>
+                  <Popup
+                    tabIndex="1"
+                    value={locationFilter}
+                    buttonText={
+                      locationFilter ? `${locationFilter.locationName}` : null
+                    }
+                    closeEvent={onFilterChange('locationFilter')}
+                    label="Location"
+                  >
+                    {({ closeHandler }) => (
+                      <AddressSearch
+                        closeHandler={closeHandler}
+                        placeholder="Search for Location"
+                      />
+                    )}
+                  </Popup>
+                </>
+              )}
               <Popup
                 tabIndex="4"
                 value={TIME_ZONE[timeZoneFilter] ? timeZoneFilter : null}
@@ -1028,6 +1025,7 @@ const Course = () => {
                   </>
                 )}
               </Popup>
+
               <Popup
                 tabIndex="3"
                 value={!courseTypeFilter.hidden ? courseTypeFilter : null}
@@ -1061,72 +1059,74 @@ const Course = () => {
                   </>
                 )}
               </Popup>
-              <div
-                data-filter="timezone"
-                className={classNames('courses-filter', {
-                  'with-selected': filterStartEndDate,
-                })}
-              >
-                <button
-                  className="courses-filter__remove"
-                  onClick={onDatesChange}
+              {!hideFiltersForPwht && (
+                <div
+                  data-filter="timezone"
+                  className={classNames('courses-filter', {
+                    'with-selected': filterStartEndDate,
+                  })}
                 >
-                  <svg
-                    width="20"
-                    height="21"
-                    viewBox="0 0 20 21"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
+                  <button
+                    className="courses-filter__remove"
+                    onClick={onDatesChange}
                   >
-                    <rect
-                      x="0.5"
-                      y="1"
-                      width="19"
-                      height="19"
-                      rx="9.5"
-                      fill="#ABB1BA"
+                    <svg
+                      width="20"
+                      height="21"
+                      viewBox="0 0 20 21"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <rect
+                        x="0.5"
+                        y="1"
+                        width="19"
+                        height="19"
+                        rx="9.5"
+                        fill="#ABB1BA"
+                      />
+                      <rect
+                        x="0.5"
+                        y="1"
+                        width="19"
+                        height="19"
+                        rx="9.5"
+                        stroke="white"
+                      />
+                      <path
+                        d="M13.5 7L6.5 14"
+                        stroke="white"
+                        strokeWidth="1.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                      <path
+                        d="M13.5 14L6.5 7"
+                        stroke="white"
+                        strokeWidth="1.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                    </svg>
+                  </button>
+                  <label>Dates</label>
+                  <div className="courses-filter__button date-picker">
+                    <DateRangePicker
+                      placeholder="Select..."
+                      appearance="subtle"
+                      showHeader={false}
+                      onChange={onDatesChange}
+                      value={filterStartEndDate}
+                      shouldDisableDate={combine(
+                        allowedMaxDays(14),
+                        beforeToday(),
+                      )}
+                      ranges={[]}
+                      editable={false}
                     />
-                    <rect
-                      x="0.5"
-                      y="1"
-                      width="19"
-                      height="19"
-                      rx="9.5"
-                      stroke="white"
-                    />
-                    <path
-                      d="M13.5 7L6.5 14"
-                      stroke="white"
-                      strokeWidth="1.5"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                    <path
-                      d="M13.5 14L6.5 7"
-                      stroke="white"
-                      strokeWidth="1.5"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                  </svg>
-                </button>
-                <label>Dates</label>
-                <div className="courses-filter__button date-picker">
-                  <DateRangePicker
-                    placeholder="Select..."
-                    appearance="subtle"
-                    showHeader={false}
-                    onChange={onDatesChange}
-                    value={filterStartEndDate}
-                    shouldDisableDate={combine(
-                      allowedMaxDays(14),
-                      beforeToday(),
-                    )}
-                    ranges={[]}
-                    editable={false}
-                  />
+                  </div>
                 </div>
-              </div>
+              )}
 
               <Popup
                 tabIndex="2"
@@ -1137,23 +1137,25 @@ const Course = () => {
                 buttonText={onlyWeekend ? 'Weekend Courses / Events' : null}
               ></Popup>
 
-              <Popup
-                tabIndex="5"
-                value={instructorFilter ? instructorFilter.label : null}
-                buttonText={instructorFilter ? instructorFilter.label : null}
-                closeEvent={onFilterChange('instructorFilter')}
-                label="Instructor"
-                parentClassName="upward"
-              >
-                {({ closeHandler }) => (
-                  <SmartInput
-                    onSearchKeyChange={(value) => setSearchKey(value)}
-                    dataList={instructorList}
-                    closeHandler={closeHandler}
-                    value={searchKey}
-                  ></SmartInput>
-                )}
-              </Popup>
+              {!hideFiltersForPwht && (
+                <Popup
+                  tabIndex="5"
+                  value={instructorFilter ? instructorFilter.label : null}
+                  buttonText={instructorFilter ? instructorFilter.label : null}
+                  closeEvent={onFilterChange('instructorFilter')}
+                  label="Instructor"
+                  parentClassName="upward"
+                >
+                  {({ closeHandler }) => (
+                    <SmartInput
+                      onSearchKeyChange={(value) => setSearchKey(value)}
+                      dataList={instructorList}
+                      closeHandler={closeHandler}
+                      value={searchKey}
+                    ></SmartInput>
+                  )}
+                </Popup>
+              )}
             </div>
             <div className="search_course_form_mobile d-lg-none d-block">
               <div>
@@ -1577,5 +1579,5 @@ const Course = () => {
 
 // Course.requiresAuth = true;
 // Course.redirectUnauthenticated = "/login";
-
+Course.hideFooter = orgConfig.name === 'PWHT' ?? false;
 export default Course;

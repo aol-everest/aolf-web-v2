@@ -5,13 +5,7 @@ import {
   UserInfoFormNewCheckout,
 } from '@components/checkout';
 import dayjs from 'dayjs';
-import {
-  ABBRS,
-  ALERT_TYPES,
-  COURSE_MODES,
-  PAYMENT_MODES,
-  PAYMENT_TYPES,
-} from '@constants';
+import { ALERT_TYPES, PAYMENT_MODES, PAYMENT_TYPES } from '@constants';
 import { useAuth, useGlobalAlertContext } from '@contexts';
 import { useQueryString, usePayment } from '@hooks';
 import { pushRouteWithUTMQuery } from '@service';
@@ -20,7 +14,8 @@ import {
   useElements,
   useStripe,
 } from '@stripe/react-stripe-js';
-import { Auth, api, isEmpty, phoneRegExp, tConvert } from '@utils';
+import { isEmpty, phoneRegExp } from '@utils';
+import { orgConfig } from '@org';
 import { filterAllowedParams } from '@utils/utmParam';
 import { Formik } from 'formik';
 import { useRouter } from 'next/router';
@@ -97,6 +92,7 @@ export const PaymentFormNew = ({
     useState(false);
   const router = useRouter();
   const { signOut } = passwordLess;
+  const isPwht = orgConfig.name === 'PWHT';
 
   useEffect(() => {
     if (isProgramQuestionnaireSubmitted) {
@@ -883,38 +879,42 @@ export const PaymentFormNew = ({
                               handlePaypalPayment={handlePaypalPayment}
                             />
                           )}
-                        <TrustScore />
+                        {!isPwht && <TrustScore />}
                       </div>
 
-                      <div className="section-box features-desktop">
-                        <div className="section__body">
-                          <FeaturesList />
+                      {!isPwht && (
+                        <div className="section-box features-desktop">
+                          <div className="section__body">
+                            <FeaturesList />
+                          </div>
                         </div>
-                      </div>
+                      )}
                     </div>
                     <div className="col-12 col-lg-5">
                       <div className="checkout-sidebar">
-                        <CostDetailsCardNewCheckout
-                          workshop={workshop}
-                          userSubscriptions={userSubscriptions}
-                          formikProps={formikProps}
-                          fee={fee}
-                          delfee={delfee}
-                          showCouponCodeField={showCouponCodeField}
-                          hasGroupedAddOnProducts={hasGroupedAddOnProducts}
-                          openSubscriptionPaywallPage={
-                            openSubscriptionPaywallPage
-                          }
-                          isComboDetailAvailable={isComboDetailAvailable}
-                          values={values}
-                          onComboDetailChange={handleComboDetailChange}
-                          paymentOptionChange={handlePaymentOptionChange}
-                          discount={discountResponse}
-                          onAccommodationChange={handleAccommodationChange}
-                          subtotal={subtotal}
-                          discountAmount={discountAmount}
-                          finalPrice={finalPrice}
-                        />
+                        {!isPwht && (
+                          <CostDetailsCardNewCheckout
+                            workshop={workshop}
+                            userSubscriptions={userSubscriptions}
+                            formikProps={formikProps}
+                            fee={fee}
+                            delfee={delfee}
+                            showCouponCodeField={showCouponCodeField}
+                            hasGroupedAddOnProducts={hasGroupedAddOnProducts}
+                            openSubscriptionPaywallPage={
+                              openSubscriptionPaywallPage
+                            }
+                            isComboDetailAvailable={isComboDetailAvailable}
+                            values={values}
+                            onComboDetailChange={handleComboDetailChange}
+                            paymentOptionChange={handlePaymentOptionChange}
+                            discount={discountResponse}
+                            onAccommodationChange={handleAccommodationChange}
+                            subtotal={subtotal}
+                            discountAmount={discountAmount}
+                            finalPrice={finalPrice}
+                          />
+                        )}
 
                         <div className="room-board-pricing">
                           <div className="total">
@@ -984,7 +984,11 @@ export const PaymentFormNew = ({
                             </div>
                             <div className="form-item submit-item">
                               <button
-                                className="submit-btn"
+                                className={
+                                  isPwht
+                                    ? 'submit-btn submit-btn-pwht'
+                                    : 'submit-btn'
+                                }
                                 id="pay-button"
                                 type="button"
                                 disabled={
@@ -997,7 +1001,11 @@ export const PaymentFormNew = ({
                                 form="my-form"
                                 onClick={handleFormSubmit}
                               >
-                                {loading ? 'Processing...' : 'Confirm and Pay'}
+                                {loading
+                                  ? 'Processing...'
+                                  : !isPwht
+                                    ? 'Confirm and Pay'
+                                    : 'Register'}
                               </button>
                             </div>
                           </div>
