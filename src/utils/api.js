@@ -25,11 +25,14 @@ const axiosClient = Axios.create({
 axiosClient.interceptors.request.use(async function (config) {
   try {
     if (!config.isUnauthorized) {
-      const { accessToken } = await Auth.getSession();
-      if (!accessToken) {
-        throw new Error('No access token available');
+      const tokens = await Auth.getSession();
+      if (tokens && tokens.accessToken) {
+        config.headers.Authorization = `Bearer ${tokens.accessToken}`;
+      } else {
+        // If no token is available, but the request requires auth,
+        // we can still let it proceed without the Authorization header
+        console.warn('No access token available for authenticated request');
       }
-      config.headers.Authorization = `Bearer ${accessToken}`;
     }
     return config;
   } catch (error) {

@@ -24,7 +24,7 @@ const AudioPlayer = () => {
   const { hidePlayer, store } = useGlobalAudioPlayerContext();
 
   const { playerProps } = store || {};
-  const { track } = playerProps || {};
+  const { track, autoPlay = true } = playerProps || {};
 
   // Destructure for conciseness
   const { title, artist, color, image, audioSrc } = track || {};
@@ -163,16 +163,27 @@ const AudioPlayer = () => {
     audioRef.current = new Audio(audioSrc);
     setTrackProgress(audioRef.current.currentTime);
 
-    setIsPlaying(false);
-    // if (isReady.current) {
-    //   audioRef.current.play();
-    //   setIsPlaying(true);
-    //   startTimer();
-    // } else {
-    //   // Set the isReady ref as true for the next pass
-    //   isReady.current = true;
-    // }
-  }, [audioSrc]);
+    // If autoPlay is true, play the audio when loaded
+    if (audioSrc && autoPlay) {
+      audioRef.current.addEventListener(
+        'canplaythrough',
+        () => {
+          audioRef.current
+            .play()
+            .then(() => {
+              setIsPlaying(true);
+              startTimer();
+            })
+            .catch((error) => {
+              console.error('Auto-play failed:', error);
+            });
+        },
+        { once: true },
+      );
+    } else {
+      setIsPlaying(false);
+    }
+  }, [audioSrc, autoPlay]);
 
   useEffect(() => {
     // Pause and clean up on unmount
