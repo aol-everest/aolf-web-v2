@@ -738,7 +738,7 @@ const ProfileLanding = () => {
       const response = await api.get({
         path: 'recommendedWorkshopV2',
         params: {
-          timeZone: getUserTimeZone(),
+          timeZone: TIME_ZONE[getUserTimeZone()].value,
         },
       });
       return response.data;
