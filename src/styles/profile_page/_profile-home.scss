@@ -501,6 +501,9 @@ main.profile-home {
           height: 298px;
           object-fit: cover;
           border-radius: 16px;
+          &[src='/img/courses/sleep-anxiety.webp'] {
+            object-position: 100%;
+          }
         }
       }
       .ds-course-header {

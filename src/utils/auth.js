@@ -25,9 +25,10 @@ const getSession = async () => {
   try {
     await getCurrentUser();
     const session = await fetchAuthSession();
-    return session.tokens;
+    return session.tokens || null;
   } catch (err) {
-    console.error(err);
+    console.error('Session error:', err);
+    return null;
   }
 };
 
