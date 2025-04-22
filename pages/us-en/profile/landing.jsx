@@ -535,7 +535,7 @@ const RecommendedCourses = ({ item }) => {
 
   const detailsPage = (item) => () => {
     pushRouteWithUTMQuery(router, {
-      pathname: `/us-en/${item.sfid}`,
+      pathname: `/us-en/course/${item.sfid}`,
       query: {
         ctype: item.productTypeId,
         page: 'c-o',
