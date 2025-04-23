@@ -965,7 +965,11 @@ export const Header = () => {
                     <span className="username">{first_name || last_name}</span>
                   </a>
                 </Link> */}
-                <Link prefetch={false} href="/us-en/profile" legacyBehavior>
+                <Link
+                  prefetch={false}
+                  href="/us-en/profile/landing"
+                  legacyBehavior
+                >
                   <a
                     className="header_profileHeaderImage"
                     href="#"

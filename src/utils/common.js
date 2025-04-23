@@ -382,7 +382,7 @@ export function navigateToLogin(router, next) {
   router.push({
     pathname: '/us-en/signin',
     query: {
-      next: next || '/us-en/profile/landing', // getFullPathWithQueryParams(router),
+      next: next || getFullPathWithQueryParams(router),
     },
   });
 }
