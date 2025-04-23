@@ -6,21 +6,50 @@ import { ErrorAlert } from './ErrorAlert';
 import { SuccessAlert } from './SuccessAlert';
 import { WarningAlert } from './WarningAlert';
 import { NewAlert } from './NewAlert';
-
+import { InlineErrorAlert } from './InlineErrorAlert';
+import { InlineSuccessAlert } from './InlineSuccessAlert';
 const ALERT_COMPONENTS = {
   [ALERT_TYPES.SUCCESS_ALERT]: SuccessAlert,
   [ALERT_TYPES.CUSTOM_ALERT]: CustomAlert,
   [ALERT_TYPES.ERROR_ALERT]: ErrorAlert,
   [ALERT_TYPES.WARNING_ALERT]: WarningAlert,
   [ALERT_TYPES.NEW_ALERT]: NewAlert,
+  [ALERT_TYPES.INLINE_ERROR_ALERT]: InlineErrorAlert,
+  [ALERT_TYPES.INLINE_SUCCESS_ALERT]: InlineSuccessAlert,
+};
+
+// Global reference to showAlert function
+let globalShowAlert = null;
+
+export const showGlobalAlert = (
+  message,
+  description,
+  type = ALERT_TYPES.ERROR_ALERT,
+) => {
+  if (globalShowAlert) {
+    globalShowAlert(type, { message, description });
+  }
 };
 
 export const GlobalAlert = ({ children }) => {
   const [store, setStore] = useState();
   const { alertType, alertProps } = store || {};
 
-  const showAlert = (alertType, alertProps, autoHideMS) => {
-    document.body.classList.add('overflow-hidden');
+  const showAlert = (alertType, props, autoHideMS) => {
+    // Convert string children to message format
+    const alertProps = {
+      ...props,
+      message:
+        typeof props.children === 'string' ? props.children : props.message,
+      description: props.description,
+      children: typeof props.children === 'string' ? undefined : props.children,
+    };
+
+    // Only add overflow-hidden for modal alerts
+    if (alertType !== ALERT_TYPES.INLINE_ERROR_ALERT) {
+      document.body.classList.add('overflow-hidden');
+    }
+
     setStore({
       ...store,
       alertType,
@@ -34,8 +63,20 @@ export const GlobalAlert = ({ children }) => {
     }
   };
 
+  // Store reference to showAlert function
+  useEffect(() => {
+    globalShowAlert = showAlert;
+    return () => {
+      globalShowAlert = null;
+    };
+  }, []);
+
   const hideAlert = () => {
-    document.body.classList.remove('overflow-hidden');
+    // Only remove overflow-hidden if it was a modal alert
+    if (store?.alertType !== ALERT_TYPES.INLINE_ERROR_ALERT) {
+      document.body.classList.remove('overflow-hidden');
+    }
+
     setStore({
       ...store,
       alertType: null,

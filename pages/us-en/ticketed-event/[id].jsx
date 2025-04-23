@@ -19,12 +19,19 @@ import { z } from 'zod';
 import { DiscountInputNew } from '@components/discountInputNew';
 import { AiTwotoneAlert } from 'react-icons/ai';
 import moment from 'moment';
+import CourseNotFoundError from '@components/errors/CourseNotFoundError';
 
 const ticketSchema = z.record(z.string(), z.number());
 
 dayjs.extend(utc);
 
-const TicketLineItem = ({ item, handleTicketSelect, selectedTickets }) => {
+const TicketLineItem = ({
+  item,
+  handleTicketSelect,
+  selectedTickets,
+  totalTickets,
+  maxTicketsWithOneOrder,
+}) => {
   let count = 0;
   if (item.pricingTierId in selectedTickets) {
     count = selectedTickets[item.pricingTierId];
@@ -50,12 +57,17 @@ const TicketLineItem = ({ item, handleTicketSelect, selectedTickets }) => {
             id={item.pricingTierId}
             value={count}
             min="0"
+            max={item.availableSeats}
             onChange={handleTicketSelect('input', item)}
+            disabled={totalTickets >= maxTicketsWithOneOrder}
           />
           <button
             className="tickets-modal__counter-button"
             type="button"
-            disabled={count >= item.availableSeats}
+            disabled={
+              count >= item.availableSeats ||
+              totalTickets >= maxTicketsWithOneOrder
+            }
             onClick={handleTicketSelect('add', item)}
           >
             +
@@ -105,7 +117,7 @@ function TicketedEvent() {
     isError,
     error,
   } = useQuery({
-    queryKey: 'getTicketedEvent',
+    queryKey: ['getTicketedEvent', eventId],
     queryFn: async () => {
       const response = await api.get({
         path: 'getTicketedEvent',
@@ -188,7 +200,12 @@ function TicketedEvent() {
     return accumulator;
   }, 0);
 
-  if (isError) return <ErrorPage statusCode={500} title={error.message} />;
+  if (isError) {
+    if (error?.response?.data?.message === 'No Event found') {
+      return <CourseNotFoundError type="event" browseLink="/us-en/courses" />;
+    }
+    return <ErrorPage statusCode={500} title={error.message} />;
+  }
   if (isLoading || !router.isReady) return <PageLoading />;
 
   const handleTicketSelect = (type, item) => (e) => {
@@ -426,14 +443,23 @@ function TicketedEvent() {
                       </div>
 
                       <div className="tickets-modal__list">
-                        {pricingTiers?.map((item, index) => (
-                          <TicketLineItem
-                            key={item.pricingTierId}
-                            item={item}
-                            handleTicketSelect={handleTicketSelect}
-                            selectedTickets={selectedTickets}
-                          ></TicketLineItem>
-                        ))}
+                        {pricingTiers?.map((item) => {
+                          const totalTickets = Object.keys(
+                            selectedTickets,
+                          ).reduce((total, item) => {
+                            return total + (selectedTickets[item] || 0);
+                          }, 0);
+                          return (
+                            <TicketLineItem
+                              key={item.pricingTierId}
+                              item={item}
+                              handleTicketSelect={handleTicketSelect}
+                              selectedTickets={selectedTickets}
+                              totalTickets={totalTickets}
+                              maxTicketsWithOneOrder={maxTicketsWithOneOrder}
+                            ></TicketLineItem>
+                          );
+                        })}
                         <div className="tickets-modal__card notes-desktop">
                           <div className="tickets notes">
                             <div className="label">Notes</div>

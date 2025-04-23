@@ -57,8 +57,13 @@ export default function AskGurudev() {
       setSearchResult({});
       setLoading(true);
       try {
-        const apiUrl = `https://askgurudev.me/search/?question=${query}`;
-        const response = await fetch(apiUrl);
+        const apiUrl = `https://askgurudev.me/public_search/?question=${query}`;
+        const response = await fetch(apiUrl, {
+          method: 'GET',
+          headers: {
+            'X-API-KEY': 'journey',
+          },
+        });
         const result = await response.json();
         setSearchResult(result);
         setSelectedPageIndex(0);
@@ -108,8 +113,14 @@ export default function AskGurudev() {
     };
     setSelectedVotes(selectedVotesData);
     try {
-      const apiUrl = `https://askgurudev.me/feedback/?hash=${searchResult.hash}&rating=${rating}&sample=${selectedPageIndex}`;
-      await fetch(apiUrl);
+      const apiUrl = `https://askgurudev.me/public_feedback/?hash=${searchResult.hash}&rating=${rating}&sample=${selectedPageIndex}`;
+      await fetch(apiUrl, {
+        method: 'GET',
+        headers: {
+          'X-API-KEY': 'journey',
+        },
+      });
+
       setFeedbackText('Your feedback submitted successfully');
       setTimeout(() => {
         setFeedbackText('');
@@ -155,7 +166,7 @@ export default function AskGurudev() {
   const getErrorMessagesForMeta = () => {
     switch (currentMeta) {
       case 'error':
-        return "Hi friend 😊 Thanks for trying the beta version of AskGurudev, but something unexpected happened. Please try again later and see Gurudev's <a href='https://www.instagram.com/gurudev'>instagram</a> for wisdom!";
+        return "Hi friend 😊 Thanks for trying AskGurudev, but something unexpected happened. Please try again later and see Gurudev's <a href='https://www.instagram.com/gurudev'>instagram</a> for wisdom!";
       case 'llm out of scope':
       case 'filtered honeypot':
       case 'above threshold':
@@ -180,7 +191,7 @@ export default function AskGurudev() {
           </div>
         )}
         <div className="container">
-          <h1 className="page-title beta">Ask Gurudev</h1>
+          <h1 className="page-title">Ask Gurudev</h1>
           <CategoryTabs
             setSelectedCategory={setSelectedCategory}
             selectedCategory={selectedCategory}
@@ -215,17 +226,16 @@ export default function AskGurudev() {
             )}
 
             {loading && <Loader />}
-            {!initialPageLoad && (
-              <SearchResultsList
-                result={selectedQueryResponse || {}}
-                handleVoteSelect={handleVoteSelect}
-                selectedVotes={selectedVotes}
-                selectedPageIndex={selectedPageIndex}
-                query={query}
-                currentMeta={searchResult?.meta}
-                results={searchResult?.matches}
-              />
-            )}
+
+            <SearchResultsList
+              result={selectedQueryResponse || {}}
+              handleVoteSelect={handleVoteSelect}
+              selectedVotes={selectedVotes}
+              selectedPageIndex={selectedPageIndex}
+              query={query}
+              currentMeta={searchResult?.meta}
+              results={searchResult?.matches}
+            />
           </div>
         </div>
       </section>

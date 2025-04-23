@@ -13,6 +13,7 @@ import {
   concatenateStrings,
   findSlugByProductTypeId,
   tConvert,
+  getUserTimeZoneAbbreviation,
 } from '@utils';
 import { useQuery } from '@tanstack/react-query';
 import dayjs from 'dayjs';
@@ -20,7 +21,7 @@ import utc from 'dayjs/plugin/utc';
 import { withAuth } from '@hoc';
 
 import { fetchContentfulBannerDetails, pushRouteWithUTMQuery } from '@service';
-import { ABBRS, COURSE_MODES } from '@constants';
+import { ABBRS, COURSE_MODES, TIME_ZONE } from '@constants';
 
 dayjs.extend(utc);
 
@@ -534,7 +535,7 @@ const RecommendedCourses = ({ item }) => {
 
   const detailsPage = (item) => () => {
     pushRouteWithUTMQuery(router, {
-      pathname: `/us-en/${item.sfid}`,
+      pathname: `/us-en/course/${item.sfid}`,
       query: {
         ctype: item.productTypeId,
         page: 'c-o',
@@ -694,6 +695,15 @@ const ProfileLanding = () => {
     },
   };
 
+  const getUserTimeZone = () => {
+    const userTimeZoneAbbreviation = getUserTimeZoneAbbreviation() || '';
+    console.log('userTimeZoneAbbreviation', userTimeZoneAbbreviation);
+    if (TIME_ZONE[userTimeZoneAbbreviation.toUpperCase()]) {
+      return userTimeZoneAbbreviation.toUpperCase();
+    }
+    return 'EST';
+  };
+
   useEffect(() => {
     const getBannersData = async () => {
       const banners = await fetchContentfulBannerDetails();
@@ -727,6 +737,9 @@ const ProfileLanding = () => {
     queryFn: async () => {
       const response = await api.get({
         path: 'recommendedWorkshopV2',
+        params: {
+          timeZone: TIME_ZONE[getUserTimeZone()].value,
+        },
       });
       return response.data;
     },
@@ -931,7 +944,7 @@ const ProfileLanding = () => {
               >
                 <div slot="container-start" className="top-picks-header">
                   <div className="top-picks-title">
-                    Activities happening at your preferred center
+                    Activities happening at your preferred center(s)
                   </div>
                   <div className="top-picks-actions">
                     <div className="slide-button-activities-prev slide-button">

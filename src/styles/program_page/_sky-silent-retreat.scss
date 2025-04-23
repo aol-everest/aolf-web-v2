@@ -93,7 +93,8 @@
     &:after {
       content: '';
       position: absolute;
-      background: linear-gradient(
+      background:
+        linear-gradient(
           109.01deg,
           rgba(255, 255, 255, 0.7) -18.28%,
           rgba(255, 255, 255, 0.435746) 24.6%,
@@ -333,8 +334,8 @@
 
 .highlights {
   padding: 120px 0 80px;
-  background: linear-gradient(180deg, #ffffff 0%, rgba(255, 255, 255, 0) 100%),
-    #e7efff;
+  background:
+    linear-gradient(180deg, #ffffff 0%, rgba(255, 255, 255, 0) 100%), #e7efff;
 
   &__container {
     max-width: 812px;
@@ -686,8 +687,8 @@
 
 .pillars {
   padding: 120px 0 100px;
-  background: linear-gradient(180deg, #ffffff 0%, rgba(255, 255, 255, 0) 100%),
-    #e7efff;
+  background:
+    linear-gradient(180deg, #ffffff 0%, rgba(255, 255, 255, 0) 100%), #e7efff;
 
   &__title {
     text-align: center;
@@ -881,8 +882,8 @@
 
 .about-sky {
   padding: 80px 0 120px;
-  background: linear-gradient(180deg, #ffffff 0%, rgba(255, 255, 255, 0) 100%),
-    #e7efff;
+  background:
+    linear-gradient(180deg, #ffffff 0%, rgba(255, 255, 255, 0) 100%), #e7efff;
 
   &__title {
     text-align: center;

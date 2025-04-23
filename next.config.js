@@ -50,6 +50,11 @@ const moduleExports = {
   productionBrowserSourceMaps: true,
   images: {
     domains: ['images.ctfassets.net'],
+    minimumCacheTTL: 60,
+  },
+  swcMinify: true,
+  compiler: {
+    removeConsole: process.env.NODE_ENV === 'production',
   },
 
   async redirects() {

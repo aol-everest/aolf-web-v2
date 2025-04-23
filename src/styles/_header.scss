@@ -109,7 +109,7 @@
     width: 115px;
 
     &:has(img[src='/img/PWHT-logo.png']) {
-      width: 180px;
+      width: 220px;
       height: auto;
     }
 
@@ -441,6 +441,7 @@
     padding: 15px 0;
     justify-content: space-between;
     display: flex;
+    max-width: 1304px;
     @media (width >= 992px) and (width <= 1199px) {
       max-width: unset;
       padding-left: 15px;

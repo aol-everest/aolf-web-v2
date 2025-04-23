@@ -4,7 +4,7 @@ import { useRouter } from 'next/router';
 import queryString from 'query-string';
 import ErrorPage from 'next/error';
 import { Loader, PageLoading } from '@components';
-import { replaceRouteWithUTMQuery } from '@service';
+import { replaceRouteWithUTMQuery, returnRouteWithUTMQuery } from '@service';
 import dayjs from 'dayjs';
 import {
   tConvert,
@@ -160,6 +160,47 @@ const SchedulingPaymentForm = ({
         value: true,
       }))
     : [];
+
+  const generateReturnUrl = (attendeeId, isGenericWorkshop) => {
+    const processPaymentLink = `/us-en/process-payment/${attendeeId}`;
+    let nextUrl = returnRouteWithUTMQuery(router, {
+      pathname: `/us-en/course/thankyou/${attendeeId}`,
+      query: {
+        ctype: workshop.productTypeId,
+        page: 'ty',
+        referral: 'course_scheduling_checkout',
+        courseType,
+      },
+    });
+    if (isGenericWorkshop) {
+      nextUrl = returnRouteWithUTMQuery(router, {
+        pathname: `/us-en/course/scheduling`,
+        query: {
+          aid: attendeeId,
+          ctype: workshop.productTypeId,
+          page: 'ty',
+          referral: 'course_scheduling_checkout',
+          courseType,
+        },
+      });
+    }
+    const previousUrl = returnRouteWithUTMQuery(router, {
+      pathname: `/us-en/course/scheduling/${workshop.id}`,
+      query: {
+        ctype: workshop.productTypeId,
+      },
+    });
+
+    const returnUrl = `${
+      window.location.origin
+    }${processPaymentLink}?${queryString.stringify({
+      next: nextUrl,
+      previous: previousUrl,
+      stripeOrg: workshop.stripeOrg,
+    })}`;
+
+    return returnUrl;
+  };
 
   const completeEnrollmentAction = async (values) => {
     setLoading(true);
@@ -339,20 +380,7 @@ const SchedulingPaymentForm = ({
 
       if (data) {
         if (data.totalOrderAmount > 0) {
-          let filteredParams = {
-            ctype: productTypeId,
-            page: 'ty',
-            referral: 'course_scheduling_checkout',
-            courseType,
-            ...filterAllowedParams(router.query),
-          };
-          filteredParams = removeNull(filteredParams);
-          let returnUrl = `${window.location.origin}/us-en/course/thankyou/${
-            data.attendeeId
-          }?${queryString.stringify(filteredParams)}`;
-          if (isGenericWorkshop) {
-            returnUrl = `${window.location.origin}/us-en/course/scheduling?aid=${data.attendeeId}&${queryString.stringify(filteredParams)}`;
-          }
+          let returnUrl = generateReturnUrl(data.attendeeId, isGenericWorkshop);
 
           const result = await stripe.confirmPayment({
             //`Elements` instance that was used to create the Payment Element

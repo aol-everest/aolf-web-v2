@@ -11,6 +11,7 @@ import { NextSeo } from 'next-seo';
 import { useQuery } from '@tanstack/react-query';
 import { A11y, Navigation, Scrollbar } from 'swiper';
 import { useAnalytics } from 'use-analytics';
+import CourseNotFoundError from '@components/errors/CourseNotFoundError';
 
 import 'swiper/css';
 import 'swiper/css/a11y';
@@ -283,7 +284,13 @@ function CourseDetail() {
     }
   }
 
-  if (isError) return <ErrorPage statusCode={500} title={error.message} />;
+  if (isError) {
+    if (error?.response?.data?.message === 'No Workshop found') {
+      return <CourseNotFoundError type="course" browseLink="/us-en/courses" />;
+    }
+    return <ErrorPage statusCode={500} title={error.message} />;
+  }
+
   if (isLoading || !router.isReady) return <PageLoading />;
 
   const isHealingBreath = orgConfig.name === 'HB';

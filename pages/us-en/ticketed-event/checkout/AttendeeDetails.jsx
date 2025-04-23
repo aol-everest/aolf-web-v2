@@ -1,146 +1,117 @@
 import React, { useEffect, useState } from 'react';
 import { groupBy } from 'lodash';
 import { FaUser } from 'react-icons/fa6';
-import { ALERT_TYPES } from '@constants';
-import { useGlobalAlertContext } from '@contexts';
+import { Formik, Form, Field } from 'formik';
+import * as Yup from 'yup';
+import classNames from 'classnames';
+import styles from './AttendeeDetails.module.scss';
+
+const phoneRegExp = /^[+]?[(]?[0-9]{3}[)]?[-\s.]?[0-9]{3}[-\s.]?[0-9]{4,6}$/;
+
+const validationSchema = Yup.object().shape({
+  tickets: Yup.array().of(
+    Yup.object().shape({
+      firstName: Yup.string()
+        .required('First name is required')
+        .matches(/\S/, 'First name cannot be empty'),
+      lastName: Yup.string()
+        .required('Last name is required')
+        .matches(/\S/, 'Last name cannot be empty'),
+      email: Yup.string()
+        .email('Invalid email format')
+        .required('Email is required'),
+      contactPhone: Yup.string()
+        .required('Phone number is required')
+        .matches(phoneRegExp, 'Phone number is not valid'),
+    }),
+  ),
+});
 
 export default function AttendeeDetails({
   tickets,
   handleSubmitAttendees,
   detailsRequired,
 }) {
-  const { showAlert } = useGlobalAlertContext();
-  const [expanded, setExpanded] = useState(0);
-  const [ticketData, setTicketData] = useState([]);
-  const [error, setError] = useState('');
+  const [expanded, setExpanded] = useState(null);
+  const [initialTickets, setInitialTickets] = useState([]);
+
+  function generateUniqueId() {
+    const timestamp = ((new Date().getTime() / 1000) | 0).toString(16);
+    const randomNum1 = Math.floor(Math.random() * 0x1000)
+      .toString(16)
+      .padStart(3, '0');
+    const randomNum2 = Math.floor(Math.random() * 0x10000)
+      .toString(16)
+      .padStart(4, '0');
+
+    return timestamp + '-' + randomNum1 + '-' + randomNum2;
+  }
 
   useEffect(() => {
+    let updatedTickets;
     if (!tickets?.[0]?.attendeeRecordExternalId) {
-      const updatedTickets = tickets.flatMap((item) => {
+      updatedTickets = tickets.flatMap((item) => {
         return Array.from({ length: item.numberOfTickets }, (_, index) => ({
           ...item,
           number: index + 1,
           attendeeRecordExternalId: generateUniqueId(),
           numberOfTickets: 1,
+          firstName: '',
+          lastName: '',
+          email: '',
+          contactPhone: '',
         }));
       });
-      setExpanded(updatedTickets?.[0]?.attendeeRecordExternalId);
-      setTicketData(updatedTickets);
     } else {
-      setExpanded(tickets?.[0]?.attendeeRecordExternalId);
-      setTicketData(tickets);
+      updatedTickets = tickets;
     }
-  }, []);
 
-  const ticketByTier = groupBy(ticketData, 'pricingTierName');
-  const firstTicketId = ticketData?.[0]?.attendeeRecordExternalId;
-
-  function generateUniqueId() {
-    const timestamp = ((new Date().getTime() / 1000) | 0).toString(16); // Convert timestamp to hexadecimal
-    const randomNum1 = Math.floor(Math.random() * 0x1000)
-      .toString(16)
-      .padStart(3, '0'); // Generate random number and ensure it has 3 characters
-    const randomNum2 = Math.floor(Math.random() * 0x10000)
-      .toString(16)
-      .padStart(4, '0'); // Generate random number and ensure it has 4 characters
-
-    return timestamp + '-' + randomNum1 + '-' + randomNum2;
-  }
+    // Set the first ticket's ID as expanded by default
+    if (updatedTickets.length > 0) {
+      setExpanded(updatedTickets[0].attendeeRecordExternalId);
+    }
+    setInitialTickets(updatedTickets);
+  }, [tickets]);
 
   const handleExpandItem = (ticket) => {
     setExpanded(ticket.attendeeRecordExternalId);
   };
 
-  const handleInputChange = (ticket, fieldName) => (e) => {
-    const value = e.target.value;
-    const newTicketData = ticketData.map((d) => {
-      if (d.attendeeRecordExternalId === ticket.attendeeRecordExternalId) {
-        d[fieldName] = value;
-      }
-      return d;
-    });
-    setTicketData(newTicketData);
-  };
-
-  const handleCopyData = (ticket) => (e) => {
+  const handleCopyData = (formik, ticket, index) => (e) => {
     const value = e.target.value;
     if (value !== null) {
-      const ticketId = ticket.attendeeRecordExternalId;
-      const fromTicket = ticketData.find((d) => {
-        return d.attendeeRecordExternalId == value;
-      });
-      const newTicketData = ticketData.map((d) => {
-        if (d.attendeeRecordExternalId === ticketId) {
-          if (fromTicket) {
-            d.firstName = fromTicket.firstName;
-            d.lastName = fromTicket.lastName;
-            d.contactPhone = fromTicket.contactPhone;
-            d.email = fromTicket.email;
-          } else {
-            d.firstName = '';
-            d.lastName = '';
-            d.contactPhone = '';
-            d.email = '';
-          }
-        }
-        return d;
-      });
-      setTicketData(newTicketData);
-    }
-  };
-
-  const handelSubmitData = (showAttendee, attendeeData) => {
-    if (detailsRequired) {
-      const isValidEmail = (email) => {
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        return emailRegex.test(email);
-      };
-
-      const isNonEmptyString = (str) => {
-        return typeof str === 'string' && str.trim().length > 0;
-      };
-
-      const validateTickets = (tickets) => {
-        return tickets.every(
-          (ticket) =>
-            isValidEmail(ticket.email) &&
-            isNonEmptyString(ticket.firstName) &&
-            isNonEmptyString(ticket.lastName) &&
-            isNonEmptyString(ticket.contactPhone),
+      const fromTicket = formik.values.tickets.find(
+        (d) => d.attendeeRecordExternalId === value,
+      );
+      if (fromTicket) {
+        formik.setFieldValue(
+          `tickets.${index}.firstName`,
+          fromTicket.firstName,
         );
-      };
-      const result = validateTickets(attendeeData);
-      if (result) {
-        handleSubmitAttendees(showAttendee, attendeeData);
-      } else {
-        showAlert(ALERT_TYPES.ERROR_ALERT, {
-          children: 'Attendee details are not valid. Please verify once.',
+        formik.setFieldValue(`tickets.${index}.lastName`, fromTicket.lastName);
+        formik.setFieldValue(
+          `tickets.${index}.contactPhone`,
+          fromTicket.contactPhone,
+        );
+        formik.setFieldValue(`tickets.${index}.email`, fromTicket.email);
+        // Trigger validation after copying
+        formik.validateForm().then(() => {
+          formik.setTouched({
+            tickets: formik.values.tickets.map(() => ({
+              firstName: true,
+              lastName: true,
+              email: true,
+              contactPhone: true,
+            })),
+          });
         });
       }
-    } else {
-      handleSubmitAttendees(showAttendee, attendeeData);
     }
   };
 
-  const validateEmail = (email) => {
-    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-    return emailRegex.test(email);
-  };
-
-  const handleChange = (e, ticket) => {
-    const { value } = e.target;
-    if (!validateEmail(value)) {
-      setError('Invalid email format');
-    } else {
-      setError('');
-    }
-    handleInputChange(ticket, 'email')(e);
-  };
-
-  const isButtonDisabled =
-    detailsRequired === false
-      ? false
-      : ticketData.some((item) => !item.firstName) || error;
+  if (!initialTickets.length) {
+    return null;
+  }
 
   return (
     <main className="course-filter calendar-online">
@@ -148,195 +119,349 @@ export default function AttendeeDetails({
         <div className="container checkout-congratulations">
           <div className="calendar-benefits-wrapper row">
             <div className="tw-w-full">
-              <form className="attendee-info-form">
-                <div className="optional">
-                  <h2 className="section-title">
-                    <FaUser className="fa fa-user-o" /> Provide Attendee
-                    Information
-                  </h2>
-                  <span>{`${!detailsRequired ? '(Optional)' : ''}`}</span>
-                </div>
-                <div className="attendee-info-wrapper">
-                  {Object.entries(ticketByTier).map(([key, value]) => {
-                    return (
-                      <>
-                        <div className="subsection-title">
-                          <span className="ticket-type">{key}</span>
-                        </div>
-                        <div
-                          className="accordion ticket-holder-accordion"
-                          id="programAccordion"
-                        >
-                          {value.map((t) => {
-                            const ticket = ticketData.find(
-                              (ti) =>
-                                ti.attendeeRecordExternalId ===
-                                t.attendeeRecordExternalId,
-                            );
-                            const isExpanded =
-                              expanded === ticket.attendeeRecordExternalId;
-                            const ticketId = ticket.attendeeRecordExternalId;
+              <Formik
+                initialValues={{ tickets: initialTickets }}
+                validationSchema={detailsRequired ? validationSchema : null}
+                enableReinitialize={true}
+                validateOnMount={true}
+                onSubmit={(values) => {
+                  handleSubmitAttendees(false, values.tickets);
+                }}
+              >
+                {(formik) => {
+                  console.log('formik.errors', formik.errors);
+                  console.log('formik.isValid', formik.isValid);
+                  console.log('formik.dirty', formik.dirty);
 
-                            return (
-                              <div
-                                className="accordion-item ticket-holder-accordion__item"
-                                key={ticketId}
-                                onClick={() => handleExpandItem(ticket)}
-                              >
-                                <div
-                                  className="accordion-item-header accordion-item__header"
-                                  id="heading2"
-                                  data-toggle="collapse"
-                                  data-target="#collapse2"
-                                  aria-expanded={isExpanded}
-                                  aria-controls="collapse2"
-                                >
-                                  <h6 className="accordion-item-header__text">
-                                    Ticket Holder #{ticket.number}
-                                  </h6>
-                                  <img
-                                    src="/img/ic-arrow-down.svg"
-                                    alt="Expand"
-                                    className="accordion-item-header__icon"
-                                  />
-                                </div>
-                                <div
-                                  className={`accordion-item-body accordion-item__body collapse ${
-                                    isExpanded && 'show'
-                                  }`}
-                                  id="collapse2"
-                                  aria-labelledby="heading2"
-                                  data-parent="#programAccordion"
-                                >
-                                  <div className="attendee-details-form">
-                                    {ticketData.length > 0 &&
-                                      firstTicketId !== ticketId && (
-                                        <div className="form-item other">
-                                          <label htmlFor="other">
-                                            Copy data from
-                                          </label>
-                                          <select
-                                            name="other"
-                                            onChange={handleCopyData(ticket)}
+                  const ticketByTier = groupBy(
+                    formik.values.tickets,
+                    'pricingTierName',
+                  );
+                  const firstTicketId =
+                    formik.values.tickets?.[0]?.attendeeRecordExternalId;
+
+                  return (
+                    <Form className={styles.attendeeForm}>
+                      <div className={styles.optional}>
+                        <h2 className={styles.title}>
+                          <FaUser className="fa fa-user-o" /> Provide Attendee
+                          Information
+                        </h2>
+                        <span>{`${!detailsRequired ? '(Optional)' : ''}`}</span>
+                      </div>
+                      <div className="attendee-info-wrapper">
+                        {Object.entries(ticketByTier).map(([key, value]) => (
+                          <React.Fragment key={key}>
+                            <div className="subsection-title">
+                              <span className="ticket-type">{key}</span>
+                            </div>
+                            <div
+                              className="accordion ticket-holder-accordion"
+                              id="programAccordion"
+                            >
+                              {value.map((ticket, index) => {
+                                const actualIndex =
+                                  formik.values.tickets.findIndex(
+                                    (t) =>
+                                      t.attendeeRecordExternalId ===
+                                      ticket.attendeeRecordExternalId,
+                                  );
+                                const isExpanded =
+                                  expanded === ticket.attendeeRecordExternalId;
+                                const ticketId =
+                                  ticket.attendeeRecordExternalId;
+
+                                return (
+                                  <div
+                                    className="accordion-item ticket-holder-accordion__item"
+                                    key={ticketId}
+                                    onClick={() => handleExpandItem(ticket)}
+                                  >
+                                    <div
+                                      className="accordion-item-header accordion-item__header"
+                                      id={`heading${ticketId}`}
+                                      data-toggle="collapse"
+                                      data-target={`#collapse${ticketId}`}
+                                      aria-expanded={isExpanded}
+                                      aria-controls={`collapse${ticketId}`}
+                                    >
+                                      <h6 className="accordion-item-header__text">
+                                        Ticket Holder #{ticket.number}
+                                      </h6>
+                                      <img
+                                        src="/img/ic-arrow-down.svg"
+                                        alt="Expand"
+                                        className="accordion-item-header__icon"
+                                      />
+                                    </div>
+                                    <div
+                                      className={`accordion-item-body accordion-item__body collapse ${
+                                        isExpanded ? 'show' : ''
+                                      }`}
+                                      id={`collapse${ticketId}`}
+                                      aria-labelledby={`heading${ticketId}`}
+                                      data-parent="#programAccordion"
+                                    >
+                                      <div className="attendee-details-form">
+                                        {formik.values.tickets.length > 0 &&
+                                          firstTicketId !== ticketId && (
+                                            <div
+                                              className={classNames(
+                                                styles.formItem,
+                                                'other',
+                                              )}
+                                            >
+                                              <label htmlFor="other">
+                                                Copy data from
+                                              </label>
+                                              <select
+                                                name="other"
+                                                onChange={handleCopyData(
+                                                  formik,
+                                                  ticket,
+                                                  actualIndex,
+                                                )}
+                                              >
+                                                <option value="">
+                                                  Other Attendee
+                                                </option>
+                                                {formik.values.tickets.map(
+                                                  (ticketAttendee) => {
+                                                    if (
+                                                      ticketAttendee.attendeeRecordExternalId !==
+                                                      ticketId
+                                                    ) {
+                                                      return (
+                                                        <option
+                                                          value={
+                                                            ticketAttendee.attendeeRecordExternalId
+                                                          }
+                                                          key={
+                                                            ticketAttendee.attendeeRecordExternalId
+                                                          }
+                                                        >
+                                                          {
+                                                            ticketAttendee?.pricingTierName
+                                                          }{' '}
+                                                          Ticket Holder #
+                                                          {
+                                                            ticketAttendee.number
+                                                          }
+                                                        </option>
+                                                      );
+                                                    }
+                                                    return null;
+                                                  },
+                                                )}
+                                              </select>
+                                            </div>
+                                          )}
+
+                                        <div
+                                          className={classNames(
+                                            styles.formItem,
+                                            {
+                                              [styles.required]:
+                                                detailsRequired,
+                                            },
+                                          )}
+                                        >
+                                          <label
+                                            htmlFor={`tickets.${actualIndex}.firstName`}
                                           >
-                                            <option value="">
-                                              Other Attendee
-                                            </option>
-                                            {ticketData.map(
-                                              (ticketAttendee) => {
-                                                if (
-                                                  ticketAttendee.attendeeRecordExternalId !==
-                                                  ticketId
-                                                ) {
-                                                  return (
-                                                    <option
-                                                      value={
-                                                        ticketAttendee.attendeeRecordExternalId
-                                                      }
-                                                      key={
-                                                        ticketAttendee.attendeeRecordExternalId
-                                                      }
-                                                    >
-                                                      {
-                                                        ticketAttendee?.pricingTierName
-                                                      }{' '}
-                                                      Ticket Holder #
-                                                      {ticketAttendee.number}
-                                                    </option>
-                                                  );
+                                            First Name
+                                          </label>
+                                          <Field
+                                            type="text"
+                                            name={`tickets.${actualIndex}.firstName`}
+                                            maxLength={40}
+                                            className={classNames({
+                                              [styles.inputError]:
+                                                formik.touched.tickets?.[
+                                                  actualIndex
+                                                ]?.firstName &&
+                                                formik.errors.tickets?.[
+                                                  actualIndex
+                                                ]?.firstName,
+                                            })}
+                                          />
+                                          {formik.touched.tickets?.[actualIndex]
+                                            ?.firstName &&
+                                            formik.errors.tickets?.[actualIndex]
+                                              ?.firstName && (
+                                              <div
+                                                className={styles.errorMessage}
+                                              >
+                                                {
+                                                  formik.errors.tickets[
+                                                    actualIndex
+                                                  ].firstName
                                                 }
-                                                return null;
-                                              },
+                                              </div>
                                             )}
-                                          </select>
                                         </div>
-                                      )}
 
-                                    <div
-                                      className={`form-item ${detailsRequired ? 'required' : ''}`}
-                                    >
-                                      <label htmlFor="fname">First Name</label>
-                                      <input
-                                        type="text"
-                                        name="firstName"
-                                        value={ticket?.firstName || ''}
-                                        onChange={handleInputChange(
-                                          ticket,
-                                          'firstName',
-                                        )}
-                                        maxLength={40}
-                                      />
-                                    </div>
-                                    <div
-                                      className={`form-item ${detailsRequired ? 'required' : ''}`}
-                                    >
-                                      <label htmlFor="lname required">
-                                        Last Name
-                                      </label>
-                                      <input
-                                        type="text"
-                                        name="lastName"
-                                        value={ticket?.lastName || ''}
-                                        onChange={handleInputChange(
-                                          ticket,
-                                          'lastName',
-                                        )}
-                                        maxLength={40}
-                                      />
-                                    </div>
-                                    <div
-                                      className={`form-item ${detailsRequired ? 'required' : ''} ${detailsRequired && error ? 'error' : ''}`}
-                                    >
-                                      <label htmlFor="email">
-                                        Email Address
-                                      </label>
-                                      <input
-                                        type="email"
-                                        name="email"
-                                        value={ticket?.email || ''}
-                                        onChange={(e) =>
-                                          handleChange(e, ticket)
-                                        }
-                                        pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
-                                      />
-                                    </div>
-                                    <div
-                                      className={`form-item ${detailsRequired ? 'required' : ''}`}
-                                    >
-                                      <label htmlFor="phone">
-                                        Phone Number
-                                      </label>
-                                      <input
-                                        type="tel"
-                                        name="contactPhone"
-                                        value={ticket?.contactPhone || ''}
-                                        minLength={11}
-                                        maxLength={15}
-                                        onChange={handleInputChange(
-                                          ticket,
-                                          'contactPhone',
-                                        )}
-                                      />
+                                        <div
+                                          className={classNames(
+                                            styles.formItem,
+                                            {
+                                              [styles.required]:
+                                                detailsRequired,
+                                            },
+                                          )}
+                                        >
+                                          <label
+                                            htmlFor={`tickets.${actualIndex}.lastName`}
+                                          >
+                                            Last Name
+                                          </label>
+                                          <Field
+                                            type="text"
+                                            name={`tickets.${actualIndex}.lastName`}
+                                            maxLength={40}
+                                            className={classNames({
+                                              [styles.inputError]:
+                                                formik.touched.tickets?.[
+                                                  actualIndex
+                                                ]?.lastName &&
+                                                formik.errors.tickets?.[
+                                                  actualIndex
+                                                ]?.lastName,
+                                            })}
+                                          />
+                                          {formik.touched.tickets?.[actualIndex]
+                                            ?.lastName &&
+                                            formik.errors.tickets?.[actualIndex]
+                                              ?.lastName && (
+                                              <div
+                                                className={styles.errorMessage}
+                                              >
+                                                {
+                                                  formik.errors.tickets[
+                                                    actualIndex
+                                                  ].lastName
+                                                }
+                                              </div>
+                                            )}
+                                        </div>
+
+                                        <div
+                                          className={classNames(
+                                            styles.formItem,
+                                            {
+                                              [styles.required]:
+                                                detailsRequired,
+                                            },
+                                          )}
+                                        >
+                                          <label
+                                            htmlFor={`tickets.${actualIndex}.email`}
+                                          >
+                                            Email Address
+                                          </label>
+                                          <Field
+                                            type="email"
+                                            name={`tickets.${actualIndex}.email`}
+                                            className={classNames({
+                                              [styles.inputError]:
+                                                formik.touched.tickets?.[
+                                                  actualIndex
+                                                ]?.email &&
+                                                formik.errors.tickets?.[
+                                                  actualIndex
+                                                ]?.email,
+                                            })}
+                                          />
+                                          {formik.touched.tickets?.[actualIndex]
+                                            ?.email &&
+                                            formik.errors.tickets?.[actualIndex]
+                                              ?.email && (
+                                              <div
+                                                className={styles.errorMessage}
+                                              >
+                                                {
+                                                  formik.errors.tickets[
+                                                    actualIndex
+                                                  ].email
+                                                }
+                                              </div>
+                                            )}
+                                        </div>
+
+                                        <div
+                                          className={classNames(
+                                            styles.formItem,
+                                            {
+                                              [styles.required]:
+                                                detailsRequired,
+                                            },
+                                          )}
+                                        >
+                                          <label
+                                            htmlFor={`tickets.${actualIndex}.contactPhone`}
+                                          >
+                                            Phone Number
+                                          </label>
+                                          <Field
+                                            type="tel"
+                                            name={`tickets.${actualIndex}.contactPhone`}
+                                            minLength={11}
+                                            maxLength={15}
+                                            className={classNames({
+                                              [styles.inputError]:
+                                                formik.touched.tickets?.[
+                                                  actualIndex
+                                                ]?.contactPhone &&
+                                                formik.errors.tickets?.[
+                                                  actualIndex
+                                                ]?.contactPhone,
+                                            })}
+                                          />
+                                          {formik.touched.tickets?.[actualIndex]
+                                            ?.contactPhone &&
+                                            formik.errors.tickets?.[actualIndex]
+                                              ?.contactPhone && (
+                                              <div
+                                                className={styles.errorMessage}
+                                              >
+                                                {
+                                                  formik.errors.tickets[
+                                                    actualIndex
+                                                  ].contactPhone
+                                                }
+                                              </div>
+                                            )}
+                                        </div>
+                                      </div>
                                     </div>
                                   </div>
-                                </div>
-                              </div>
-                            );
-                          })}
-                        </div>
-                      </>
-                    );
-                  })}
-                </div>
-                <button
-                  type="button"
-                  className="btn btn-submit"
-                  disabled={isButtonDisabled}
-                  onClick={() => handelSubmitData(false, ticketData)}
-                >
-                  Continue
-                </button>
-              </form>
+                                );
+                              })}
+                            </div>
+                          </React.Fragment>
+                        ))}
+                      </div>
+                      <button
+                        type="submit"
+                        className={styles.submitButton}
+                        disabled={
+                          detailsRequired &&
+                          (!formik.isValid ||
+                            formik.values.tickets.some(
+                              (ticket) =>
+                                !ticket.firstName ||
+                                !ticket.lastName ||
+                                !ticket.email ||
+                                !ticket.contactPhone,
+                            ))
+                        }
+                      >
+                        Continue
+                      </button>
+                    </Form>
+                  );
+                }}
+              </Formik>
             </div>
           </div>
         </div>

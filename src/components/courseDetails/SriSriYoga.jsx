@@ -296,7 +296,8 @@ export const SriSriYoga = ({ data, mode: courseViewMode, handleRegister }) => {
                   </h6>
                   <p className="program-experience__item-text">
                     Gain practical, life-enhancing yogic wisdom and insight into
-                    your mind-body well-being for greater health and vitality.{' '}
+                    your mind-body well-being for greater health and
+                    vitality.{' '}
                   </p>
                 </div>
                 <div className="program-experience__item">

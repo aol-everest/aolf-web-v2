@@ -23,8 +23,13 @@ export const CardUpdateRequired = () => {
   const router = useRouter();
   const { showAlert } = useGlobalAlertContext();
 
-  const { data: subsciptionCategories = [] } = useQuery({
-    queryKey: 'subsciption',
+  const {
+    data: subscription,
+    isLoading,
+    isError,
+    error,
+  } = useQuery({
+    queryKey: ['subscription'],
     queryFn: async () => {
       const response = await api.get({
         path: 'subsciption',
@@ -34,8 +39,8 @@ export const CardUpdateRequired = () => {
   });
 
   useEffect(() => {
-    if (!router.isReady || subsciptionCategories.length === 0) return;
-    const allSubscriptions = subsciptionCategories.reduce(
+    if (!router.isReady || subscription.length === 0) return;
+    const allSubscriptions = subscription.reduce(
       (accumulator, currentValue) => {
         return {
           ...accumulator,
@@ -48,7 +53,7 @@ export const CardUpdateRequired = () => {
       children: <CardUpdateRequiredModal allSubscriptions={allSubscriptions} />,
       title: 'Action required',
     });
-  }, [router.isReady, subsciptionCategories]);
+  }, [router.isReady, subscription]);
 
   return null;
 };

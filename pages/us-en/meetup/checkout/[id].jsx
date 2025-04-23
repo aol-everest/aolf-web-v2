@@ -41,7 +41,7 @@ const Checkout = (props) => {
     isError,
     error,
   } = useQuery({
-    queryKey: 'meetupDetail',
+    queryKey: ['meetupDetail', workshopId],
     queryFn: async () => {
       const response = await api.get({
         path: 'meetupDetail',
@@ -51,6 +51,7 @@ const Checkout = (props) => {
       });
       return response.data;
     },
+    enabled: !!workshopId,
   });
 
   const isReferBySameSite =

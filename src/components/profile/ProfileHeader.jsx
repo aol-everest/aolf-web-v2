@@ -212,7 +212,11 @@ export const ProfileHeader = ({
 
   return (
     <>
-      {subscriptions.map(subscriptionPanel)}
+      {subscriptions.map((subscription) => (
+        <div key={subscription.sfid || subscription.subscriptionMasterSfid}>
+          {subscriptionPanel(subscription)}
+        </div>
+      ))}
       {subscriptionBuyBtnPanel(
         userSubscriptions,
         showPurchaseMembershipModalAction,

@@ -52,7 +52,10 @@ const CourseTypeTile = ({ courseType }) => {
         <div className="course-desc">{courseType.description}</div>
         <div className="course-action">
           <Link href={findCourseAction()} legacyBehavior>
-            <a className="course-link" href="#">
+            <a
+              className={`${orgConfig.name === 'PWHT' ? 'course-link-pwht' : 'course-link'}`}
+              href="#"
+            >
               Find a course
             </a>
           </Link>
@@ -106,4 +109,5 @@ const Home = () => {
   );
 };
 Home.sideGetStartedAction = true;
+Home.hideFooter = orgConfig.name === 'PWHT' ?? false;
 export default Home;

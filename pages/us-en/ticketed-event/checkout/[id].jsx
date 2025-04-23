@@ -31,7 +31,7 @@ import dayjs from 'dayjs';
 import { DiscountInputNew } from '@components/discountInputNew';
 import { navigateToLogin } from '@utils';
 import { Loader } from '@components';
-import { pushRouteWithUTMQuery, replaceRouteWithUTMQuery } from '@service';
+import { pushRouteWithUTMQuery, returnRouteWithUTMQuery } from '@service';
 import { useQuery } from '@tanstack/react-query';
 import ErrorPage from 'next/error';
 import { PageLoading } from '@components';
@@ -39,6 +39,7 @@ import { ScheduleAgreementForm } from '@components/scheduleAgreementForm';
 import AttendeeDetails from './AttendeeDetails';
 import { FaChevronLeft } from 'react-icons/fa6';
 import { z } from 'zod';
+import CourseNotFoundError from '@components/errors/CourseNotFoundError';
 
 const ticketSchema = z.record(z.string(), z.number());
 
@@ -52,7 +53,7 @@ function TicketCheckout() {
     isError,
     error,
   } = useQuery({
-    queryKey: 'getTicketedEvent',
+    queryKey: ['getTicketedEvent', eventId],
     queryFn: async () => {
       const response = await api.get({
         path: 'getTicketedEvent',
@@ -64,6 +65,13 @@ function TicketCheckout() {
     },
     enabled: !!eventId,
   });
+
+  if (isError) {
+    if (error?.response?.data?.message === 'No Event found') {
+      return <CourseNotFoundError type="event" browseLink="/us-en/courses" />;
+    }
+    return <ErrorPage statusCode={500} title={error.message} />;
+  }
 
   if (isError) return <ErrorPage statusCode={500} title={error.message} />;
   if (isLoading || !router.isReady) return <PageLoading />;
@@ -245,6 +253,36 @@ const TicketCheckoutForm = ({ event }) => {
     navigateToLogin(router);
   };
 
+  const generateReturnUrl = (attendeeId) => {
+    const processPaymentLink = `/us-en/process-payment/${attendeeId}`;
+    let nextUrl = returnRouteWithUTMQuery(router, {
+      pathname: `/us-en/ticketed-event/thankyou/${attendeeId}`,
+      query: {
+        ctype: productTypeId,
+        page: 'ty',
+        referral: 'ticketed_event_checkout',
+      },
+    });
+
+    const previousUrl = returnRouteWithUTMQuery(router, {
+      pathname: `/us-en/ticketed-event/checkout/${productId}`,
+      query: {
+        ctype: productTypeId,
+        ticket: JSON.stringify(selectedTickets),
+      },
+    });
+
+    const returnUrl = `${
+      window.location.origin
+    }${processPaymentLink}?${queryString.stringify({
+      next: nextUrl,
+      previous: previousUrl,
+      stripeOrg: event.stripeOrg,
+    })}`;
+
+    return returnUrl;
+  };
+
   const completeEnrollmentAction = async (
     values,
     resetForm,
@@ -383,17 +421,8 @@ const TicketCheckoutForm = ({ event }) => {
             `/us-en/ticketed-event/thankyou/${data.orderId}`,
           );
         } else {
-          let filteredParams = {
-            ctype: productTypeId,
-            page: 'ty',
-            referral: 'ticketed_event_checkout',
-            ...filterAllowedParams(router.query),
-          };
-          const returnUrl = `${
-            window.location.origin
-          }/us-en/ticketed-event/thankyou/${data.orderId}?${queryString.stringify(
-            filteredParams,
-          )}`;
+          const returnUrl = generateReturnUrl(data.orderId);
+
           const result = await stripe.confirmPayment({
             //`Elements` instance that was used to create the Payment Element
             elements,

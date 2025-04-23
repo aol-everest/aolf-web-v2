@@ -676,7 +676,8 @@ export const SleepAnxietyProtocol = ({
                 “Wish I had learned this sooner!”
               </div>
               <div class="testimony-text">
-                “I can’t believe how easy it is to quiet my racing thoughts."{' '}
+                “I can’t believe how easy it is to quiet my racing
+                thoughts."{' '}
               </div>
             </div>
             <div class="testimonial-item">

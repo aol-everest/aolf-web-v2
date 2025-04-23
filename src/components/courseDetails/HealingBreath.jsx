@@ -73,7 +73,8 @@ export const HealingBreath = ({
                     <li>Reconnect to the joy in medicine</li>
                     <li>Boost energy & alertness</li>
                     <li>
-                      Cultivate inner calm & connectedness with self & others{' '}
+                      Cultivate inner calm & connectedness with self &
+                      others{' '}
                     </li>
                   </ul>
                 </div>
@@ -542,8 +543,44 @@ export const HealingBreath = ({
             </div>
 
             <div className="benefitted-orgs-list">
-              <div>
-                <img src="/img/hb-logos-new.png" width="1300" height="512" />
+              <div className="org-list-item">
+                <img src="/img/hb-logo-1.webp" width="188" height="67" />
+              </div>
+              <div className="org-list-item">
+                <img src="/img/hb-logo-2.webp" width="352" height="39" />
+              </div>
+              <div className="org-list-item">
+                <img src="/img/hb-logo-3.webp" width="156" height="68" />
+              </div>
+              <div className="org-list-item">
+                <img src="/img/hb-logo-4.webp" width="173" height="59" />
+              </div>
+              <div className="org-list-item">
+                <img src="/img/hb-logo-5.webp" width="349" height="40" />
+              </div>
+              <div className="org-list-item">
+                <img src="/img/hb-logo-6.webp" width="207" height="49" />
+              </div>
+              <div className="org-list-item">
+                <img src="/img/hb-logo-7.webp" width="262" height="43" />
+              </div>
+              <div className="org-list-item">
+                <img src="/img/hb-logo-8.webp" width="138" height="73" />
+              </div>
+              <div className="org-list-item">
+                <img src="/img/hb-logo-9.webp" width="214" height="38" />
+              </div>
+              <div className="org-list-item">
+                <img src="/img/hb-logo-10.webp" width="193" height="34" />
+              </div>
+              <div className="org-list-item">
+                <img src="/img/hb-logo-11.webp" width="186" height="67" />
+              </div>
+              <div className="org-list-item">
+                <img src="/img/hb-logo-12.webp" width="106" height="59" />
+              </div>
+              <div className="org-list-item">
+                <img src="/img/hb-logo-13.webp" width="183" height="60" />
               </div>
             </div>
           </div>

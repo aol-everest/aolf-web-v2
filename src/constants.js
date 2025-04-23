@@ -106,6 +106,8 @@ export const ALERT_TYPES = {
   WARNING_ALERT: 'WARNING_ALERT',
   CUSTOM_ALERT: 'CUSTOM_ALERT',
   NEW_ALERT: 'NEW_ALERT',
+  INLINE_ERROR_ALERT: 'INLINE_ERROR_ALERT',
+  INLINE_SUCCESS_ALERT: 'INLINE_SUCCESS_ALERT',
 };
 
 export const SHARE_SITES = {
@@ -307,9 +309,9 @@ export const COURSE_TYPES_MASTER = {
     {
       name: `Beginner's Courses`,
       courseTypes: {
-        SKY_BREATH_MEDITATION: {
-          slug: 'art-of-living-part-1',
-          name: 'Art of Living Part 1',
+        SKY_RESILIENCE: {
+          slug: 'sky-resilience',
+          name: 'SKY Resilience Training',
         },
       },
     },
@@ -417,7 +419,7 @@ export const COURSE_TYPES = {
     value: process.env.NEXT_PUBLIC_SKY_HAPPINESS_RETREAT_CTYPE || '',
   },
   SKY_RESILIENCE: {
-    slug: 'sky_resilience',
+    slug: 'sky-resilience',
     name: 'SKY Resilience Training',
     value: process.env.NEXT_PUBLIC_SKY_RESILIENCE_CTYPE || '',
     description:

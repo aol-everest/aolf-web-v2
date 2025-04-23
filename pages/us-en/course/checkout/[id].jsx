@@ -15,10 +15,13 @@ import {
   useGlobalAlertContext,
   useGlobalModalContext,
 } from '@contexts';
-import { useQueryString } from '@hooks';
-import { pushRouteWithUTMQuery, replaceRouteWithUTMQuery } from '@service';
+import { useQueryState, parseAsBoolean, parseAsString } from 'nuqs';
+import {
+  pushRouteWithUTMQuery,
+  replaceRouteWithUTMQuery,
+  returnRouteWithUTMQuery,
+} from '@service';
 import { Elements } from '@stripe/react-stripe-js';
-import { loadStripe } from '@stripe/stripe-js';
 import { api, convertToUpperCaseAndReplaceSpacesForURL } from '@utils';
 import dayjs from 'dayjs';
 import { NextSeo } from 'next-seo';
@@ -32,6 +35,8 @@ import { filterAllowedParams, removeNull } from '@utils/utmParam';
 import { PaymentFormNew } from '@components/paymentFormNew';
 import { orgConfig } from '@org';
 import { navigateToLogin } from '@utils';
+import { useStripeLoader } from '@hooks';
+import CourseNotFoundError from '@components/errors/CourseNotFoundError';
 
 const RetreatPrerequisiteWarning = ({ firstPreRequisiteFailedReason }) => {
   return (
@@ -57,29 +62,14 @@ const Checkout = () => {
   const router = useRouter();
   const { profile, isAuthenticated } = useAuth();
   const { id: workshopId, coupon, bundle } = router.query;
-  const [mbsy_source] = useQueryString('mbsy_source', {
-    defaultValue: null,
-  });
-  const [campaignid] = useQueryString('campaignid', {
-    defaultValue: null,
-  });
-  const [sourceBundle] = useQueryString('source-bundle', {
-    defaultValue: null,
-  });
-  const [mbsy] = useQueryString('mbsy', {
-    defaultValue: null,
-  });
-  const { showAlert, hideAlert } = useGlobalAlertContext();
-  const { showModal } = useGlobalModalContext();
-  const [showTopMessage, setShowTopMessage] = useState(false);
-  const [loading, setLoading] = useState(true);
-  const [comboProductSfid, setComboProductSfid] = useState('');
-  const { track, page } = useAnalytics();
-  const [validateDiscount, setValidateDiscount] = useState(false);
-
-  const handleValidateDiscount = (isValid) => {
-    setValidateDiscount(isValid);
-  };
+  const [mbsy_source] = useQueryState('mbsy_source', parseAsString);
+  const [campaignid] = useQueryState('campaignid', parseAsString);
+  const [sourceBundle] = useQueryState('source-bundle', parseAsString);
+  const [mbsy] = useQueryState('mbsy', parseAsString);
+  const [isOldCheckout] = useQueryState(
+    'isOldCheckout',
+    parseAsBoolean.withDefault(false),
+  );
 
   const {
     data: workshop,
@@ -87,7 +77,7 @@ const Checkout = () => {
     isError,
     error,
   } = useQuery({
-    queryKey: 'workshopDetail',
+    queryKey: ['workshopDetail', workshopId, bundle],
     queryFn: async () => {
       let param = {
         id: workshopId,
@@ -108,6 +98,23 @@ const Checkout = () => {
     enabled: !!workshopId,
   });
 
+  const stripePromise = useStripeLoader(workshop?.publishableKey);
+
+  // Add check for valid stripe initialization
+  const isStripeReady = !!stripePromise;
+
+  const { showAlert, hideAlert } = useGlobalAlertContext();
+  const { showModal } = useGlobalModalContext();
+  const [showTopMessage, setShowTopMessage] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [comboProductSfid, setComboProductSfid] = useState('');
+  const { track, page } = useAnalytics();
+  const [validateDiscount, setValidateDiscount] = useState(false);
+
+  const handleValidateDiscount = (isValid) => {
+    setValidateDiscount(isValid);
+  };
+
   useEffect(() => {
     if (workshop && !isAuthenticated && !workshop.isGuestCheckoutEnabled) {
       router.push(
@@ -118,6 +125,32 @@ const Checkout = () => {
       setLoading(false);
     }, 2000);
     if (!workshop) return;
+
+    if (
+      workshop.isInitialRequisiteCompleted === false &&
+      workshop.initialBusinessRules.length > 0
+    ) {
+      const reason = workshop.initialBusinessRules[0];
+
+      showAlert(ALERT_TYPES.CUSTOM_ALERT, {
+        className: 'retreat-prerequisite-big',
+        title: 'Prerequisite',
+        closeModalAction: closeRetreatPrerequisiteWarning(reason),
+        footer: () => {
+          return (
+            <button
+              className="btn-secondary"
+              onClick={closeRetreatPrerequisiteWarning(reason)}
+            >
+              {reason.actionButtonText}
+            </button>
+          );
+        },
+        children: (
+          <RetreatPrerequisiteWarning firstPreRequisiteFailedReason={reason} />
+        ),
+      });
+    }
 
     if (workshop?.bundleInfo) {
       workshop.listPrice = workshop?.bundleInfo.comboListPrice;
@@ -254,6 +287,8 @@ const Checkout = () => {
     }
   }, [profile, workshop]);
 
+  const businessOrg = workshop?.businessOrg || 'AOL';
+
   const closeRetreatPrerequisiteWarning =
     (firstPreRequisiteFailedReason) => (e) => {
       if (e) e.preventDefault();
@@ -291,22 +326,33 @@ const Checkout = () => {
 
   const enrollmentCompletionLink = ({ attendeeId }) => {
     const title = convertToUpperCaseAndReplaceSpacesForURL(workshop.title);
-    let filteredParams = {
-      ctype: workshop.productTypeId,
-      comboId: comboProductSfid,
-      page: 'ty',
-      referral: 'course_checkout',
-      type: `local${mbsy_source ? '&mbsy_source=' + mbsy_source : ''}`,
-      campaignid,
-      mbsy,
-      ...filterAllowedParams(router.query),
-    };
-    filteredParams = removeNull(filteredParams);
+    const processPaymentLink = `/us-en/process-payment/${attendeeId}`;
+    const nextUrl = returnRouteWithUTMQuery(router, {
+      pathname: `/us-en/course/thankyou/${attendeeId}`,
+      query: {
+        ctype: workshop.productTypeId,
+        comboId: comboProductSfid,
+        page: 'ty',
+        referral: 'course_checkout',
+        type: `local${mbsy_source ? '&mbsy_source=' + mbsy_source : ''}`,
+        campaignid,
+        mbsy,
+      },
+    });
+    const previousUrl = returnRouteWithUTMQuery(router, {
+      pathname: `/us-en/course/checkout/${workshopId}`,
+      query: {
+        ctype: workshop.productTypeId,
+        comboId: comboProductSfid,
+      },
+    });
     const returnUrl = `${
       window.location.origin
-    }/us-en/course/thankyou/${attendeeId}?${queryString.stringify(
-      filteredParams,
-    )}`;
+    }${processPaymentLink}?${queryString.stringify({
+      next: nextUrl,
+      previous: previousUrl,
+      stripeOrg: workshop.stripeOrg,
+    })}`;
     return returnUrl;
   };
 
@@ -322,18 +368,15 @@ const Checkout = () => {
     }
   };
 
-  if (isError) return <ErrorPage statusCode={500} title={error.message} />;
+  if (isError) {
+    if (error?.response?.data?.message === 'No Workshop found') {
+      return <CourseNotFoundError />;
+    }
+    return <ErrorPage statusCode={500} title={error.message} />;
+  }
   if (isLoading || !workshopId) return <PageLoading />;
 
-  const stripePromise = loadStripe(workshop.publishableKey);
-
   const isHealingBreath = orgConfig.name === 'HB';
-
-  const isSKYType =
-    COURSE_TYPES.SKY_BREATH_MEDITATION.value.indexOf(workshop.productTypeId) >=
-    0;
-  const isSilentRetreatType =
-    COURSE_TYPES.SILENT_RETREAT.value.indexOf(workshop.productTypeId) >= 0;
 
   const isSkyHappinessRetreat =
     COURSE_TYPES.SKY_HAPPINESS_RETREAT.value.indexOf(workshop.productTypeId) >=
@@ -341,10 +384,10 @@ const Checkout = () => {
 
   const isStripeIntentPayment = !!workshop.isStripeIntentPaymentEnabled;
 
-  const isHBCheckoutPage = isHealingBreath;
+  const isHBCheckoutPage = businessOrg === 'HB';
 
   const renderPaymentForm = () => {
-    if (isHBCheckoutPage) {
+    if (isOldCheckout) {
       return (
         <div className="order hb-checkout-page">
           <PaymentFormHB
@@ -356,6 +399,7 @@ const Checkout = () => {
             handleCouseSelection={handleCouseSelection}
             login={login}
             isLoggedUser={isAuthenticated}
+            onValidateDiscount={handleValidateDiscount}
           />
         </div>
       );
@@ -388,6 +432,7 @@ const Checkout = () => {
           login={login}
           isLoggedUser={isAuthenticated}
           onValidateDiscount={handleValidateDiscount}
+          isHBForm={isHBCheckoutPage}
         />
       </div>
     );
@@ -532,10 +577,10 @@ const Checkout = () => {
         )}
 
         <section
-          className={isHBCheckoutPage || isSkyHappinessRetreat ? 'order' : ''}
+          className={isOldCheckout || isSkyHappinessRetreat ? 'order' : ''}
         >
           <div className="container">
-            {(isHBCheckoutPage || isSkyHappinessRetreat) && (
+            {(isOldCheckout || isSkyHappinessRetreat) && (
               <>
                 <h1 className="title">{workshop.title}</h1>
                 {workshop.isGenericWorkshop ? (
@@ -565,23 +610,33 @@ const Checkout = () => {
                 </h1>
               </div>
             )}
-            {isStripeIntentPayment && (
-              <Elements stripe={stripePromise} options={elementsOptions}>
-                {renderPaymentForm()}
-              </Elements>
+            {isStripeReady && (
+              <>
+                {isStripeIntentPayment && (
+                  <Elements stripe={stripePromise} options={elementsOptions}>
+                    {renderPaymentForm()}
+                  </Elements>
+                )}
+                {!isStripeIntentPayment && (
+                  <Elements
+                    stripe={stripePromise}
+                    fonts={[
+                      {
+                        cssSrc:
+                          'https://fonts.googleapis.com/css2?family=Work+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap',
+                      },
+                    ]}
+                  >
+                    {renderPaymentForm()}
+                  </Elements>
+                )}
+              </>
             )}
-            {!isStripeIntentPayment && (
-              <Elements
-                stripe={stripePromise}
-                fonts={[
-                  {
-                    cssSrc:
-                      'https://fonts.googleapis.com/css2?family=Work+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap',
-                  },
-                ]}
-              >
-                {renderPaymentForm()}
-              </Elements>
+
+            {!isStripeReady && (
+              <div className="tw-p-4 tw-text-center tw-text-red-600">
+                Unable to initialize payment system. Please try again later.
+              </div>
             )}
           </div>
         </section>

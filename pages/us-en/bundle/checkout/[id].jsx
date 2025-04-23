@@ -38,7 +38,7 @@ const Checkout = () => {
     isError,
     error,
   } = useQuery({
-    queryKey: 'getBundleDetail',
+    queryKey: ['getBundleDetail', bundleId],
     queryFn: async () => {
       let param = {
         bundleSfid: bundleId,

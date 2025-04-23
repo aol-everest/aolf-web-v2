@@ -76,12 +76,8 @@ export const BackendPaymentForm = ({
   const stripe = useStripe();
   const elements = useElements();
 
-  const {
-    data: corporates,
-    isLoading,
-    error,
-  } = useQuery({
-    queryKey: 'corporates',
+  const { data: corporates = [] } = useQuery({
+    queryKey: ['corporates'],
     queryFn: async () => {
       const response = await api.get({
         path: 'getCorporates',

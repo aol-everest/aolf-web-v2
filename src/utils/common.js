@@ -382,7 +382,7 @@ export function navigateToLogin(router, next) {
   router.push({
     pathname: '/us-en/signin',
     query: {
-      next: next || getFullPathWithQueryParams(router),
+      next: next || '/us-en/profile/landing', // getFullPathWithQueryParams(router),
     },
   });
 }
@@ -763,31 +763,132 @@ export const getParentDomain = () => {
 };
 
 export const clearAuthCookies = async () => {
+  console.log('Starting clearAuthCookies...');
+  let deletedCookies = [];
+  let failedCookies = [];
+
   try {
     const PARENT_DOMAIN = getParentDomain();
     const allCookies = Cookies.get();
-    const poolId = process.env.NEXT_PUBLIC_COGNITO_CLIENT_ID; // Assuming currentPoolId is defined
-    const regex = new RegExp(
-      `^(CognitoIdentityServiceProvider|Passwordless)\\.(?!${poolId}\\b).+$`,
-    );
+    const poolId = process.env.NEXT_PUBLIC_COGNITO_CLIENT_ID;
+
+    // Match any Cognito, Passwordless, or amplify-related cookies
+    const regexPatterns = [
+      new RegExp(
+        `^(CognitoIdentityServiceProvider|Passwordless)\\.(?!${poolId}\\b).+$`,
+      ),
+      new RegExp(`^(CognitoIdentityServiceProvider|Passwordless)\\.${poolId}`),
+      // Add specific pattern for Google OAuth cookies
+      new RegExp(`^CognitoIdentityServiceProvider\\.${poolId}\\.google_.*`),
+      new RegExp('^amplify-signin-with-hostedUI'),
+      new RegExp('^LastAuthUser'),
+      new RegExp('^aws\\.cognito\\.'),
+    ];
 
     const cookieNames = Object.keys(allCookies).filter((cookieName) =>
-      regex.test(cookieName),
+      regexPatterns.some((regex) => regex.test(cookieName)),
     );
 
+    console.log('Found cookies to delete:', cookieNames);
+
+    // Remove cookies from both root and current path
+    const paths = ['/', window.location.pathname];
+    const domains = [PARENT_DOMAIN, window.location.hostname, undefined];
+
     await Promise.all(
-      cookieNames.map(async (cookieName) => {
-        try {
-          console.log(
-            `Removing cookie: ${cookieName}, Value: ${allCookies[cookieName]}`,
-          );
-          Cookies.remove(cookieName, { path: '/', domain: PARENT_DOMAIN });
-        } catch (error) {
-          console.error(`Failed to remove cookie: ${cookieName}`, error);
-        }
+      cookieNames.flatMap(async (cookieName) => {
+        return paths.flatMap((path) =>
+          domains.map(async (domain) => {
+            try {
+              console.log(`Attempting to remove cookie: ${cookieName}`, {
+                path,
+                domain,
+                value: allCookies[cookieName],
+              });
+
+              // Try removing with current configuration
+              Cookies.remove(cookieName, { path, domain });
+
+              // For Google OAuth related cookies, try additional removal methods
+              if (cookieName.includes('google_')) {
+                // Try removing without domain
+                Cookies.remove(cookieName, { path });
+                // Try removing with specific attributes
+                document.cookie = `${cookieName}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=${path}${domain ? `; domain=${domain}` : ''}`;
+              }
+
+              deletedCookies.push({ name: cookieName, path, domain });
+            } catch (error) {
+              console.error(
+                `Failed to remove cookie: ${cookieName} from path: ${path}, domain: ${domain}`,
+                error,
+              );
+              failedCookies.push({
+                name: cookieName,
+                path,
+                domain,
+                error: error.message,
+              });
+            }
+          }),
+        );
       }),
     );
+
+    // Clear any localStorage items related to auth
+    try {
+      const authKeys = Object.keys(localStorage).filter(
+        (key) =>
+          key.includes('CognitoIdentityServiceProvider') ||
+          key.includes('Passwordless') ||
+          key.includes('amplify-signin-with-hostedUI') ||
+          key.includes('google_') ||
+          key.includes('LastAuthUser'),
+      );
+
+      console.log('Found localStorage items to delete:', authKeys);
+
+      authKeys.forEach((key) => {
+        try {
+          localStorage.removeItem(key);
+          deletedCookies.push({ type: 'localStorage', name: key });
+        } catch (error) {
+          failedCookies.push({
+            type: 'localStorage',
+            name: key,
+            error: error.message,
+          });
+        }
+      });
+    } catch (error) {
+      console.error('Error clearing localStorage:', error);
+      failedCookies.push({ type: 'localStorage', error: error.message });
+    }
+
+    // Final status report
+    console.log('clearAuthCookies completed', {
+      success: true,
+      deletedItems: deletedCookies,
+      failedItems: failedCookies,
+      remainingCookies: Cookies.get(),
+    });
+
+    // Double-check if any target cookies still exist
+    const remainingAuthCookies = Object.keys(Cookies.get()).filter(
+      (cookieName) => regexPatterns.some((regex) => regex.test(cookieName)),
+    );
+
+    if (remainingAuthCookies.length > 0) {
+      console.warn(
+        'Some auth cookies still remain after cleanup:',
+        remainingAuthCookies,
+      );
+    }
   } catch (error) {
-    console.error('Error clearing auth cookies:', error);
+    console.error('Error in clearAuthCookies:', error, {
+      deletedItems: deletedCookies,
+      failedItems: failedCookies,
+    });
+    throw error;
   }
 };
