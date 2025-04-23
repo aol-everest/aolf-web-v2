@@ -104,7 +104,7 @@ const AOL_MENU = [
       },
       {
         name: 'Meditation',
-        link: 'https://event.us.artofliving.org/us-en/secrets-of-meditation2/lp1/',
+        link: 'https://www.artofliving.org/us-en/secrets-of-meditation',
       },
     ],
   },
