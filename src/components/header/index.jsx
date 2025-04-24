@@ -104,7 +104,7 @@ const AOL_MENU = [
       },
       {
         name: 'Meditation',
-        link: 'https://www.artofliving.org/us-en/secrets-of-meditation',
+        link: 'https://event.us.artofliving.org/us-en/secrets-of-meditation2/lp1/',
       },
     ],
   },
@@ -156,7 +156,7 @@ const AOL_MENU = [
           },
           {
             name: 'Sahaj Samadhi Meditation',
-            link: `https://www.artofliving.org/us-en/sahajsamadhi`,
+            link: `https://event.us.artofliving.org/us-en/sahajsamadhi`,
           },
           {
             name: 'Art Of Living Premium',
@@ -164,11 +164,11 @@ const AOL_MENU = [
           },
           {
             name: 'Sri Sri Yoga Foundation',
-            link: 'https://www.artofliving.org/us-en/srisriyoga-foundation-program',
+            link: '/us-en/lp/online-foundation-program?utm_source=organic&utm_medium=home&utm_content=menu&course_id=1004431',
           },
           {
             name: 'Sleep and Anxiety Protocol',
-            link: 'https://www.artofliving.org/us-en/sleep-anxiety-protocol',
+            link: 'https://event.us.artofliving.org/us-en/lp1/sleep-anxiety-protocol',
           },
         ],
       },
