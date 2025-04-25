@@ -128,14 +128,14 @@ const PreferredCenterComp = ({ item }) => {
               <div
                 className={`course-type ${isOnline ? 'online' : 'in-person'}`}
               >
-                {mode}
+                {isOnline ? mode : COURSE_MODES.IN_PERSON.name}
               </div>
               <div className="course-type duration">
                 {getCourseDuration(eventStartDate, eventEndDate, eventTimeZone)}
               </div>
             </div>
           </div>
-          {mode !== 'Online' && locationCity && (
+          {!isOnline && locationCity && (
             <div className="course-location">
               {concatenateStrings([
                 locationStreet,
@@ -182,14 +182,14 @@ const PreferredCenterComp = ({ item }) => {
               <div
                 className={`course-type ${isOnline ? 'online' : 'in-person'}`}
               >
-                {mode}
+                {isOnline ? mode : COURSE_MODES.IN_PERSON.name}
               </div>
               <div className="course-type duration">
                 {getMeetupDurationTop(item, updateMeetupDuration)}
               </div>
             </div>
           </div>
-          {mode !== 'Online' && locationCity && (
+          {!isOnline && locationCity && (
             <div className="course-location">
               {concatenateStrings([
                 locationStreet,
@@ -224,14 +224,14 @@ const PreferredCenterComp = ({ item }) => {
               <div
                 className={`course-type ${isOnline ? 'online' : 'in-person'}`}
               >
-                {mode}
+                {isOnline ? mode : COURSE_MODES.IN_PERSON.name}
               </div>
               <div className="course-type duration">
                 {getCourseDuration(eventStartDate, eventEndDate, eventTimeZone)}
               </div>
             </div>
           </div>
-          {mode !== 'Online' && locationCity && (
+          {!isOnline && locationCity && (
             <div className="course-location">
               {concatenateStrings([
                 locationStreet,
@@ -333,7 +333,7 @@ const UpcomingEventsComp = ({ item }) => {
                     <div
                       className={`course-type ${isOnline ? 'online' : 'in-person'}`}
                     >
-                      {mode}
+                      {isOnline ? mode : COURSE_MODES.IN_PERSON.name}
                     </div>
                   </div>
                 </div>
@@ -405,7 +405,7 @@ const UpcomingEventsComp = ({ item }) => {
                     <div
                       className={`course-type ${isOnline ? 'online' : 'in-person'}`}
                     >
-                      {mode}
+                      {isOnline ? mode : COURSE_MODES.IN_PERSON.name}
                     </div>
                   </div>
                 </div>
@@ -481,12 +481,12 @@ const UpcomingEventsComp = ({ item }) => {
                     <div
                       className={`course-type ${isOnline ? 'online' : 'in-person'}`}
                     >
-                      {mode}
+                      {isOnline ? mode : COURSE_MODES.IN_PERSON.name}
                     </div>
                   </div>
                 </div>
 
-                {mode !== 'Online' && locationCity && (
+                {!isOnline && locationCity && (
                   <div className="course-location">
                     {concatenateStrings([
                       locationStreet,
@@ -594,14 +594,14 @@ const RecommendedCourses = ({ item }) => {
         <div className="course-title-duration">
           <div className="course-title">{title}</div>
           <div className={`course-type ${isOnline ? 'online' : 'in-person'}`}>
-            {mode}
+            {isOnline ? mode : COURSE_MODES.IN_PERSON.name}
           </div>
         </div>
         <div className="course-price">
           <span>${unitPrice}</span>
         </div>
       </div>
-      {mode !== 'Online' && locationCity && (
+      {!isOnline && locationCity && (
         <div className="course-location">
           {concatenateStrings([
             locationStreet,
