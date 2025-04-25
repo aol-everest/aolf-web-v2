@@ -298,8 +298,11 @@ const GuidedMeditation = () => {
     'level',
     customParseEnum(LEVELS),
   );
+  const [selectedMeditationId, setSelectedMeditationId] =
+    useQueryState('meditation');
   const [selectedMeditation, setSelectedMeditation] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [manuallySelectedId, setManuallySelectedId] = useState(null);
   const router = useRouter();
   const { id: rootFolderID } = router.query;
   const { isAuthenticated } = useAuth();
@@ -324,8 +327,9 @@ const GuidedMeditation = () => {
     },
   });
 
-  const meditateClickHandle = async (e, meditate) => {
-    if (e) e.preventDefault();
+  const meditateClickHandle = async (meditate) => {
+    // Set manually selected ID to prevent infinite loop with useEffect
+    setManuallySelectedId(meditate.id);
 
     // Get the correct video URL based on the available data
     let videoUrl = null;
@@ -336,14 +340,12 @@ const GuidedMeditation = () => {
       videoUrl = `https:${meditate.track.file.url}`;
     }
 
-    console.log('Video URL:', videoUrl);
-
     // Store the selected meditation for context with the correct video URL
+    setSelectedMeditationId(meditate.id);
     setSelectedMeditation({
       ...meditate,
       videoUrl,
     });
-    console.log('meditate', meditate);
 
     if (
       meditate.contentType === 'Audio' ||
@@ -400,6 +402,27 @@ const GuidedMeditation = () => {
       document.removeEventListener('keydown', handleEscapeKey);
     };
   }, [isModalOpen]);
+
+  // Play meditation on page load if selectedMeditationId is present in query params
+  useEffect(() => {
+    if (
+      selectedMeditationId &&
+      guidedMeditations.length > 0 &&
+      selectedMeditationId !== manuallySelectedId
+    ) {
+      const meditation = guidedMeditations.find(
+        (m) => m.id === selectedMeditationId,
+      );
+      if (meditation) {
+        meditateClickHandle(meditation);
+      }
+    }
+  }, [
+    selectedMeditationId,
+    guidedMeditations,
+    meditateClickHandle,
+    manuallySelectedId,
+  ]);
 
   return (
     <main className="free-guided-meditations">
@@ -509,7 +532,7 @@ const GuidedMeditation = () => {
                     : `/img/ds-course-preview-${(index % 7) + 1}.webp`
                 }
                 title={item.title || 'Guided Meditation'}
-                onClick={() => meditateClickHandle(null, item)}
+                onClick={() => meditateClickHandle(item)}
               />
             ))}
           </div>
