@@ -53,9 +53,9 @@ export function AddonProduct({ addOnProducts = [], formikProps, cmeAddOn }) {
                 />
                 <label
                   htmlFor={product.productSfid}
-                  className="tw-flex tw-justify-between tw-w-full"
+                  className="tw-flex tw-w-full"
                 >
-                  <span>{product.productName}</span>
+                  <span className="tw-mr-2">{product.productName}</span>
                   <span className="tw-font-medium">${product.unitPrice}</span>
                 </label>
               </>
