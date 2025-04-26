@@ -1,12 +1,12 @@
 /* eslint-disable react/no-unescaped-entities */
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { motion } from 'framer-motion';
 import YouTube from 'react-youtube';
 import { useRouter } from 'next/router';
 import {
   extractFacebookVideoId,
   extractInstagramVideoId,
-  extractVideoId,
+  extractVideoIdAndStartTime,
 } from '@utils';
 import FacebookVideo from '@components/facebookVideo';
 import InstagramVideo from '@components/instagramVideo';
@@ -14,11 +14,7 @@ import { Accordion, Button } from 'react-bootstrap';
 
 export const VideoItemComp = (props) => {
   const { video, playingId, onPlayAction } = props;
-  // const [isInitialPlaying, setInitialPlaying] = useState(false);
-  // const [isReady, setReady] = useState(false);
-  const [player, setPlayer] = useState(null);
-  // const [playerState, setPlayerState] = useState(null);
-  const opts = {
+  const [playerVars, setPlayerVars] = useState({
     height: '100%',
     width: '100%',
     playerVars: {
@@ -35,16 +31,42 @@ export const VideoItemComp = (props) => {
       listType: 'playlist',
       start: 0,
     },
-  };
+  });
+  // const [isInitialPlaying, setInitialPlaying] = useState(false);
+  // const [isReady, setReady] = useState(false);
+  const [player, setPlayer] = useState(null);
+  // const [playerState, setPlayerState] = useState(null);
 
   const facebookView = video.includes('www.facebook.com');
   const instagramView = video.includes('www.instagram.com');
 
-  const videoId = facebookView
-    ? extractFacebookVideoId(video)
+  const { videoId, start } = facebookView
+    ? { videoId: extractFacebookVideoId(video), start: 0 }
     : instagramView
-      ? extractInstagramVideoId(video)
-      : extractVideoId(video);
+      ? { videoId: extractInstagramVideoId(video), start: 0 }
+      : extractVideoIdAndStartTime(video);
+
+  useEffect(() => {
+    setPlayerVars({
+      height: '100%',
+      width: '100%',
+      playerVars: {
+        version: 3,
+        controls: 1,
+        playerapiid: 'ytplayer',
+        color: 'white',
+        enablejsapi: 1,
+        mute: 1,
+        showinfo: 0,
+        rel: 0,
+        playsinline: 1,
+        iv_load_policy: 3,
+        listType: 'playlist',
+        start: start,
+      },
+    });
+  }, [start]);
+
   const onReady = (event) => {
     setPlayer(event.target);
     // setReady(true);
@@ -105,7 +127,7 @@ export const VideoItemComp = (props) => {
       <YouTube
         videoId={videoId}
         loading="loading"
-        opts={opts}
+        opts={playerVars}
         onReady={onReady}
         onPlay={onPlay}
         className="youtube-iframe"
@@ -257,15 +279,12 @@ const SearchResult = React.forwardRef(function SearchResult(
                             </div>
                             <div class="tab-content-action">
                               <button
-                                class="tc-action-btn"
-                                id="share-button"
-                                onClick={handleShare}
-                              >
-                                <span class="icon-aol iconaol-export"></span>
-                              </button>
-                              <button
                                 class="tc-action-btn copy-btn"
-                                onClick={() => copyToClipboard(data?.answer)}
+                                onClick={() =>
+                                  copyToClipboard(
+                                    isSourceUrl ? data.source : data?.answer,
+                                  )
+                                }
                               >
                                 <span class="icon-aol iconaol-copy"></span>
                               </button>

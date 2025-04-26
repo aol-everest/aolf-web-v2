@@ -403,6 +403,18 @@ export const extractVideoId = (url) => {
   return match ? match[1] : null;
 };
 
+export function extractVideoIdAndStartTime(url) {
+  const videoIdMatch = url.match(
+    /(?:youtube\.com\/(?:[^/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?/\s]{11})/,
+  );
+  const timeMatch = url.match(/[?&]t=([\d.]+)s?/);
+
+  const videoId = videoIdMatch ? videoIdMatch[1] : null;
+  const start = timeMatch ? parseFloat(timeMatch[1]) : 0; // if no time, start at 0
+
+  return { videoId, start };
+}
+
 export const extractFacebookVideoId = (url) => {
   const urlObj = new URL(url);
   return urlObj.searchParams.get('v');
