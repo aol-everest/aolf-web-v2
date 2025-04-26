@@ -213,7 +213,10 @@ export const ProfileHeader = ({
   return (
     <>
       {subscriptions.map((subscription) => (
-        <div key={subscription.sfid || subscription.subscriptionMasterSfid}>
+        <div
+          key={subscription.sfid || subscription.subscriptionMasterSfid}
+          className="subscription-container"
+        >
           {subscriptionPanel(subscription)}
         </div>
       ))}
