@@ -403,9 +403,9 @@ export default function AttendeeDetails({
                                             Phone Number
                                           </label>
                                           <Field
-                                            type="tel"
+                                            type="text"
                                             name={`tickets.${actualIndex}.contactPhone`}
-                                            minLength={11}
+                                            minLength={10}
                                             maxLength={15}
                                             className={classNames({
                                               [styles.inputError]:
