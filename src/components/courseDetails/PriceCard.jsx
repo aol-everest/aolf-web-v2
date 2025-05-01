@@ -175,7 +175,7 @@ export const PriceCard = ({
               {isUsableCreditAvailable && (
                 <span className="content">
                   ${UpdatedFeeAfterCredits}&nbsp;
-                  {delfee && (
+                  {delfee && UpdatedFeeAfterCredits !== delfee && (
                     <span className="actual-price">
                       <strike>${delfee}</strike>
                     </span>
@@ -185,7 +185,7 @@ export const PriceCard = ({
               {!isUsableCreditAvailable && (
                 <span className="content">
                   ${fee}&nbsp;
-                  {delfee && (
+                  {delfee && fee !== delfee && (
                     <span className="actual-price">
                       <strike>${delfee}</strike>
                     </span>
@@ -198,7 +198,7 @@ export const PriceCard = ({
               {isUsableCreditAvailable && (
                 <>
                   ${UpdatedFeeAfterCredits}
-                  {delfee && (
+                  {delfee && UpdatedFeeAfterCredits !== delfee && (
                     <span className="actual-price">
                       <strike>${delfee}</strike>
                     </span>
@@ -208,7 +208,7 @@ export const PriceCard = ({
               {!isUsableCreditAvailable && (
                 <>
                   ${fee}
-                  {delfee && (
+                  {delfee && fee !== delfee && (
                     <span className="actual-price">
                       <strike>${delfee}</strike>
                     </span>
