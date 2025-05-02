@@ -830,6 +830,11 @@
   border-radius: 32px;
   padding: 6px;
   box-shadow: 4px 6px 25.1000003815px 0px rgba(110, 107, 104, 0.1411764706);
+  @media screen and (min-width: 991px) {
+    max-height: calc(100dvh - 50px);
+    position: sticky;
+    top: 10px;
+  }
 }
 .tickets-modal__right-column {
   display: flex;
