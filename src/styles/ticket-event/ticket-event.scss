@@ -388,9 +388,12 @@
         font-weight: 400;
         width: 100%;
         word-break: break-all;
-        max-height: 100px;
+        max-height: 300px;
         overflow-y: auto;
         padding: 0;
+        @media screen and (max-width: 990px) {
+          max-height: 200px;
+        }
       }
     }
   }
@@ -1189,9 +1192,12 @@
         font-weight: 400;
         width: 100%;
         word-break: break-all;
-        max-height: 100px;
+        max-height: 300px;
         overflow-y: auto;
         padding: 0;
+        @media screen and (max-width: 990px) {
+          max-height: 200px;
+        }
       }
     }
   }
