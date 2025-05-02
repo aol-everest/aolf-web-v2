@@ -31,7 +31,8 @@
       "@constants": ["src/constants"],
       "@contexts": ["src/contexts"],
       "@service": ["src/service"],
-      "@org": ["src/organization-config"]
+      "@org": ["src/organization-config"],
+      "@config/*": ["src/config/*"]
     }
   },
   "include": ["next-env.d.js", "**/*.js", "**/*.jsx"],

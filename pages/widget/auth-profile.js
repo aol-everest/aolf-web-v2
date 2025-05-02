@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { useAuth } from '@contexts';
 import { orgConfig } from '@org';
-import { AOL_MENU, HB_MENU, IAHV_MENU, PWHT_MENU } from '@constants';
+import { AOL_MENU, IAHV_MENU, PWHT_MENU, HB_MENU } from '@config/navigation';
 
 const ALLOWED_ORIGIN_REGEX = /^https:\/\/([a-z0-9-]+\.)*artofliving\.org$/i;
 
