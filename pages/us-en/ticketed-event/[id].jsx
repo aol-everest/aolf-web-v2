@@ -538,6 +538,7 @@ function TicketedEvent() {
                                     : total
                                 }
                                 selectedTickets={selectedTickets}
+                                formikProps={formikProps}
                               />
                             </div>
                           </>

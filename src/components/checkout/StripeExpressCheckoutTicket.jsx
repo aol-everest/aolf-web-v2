@@ -20,6 +20,7 @@ export const StripeExpressCheckoutTicket = ({
   selectedTickets,
   nextPageUrl = '/us-en/ticketed-event/thankyou',
   discountResponse,
+  formikProps,
 }) => {
   const stripePromise = loadStripe(workshop.publishableKey);
   const elementsOptions = {
@@ -42,6 +43,7 @@ export const StripeExpressCheckoutTicket = ({
         selectedTickets={selectedTickets}
         nextPageUrl={nextPageUrl}
         discountResponse={discountResponse}
+        formikProps={formikProps}
       />
     </Elements>
   );
@@ -65,6 +67,7 @@ const CheckoutPage = ({
   selectedTickets,
   nextPageUrl,
   discountResponse,
+  formikProps,
 }) => {
   const stripe = useStripe();
   const elements = useElements();
@@ -105,6 +108,14 @@ const CheckoutPage = ({
         };
       });
 
+      const complianceQuestionnaire = formikProps.values.questionnaire.reduce(
+        (res, current) => ({
+          ...res,
+          [current.key]: current.value ? 'Yes' : 'No',
+        }),
+        {},
+      );
+
       const {
         stripeIntentObj,
         status,
@@ -120,6 +131,7 @@ const CheckoutPage = ({
               productSfId: workshop.id,
               productType: 'ticketed_event',
             },
+            complianceQuestionnaire,
             tickets,
             isStripeIntentPayment: true,
             utmParams: filteredParams,
