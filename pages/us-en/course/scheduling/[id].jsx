@@ -690,8 +690,10 @@ const SchedulingPaymentForm = ({
                         <div className="payment-total-box">
                           <label>Total:</label>
                           <div className="amount">
-                            {delfee && <s>${delfee}</s>} $
-                            {fee.toFixed(2) || '0'}
+                            {delfee && (delfee !== fee || delfee > fee) && (
+                              <s>${delfee}</s>
+                            )}
+                            ${fee.toFixed(2) || '0'}
                           </div>
                         </div>
                         <div className="payment-details">
