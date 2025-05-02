@@ -94,10 +94,16 @@ const WorkShopTile = ({ workshop }) => {
     listPrice,
     productTypeId,
     title,
+    eventPricing,
   } = workshop || {};
   const router = useRouter();
   const getCourseDeration = () => {
-    return <>{`${dayjs.utc(eventStartDate).format('DD MMM')}`}</>;
+    const start = dayjs.utc(eventStartDate);
+    const end = dayjs.utc(eventEndDate);
+    if (start.isSame(end, 'day')) {
+      return <>{start.format('DD MMM')}</>;
+    }
+    return <>{`${start.format('DD MMM')} - ${end.format('DD MMM')}`}</>;
   };
 
   const enrollAction = () => {
@@ -113,7 +119,9 @@ const WorkShopTile = ({ workshop }) => {
         <div class="course-item-top">
           <div class="row">
             <div class="course-item-date">{getCourseDeration()}</div>
-            <div className="course-item-price">$ {listPrice}</div>
+            <div className="course-item-price">
+              {eventPricing === 'Free' ? '$ 0' : 'Paid'}
+            </div>
           </div>
           <div class="payment-details">
             <div class="tw-text-xl tw-mt-2 tw-mx-2">{title}</div>
