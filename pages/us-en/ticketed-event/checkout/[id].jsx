@@ -1,17 +1,12 @@
 /* eslint-disable no-inline-styles/no-inline-styles */
 import React, { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/router';
-import {
-  useAuth,
-  useGlobalAlertContext,
-  useGlobalModalContext,
-} from '@contexts';
+import { useAuth, useGlobalAlertContext } from '@contexts';
 import { NextSeo } from 'next-seo';
-import { ABBRS, ALERT_TYPES, COURSE_MODES, MODAL_TYPES } from '@constants';
+import { ABBRS, ALERT_TYPES, COURSE_MODES } from '@constants';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { loadStripe } from '@stripe/stripe-js';
-import { filterAllowedParams } from '@utils/utmParam';
 import queryString from 'query-string';
 import {
   PaymentElement,
@@ -25,7 +20,7 @@ import {
   parseAsBoolean,
   parseAsString,
 } from 'nuqs';
-import { Auth, api, phoneRegExp, tConvert } from '@utils';
+import { api, phoneRegExp, tConvert } from '@utils';
 import { UserInfoFormNewCheckout } from '@components/checkout';
 import dayjs from 'dayjs';
 import { DiscountInputNew } from '@components/discountInputNew';
@@ -158,7 +153,6 @@ const TicketCheckoutForm = ({ event }) => {
   const router = useRouter();
   const { profile, passwordLess, isAuthenticated: isUserLoggedIn } = useAuth();
   const { signOut } = passwordLess;
-  const { showModal } = useGlobalModalContext();
   const stripe = useStripe();
   const formRef = useRef();
   const [couponCode, setCouponCode] = useQueryState(
@@ -185,9 +179,6 @@ const TicketCheckoutForm = ({ event }) => {
     eventImageUrl,
     eventEndDate,
     eventStartDate,
-    primaryTeacherName,
-    coTeacher1Name,
-    coTeacher2Name,
     mode,
     phone2,
     timings = [],

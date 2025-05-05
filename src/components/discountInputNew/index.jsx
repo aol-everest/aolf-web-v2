@@ -115,14 +115,13 @@ export const DiscountInputNew = ({
   // Handle URL coupon code on initial load with retry logic
   useEffect(() => {
     const applyUrlCoupon = async () => {
-      if (!isInitialized && couponCode && !formikProps.values[formikKey]) {
+      if (!isInitialized && !!couponCode) {
         debugLog('Attempting to apply URL coupon', {
           couponCode,
           attempt: initializationAttempts + 1,
         });
 
         try {
-          formikProps.setFieldValue(formikKey, couponCode.toUpperCase());
           await validateCoupon(couponCode.toUpperCase(), true);
           setIsInitialized(true);
           debugLog('Successfully initialized coupon from URL');
