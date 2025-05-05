@@ -1177,6 +1177,9 @@
     padding: 12px 16px 0px 16px;
     color: #31364e;
     font-weight: 500;
+    @media screen and (max-width: 990px) {
+      padding-right: 0;
+    }
     &.notes {
       flex-direction: column;
       align-items: flex-start;
@@ -1196,7 +1199,25 @@
         overflow-y: auto;
         padding: 0;
         @media screen and (max-width: 990px) {
-          max-height: 200px;
+          max-height: 250px;
+          padding-right: 16px;
+          &::-webkit-scrollbar {
+            width: 8px;
+          }
+          /* Track */
+          &::-webkit-scrollbar-track {
+            background: #fef5ec;
+          }
+          /* Handle */
+          &::-webkit-scrollbar-thumb {
+            background: #fca248;
+            border-radius: 4px;
+          }
+
+          /* Handle on hover */
+          &::-webkit-scrollbar-thumb:hover {
+            background: #fca248b0;
+          }
         }
       }
     }
