@@ -566,8 +566,7 @@ export const SKYBreathMeditation = ({
                 <Accordion.Collapse eventKey="4">
                   <Card.Body>
                     <p>
-                      The {title} course is available: a 3-day course for $
-                      {delfee}
+                      The {title} course is available for ${delfee}
                       <br />
                       <br />
                     </p>
