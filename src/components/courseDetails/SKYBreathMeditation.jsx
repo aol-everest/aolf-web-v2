@@ -566,14 +566,14 @@ export const SKYBreathMeditation = ({
                 <Accordion.Collapse eventKey="4">
                   <Card.Body>
                     <p>
-                      The {title} course is available in two formats: a 3-day
-                      course for ${delfee}
+                      The {title} course is available: a 3-day course for $
+                      {delfee}
                       <br />
                       <br />
                     </p>
                     <p class="mb-2">What’s included:</p>
                     <ul>
-                      <li>-3 hours daily live sessions</li>
+                      <li>2.5-3 hours daily live sessions</li>
                       <li>certified expert instruction</li>
                       <li>guided techniques with Q&A</li>
                       <li>real-time support</li>
