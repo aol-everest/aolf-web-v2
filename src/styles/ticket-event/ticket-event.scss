@@ -1201,6 +1201,8 @@
         @media screen and (max-width: 990px) {
           max-height: 250px;
           padding-right: 16px;
+          -webkit-overflow-scrolling: touch; // Enables smooth scrolling on iOS
+          overflow-y: scroll;
           &::-webkit-scrollbar {
             width: 8px;
           }
