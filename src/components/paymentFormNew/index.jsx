@@ -5,7 +5,12 @@ import {
   UserInfoFormNewCheckout,
 } from '@components/checkout';
 import dayjs from 'dayjs';
-import { ALERT_TYPES, PAYMENT_MODES, PAYMENT_TYPES } from '@constants';
+import {
+  ALERT_TYPES,
+  COURSE_TYPES,
+  PAYMENT_MODES,
+  PAYMENT_TYPES,
+} from '@constants';
 import { useAuth, useGlobalAlertContext } from '@contexts';
 import { useQueryString, usePayment } from '@hooks';
 import { pushRouteWithUTMQuery } from '@service';
@@ -152,6 +157,12 @@ export const PaymentFormNew = ({
     email: contactEmail,
     contactName,
   } = workshop;
+
+  const isSahajSamadhiMeditationType =
+    COURSE_TYPES.SAHAJ_SAMADHI_MEDITATION.value.indexOf(productTypeId) >= 0;
+
+  const isSilentRetreatType =
+    COURSE_TYPES.SILENT_RETREAT.value.indexOf(productTypeId) >= 0;
 
   const questionnaireArray = complianceQuestionnaire
     ? complianceQuestionnaire.map((current) => ({
@@ -885,7 +896,12 @@ export const PaymentFormNew = ({
                       {!isPwht && (
                         <div className="section-box features-desktop">
                           <div className="section__body">
-                            <FeaturesList />
+                            <FeaturesList
+                              isSahajSamadhiMeditationType={
+                                isSahajSamadhiMeditationType
+                              }
+                              isSilentRetreatType={isSilentRetreatType}
+                            />
                           </div>
                         </div>
                       )}
@@ -1013,7 +1029,13 @@ export const PaymentFormNew = ({
                       </div>
                       <div className="section-box features-mobile">
                         <div className="section__body">
-                          <FeaturesList className="row mx-n2" />
+                          <FeaturesList
+                            className="row mx-n2"
+                            isSahajSamadhiMeditationType={
+                              isSahajSamadhiMeditationType
+                            }
+                            isSilentRetreatType={isSilentRetreatType}
+                          />
                         </div>
                       </div>
                     </div>

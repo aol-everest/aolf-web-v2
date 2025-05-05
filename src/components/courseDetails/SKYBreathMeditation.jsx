@@ -60,7 +60,7 @@ export const SKYBreathMeditation = ({
   handleRegister,
 }) => {
   const { sfid, title } = data || {};
-  const { delfee } = priceCalculation({ workshop: data });
+  const { fee } = priceCalculation({ workshop: data });
 
   return (
     <>
@@ -566,7 +566,7 @@ export const SKYBreathMeditation = ({
                 <Accordion.Collapse eventKey="4">
                   <Card.Body>
                     <p>
-                      The {title} course is available for ${delfee}
+                      The {title} course is available for ${fee}
                       <br />
                       <br />
                     </p>
