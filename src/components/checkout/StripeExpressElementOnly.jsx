@@ -122,6 +122,14 @@ const CheckoutPage = ({
       };
       filteredParams = removeNull(filteredParams);
 
+      const complianceQuestionnaire = form.values.questionnaire.reduce(
+        (res, current) => ({
+          ...res,
+          [current.key]: current.value ? 'Yes' : 'No',
+        }),
+        {},
+      );
+
       const {
         stripeIntentObj,
         status,
@@ -136,6 +144,7 @@ const CheckoutPage = ({
               productSfId: workshop.id,
               productType: 'workshop',
             },
+            complianceQuestionnaire,
             ...(email && { accountEmail: email }),
             utmParams: filteredParams,
           },
