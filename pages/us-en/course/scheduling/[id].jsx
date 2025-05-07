@@ -690,8 +690,10 @@ const SchedulingPaymentForm = ({
                         <div className="payment-total-box">
                           <label>Total:</label>
                           <div className="amount">
-                            {delfee && <s>${delfee}</s>} $
-                            {fee.toFixed(2) || '0'}
+                            {delfee && (delfee !== fee || delfee > fee) && (
+                              <s>${delfee}</s>
+                            )}
+                            {` `}${fee.toFixed(2) || '0'}
                           </div>
                         </div>
                         <div className="payment-details">
@@ -1084,7 +1086,7 @@ const SchedulingCheckoutFlow = () => {
     isError,
     error,
   } = useQuery({
-    queryKey: 'workshopDetail',
+    queryKey: ['workshopDetail', { workshopId }],
     queryFn: async () => {
       const response = await api.get({
         path: 'workshopDetail',

@@ -19,7 +19,7 @@ import queryString from 'query-string';
 import { pushRouteWithUTMQuery } from '@service';
 import { useRouter } from 'next/router';
 import { FaArrowRightLong } from 'react-icons/fa6';
-import { navigateToLogin } from '@utils';
+import { navigateToLogin, priceCalculation } from '@utils';
 
 const settings = {
   slidesToShow: 3,
@@ -60,6 +60,7 @@ export const SKYBreathMeditation = ({
   handleRegister,
 }) => {
   const { sfid, title } = data || {};
+  const { fee } = priceCalculation({ workshop: data });
 
   return (
     <>
@@ -496,7 +497,7 @@ export const SKYBreathMeditation = ({
                 <Accordion.Collapse eventKey="0">
                   <Card.Body>
                     You can learn the Sudarshan Kriya™ practice taught in the{' '}
-                    {title} Course in 3 days with 2.5 hours of live online or
+                    {title} Course in 3 days with 2.5-3 hours of live online or
                     in-person sessions each day with a certified instructor.
                   </Card.Body>
                 </Accordion.Collapse>
@@ -565,14 +566,13 @@ export const SKYBreathMeditation = ({
                 <Accordion.Collapse eventKey="4">
                   <Card.Body>
                     <p>
-                      The {title} course is available in two formats: a 3-day
-                      online course for $295 and an in-person course for $395.
+                      The {title} course is available for ${fee}
                       <br />
                       <br />
                     </p>
                     <p class="mb-2">What’s included:</p>
                     <ul>
-                      <li>2.5 hour daily live sessions</li>
+                      <li>2.5-3 hours daily live sessions</li>
                       <li>certified expert instruction</li>
                       <li>guided techniques with Q&A</li>
                       <li>real-time support</li>

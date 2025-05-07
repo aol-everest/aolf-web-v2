@@ -118,7 +118,7 @@ function CourseDetail() {
 
   const { track, page } = useAnalytics();
   const { data, isLoading, isError, error } = useQuery({
-    queryKey: 'workshopDetail',
+    queryKey: ['workshopDetail', { workshopId, bundle }],
     queryFn: async () => {
       let param = {
         id: workshopId,
@@ -152,6 +152,7 @@ function CourseDetail() {
       bundle,
     };
   }
+
   useEffect(() => {
     if (!isAuthenticated || !data) return;
 

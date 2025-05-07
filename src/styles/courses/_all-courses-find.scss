@@ -738,6 +738,7 @@ main.all-courses-find {
         border-bottom: none;
         margin-bottom: 0;
         padding-bottom: 0;
+        word-break: break-word;
         &::before {
           content: '\e90b';
         }

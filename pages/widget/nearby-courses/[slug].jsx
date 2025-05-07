@@ -331,6 +331,8 @@ const NearbyCoursesCarousel = ({ initialLocation = null, nearbyWorkshops }) => {
     timezone: initialLocation.timezone,
   });
 
+  console.log(location);
+
   const { data, isLoading, isError, error } = useQuery({
     queryKey: [
       'nearbyWorkshops',
@@ -350,13 +352,19 @@ const NearbyCoursesCarousel = ({ initialLocation = null, nearbyWorkshops }) => {
         timeZone: location.timezone,
       };
 
+      console.log('fetching data');
+
       const response = await api.get({
         path: 'nearbyWorkshops',
         param,
       });
       return response.data;
     },
-    enabled: !!location.latitude,
+    enabled: !!location.latitude && !!location.longitude,
+    refetchOnMount: true,
+    refetchOnWindowFocus: true,
+    staleTime: 0,
+    cacheTime: 0,
     initialData: nearbyWorkshops,
   });
 

@@ -532,7 +532,10 @@ const GuidedMeditation = (props) => {
               </div>
             </div>
             <div className="journey-form-wrap">
-              <HubSpotForm />
+              <HubSpotForm
+                formId="38e9752d-78df-4079-b18f-c90e579b0969"
+                sfdcCampaignId="7011I000000CWMgQAO"
+              />
             </div>
           </div>
         </div>
