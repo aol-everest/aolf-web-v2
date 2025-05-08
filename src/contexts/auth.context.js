@@ -9,7 +9,7 @@ import React, {
 } from 'react';
 import { Hub } from 'aws-amplify/utils';
 import { signOut as amplifySignOut } from 'aws-amplify/auth';
-import { Auth, clearAuthCookies } from '@utils';
+import { Auth } from '@utils';
 import { signOut } from '@passwordLess/common.js';
 import { parseJwtPayload, setTimeoutWallClock } from '@passwordLess/util.js';
 import { signInWithLink, requestSignInLink } from '@passwordLess/magic-link.js';
@@ -27,11 +27,7 @@ import {
 } from '@passwordLess/plaintext.js';
 import { stepUpAuthenticationWithSmsOtp } from '@passwordLess/sms-otp-stepup.js';
 import { configure } from '@passwordLess/config.js';
-import {
-  retrieveTokens,
-  storeTokens,
-  clearStorage,
-} from '@passwordLess/storage.js';
+import { retrieveTokens, storeTokens } from '@passwordLess/storage.js';
 import { busyState } from '@passwordLess/model.js';
 import { scheduleRefresh, refreshTokens } from '@passwordLess/refresh.js';
 import { clearInflightOAuth } from '@passwordLess/storage.js';
@@ -65,7 +61,6 @@ export const AuthProvider = ({
       console.log('Error fetching current user:', error);
       // Clear cookies if we get specific auth-related errors
       console.log('Clearing auth cookies for NotAuthorizedException...');
-      await clearAuthCookies();
       throw new Error(
         'Unable to load your profile details. Please refresh the page or contact support if the issue persists.',
       );
@@ -87,8 +82,6 @@ export const AuthProvider = ({
             parseJwtPayload(tokens.accessToken);
           } catch (e) {
             console.log('Found invalid tokens, clearing auth state');
-            await clearAuthCookies();
-            await clearStorage();
           }
         }
       } catch (err) {
@@ -102,7 +95,6 @@ export const AuthProvider = ({
       setError(null);
       switch (payload.event) {
         case 'signedIn':
-          // await clearAuthCookies();
           console.log('user have been signedIn successfully.');
           await fetchCurrentUser();
           break;
@@ -110,16 +102,13 @@ export const AuthProvider = ({
           console.log('user have been signedOut successfully.');
           setCurrentUser({ isAuthenticated: false });
           localStorage.clear();
-          clearStorage();
           console.log('Clearing auth cookies for signedOut...');
-          await clearAuthCookies();
           break;
         case 'tokenRefresh':
           console.log('auth tokens have been refreshed.');
           break;
         case 'tokenRefresh_failure':
           console.log('failure while refreshing auth tokens.');
-          await clearAuthCookies();
           setError('An error has occurred during token refresh.');
           setCurrentUser({ isAuthenticated: false });
           break;
@@ -132,7 +121,6 @@ export const AuthProvider = ({
           console.log(
             'failure while trying to resolve signInWithRedirect API.',
           );
-          await clearAuthCookies();
           break;
         case 'customOAuthState':
           customState = payload.data;
@@ -742,7 +730,6 @@ const usePasswordlessAuth = (fetchCurrentUser) => {
       signingOut.signedOut.catch(setLastError);
       amplifySignOut();
       localStorage.clear();
-      clearStorage();
       console.log('Logged out and cache cleared');
       return signingOut;
     },
