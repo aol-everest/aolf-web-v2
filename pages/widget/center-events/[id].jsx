@@ -124,7 +124,9 @@ const WorkShopTile = ({ workshop }) => {
             </div>
           </div>
           <div class="payment-details">
-            <div class="tw-text-xl tw-mt-2 tw-mx-2">{title}</div>
+            <div class="tw-text-xl tw-mt-2 tw-mx-2 tw-font-bold tw-text-center">
+              {title}
+            </div>
           </div>
         </div>
         <div class="course-item-content">
@@ -173,7 +175,7 @@ const WorkShopTile = ({ workshop }) => {
 
 const CenterEventsCarousel = () => {
   const router = useRouter();
-  const { id: centerId } = router.query;
+  const { id: centerId, ctype: courseType } = router.query;
   const courseTypeFilter = null;
 
   const [isReadyForSelection, setReadyForSelection] = useState(true);
@@ -197,6 +199,8 @@ const CenterEventsCarousel = () => {
     queryFn: async () => {
       let param = {
         center: centerId,
+        timingsRequired: true,
+        ctype: courseType,
       };
 
       const res = await api.get({
