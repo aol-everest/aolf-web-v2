@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AOLF Auth Tokens Test</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+      line-height: 1.6;
+    }
+    pre {
+      background-color: #f5f5f5;
+      padding: 10px;
+      border-radius: 5px;
+      overflow-x: auto;
+    }
+    button {
+      padding: 8px 16px;
+      background-color: #0070f3;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 14px;
+      margin-right: 10px;
+    }
+    button:hover {
+      background-color: #0051a8;
+    }
+    .hidden {
+      display: none;
+    }
+    .token-display {
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <h1>AOLF Auth Tokens Test</h1>
+
+  <p>This page demonstrates how to request and receive Cognito auth tokens from the AOLF widget.</p>
+
+  <div>
+    <button id="requestAuth">Request Auth Tokens</button>
+    <button id="requestProfile">Request Profile Data</button>
+    <button id="clearResults">Clear Results</button>
+  </div>
+
+  <div class="token-display">
+    <h3>Auth Status:</h3>
+    <div id="authStatus">Not checked yet</div>
+
+    <h3>Access Token:</h3>
+    <pre id="accessToken">Not available</pre>
+
+    <h3>ID Token:</h3>
+    <pre id="idToken">Not available</pre>
+
+    <h3>Profile Data:</h3>
+    <pre id="profileData">Not available</pre>
+  </div>
+
+  <!-- Hidden iframe for communication -->
+  <iframe id="auth-profile-iframe" src="/widget/auth-profile" style="display:none;"></iframe>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const APP2_ORIGIN = window.location.origin; // Same origin for testing
+      const iframe = document.getElementById('auth-profile-iframe');
+      const authStatusEl = document.getElementById('authStatus');
+      const accessTokenEl = document.getElementById('accessToken');
+      const idTokenEl = document.getElementById('idToken');
+      const profileDataEl = document.getElementById('profileData');
+
+      // Request auth tokens button
+      document.getElementById('requestAuth').addEventListener('click', function() {
+        authStatusEl.textContent = 'Requesting...';
+        iframe.contentWindow.postMessage({ type: 'get-auth-tokens' }, APP2_ORIGIN);
+      });
+
+      // Request profile data button
+      document.getElementById('requestProfile').addEventListener('click', function() {
+        profileDataEl.textContent = 'Requesting...';
+        iframe.contentWindow.postMessage({ type: 'get-auth-profile' }, APP2_ORIGIN);
+      });
+
+      // Clear results button
+      document.getElementById('clearResults').addEventListener('click', function() {
+        authStatusEl.textContent = 'Not checked';
+        accessTokenEl.textContent = 'Not available';
+        idTokenEl.textContent = 'Not available';
+        profileDataEl.textContent = 'Not available';
+      });
+
+      // Handle messages from iframe
+      window.addEventListener('message', function(event) {
+        // Accept only messages from our origin for this test
+        if (event.origin !== APP2_ORIGIN) return;
+
+        // Handle auth tokens response
+        if (event.data?.type === 'auth-tokens') {
+          const { isAuthenticated, tokens } = event.data.data;
+
+          authStatusEl.textContent = isAuthenticated ? 'Authenticated' : 'Not authenticated';
+
+          if (isAuthenticated && tokens) {
+            // Show just the first 20 chars of the token to avoid UI clutter
+            accessTokenEl.textContent = tokens.accessToken.substring(0, 20) + '...';
+            idTokenEl.textContent = tokens.idToken.substring(0, 20) + '...';
+
+            // Add click to reveal full token functionality
+            accessTokenEl.title = 'Click to show/hide full token';
+            idTokenEl.title = 'Click to show/hide full token';
+
+            // Store full tokens for toggle functionality
+            accessTokenEl.dataset.fullToken = tokens.accessToken;
+            idTokenEl.dataset.fullToken = tokens.idToken;
+          } else {
+            accessTokenEl.textContent = 'Not available (not authenticated)';
+            idTokenEl.textContent = 'Not available (not authenticated)';
+          }
+        }
+
+        // Handle profile data response
+        if (event.data?.type === 'auth-profile') {
+          const data = event.data.data;
+          profileDataEl.textContent = JSON.stringify(data, null, 2);
+        }
+      });
+
+      // Toggle between abbreviated and full token display
+      accessTokenEl.addEventListener('click', function() {
+        if (this.dataset.fullToken) {
+          this.textContent = this.textContent.includes('...')
+            ? this.dataset.fullToken
+            : this.dataset.fullToken.substring(0, 20) + '...';
+        }
+      });
+
+      idTokenEl.addEventListener('click', function() {
+        if (this.dataset.fullToken) {
+          this.textContent = this.textContent.includes('...')
+            ? this.dataset.fullToken
+            : this.dataset.fullToken.substring(0, 20) + '...';
+        }
+      });
+    });
+  </script>
+</body>
+</html>

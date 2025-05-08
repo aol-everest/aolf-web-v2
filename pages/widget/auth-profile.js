@@ -6,7 +6,10 @@ import { useQuery } from '@tanstack/react-query';
 const ALLOWED_ORIGIN_REGEX = /^https:\/\/([a-z0-9-]+\.)*artofliving\.org$/i;
 
 export default function AuthProfileWidget() {
-  const { isAuthenticated, profile } = useAuth() || {};
+  const authObject = useAuth();
+  const { isAuthenticated, profile, passwordLess } = authObject || {};
+  const { tokens } = passwordLess || {};
+
   const { data: introData = [] } = useQuery({
     queryKey: ['get-started-intro-series'],
     queryFn: async () => {
@@ -50,6 +53,12 @@ export default function AuthProfileWidget() {
             type: 'auth-profile',
             data: {
               isAuthenticated,
+              tokens: isAuthenticated
+                ? {
+                    accessToken: tokens?.accessToken,
+                    idToken: tokens?.idToken,
+                  }
+                : null,
               profile,
               exploreMenu,
             },
@@ -60,7 +69,7 @@ export default function AuthProfileWidget() {
     }
     window.addEventListener('message', handler);
     return () => window.removeEventListener('message', handler);
-  }, [isAuthenticated, profile, introData]);
+  }, [isAuthenticated, profile, introData, tokens]);
 
   return null;
 }
