@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { useAuth } from '@contexts';
 import { api } from '@utils';
+import { Auth } from '@utils/auth';
 import { useQuery } from '@tanstack/react-query';
 import Head from 'next/head';
 import Script from 'next/script';
@@ -103,15 +104,168 @@ function OptimizedScripts() {
   );
 }
 
+// Add this right at the top of the file to track script initialization
+if (typeof window !== 'undefined') {
+  console.log('[AUTH DEBUG] Script initialized at', new Date().toISOString());
+
+  // Try to load Auth if it's available
+  const tryGetEmergencyTokens = async () => {
+    try {
+      // Check if Auth is globally available
+      if (window.Auth?.getSession) {
+        console.log('[AUTH DEBUG] Found Auth on window');
+        const tokens = await window.Auth.getSession();
+        console.log('[AUTH DEBUG] Got tokens from global Auth:', !!tokens);
+        return tokens;
+      }
+
+      // Try to dynamically import Auth
+      try {
+        const AuthModule = await import('@utils/auth');
+        if (AuthModule.Auth?.getSession) {
+          console.log('[AUTH DEBUG] Imported Auth module');
+          const tokens = await AuthModule.Auth.getSession();
+          console.log('[AUTH DEBUG] Got tokens from imported Auth:', !!tokens);
+          return tokens;
+        }
+      } catch (importErr) {
+        console.log('[AUTH DEBUG] Could not import Auth module:', importErr);
+      }
+    } catch (err) {
+      console.error('[AUTH DEBUG] Error getting emergency tokens:', err);
+    }
+    return null;
+  };
+
+  // Emergency global message handler - won't be affected by React re-renders
+  window.addEventListener('message', async function (event) {
+    console.log('[AUTH DEBUG] Raw message received:', event.origin, event.data);
+
+    if (event.data && event.data.type === 'get-auth-profile') {
+      console.log('[AUTH DEBUG] Found get-auth-profile request!');
+
+      // Send a simple emergency response
+      try {
+        // Try to get real tokens if possible
+        const emergencyTokens = await tryGetEmergencyTokens();
+
+        const emergencyResponse = {
+          type: 'auth-profile',
+          data: {
+            isAuthenticated: true,
+            profile: {
+              first_name: 'Emergency',
+              last_name: 'User',
+              email: 'emergency@test.com',
+            },
+            tokens: emergencyTokens || {
+              accessToken: 'test-token',
+              idToken: 'test-id-token',
+            },
+            exploreMenu: [{ name: 'Test', link: '#' }],
+          },
+        };
+
+        // Log before sending
+        console.log('[AUTH DEBUG] Sending emergency response to', event.origin);
+
+        // Send to the source that sent us the request
+        event.source.postMessage(emergencyResponse, event.origin);
+        console.log('[AUTH DEBUG] Emergency response sent successfully');
+      } catch (err) {
+        console.error('[AUTH DEBUG] Failed to send emergency response:', err);
+      }
+    }
+  });
+}
+
 function AuthProfileWidget() {
   const authObject = useAuth();
-  const { isAuthenticated, profile, passwordLess } = authObject || {};
-  const { tokens } = passwordLess || {};
+  console.log('authObject', authObject);
+
+  // Extract data using the correct structure from the auth object
+  const isAuthenticated = authObject?.isAuthenticated || false;
+
+  // Extract profile from the correct location in the auth object
+  const profile = authObject?.profile || null;
+
+  // Extract tokens from the correct location
+  // Tokens are directly on authObject.tokens, not under passwordLess
+  const tokens = authObject?.tokens || {};
+
+  // Log the extracted data for debugging
+  console.log('[AUTH DEBUG] Extracted auth data:', {
+    isAuthenticated,
+    profileName: profile ? `${profile.first_name} ${profile.last_name}` : 'N/A',
+    hasTokens: !!tokens?.accessToken,
+  });
 
   // Refs to track message handler and setup state
   const messageHandlerRef = useRef(null);
   const listenerSetupRef = useRef(false);
   const prevProfileSignatureRef = useRef(null);
+
+  // Create a helper function to generate the auth profile response
+  const createResponseData = async () => {
+    // Get the latest tokens directly from Auth
+    let currentTokens = tokens;
+    try {
+      if (isAuthenticated) {
+        console.log('[AUTH DEBUG] Getting fresh tokens from Auth.getSession()');
+        const sessionTokens = await Auth.getSession();
+        console.log(
+          '[AUTH DEBUG] Got fresh tokens:',
+          sessionTokens ? 'yes' : 'no',
+        );
+        if (sessionTokens) {
+          currentTokens = sessionTokens;
+        }
+      }
+    } catch (error) {
+      console.error('[AUTH DEBUG] Error getting session tokens:', error);
+    }
+
+    return {
+      type: 'auth-profile',
+      data: {
+        isAuthenticated,
+        tokens: isAuthenticated
+          ? {
+              // Map the tokens correctly
+              accessToken:
+                currentTokens?.accessToken?.jwtToken ||
+                (typeof currentTokens?.accessToken === 'object'
+                  ? JSON.stringify(currentTokens?.accessToken)
+                  : currentTokens?.accessToken) ||
+                null,
+              idToken:
+                currentTokens?.idToken?.jwtToken ||
+                (typeof currentTokens?.idToken === 'object'
+                  ? JSON.stringify(currentTokens?.idToken)
+                  : currentTokens?.idToken) ||
+                null,
+            }
+          : null,
+        profile: isAuthenticated
+          ? {
+              ...profile,
+              // Ensure we have proper field names
+              first_name:
+                profile?.first_name ||
+                profile?.firstName ||
+                profile?.given_name,
+              last_name:
+                profile?.last_name || profile?.lastName || profile?.family_name,
+              email: profile?.email,
+            }
+          : null,
+        exploreMenu: introData.map((item) => ({
+          name: item.title,
+          link: item.slug ? `/us-en/explore/${item.slug}` : '#',
+        })),
+      },
+    };
+  };
 
   // Log authentication state on changes
   useEffect(() => {
@@ -121,8 +275,8 @@ function AuthProfileWidget() {
     if (isAuthenticated) {
       logger.debug(
         'User profile available:',
-        profile?.firstName,
-        profile?.lastName,
+        profile?.first_name,
+        profile?.last_name,
       );
       logger.debug(
         'Tokens available:',
@@ -225,20 +379,26 @@ function AuthProfileWidget() {
             event.origin,
           );
 
-          // Send a simple response immediately
+          // Create a direct response with static data since we can't access component state
           try {
-            const simpleResponse = {
+            const directResponse = {
               type: 'auth-profile',
               data: {
                 isAuthenticated: true,
-                profile: { firstName: 'Test', lastName: 'User' },
-                tokens: { accessToken: 'test-token' },
-                exploreMenu: [{ name: 'Test Menu', link: '#' }],
-                _source: 'direct-handler',
+                profile: {
+                  first_name: 'Direct',
+                  last_name: 'Handler',
+                  email: 'direct@test.com',
+                },
+                tokens: {
+                  accessToken: 'direct-handler-token',
+                  idToken: 'direct-handler-id-token',
+                },
+                exploreMenu: [{ name: 'Direct Handler Menu', link: '#' }],
               },
             };
 
-            event.source.postMessage(simpleResponse, event.origin);
+            event.source.postMessage(directResponse, event.origin);
             globalLogger.log('✅ Sent direct response to:', event.origin);
           } catch (err) {
             globalLogger.error('Failed to send response:', err);
@@ -253,7 +413,7 @@ function AuthProfileWidget() {
   // Set up message listener with useRef to avoid recreation on each render
   useEffect(() => {
     // Define the message handler function - keep it simple
-    function messageHandler(event) {
+    async function messageHandler(event) {
       // Log every message
       logger.info(`Message from ${event.origin}:`, event.data);
 
@@ -284,28 +444,17 @@ function AuthProfileWidget() {
             event.origin,
           );
 
-          // Create response with available data
-          const response = {
-            type: 'auth-profile',
-            data: {
-              isAuthenticated,
-              tokens: isAuthenticated
-                ? {
-                    accessToken: tokens?.accessToken,
-                    idToken: tokens?.idToken,
-                  }
-                : null,
-              profile: isAuthenticated ? profile : null,
-              exploreMenu: introData.map((item) => ({
-                name: item.title,
-                link: item.slug ? `/us-en/explore/${item.slug}` : '#',
-              })),
-              _source: 'message-handler',
-            },
-          };
-
-          // Send response
           try {
+            // Create response with available data
+            const response = await createResponseData();
+
+            // Log full response for debugging
+            console.log(
+              '[AUTH DEBUG] Full response payload:',
+              JSON.stringify(response),
+            );
+
+            // Send response
             logger.info('Sending auth profile response to:', event.origin);
             event.source.postMessage(response, event.origin);
             logger.info('✅ Sent auth profile response');
@@ -459,55 +608,85 @@ function AuthProfileWidget() {
         {`
           // Immediate verification script - run before React loads
           try {
-            const emergencyLogger = {
-              log: (...args) => console.log('[Auth Widget Emergency]', new Date().toISOString(), ...args),
-              error: (...args) => console.error('[Auth Widget Emergency]', new Date().toISOString(), ...args)
-            };
+            console.log('[AUTH DEBUG] Early init script running');
 
-            emergencyLogger.log('Early initialization');
-
-            // Add direct listener for auth requests that runs before React
-            window.addEventListener('message', function emergencyHandler(e) {
-              if (!e.data) return;
-
+            // Try to load the Auth utility if possible
+            const tryGetAuth = async () => {
               try {
-                let data = e.data;
-                if (typeof data === 'string') {
-                  try {
-                    data = JSON.parse(data);
-                  } catch(e) {
-                    // Failed to parse as JSON, continue with string value
-                  }
-                }
+                // This is a dynamic import attempt - might not work in all browsers
+                if (window.Auth || window.auth) {
+                  const Auth = window.Auth || window.auth;
+                  console.log('[AUTH DEBUG] Found Auth in window');
 
-                if (data && data.type === 'get-auth-profile') {
-                  emergencyLogger.log('Received get-auth-profile request from:', e.origin);
-
-                  // Send immediate emergency response
-                  const emergencyResponse = {
-                    type: 'auth-profile',
-                    data: {
-                      isAuthenticated: true,
-                      profile: { firstName: 'Emergency', lastName: 'User' },
-                      tokens: { accessToken: 'emergency-token' },
-                      exploreMenu: [],
-                      _source: 'emergency-handler'
-                    }
-                  };
-
-                  try {
-                    e.source.postMessage(emergencyResponse, e.origin);
-                    emergencyLogger.log('Sent emergency response to:', e.origin);
-                  } catch (err) {
-                    emergencyLogger.error('Failed to send emergency response:', err);
+                  // Try to get session
+                  if (Auth.getSession) {
+                    const tokens = await Auth.getSession();
+                    console.log('[AUTH DEBUG] Got tokens from Auth:', tokens ? 'yes' : 'no');
+                    return tokens;
                   }
                 }
               } catch (err) {
-                emergencyLogger.error('Error handling message:', err);
+                console.log('[AUTH DEBUG] Error accessing Auth:', err);
+              }
+              return null;
+            };
+
+            // Direct handler for get-auth-profile
+            window.addEventListener('message', async function(e) {
+              console.log('[AUTH DEBUG] beforeInteractive: Message received from', e.origin, e.data);
+
+              // Check for the specific format from the parent site
+              if (e.data) {
+                // Check for both object format and possible string format
+                let msgType = e.data.type;
+                let msgData = e.data;
+
+                // Handle string messages (they might be JSON)
+                if (typeof e.data === 'string') {
+                  try {
+                    const parsed = JSON.parse(e.data);
+                    console.log('[AUTH DEBUG] Parsed string message:', parsed);
+                    msgType = parsed.type;
+                    msgData = parsed;
+                  } catch(err) {
+                    // Not JSON, continue checking
+                  }
+                }
+
+                if (msgType === 'get-auth-profile') {
+                  console.log('[AUTH DEBUG] Found get-auth-profile request!');
+
+                  try {
+                    // Try to get real tokens if possible
+                    const tokens = await tryGetAuth();
+
+                    const response = {
+                      type: 'auth-profile',
+                      data: {
+                        isAuthenticated: true,
+                        profile: {
+                          first_name: 'Diagnostic',
+                          last_name: 'User',
+                          email: 'diagnostic@example.com'
+                        },
+                        tokens: tokens || {
+                          accessToken: 'diagnostic-token',
+                          idToken: 'diagnostic-id-token'
+                        },
+                        exploreMenu: []
+                      }
+                    };
+
+                    e.source.postMessage(response, e.origin);
+                    console.log('[AUTH DEBUG] Sent direct response to', e.origin);
+                  } catch(err) {
+                    console.error('[AUTH DEBUG] Error sending response:', err);
+                  }
+                }
               }
             });
           } catch(e) {
-            console.error('[Auth Widget Emergency]', new Date().toISOString(), 'Early initialization error:', e);
+            console.error('[AUTH DEBUG] Early init error:', e);
           }
         `}
       </Script>
@@ -522,20 +701,56 @@ function AuthProfileWidget() {
               error: (...args) => console.error('[Auth Widget Diagnostic]', new Date().toISOString(), ...args)
             };
 
+            // Try to get Auth module
+            const getAuthTokens = async () => {
+              try {
+                if (typeof Auth !== 'undefined') {
+                  diagnosticLogger.log('Auth module found');
+                  const session = await Auth.getSession();
+                  diagnosticLogger.log('Got session from Auth');
+                  return session;
+                } else if (window.Auth) {
+                  diagnosticLogger.log('Auth found on window');
+                  const session = await window.Auth.getSession();
+                  diagnosticLogger.log('Got session from window.Auth');
+                  return session;
+                }
+              } catch (err) {
+                diagnosticLogger.error('Error getting Auth tokens:', err);
+              }
+              return null;
+            };
+
             // Add direct listener for both ping and auth requests
-            window.addEventListener('message', function(e) {
+            window.addEventListener('message', async function(e) {
               if (!e.data) return;
 
               // Handle get-auth-profile requests directly from script too for redundancy
               if (e.data?.type === 'get-auth-profile') {
                 diagnosticLogger.log('Received get-auth-profile request from:', e.origin);
+
                 try {
-                  // Simple quick response with basic data
+                  // Try to get real tokens
+                  const tokens = await getAuthTokens();
+
+                  // Complete response with required fields
                   const auth = {
                     type: 'auth-profile',
                     data: {
-                      isAuthenticated: !!window.__NEXT_DATA__?.props?.pageProps?.auth?.isAuthenticated,
-                      _source: 'diagnostic-script'
+                      isAuthenticated: true,
+                      profile: {
+                        first_name: 'Afterinteractive',
+                        last_name: 'User',
+                        email: 'afterinteractive@example.com'
+                      },
+                      tokens: tokens || {
+                        accessToken: 'afterinteractive-token',
+                        idToken: 'afterinteractive-id-token'
+                      },
+                      exploreMenu: [
+                        { name: 'Explore Menu Item', link: '#' }
+                      ],
+                      _source: 'afterinteractive-script'
                     }
                   };
 
