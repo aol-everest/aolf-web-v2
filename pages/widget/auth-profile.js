@@ -6,6 +6,30 @@ import { useQuery } from '@tanstack/react-query';
 import Head from 'next/head';
 import Script from 'next/script';
 
+/**
+ * AOLF Auth Widget - Cross-Domain Authentication Widget
+ *
+ * This widget manages authentication between multiple AOLF sites
+ * by providing a consistent interface for auth data.
+ *
+ * LOGGING CONTROLS:
+ * -----------------
+ * Logging is DISABLED BY DEFAULT to reduce console noise.
+ *
+ * To ENABLE logging and debugging:
+ *   localStorage.setItem('aolf-widget-debug', 'true');
+ *   // Or use the global helper:
+ *   window.AolfWidgetControls.enableLogging();
+ *   // Window reload may be required
+ *
+ * To DISABLE logging and debugging:
+ *   localStorage.removeItem('aolf-widget-debug');
+ *   // Or use the global helper:
+ *   window.AolfWidgetControls.disableLogging();
+ *
+ * Warnings and errors will always be logged regardless of these settings.
+ */
+
 // Update to allow all artofliving.org subdomains and localhost for development
 const ALLOWED_ORIGIN_REGEX =
   /^https?:\/\/(localhost(:\d+)?|([a-z0-9-]+\.)*(members\.)?artofliving\.org|test7\.artofliving\.org)$/i;
@@ -13,20 +37,54 @@ const ALLOWED_ORIGIN_REGEX =
 // Custom logger with timestamps and prefixes
 const logger = {
   prefix: '[Auth Widget]',
-  log: (...args) =>
-    console.log(logger.prefix, new Date().toISOString(), ...args),
-  info: (...args) =>
-    console.info(logger.prefix, new Date().toISOString(), ...args),
-  warn: (...args) =>
-    console.warn(logger.prefix, new Date().toISOString(), ...args),
-  error: (...args) =>
-    console.error(logger.prefix, new Date().toISOString(), ...args),
+  isEnabled: () => {
+    // Only enable logging if debug mode is enabled
+    if (typeof window !== 'undefined') {
+      // If debug is enabled, enable logging
+      if (localStorage.getItem('aolf-widget-debug') === 'true') {
+        return true;
+      }
+    }
+    // Default: disabled in all environments unless debug is enabled
+    return false;
+  },
+  log: (...args) => {
+    if (logger.isEnabled()) {
+      console.log(logger.prefix, new Date().toISOString(), ...args);
+    }
+  },
+  info: (...args) => {
+    if (logger.isEnabled()) {
+      console.info(logger.prefix, new Date().toISOString(), ...args);
+    }
+  },
+  warn: (...args) => {
+    // Always show warnings
+    console.warn(logger.prefix, new Date().toISOString(), ...args);
+  },
+  error: (...args) => {
+    // Always show errors
+    console.error(logger.prefix, new Date().toISOString(), ...args);
+  },
   debug: (...args) => {
-    if (process.env.NODE_ENV !== 'production') {
+    if (logger.isEnabled()) {
       console.debug(logger.prefix, new Date().toISOString(), ...args);
     }
   },
 };
+
+// Add global controls for logging
+if (typeof window !== 'undefined') {
+  window.AolfWidgetControls = window.AolfWidgetControls || {};
+  window.AolfWidgetControls.enableLogging = () => {
+    localStorage.setItem('aolf-widget-debug', 'true');
+    console.info('[Auth Widget] Logging enabled');
+  };
+  window.AolfWidgetControls.disableLogging = () => {
+    localStorage.removeItem('aolf-widget-debug');
+    console.info('[Auth Widget] Logging disabled');
+  };
+}
 
 // Component to optimize script loading - delays non-critical scripts
 function OptimizedScripts() {
@@ -106,16 +164,35 @@ function OptimizedScripts() {
 
 // Add this right at the top of the file to track script initialization
 if (typeof window !== 'undefined') {
-  console.log('[AUTH DEBUG] Script initialized at', new Date().toISOString());
+  // Check if logging is disabled first
+  const isLoggingEnabled = () => {
+    try {
+      if (localStorage.getItem('aolf-widget-debug') === 'true') {
+        return true;
+      }
+      return false; // Default to disabled
+    } catch (e) {
+      return false; // Default to disabled if we can't check localStorage
+    }
+  };
+
+  // Only log if debug is enabled
+  if (isLoggingEnabled()) {
+    console.log('[AUTH DEBUG] Script initialized at', new Date().toISOString());
+  }
 
   // Try to load Auth if it's available
   const tryGetEmergencyTokens = async () => {
     try {
       // Check if Auth is globally available
       if (window.Auth?.getSession) {
-        console.log('[AUTH DEBUG] Found Auth on window');
+        if (isLoggingEnabled()) {
+          console.log('[AUTH DEBUG] Found Auth on window');
+        }
         const tokens = await window.Auth.getSession();
-        console.log('[AUTH DEBUG] Got tokens from global Auth:', !!tokens);
+        if (isLoggingEnabled()) {
+          console.log('[AUTH DEBUG] Got tokens from global Auth:', !!tokens);
+        }
         return tokens;
       }
 
@@ -123,13 +200,22 @@ if (typeof window !== 'undefined') {
       try {
         const AuthModule = await import('@utils/auth');
         if (AuthModule.Auth?.getSession) {
-          console.log('[AUTH DEBUG] Imported Auth module');
+          if (isLoggingEnabled()) {
+            console.log('[AUTH DEBUG] Imported Auth module');
+          }
           const tokens = await AuthModule.Auth.getSession();
-          console.log('[AUTH DEBUG] Got tokens from imported Auth:', !!tokens);
+          if (isLoggingEnabled()) {
+            console.log(
+              '[AUTH DEBUG] Got tokens from imported Auth:',
+              !!tokens,
+            );
+          }
           return tokens;
         }
       } catch (importErr) {
-        console.log('[AUTH DEBUG] Could not import Auth module:', importErr);
+        if (isLoggingEnabled()) {
+          console.log('[AUTH DEBUG] Could not import Auth module:', importErr);
+        }
       }
     } catch (err) {
       console.error('[AUTH DEBUG] Error getting emergency tokens:', err);
@@ -139,10 +225,18 @@ if (typeof window !== 'undefined') {
 
   // Emergency global message handler - won't be affected by React re-renders
   window.addEventListener('message', async function (event) {
-    console.log('[AUTH DEBUG] Raw message received:', event.origin, event.data);
+    if (isLoggingEnabled()) {
+      console.log(
+        '[AUTH DEBUG] Raw message received:',
+        event.origin,
+        event.data,
+      );
+    }
 
     if (event.data && event.data.type === 'get-auth-profile') {
-      console.log('[AUTH DEBUG] Found get-auth-profile request!');
+      if (isLoggingEnabled()) {
+        console.log('[AUTH DEBUG] Found get-auth-profile request!');
+      }
 
       // Send a simple emergency response
       try {
@@ -167,11 +261,18 @@ if (typeof window !== 'undefined') {
         };
 
         // Log before sending
-        console.log('[AUTH DEBUG] Sending emergency response to', event.origin);
+        if (isLoggingEnabled()) {
+          console.log(
+            '[AUTH DEBUG] Sending emergency response to',
+            event.origin,
+          );
+        }
 
         // Send to the source that sent us the request
         event.source.postMessage(emergencyResponse, event.origin);
-        console.log('[AUTH DEBUG] Emergency response sent successfully');
+        if (isLoggingEnabled()) {
+          console.log('[AUTH DEBUG] Emergency response sent successfully');
+        }
       } catch (err) {
         console.error('[AUTH DEBUG] Failed to send emergency response:', err);
       }
@@ -181,7 +282,6 @@ if (typeof window !== 'undefined') {
 
 function AuthProfileWidget() {
   const authObject = useAuth();
-  console.log('authObject', authObject);
 
   // Extract data using the correct structure from the auth object
   const isAuthenticated = authObject?.isAuthenticated || false;
@@ -194,11 +294,15 @@ function AuthProfileWidget() {
   const tokens = authObject?.tokens || {};
 
   // Log the extracted data for debugging
-  console.log('[AUTH DEBUG] Extracted auth data:', {
-    isAuthenticated,
-    profileName: profile ? `${profile.first_name} ${profile.last_name}` : 'N/A',
-    hasTokens: !!tokens?.accessToken,
-  });
+  if (logger.isEnabled()) {
+    console.log('[AUTH DEBUG] Extracted auth data:', {
+      isAuthenticated,
+      profileName: profile
+        ? `${profile.first_name} ${profile.last_name}`
+        : 'N/A',
+      hasTokens: !!tokens?.accessToken,
+    });
+  }
 
   // Refs to track message handler and setup state
   const messageHandlerRef = useRef(null);
@@ -211,12 +315,18 @@ function AuthProfileWidget() {
     let currentTokens = tokens;
     try {
       if (isAuthenticated) {
-        console.log('[AUTH DEBUG] Getting fresh tokens from Auth.getSession()');
+        if (logger.isEnabled()) {
+          console.log(
+            '[AUTH DEBUG] Getting fresh tokens from Auth.getSession()',
+          );
+        }
         const sessionTokens = await Auth.getSession();
-        console.log(
-          '[AUTH DEBUG] Got fresh tokens:',
-          sessionTokens ? 'yes' : 'no',
-        );
+        if (logger.isEnabled()) {
+          console.log(
+            '[AUTH DEBUG] Got fresh tokens:',
+            sessionTokens ? 'yes' : 'no',
+          );
+        }
         if (sessionTokens) {
           currentTokens = sessionTokens;
         }
@@ -341,8 +451,26 @@ function AuthProfileWidget() {
   if (typeof window !== 'undefined') {
     // Use a simplified logger for the global context
     const globalLogger = {
-      log: (...args) =>
-        console.log('[Auth Widget Direct]', new Date().toISOString(), ...args),
+      isEnabled: () => {
+        try {
+          if (localStorage.getItem('aolf-widget-debug') === 'true') {
+            return true;
+          }
+          // Default: disabled in all environments
+          return false;
+        } catch (e) {
+          return false; // Default to disabled if we can't check localStorage
+        }
+      },
+      log: (...args) => {
+        if (globalLogger.isEnabled()) {
+          console.log(
+            '[Auth Widget Direct]',
+            new Date().toISOString(),
+            ...args,
+          );
+        }
+      },
       error: (...args) =>
         console.error(
           '[Auth Widget Direct]',
@@ -351,16 +479,20 @@ function AuthProfileWidget() {
         ),
     };
 
-    globalLogger.log('Script loaded');
+    if (globalLogger.isEnabled()) {
+      globalLogger.log('Script loaded');
+    }
 
     // Direct global handler for get-auth-profile message
     window.addEventListener('message', function directMessageHandler(event) {
-      globalLogger.log(
-        'Received message:',
-        typeof event.data === 'string'
-          ? event.data
-          : JSON.stringify(event.data),
-      );
+      if (globalLogger.isEnabled()) {
+        globalLogger.log(
+          'Received message:',
+          typeof event.data === 'string'
+            ? event.data
+            : JSON.stringify(event.data),
+        );
+      }
 
       try {
         // Check if this is the message we're looking for
@@ -374,10 +506,12 @@ function AuthProfileWidget() {
         }
 
         if (data && data.type === 'get-auth-profile') {
-          globalLogger.log(
-            '📣 Received get-auth-profile request from:',
-            event.origin,
-          );
+          if (globalLogger.isEnabled()) {
+            globalLogger.log(
+              '📣 Received get-auth-profile request from:',
+              event.origin,
+            );
+          }
 
           // Create a direct response with static data since we can't access component state
           try {
@@ -399,7 +533,9 @@ function AuthProfileWidget() {
             };
 
             event.source.postMessage(directResponse, event.origin);
-            globalLogger.log('✅ Sent direct response to:', event.origin);
+            if (globalLogger.isEnabled()) {
+              globalLogger.log('✅ Sent direct response to:', event.origin);
+            }
           } catch (err) {
             globalLogger.error('Failed to send response:', err);
           }
@@ -449,10 +585,12 @@ function AuthProfileWidget() {
             const response = await createResponseData();
 
             // Log full response for debugging
-            console.log(
-              '[AUTH DEBUG] Full response payload:',
-              JSON.stringify(response),
-            );
+            if (logger.isEnabled()) {
+              console.log(
+                '[AUTH DEBUG] Full response payload:',
+                JSON.stringify(response),
+              );
+            }
 
             // Send response
             logger.info('Sending auth profile response to:', event.origin);
@@ -614,7 +752,21 @@ function AuthProfileWidget() {
         {`
           // Immediate verification script - run before React loads
           try {
-            console.log('[AUTH DEBUG] Early init script running');
+            // Check if logging is disabled
+            const isLoggingEnabled = () => {
+              try {
+                if (localStorage.getItem('aolf-widget-debug') === 'true') {
+                  return true;
+                }
+                return false; // Default to disabled for diagnostics
+              } catch (e) {
+                return false; // Default to disabled if can't check localStorage
+              }
+            };
+
+            if (isLoggingEnabled()) {
+              console.log('[AUTH DEBUG] Early init script running');
+            }
 
             // Try to load the Auth utility if possible
             const tryGetAuth = async () => {
@@ -622,24 +774,32 @@ function AuthProfileWidget() {
                 // This is a dynamic import attempt - might not work in all browsers
                 if (window.Auth || window.auth) {
                   const Auth = window.Auth || window.auth;
-                  console.log('[AUTH DEBUG] Found Auth in window');
+                  if (isLoggingEnabled()) {
+                    console.log('[AUTH DEBUG] Found Auth in window');
+                  }
 
                   // Try to get session
                   if (Auth.getSession) {
                     const tokens = await Auth.getSession();
-                    console.log('[AUTH DEBUG] Got tokens from Auth:', tokens ? 'yes' : 'no');
+                    if (isLoggingEnabled()) {
+                      console.log('[AUTH DEBUG] Got tokens from Auth:', tokens ? 'yes' : 'no');
+                    }
                     return tokens;
                   }
                 }
               } catch (err) {
-                console.log('[AUTH DEBUG] Error accessing Auth:', err);
+                if (isLoggingEnabled()) {
+                  console.log('[AUTH DEBUG] Error accessing Auth:', err);
+                }
               }
               return null;
             };
 
             // Direct handler for get-auth-profile
             window.addEventListener('message', async function(e) {
-              console.log('[AUTH DEBUG] beforeInteractive: Message received from', e.origin, e.data);
+              if (isLoggingEnabled()) {
+                console.log('[AUTH DEBUG] beforeInteractive: Message received from', e.origin, e.data);
+              }
 
               // Check for the specific format from the parent site
               if (e.data) {
@@ -651,7 +811,9 @@ function AuthProfileWidget() {
                 if (typeof e.data === 'string') {
                   try {
                     const parsed = JSON.parse(e.data);
-                    console.log('[AUTH DEBUG] Parsed string message:', parsed);
+                    if (isLoggingEnabled()) {
+                      console.log('[AUTH DEBUG] Parsed string message:', parsed);
+                    }
                     msgType = parsed.type;
                     msgData = parsed;
                   } catch(err) {
@@ -660,7 +822,9 @@ function AuthProfileWidget() {
                 }
 
                 if (msgType === 'get-auth-profile') {
-                  console.log('[AUTH DEBUG] Found get-auth-profile request!');
+                  if (isLoggingEnabled()) {
+                    console.log('[AUTH DEBUG] Found get-auth-profile request!');
+                  }
 
                   try {
                     // Try to get real tokens if possible
@@ -684,7 +848,9 @@ function AuthProfileWidget() {
                     };
 
                     e.source.postMessage(response, e.origin);
-                    console.log('[AUTH DEBUG] Sent direct response to', e.origin);
+                    if (isLoggingEnabled()) {
+                      console.log('[AUTH DEBUG] Sent direct response to', e.origin);
+                    }
                   } catch(err) {
                     console.error('[AUTH DEBUG] Error sending response:', err);
                   }
@@ -702,8 +868,25 @@ function AuthProfileWidget() {
         {`
           // Simple verification script
           try {
+            // Check if logging is disabled
+            const isLoggingEnabled = () => {
+              try {
+                if (localStorage.getItem('aolf-widget-debug') === 'true') {
+                  return true;
+                }
+                return false; // Default to disabled for diagnostics
+              } catch (e) {
+                return false; // Default to disabled if can't check localStorage
+              }
+            };
+
             const diagnosticLogger = {
-              log: (...args) => console.log('[Auth Widget Diagnostic]', new Date().toISOString(), ...args),
+              log: (...args) => {
+                if (isLoggingEnabled()) {
+                  console.log('[Auth Widget Diagnostic]', new Date().toISOString(), ...args);
+                }
+              },
+              // Always show errors
               error: (...args) => console.error('[Auth Widget Diagnostic]', new Date().toISOString(), ...args)
             };
 
