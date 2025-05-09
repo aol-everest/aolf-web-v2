@@ -7,7 +7,7 @@ import Script from 'next/script';
 
 // Update to allow all artofliving.org subdomains and localhost for development
 const ALLOWED_ORIGIN_REGEX =
-  /^https?:\/\/(localhost(:\d+)?|([a-z0-9-]+\.)*artofliving\.org)$/i;
+  /^https?:\/\/(localhost(:\d+)?|([a-z0-9-]+\.)*(members\.)?artofliving\.org|test7\.artofliving\.org)$/i;
 
 // Custom logger with timestamps and prefixes
 const logger = {
@@ -108,9 +108,10 @@ function AuthProfileWidget() {
   const { isAuthenticated, profile, passwordLess } = authObject || {};
   const { tokens } = passwordLess || {};
 
-  // Use ref to prevent removing/adding the same listener multiple times
+  // Refs to track message handler and setup state
   const messageHandlerRef = useRef(null);
   const listenerSetupRef = useRef(false);
+  const prevProfileSignatureRef = useRef(null);
 
   // Log authentication state on changes
   useEffect(() => {
@@ -182,203 +183,180 @@ function AuthProfileWidget() {
     }
   }, [isLoading, error]);
 
-  // Function to create a response object for auth-profile requests
-  const createAuthProfileResponse = () => {
-    const exploreMenu = introData.map((item) => ({
-      name: item.title,
-      link: item.slug ? `/us-en/explore/${item.slug}` : '#',
-    }));
-
-    return {
-      type: 'auth-profile',
-      data: {
-        isAuthenticated,
-        tokens: isAuthenticated
-          ? {
-              accessToken: tokens?.accessToken,
-              idToken: tokens?.idToken,
-            }
-          : null,
-        profile,
-        exploreMenu,
-      },
-    };
-  };
-
   // Set up message listener with useRef to avoid recreation on each render
   useEffect(() => {
-    // Define the message handler function
-    const createMessageHandler = () => {
-      function handler(event) {
-        // Log raw message event for debugging
-        logger.debug(
-          `Received raw message event from ${event.origin}, data:`,
-          typeof event.data === 'object'
-            ? JSON.stringify(event.data)
-            : event.data,
-        );
+    // Define the message handler function - keep it simple
+    function messageHandler(event) {
+      // Log every message
+      logger.info(`Message from ${event.origin}:`, event.data);
 
-        // Validate origin
-        if (!ALLOWED_ORIGIN_REGEX.test(event.origin)) {
-          logger.warn('Rejected message from invalid origin:', event.origin);
-          return;
-        }
-
-        // Check for message type
-        if (typeof event.data === 'object') {
-          logger.debug(`Message type: ${event.data.type}`);
-
-          if (event.data.type === 'get-auth-profile') {
-            logger.info(
-              'Received auth-profile request from origin:',
-              event.origin,
-            );
-
-            // Create response data
-            const responseData = createAuthProfileResponse();
-
-            // Log response size (but not content for security)
-            logger.debug('Response payload size details:', {
-              profileSize: profile ? JSON.stringify(profile).length : 0,
-              menuItemsCount: responseData.data.exploreMenu.length,
-              totalSize: JSON.stringify(responseData).length,
-            });
-
-            // Send the response
-            try {
-              logger.info('Sending auth profile response...');
-              event.source.postMessage(responseData, event.origin);
-              logger.info('Auth profile sent successfully to:', event.origin);
-            } catch (err) {
-              logger.error('Failed to send auth profile:', err);
-            }
-          } else if (event.data.type === 'auth-widget-ping') {
-            // This is our self-diagnostic ping, just reply to confirm working
-            try {
-              event.source.postMessage(
-                {
-                  type: 'auth-widget-pong',
-                  timestamp: new Date().toISOString(),
-                },
-                event.origin,
-              );
-              logger.debug('Replied to diagnostic ping');
-            } catch (err) {
-              logger.error('Failed to respond to ping:', err);
-            }
-          }
-        } else {
-          logger.warn(
-            'Received non-object message from origin:',
-            event.origin,
-            event.data,
-          );
-        }
-      }
-
-      return handler;
-    };
-
-    // Only set up the listener once
-    if (!listenerSetupRef.current) {
-      logger.info('Setting up postMessage listener (initial setup)');
-      messageHandlerRef.current = createMessageHandler();
-      window.addEventListener('message', messageHandlerRef.current);
-      listenerSetupRef.current = true;
-
-      // Add a diagnostic check to verify if we're receiving any messages
-      const diagInterval = setInterval(() => {
-        logger.debug(
-          'Diagnostic: postMessage listener is active, waiting for messages...',
-        );
-
-        // Try to trigger a message to self to verify listener is working
-        try {
-          window.parent.postMessage({ type: 'auth-widget-ping' }, '*');
-        } catch (e) {
-          // Ignore security errors for cross-origin frames
-        }
-      }, 10000); // Check every 10 seconds
-
-      return () => {
-        logger.info('Cleaning up postMessage listener and diagnostic interval');
-        window.removeEventListener('message', messageHandlerRef.current);
-        clearInterval(diagInterval);
-        listenerSetupRef.current = false;
-      };
-    }
-  }, []); // Empty dependency array - only run once
-
-  // Update the handler when important data changes
-  useEffect(() => {
-    // Skip if listener hasn't been set up yet
-    if (!messageHandlerRef.current || !listenerSetupRef.current) return;
-
-    logger.debug('Updating message handler with new data');
-
-    // Remove old handler
-    window.removeEventListener('message', messageHandlerRef.current);
-
-    // Create new handler with updated data
-    messageHandlerRef.current = function handler(event) {
-      // Log raw message event for debugging
-      logger.debug(
-        `Received message from ${event.origin}, data:`,
-        typeof event.data === 'object'
-          ? JSON.stringify(event.data)
-          : event.data,
-      );
-
-      // Validate origin
+      // Check origin
       if (!ALLOWED_ORIGIN_REGEX.test(event.origin)) {
-        logger.warn('Rejected message from invalid origin:', event.origin);
+        logger.warn('Rejected message from unauthorized origin:', event.origin);
         return;
       }
 
-      // Check for message type
-      if (typeof event.data === 'object') {
-        logger.debug(`Message type: ${event.data.type}`);
+      // Handle string messages by trying to parse them
+      let messageData = event.data;
+      if (typeof messageData === 'string') {
+        try {
+          messageData = JSON.parse(messageData);
+          logger.info('Parsed string message:', messageData);
+        } catch (e) {
+          logger.warn('Received unparseable string message, ignoring');
+          return;
+        }
+      }
 
-        if (event.data.type === 'get-auth-profile') {
-          logger.info(
-            'Received auth-profile request from origin:',
-            event.origin,
-          );
+      // Now that we have an object, handle by message type
+      if (typeof messageData === 'object') {
+        // Handle get-auth-profile request
+        if (messageData.type === 'get-auth-profile') {
+          logger.info('📣 Received auth-profile request from:', event.origin);
 
-          // Create response data
-          const responseData = createAuthProfileResponse();
+          // Create response with available data
+          const response = {
+            type: 'auth-profile',
+            data: {
+              isAuthenticated,
+              tokens: isAuthenticated
+                ? {
+                    accessToken: tokens?.accessToken,
+                    idToken: tokens?.idToken,
+                  }
+                : null,
+              profile: isAuthenticated ? profile : null,
+              exploreMenu: introData.map((item) => ({
+                name: item.title,
+                link: item.slug ? `/us-en/explore/${item.slug}` : '#',
+              })),
+            },
+          };
 
-          // Send the response
+          // Send response
           try {
-            logger.info('Sending auth profile response...');
-            event.source.postMessage(responseData, event.origin);
-            logger.info('Auth profile sent successfully to:', event.origin);
+            event.source.postMessage(response, event.origin);
+            logger.info('✅ Sent auth profile response');
           } catch (err) {
             logger.error('Failed to send auth profile:', err);
           }
-        } else if (event.data.type === 'auth-widget-ping') {
-          // This is our self-diagnostic ping, just reply to confirm working
+        }
+        // Handle ping request
+        else if (messageData.type === 'auth-widget-ping') {
           try {
             event.source.postMessage(
               { type: 'auth-widget-pong', timestamp: new Date().toISOString() },
               event.origin,
             );
-            logger.debug('Replied to diagnostic ping');
+            logger.debug('Replied to ping from', event.origin);
           } catch (err) {
             logger.error('Failed to respond to ping:', err);
           }
         }
-      } else {
-        logger.warn(
-          'Received non-object message from origin:',
-          event.origin,
-          event.data,
-        );
       }
-    };
+    }
 
-    // Add updated handler
-    window.addEventListener('message', messageHandlerRef.current);
+    // Set up listener just once
+    if (!listenerSetupRef.current) {
+      logger.info('Setting up message listener');
+      window.addEventListener('message', messageHandler);
+      messageHandlerRef.current = messageHandler;
+      listenerSetupRef.current = true;
+
+      // Send initialization notification
+      if (window.parent !== window) {
+        try {
+          setTimeout(() => {
+            // Let parent know we're ready
+            window.parent.postMessage(
+              {
+                type: 'auth-widget-ready',
+                timestamp: new Date().toISOString(),
+              },
+              '*',
+            );
+            logger.info('Sent ready notification to parent');
+
+            // Send a test ping to verify communication
+            window.parent.postMessage(
+              {
+                type: 'auth-widget-ping',
+                source: 'initialization',
+              },
+              '*',
+            );
+          }, 500);
+        } catch (e) {
+          logger.error('Error sending initialization message:', e);
+        }
+      }
+
+      return () => {
+        logger.info('Removing message listener');
+        window.removeEventListener('message', messageHandler);
+        listenerSetupRef.current = false;
+      };
+    }
+  }, []);
+
+  // Add a simple diagnostic ping
+  useEffect(() => {
+    if (!listenerSetupRef.current) return;
+
+    const pingInterval = setInterval(() => {
+      try {
+        if (window.parent !== window) {
+          window.parent.postMessage(
+            {
+              type: 'auth-widget-ping',
+              source: 'periodic-check',
+            },
+            '*',
+          );
+        }
+      } catch (e) {
+        // Ignore cross-origin errors
+      }
+    }, 10000);
+
+    return () => clearInterval(pingInterval);
+  }, []);
+
+  // Simplify this second effect since it might be causing conflicts
+  useEffect(() => {
+    // Skip if listener hasn't been set up yet or if data hasn't really changed
+    if (!messageHandlerRef.current || !listenerSetupRef.current) return;
+
+    // Create a simple version profile checker to avoid unnecessary updates
+    const profileSignature = isAuthenticated
+      ? `${!!tokens?.accessToken}-${profile?.firstName}-${profile?.lastName}-${introData?.length}`
+      : 'not-authenticated';
+
+    // Compare with previous value
+    if (prevProfileSignatureRef.current === profileSignature) {
+      // Skip update if nothing meaningful changed
+      return;
+    }
+
+    logger.info(`Auth data changed, profile signature: ${profileSignature}`);
+    prevProfileSignatureRef.current = profileSignature;
+
+    // Send a notification that auth data is updated
+    try {
+      // Notify parent that auth data has been updated
+      window.parent.postMessage(
+        {
+          type: 'auth-widget-data-updated',
+          hasAuth: isAuthenticated,
+          timestamp: new Date().toISOString(),
+        },
+        '*',
+      );
+
+      logger.info('Notified parent that auth data was updated');
+    } catch (err) {
+      logger.error('Failed to notify parent of auth update:', err);
+    }
   }, [isAuthenticated, profile, introData, tokens]); // Only update when these change
 
   // Log component render
@@ -403,40 +381,54 @@ function AuthProfileWidget() {
       {/* Optimize script loading */}
       <OptimizedScripts />
 
-      {/* Add diagnostic script to ensure postMessage is working */}
+      {/* Simplified diagnostic script */}
       <Script id="diagnostic-check" strategy="afterInteractive">
         {`
-          // Safely verify postMessage is working
+          // Simple verification script
           try {
-            window.addEventListener('message', function diagnosticListener(e) {
-              if (e.data?.type === 'auth-widget-ping') {
-                console.log('[Auth Widget]', new Date().toISOString(), 'Self diagnostic ping received - postMessage is working');
-              }
+            // Add direct listener for both ping and auth requests
+            window.addEventListener('message', function(e) {
+              if (!e.data) return;
 
-              // Log any incoming get-auth-profile requests
+              // Log all messages in a consistent format
+              console.log('[Auth Widget]', new Date().toISOString(),
+                'Message received:', e.data?.type || 'unknown', 'from', e.origin);
+
+              // Handle get-auth-profile requests directly from script too for redundancy
               if (e.data?.type === 'get-auth-profile') {
-                console.log('[Auth Widget]', new Date().toISOString(), 'get-auth-profile request received from', e.origin);
+                try {
+                  // Simple quick response with basic data
+                  const auth = {
+                    type: 'auth-profile',
+                    data: {
+                      isAuthenticated: !!window.__NEXT_DATA__?.props?.pageProps?.auth?.isAuthenticated,
+                      _source: 'diagnostic-script'
+                    }
+                  };
+
+                  // Send immediate response
+                  e.source.postMessage(auth, e.origin);
+                  console.log('[Auth Widget]', new Date().toISOString(),
+                    'Sent emergency auth response to', e.origin);
+                } catch (err) {
+                  console.error('[Auth Widget]', new Date().toISOString(),
+                    'Error in diagnostic response:', err);
+                }
               }
             });
 
-            // Log that we're ready to receive messages
-            console.log('[Auth Widget]', new Date().toISOString(), 'Widget initialized and ready to receive messages');
+            console.log('[Auth Widget]', new Date().toISOString(),
+              'Diagnostic script ready and listening for messages');
 
-            // Check if this is embedded in an iframe
+            // Announce ready state
             if (window.parent !== window) {
-              console.log('[Auth Widget]', new Date().toISOString(), 'Widget is embedded in an iframe - correct configuration');
-
-              // Alert parent we're ready (right after load)
               setTimeout(() => {
-                try {
-                  window.parent.postMessage({ type: 'auth-widget-ready' }, '*');
-                  console.log('[Auth Widget]', new Date().toISOString(), 'Sent ready notification to parent');
-                } catch (e) {
-                  console.error('[Auth Widget]', new Date().toISOString(), 'Error sending ready message:', e);
-                }
+                window.parent.postMessage({
+                  type: 'auth-widget-ready',
+                  timestamp: new Date().toISOString()
+                }, '*');
+                console.log('[Auth Widget]', new Date().toISOString(), 'Ready notification sent');
               }, 1000);
-            } else {
-              console.warn('[Auth Widget]', new Date().toISOString(), 'Widget is NOT embedded in an iframe - this may cause issues');
             }
           } catch(e) {
             console.error('[Auth Widget]', new Date().toISOString(), 'Diagnostic script error:', e);
