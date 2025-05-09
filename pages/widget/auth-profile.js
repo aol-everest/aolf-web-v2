@@ -193,7 +193,21 @@ if (typeof window !== 'undefined') {
         if (isLoggingEnabled()) {
           console.log('[AUTH DEBUG] Got tokens from global Auth:', !!tokens);
         }
-        return tokens;
+        // Clone tokens to ensure no functions or non-serializable data
+        const safeTokens = tokens
+          ? {
+              accessToken:
+                typeof tokens.accessToken === 'object'
+                  ? tokens.accessToken.jwtToken ||
+                    JSON.stringify(tokens.accessToken)
+                  : tokens.accessToken,
+              idToken:
+                typeof tokens.idToken === 'object'
+                  ? tokens.idToken.jwtToken || JSON.stringify(tokens.idToken)
+                  : tokens.idToken,
+            }
+          : null;
+        return safeTokens;
       }
 
       // Try to dynamically import Auth
@@ -210,7 +224,21 @@ if (typeof window !== 'undefined') {
               !!tokens,
             );
           }
-          return tokens;
+          // Clone tokens to ensure no functions or non-serializable data
+          const safeTokens = tokens
+            ? {
+                accessToken:
+                  typeof tokens.accessToken === 'object'
+                    ? tokens.accessToken.jwtToken ||
+                      JSON.stringify(tokens.accessToken)
+                    : tokens.accessToken,
+                idToken:
+                  typeof tokens.idToken === 'object'
+                    ? tokens.idToken.jwtToken || JSON.stringify(tokens.idToken)
+                    : tokens.idToken,
+              }
+            : null;
+          return safeTokens;
         }
       } catch (importErr) {
         if (isLoggingEnabled()) {
@@ -257,6 +285,7 @@ if (typeof window !== 'undefined') {
               idToken: 'test-id-token',
             },
             exploreMenu: [{ name: 'Test', link: '#' }],
+            _source: 'emergency-handler',
           },
         };
 
@@ -310,72 +339,46 @@ function AuthProfileWidget() {
   const prevProfileSignatureRef = useRef(null);
 
   // Create a helper function to generate the auth profile response
-  const createResponseData = async () => {
-    // Get the latest tokens directly from Auth
-    let currentTokens = tokens;
-    try {
-      if (isAuthenticated) {
-        if (logger.isEnabled()) {
-          console.log(
-            '[AUTH DEBUG] Getting fresh tokens from Auth.getSession()',
-          );
-        }
-        const sessionTokens = await Auth.getSession();
-        if (logger.isEnabled()) {
-          console.log(
-            '[AUTH DEBUG] Got fresh tokens:',
-            sessionTokens ? 'yes' : 'no',
-          );
-        }
-        if (sessionTokens) {
-          currentTokens = sessionTokens;
-        }
-      }
-    } catch (error) {
-      console.error('[AUTH DEBUG] Error getting session tokens:', error);
-    }
-
-    return {
+  async function createResponseData() {
+    // Get current auth state
+    const responseData = {
       type: 'auth-profile',
       data: {
-        isAuthenticated,
-        tokens: isAuthenticated
+        isAuthenticated: isAuthenticated || false,
+        profile: profile
           ? {
-              // Map the tokens correctly
+              // Clean up profile data and ensure it's serializable
+              first_name: profile.first_name || profile.firstName || '',
+              last_name: profile.last_name || profile.lastName || '',
+              email: profile.email || '',
+              avatar: profile.avatar || profile.picture || '',
+            }
+          : null,
+        // Convert tokens to simple objects that are cloneable
+        tokens: tokens
+          ? {
               accessToken:
-                currentTokens?.accessToken?.jwtToken ||
-                (typeof currentTokens?.accessToken === 'object'
-                  ? JSON.stringify(currentTokens?.accessToken)
-                  : currentTokens?.accessToken) ||
-                null,
+                typeof tokens.accessToken === 'object'
+                  ? tokens.accessToken.jwtToken ||
+                    JSON.stringify(tokens.accessToken)
+                  : tokens.accessToken,
               idToken:
-                currentTokens?.idToken?.jwtToken ||
-                (typeof currentTokens?.idToken === 'object'
-                  ? JSON.stringify(currentTokens?.idToken)
-                  : currentTokens?.idToken) ||
-                null,
+                typeof tokens.idToken === 'object'
+                  ? tokens.idToken.jwtToken || JSON.stringify(tokens.idToken)
+                  : tokens.idToken,
+              // Exclude functions and non-cloneable properties
             }
           : null,
-        profile: isAuthenticated
-          ? {
-              ...profile,
-              // Ensure we have proper field names
-              first_name:
-                profile?.first_name ||
-                profile?.firstName ||
-                profile?.given_name,
-              last_name:
-                profile?.last_name || profile?.lastName || profile?.family_name,
-              email: profile?.email,
-            }
-          : null,
-        exploreMenu: introData.map((item) => ({
-          name: item.title,
-          link: item.slug ? `/us-en/explore/${item.slug}` : '#',
-        })),
+        exploreMenu:
+          introData?.map((item) => ({
+            name: item.title || item.name || '',
+            link: item.url || item.link || '#',
+          })) || [],
       },
     };
-  };
+
+    return responseData;
+  }
 
   // Log authentication state on changes
   useEffect(() => {
@@ -483,6 +486,40 @@ function AuthProfileWidget() {
       globalLogger.log('Script loaded');
     }
 
+    // Update direct response handler to use safe object structures
+    const createSafeResponse = (data) => {
+      // Create a clone-safe response by ensuring all properties are serializable
+      return {
+        type: 'auth-profile',
+        data: {
+          isAuthenticated: !!data.isAuthenticated,
+          profile: data.profile
+            ? {
+                first_name:
+                  data.profile.first_name || data.profile.firstName || 'Direct',
+                last_name:
+                  data.profile.last_name || data.profile.lastName || 'User',
+                email: data.profile.email || 'direct@example.com',
+              }
+            : {
+                first_name: 'Direct',
+                last_name: 'User',
+                email: 'direct@example.com',
+              },
+          tokens: data.tokens || {
+            accessToken: 'direct-token',
+            idToken: 'direct-token',
+          },
+          exploreMenu: Array.isArray(data.exploreMenu)
+            ? data.exploreMenu.map((item) => ({
+                name: item.name || item.title || '',
+                link: item.link || item.url || '#',
+              }))
+            : [{ name: 'Menu', link: '#' }],
+        },
+      };
+    };
+
     // Direct global handler for get-auth-profile message
     window.addEventListener('message', function directMessageHandler(event) {
       if (globalLogger.isEnabled()) {
@@ -515,22 +552,15 @@ function AuthProfileWidget() {
 
           // Create a direct response with static data since we can't access component state
           try {
-            const directResponse = {
-              type: 'auth-profile',
-              data: {
-                isAuthenticated: true,
-                profile: {
-                  first_name: 'Direct',
-                  last_name: 'Handler',
-                  email: 'direct@test.com',
-                },
-                tokens: {
-                  accessToken: 'direct-handler-token',
-                  idToken: 'direct-handler-id-token',
-                },
-                exploreMenu: [{ name: 'Direct Handler Menu', link: '#' }],
+            // Use the safe response creator
+            const directResponse = createSafeResponse({
+              isAuthenticated: true,
+              profile: {
+                first_name: 'Direct',
+                last_name: 'Handler',
+                email: 'direct@test.com',
               },
-            };
+            });
 
             event.source.postMessage(directResponse, event.origin);
             if (globalLogger.isEnabled()) {
@@ -706,10 +736,11 @@ function AuthProfileWidget() {
       // Notify parent that auth data has been updated
       (async () => {
         const responseData = await createResponseData();
+        // Make sure response is serializable before sending
         window.parent.postMessage(
           {
             type: 'auth-widget-data-updated',
-            hasAuth: isAuthenticated,
+            hasAuth: !!isAuthenticated,
             timestamp: new Date().toISOString(),
             data: responseData.data, // Include the full auth data for the parent to use
           },
@@ -784,7 +815,15 @@ function AuthProfileWidget() {
                     if (isLoggingEnabled()) {
                       console.log('[AUTH DEBUG] Got tokens from Auth:', tokens ? 'yes' : 'no');
                     }
-                    return tokens;
+                    // Make tokens safe for serialization
+                    return tokens ? {
+                      accessToken: typeof tokens.accessToken === 'object' ?
+                        (tokens.accessToken.jwtToken || JSON.stringify(tokens.accessToken)) :
+                        tokens.accessToken,
+                      idToken: typeof tokens.idToken === 'object' ?
+                        (tokens.idToken.jwtToken || JSON.stringify(tokens.idToken)) :
+                        tokens.idToken
+                    } : null;
                   }
                 }
               } catch (err) {
@@ -897,12 +936,28 @@ function AuthProfileWidget() {
                   diagnosticLogger.log('Auth module found');
                   const session = await Auth.getSession();
                   diagnosticLogger.log('Got session from Auth');
-                  return session;
+                  // Make tokens safe for serialization
+                  return session ? {
+                    accessToken: typeof session.accessToken === 'object' ?
+                      (session.accessToken.jwtToken || JSON.stringify(session.accessToken)) :
+                      session.accessToken,
+                    idToken: typeof session.idToken === 'object' ?
+                      (session.idToken.jwtToken || JSON.stringify(session.idToken)) :
+                      session.idToken
+                  } : null;
                 } else if (window.Auth) {
                   diagnosticLogger.log('Auth found on window');
                   const session = await window.Auth.getSession();
                   diagnosticLogger.log('Got session from window.Auth');
-                  return session;
+                  // Make tokens safe for serialization
+                  return session ? {
+                    accessToken: typeof session.accessToken === 'object' ?
+                      (session.accessToken.jwtToken || JSON.stringify(session.accessToken)) :
+                      session.accessToken,
+                    idToken: typeof session.idToken === 'object' ?
+                      (session.idToken.jwtToken || JSON.stringify(session.idToken)) :
+                      session.idToken
+                  } : null;
                 }
               } catch (err) {
                 diagnosticLogger.error('Error getting Auth tokens:', err);
@@ -938,34 +993,22 @@ function AuthProfileWidget() {
                       },
                       exploreMenu: [
                         { name: 'Explore Menu Item', link: '#' }
-                      ],
-                      _source: 'afterinteractive-script'
+                      ]
                     }
                   };
 
-                  // Send immediate response
+                  // Send response
                   e.source.postMessage(auth, e.origin);
-                  diagnosticLogger.log('Sent diagnostic auth response to:', e.origin);
-                } catch (err) {
-                  diagnosticLogger.error('Error in diagnostic response:', err);
+                  diagnosticLogger.log('Sent auth response to', e.origin);
+                } catch(err) {
+                  diagnosticLogger.error('Error responding to get-auth-profile:', err);
                 }
               }
             });
 
-            diagnosticLogger.log('Script ready and listening for messages');
-
-            // Announce ready state
-            if (window.parent !== window) {
-              setTimeout(() => {
-                window.parent.postMessage({
-                  type: 'auth-widget-ready',
-                  timestamp: new Date().toISOString()
-                }, '*');
-                diagnosticLogger.log('Ready notification sent');
-              }, 1000);
-            }
-          } catch(e) {
-            console.error('[Auth Widget Diagnostic]', new Date().toISOString(), 'Script error:', e);
+            diagnosticLogger.log('Diagnostic script initialized (afterInteractive)');
+          } catch(err) {
+            console.error('[Auth Widget Diagnostic] Error:', err);
           }
         `}
       </Script>

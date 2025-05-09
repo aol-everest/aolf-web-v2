@@ -162,3 +162,4 @@ The debug helper (only active when debug mode is enabled):
 
 - Make sure to update the iframe src and APP2_ORIGIN to match your actual app2 deployment.
 - Any subdomain of `artofliving.org` will be accepted by the widget responder.
+ 
