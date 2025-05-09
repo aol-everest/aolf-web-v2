@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { useAuth } from '@contexts';
 import { api } from '@utils';
 import { useQuery } from '@tanstack/react-query';
@@ -106,6 +106,10 @@ function AuthProfileWidget() {
   const { isAuthenticated, profile, passwordLess } = authObject || {};
   const { tokens } = passwordLess || {};
 
+  // Use ref to prevent removing/adding the same listener multiple times
+  const messageHandlerRef = useRef(null);
+  const listenerSetupRef = useRef(false);
+
   // Log authentication state on changes
   useEffect(() => {
     logger.info(
@@ -176,10 +180,119 @@ function AuthProfileWidget() {
     }
   }, [isLoading, error]);
 
+  // Set up message listener with useRef to avoid recreation on each render
   useEffect(() => {
-    function handler(event) {
-      // Log all incoming postMessages for debugging
-      logger.debug('Received postMessage from origin:', event.origin);
+    // Define the message handler function
+    const createMessageHandler = () => {
+      return function handler(event) {
+        // Log all incoming postMessages for debugging
+        logger.debug(
+          'Received event from origin:',
+          event.origin,
+          'type:',
+          event.data?.type,
+        );
+
+        // Validate origin
+        if (!ALLOWED_ORIGIN_REGEX.test(event.origin)) {
+          logger.warn('Rejected message from invalid origin:', event.origin);
+          return;
+        }
+
+        // Create menu items from intro data
+        const exploreMenu = introData.map((item) => ({
+          name: item.title,
+          link: item.slug ? `/us-en/explore/${item.slug}` : '#',
+        }));
+
+        if (event.data?.type === 'get-auth-profile') {
+          logger.info(
+            'Received auth profile request from origin:',
+            event.origin,
+          );
+
+          // Create response data
+          const responseData = {
+            type: 'auth-profile',
+            data: {
+              isAuthenticated,
+              tokens: isAuthenticated
+                ? {
+                    accessToken: tokens?.accessToken,
+                    idToken: tokens?.idToken,
+                  }
+                : null,
+              profile,
+              exploreMenu,
+            },
+          };
+
+          // Log response size (but not content for security)
+          logger.debug('Response payload size details:', {
+            profileSize: profile ? JSON.stringify(profile).length : 0,
+            menuItemsCount: exploreMenu.length,
+            totalSize: JSON.stringify(responseData).length,
+          });
+
+          // Send the response
+          try {
+            event.source.postMessage(responseData, event.origin);
+            logger.info('Auth profile sent successfully to:', event.origin);
+          } catch (err) {
+            logger.error('Failed to send auth profile:', err);
+          }
+        }
+      };
+    };
+
+    // Only set up the listener once
+    if (!listenerSetupRef.current) {
+      logger.info('Setting up postMessage listener (initial setup)');
+      messageHandlerRef.current = createMessageHandler();
+      window.addEventListener('message', messageHandlerRef.current);
+      listenerSetupRef.current = true;
+
+      // Add a diagnostic check to verify if we're receiving any messages
+      const diagInterval = setInterval(() => {
+        logger.debug(
+          'Diagnostic: postMessage listener is active, waiting for messages...',
+        );
+
+        // Try to trigger a message to self to verify listener is working
+        try {
+          window.parent.postMessage({ type: 'auth-widget-ping' }, '*');
+        } catch (e) {
+          // Ignore security errors for cross-origin frames
+        }
+      }, 10000); // Check every 10 seconds
+
+      return () => {
+        logger.info('Cleaning up postMessage listener and diagnostic interval');
+        window.removeEventListener('message', messageHandlerRef.current);
+        clearInterval(diagInterval);
+        listenerSetupRef.current = false;
+      };
+    }
+  }, []); // Empty dependency array - only run once
+
+  // Update the handler when important data changes
+  useEffect(() => {
+    // Skip if listener hasn't been set up yet
+    if (!messageHandlerRef.current || !listenerSetupRef.current) return;
+
+    logger.debug('Updating message handler with new data');
+
+    // Remove old handler
+    window.removeEventListener('message', messageHandlerRef.current);
+
+    // Create new handler with updated data
+    messageHandlerRef.current = function handler(event) {
+      logger.debug(
+        'Received event from origin:',
+        event.origin,
+        'type:',
+        event.data?.type,
+      );
 
       // Validate origin
       if (!ALLOWED_ORIGIN_REGEX.test(event.origin)) {
@@ -187,15 +300,14 @@ function AuthProfileWidget() {
         return;
       }
 
+      // Create menu items from intro data
       const exploreMenu = introData.map((item) => ({
         name: item.title,
         link: item.slug ? `/us-en/explore/${item.slug}` : '#',
       }));
 
-      logger.debug('Message type:', event.data?.type);
-
       if (event.data?.type === 'get-auth-profile') {
-        logger.info('Sending auth profile to origin:', event.origin);
+        logger.info('Received auth profile request from origin:', event.origin);
 
         // Create response data
         const responseData = {
@@ -213,27 +325,23 @@ function AuthProfileWidget() {
           },
         };
 
-        // Log response size (but not content for security)
-        logger.debug('Response payload size details:', {
-          profileSize: profile ? JSON.stringify(profile).length : 0,
-          menuItemsCount: exploreMenu.length,
-          totalSize: JSON.stringify(responseData).length,
-        });
-
         // Send the response
-        event.source.postMessage(responseData, event.origin);
-        logger.info('Auth profile sent successfully');
+        try {
+          event.source.postMessage(responseData, event.origin);
+          logger.info('Auth profile sent successfully to:', event.origin);
+        } catch (err) {
+          logger.error('Failed to send auth profile:', err);
+        }
       }
-    }
+    };
 
-    logger.info('Setting up postMessage listener');
-    window.addEventListener('message', handler);
+    // Add updated handler
+    window.addEventListener('message', messageHandlerRef.current);
 
     return () => {
-      logger.info('Removing postMessage listener');
-      window.removeEventListener('message', handler);
+      // Cleanup not needed here as it will be done by the main setup effect
     };
-  }, [isAuthenticated, profile, introData, tokens]);
+  }, [isAuthenticated, profile, introData, tokens]); // Only update when these change
 
   // Log component render
   logger.debug('AuthProfileWidget rendered');
@@ -257,12 +365,31 @@ function AuthProfileWidget() {
       {/* Optimize script loading */}
       <OptimizedScripts />
 
-      {/* Add console logger during development */}
-      {process.env.NODE_ENV !== 'production' && (
-        <Script id="logger-info" strategy="afterInteractive">
-          {`console.log('[Auth Widget]', new Date().toISOString(), 'Widget fully loaded and ready');`}
-        </Script>
-      )}
+      {/* Add diagnostic script to ensure postMessage is working */}
+      <Script id="diagnostic-check" strategy="afterInteractive">
+        {`
+          // Safely verify postMessage is working
+          try {
+            window.addEventListener('message', function diagnosticListener(e) {
+              if (e.data?.type === 'auth-widget-ping') {
+                console.log('[Auth Widget]', new Date().toISOString(), 'Self diagnostic ping received - postMessage is working');
+              }
+            });
+
+            // Log that we're ready to receive messages
+            console.log('[Auth Widget]', new Date().toISOString(), 'Widget initialized and ready to receive messages');
+
+            // Check if this is embedded in an iframe
+            if (window.parent !== window) {
+              console.log('[Auth Widget]', new Date().toISOString(), 'Widget is embedded in an iframe - correct configuration');
+            } else {
+              console.warn('[Auth Widget]', new Date().toISOString(), 'Widget is NOT embedded in an iframe - this may cause issues');
+            }
+          } catch(e) {
+            console.error('[Auth Widget]', new Date().toISOString(), 'Diagnostic script error:', e);
+          }
+        `}
+      </Script>
     </>
   );
 }
