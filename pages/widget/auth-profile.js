@@ -40,7 +40,14 @@ const logger = {
   isEnabled: () => {
     // Only enable logging if debug mode is enabled
     if (typeof window !== 'undefined') {
-      // If debug is enabled, enable logging
+      // Check URL query parameters - useful for mobile debugging
+      const urlParams = new URLSearchParams(window.location.search);
+      const debugParam = urlParams.get('debug');
+      if (debugParam === 'true' || debugParam === 'widget') {
+        return true;
+      }
+
+      // If debug is enabled in localStorage, enable logging
       if (localStorage.getItem('aolf-widget-debug') === 'true') {
         return true;
       }
@@ -84,6 +91,182 @@ if (typeof window !== 'undefined') {
     localStorage.removeItem('aolf-widget-debug');
     console.info('[Auth Widget] Logging disabled');
   };
+
+  // Add a visual debug overlay for mobile debugging
+  const addDebugOverlay = () => {
+    // Only add if it doesn't exist and debug is enabled
+    if (
+      logger.isEnabled() &&
+      !document.getElementById('mobile-debug-overlay')
+    ) {
+      // Create the debug overlay element
+      const overlay = document.createElement('div');
+      overlay.id = 'mobile-debug-overlay';
+      overlay.style.cssText = `
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        max-height: 40vh;
+        background-color: rgba(0, 0, 0, 0.8);
+        color: #0f0;
+        font-family: monospace;
+        font-size: 10px;
+        padding: 8px;
+        overflow-y: auto;
+        z-index: 9999;
+        border-top: 2px solid #0f0;
+      `;
+
+      // Add a clear logs button
+      const clearButton = document.createElement('button');
+      clearButton.textContent = 'Clear Logs';
+      clearButton.style.cssText = `
+        position: absolute;
+        top: 5px;
+        right: 5px;
+        background: #700;
+        color: white;
+        border: none;
+        padding: 3px 6px;
+        font-size: 10px;
+      `;
+      clearButton.addEventListener('click', () => {
+        const logContainer = document.getElementById('mobile-debug-logs');
+        if (logContainer) logContainer.innerHTML = '';
+      });
+      overlay.appendChild(clearButton);
+
+      // Add log container
+      const logContainer = document.createElement('div');
+      logContainer.id = 'mobile-debug-logs';
+      overlay.appendChild(logContainer);
+
+      // Add device information banner for easier debugging
+      const deviceInfoBanner = document.createElement('div');
+      deviceInfoBanner.style.cssText = `
+        background-color: #305;
+        padding: 5px;
+        margin-bottom: 10px;
+        border-radius: 4px;
+        font-weight: bold;
+        white-space: pre-wrap;
+        word-break: break-all;
+      `;
+
+      // Get device and browser info
+      const userAgent = navigator.userAgent;
+      const isIOS =
+        /iPhone|iPad|iPod|iOS|CriOS/.test(userAgent) ||
+        (/Safari/.test(userAgent) && /Apple/.test(navigator.vendor));
+
+      deviceInfoBanner.innerHTML = `
+        <div>Device: ${isIOS ? '📱 iOS' : '🖥️ Desktop/Android'}</div>
+        <div>PostMessage Mode: ${isIOS ? '📝 String JSON' : '🔄 Object'}</div>
+        <div>URL: ${window.location.href}</div>
+        <div style="font-size:8px;color:#aaa;margin-top:3px">${userAgent}</div>
+      `;
+
+      // Insert at top of log container
+      logContainer.insertBefore(deviceInfoBanner, logContainer.firstChild);
+
+      // Add to the document
+      document.body.appendChild(overlay);
+
+      // Override console.log to write to our debug overlay
+      const originalConsole = {
+        log: console.log,
+        info: console.info,
+        warn: console.warn,
+        error: console.error,
+        debug: console.debug,
+      };
+
+      // Create a function to append log messages to the overlay
+      const appendToOverlay = (level, ...args) => {
+        try {
+          const logContainer = document.getElementById('mobile-debug-logs');
+          if (!logContainer) return;
+
+          let color = '#0f0'; // Default green
+          if (level === 'error') color = '#f00';
+          if (level === 'warn') color = '#ff0';
+          if (level === 'info') color = '#0ff';
+
+          const logLine = document.createElement('div');
+          logLine.style.cssText = `
+            color: ${color};
+            margin: 2px 0;
+            white-space: pre-wrap;
+            word-break: break-all;
+          `;
+
+          const timestamp = new Date()
+            .toISOString()
+            .split('T')[1]
+            .split('Z')[0];
+          logLine.textContent = `[${timestamp}] ${level.toUpperCase()}: ${args
+            .map((arg) => {
+              if (typeof arg === 'object') {
+                try {
+                  return JSON.stringify(arg);
+                } catch (e) {
+                  return String(arg);
+                }
+              }
+              return String(arg);
+            })
+            .join(' ')}`;
+
+          logContainer.appendChild(logLine);
+          // Auto-scroll to bottom
+          logContainer.scrollTop = logContainer.scrollHeight;
+
+          // Limit to latest 100 lines
+          while (logContainer.children.length > 100) {
+            logContainer.removeChild(logContainer.children[0]);
+          }
+        } catch (e) {
+          // Fallback to original if something goes wrong
+          originalConsole.error('Debug overlay error:', e);
+        }
+      };
+
+      // Override console methods
+      console.log = (...args) => {
+        originalConsole.log(...args);
+        appendToOverlay('log', ...args);
+      };
+      console.info = (...args) => {
+        originalConsole.info(...args);
+        appendToOverlay('info', ...args);
+      };
+      console.warn = (...args) => {
+        originalConsole.warn(...args);
+        appendToOverlay('warn', ...args);
+      };
+      console.error = (...args) => {
+        originalConsole.error(...args);
+        appendToOverlay('error', ...args);
+      };
+      console.debug = (...args) => {
+        originalConsole.debug(...args);
+        appendToOverlay('debug', ...args);
+      };
+    }
+  };
+
+  // Check if we should add the debug overlay
+  setTimeout(() => {
+    try {
+      if (logger.isEnabled()) {
+        addDebugOverlay();
+        console.log('[Auth Widget] Mobile debug overlay enabled');
+      }
+    } catch (e) {
+      console.error('[Auth Widget] Error initializing debug overlay:', e);
+    }
+  }, 500);
 }
 
 // Component to optimize script loading - delays non-critical scripts
@@ -167,12 +350,20 @@ if (typeof window !== 'undefined') {
   // Check if logging is disabled first
   const isLoggingEnabled = () => {
     try {
+      // Check URL query parameters for mobile debugging
+      const urlParams = new URLSearchParams(window.location.search);
+      const debugParam = urlParams.get('debug');
+      if (debugParam === 'true' || debugParam === 'widget') {
+        return true;
+      }
+
+      // Check localStorage
       if (localStorage.getItem('aolf-widget-debug') === 'true') {
         return true;
       }
-      return false; // Default to disabled
+      return false; // Default to disabled for diagnostics
     } catch (e) {
-      return false; // Default to disabled if we can't check localStorage
+      return false; // Default to disabled if can't check localStorage
     }
   };
 
@@ -551,10 +742,16 @@ function AuthProfileWidget() {
 
             // Special handling for iOS browsers - stringify the message
             try {
-              // Check if we should stringify based on browser
-              const isIOSDevice = /iPhone|iPad|iPod|iOS|CriOS/i.test(
-                navigator?.userAgent,
-              );
+              // Better iOS device detection - all browsers on iOS use WebKit underneath
+              const userAgent = navigator?.userAgent || '';
+              const isIOSDevice =
+                /iPhone|iPad|iPod|iOS|CriOS/.test(userAgent) ||
+                (/Safari/.test(userAgent) && /Apple/.test(navigator.vendor));
+
+              if (logger.isEnabled()) {
+                logger.debug(`Browser detection - UserAgent: ${userAgent}`);
+                logger.debug(`Detected as iOS device: ${isIOSDevice}`);
+              }
 
               if (isIOSDevice) {
                 // For iOS devices - ALWAYS use string format
@@ -564,7 +761,7 @@ function AuthProfileWidget() {
                   '✅ Sent stringified auth profile response (iOS format)',
                 );
               } else {
-                // For other devices - try direct object first
+                // For other devices - try object first, then string
                 try {
                   // Attempt to send the object directly first (works better with the receiver code)
                   event.source.postMessage(response, event.origin);
@@ -1033,10 +1230,16 @@ function AuthProfileWidget() {
               // Use the safe response creator with the cleaned auth data
               const directResponse = createSafeResponse(safeAuthObject);
 
-              // Check if we should stringify based on browser
-              const isIOSDevice = /iPhone|iPad|iPod|iOS|CriOS/i.test(
-                navigator?.userAgent,
-              );
+              // Better iOS device detection - all browsers on iOS use WebKit underneath
+              const userAgent = navigator?.userAgent || '';
+              const isIOSDevice =
+                /iPhone|iPad|iPod|iOS|CriOS/.test(userAgent) ||
+                (/Safari/.test(userAgent) && /Apple/.test(navigator.vendor));
+
+              if (globalLogger.isEnabled()) {
+                globalLogger.log(`Browser detection - UserAgent: ${userAgent}`);
+                globalLogger.log(`Detected as iOS device: ${isIOSDevice}`);
+              }
 
               if (isIOSDevice) {
                 // For iOS devices - ALWAYS use string format
@@ -1116,6 +1319,14 @@ function AuthProfileWidget() {
         // Check if logging is disabled
         const isLoggingEnabled = () => {
           try {
+            // Check URL query parameters for mobile debugging
+            const urlParams = new URLSearchParams(window.location.search);
+            const debugParam = urlParams.get('debug');
+            if (debugParam === 'true' || debugParam === 'widget') {
+              return true;
+            }
+
+            // Check localStorage
             if (localStorage.getItem('aolf-widget-debug') === 'true') {
               return true;
             }
@@ -1252,6 +1463,14 @@ function AuthProfileWidget() {
             // Check if logging is disabled
             const isLoggingEnabled = () => {
               try {
+                // Check URL query parameters for mobile debugging
+                const urlParams = new URLSearchParams(window.location.search);
+                const debugParam = urlParams.get('debug');
+                if (debugParam === 'true' || debugParam === 'widget') {
+                  return true;
+                }
+
+                // Check localStorage
                 if (localStorage.getItem('aolf-widget-debug') === 'true') {
                   return true;
                 }
