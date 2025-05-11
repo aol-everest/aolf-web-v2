@@ -490,6 +490,111 @@ if (typeof window !== 'undefined') {
   }
 }
 
+/**
+ * Utility to safely post messages across domains on mobile
+ * Handles various origin issues that can happen on mobile browsers
+ */
+const postToParent = (data) => {
+  if (typeof window === 'undefined' || !window.parent) return;
+
+  try {
+    // On iOS, sometimes the parent origin cannot be determined
+    // We need to handle this case specially
+    let targetOrigin = '*';
+    const isIOS = isIOSDevice();
+
+    // First try to get the parent origin properly
+    try {
+      if (
+        window.location &&
+        window.location.ancestorOrigins &&
+        window.location.ancestorOrigins.length > 0
+      ) {
+        targetOrigin = window.location.ancestorOrigins[0];
+        console.log('[AUTH DEBUG] Using detected parent origin:', targetOrigin);
+      } else if (document.referrer) {
+        // Try to get origin from referrer as fallback
+        const referrerUrl = new URL(document.referrer);
+        targetOrigin = referrerUrl.origin;
+        console.log('[AUTH DEBUG] Using referrer origin:', targetOrigin);
+      } else {
+        console.log(
+          '[AUTH DEBUG] Unable to detect parent origin, using wildcards',
+        );
+      }
+    } catch (e) {
+      console.warn('[AUTH DEBUG] Error getting parent origin:', e);
+    }
+
+    // For iOS, use stringified format
+    if (isIOS) {
+      // Special handling for iOS mobile
+      const message = JSON.stringify(data);
+
+      // On iOS, we need to try different approaches
+      try {
+        // Try wildcard origin first - this is often more reliable on iOS
+        window.parent.postMessage({ data: message }, '*');
+        console.log('[AUTH DEBUG] Sent iOS-formatted message with * origin');
+
+        // Also try with specific origin if available
+        if (targetOrigin !== '*') {
+          try {
+            window.parent.postMessage({ data: message }, targetOrigin);
+            console.log(
+              '[AUTH DEBUG] Sent iOS-formatted message with specific origin:',
+              targetOrigin,
+            );
+          } catch (specificErr) {
+            console.warn(
+              '[AUTH DEBUG] Error sending with specific origin:',
+              specificErr.message,
+            );
+          }
+        }
+      } catch (e) {
+        console.error('[AUTH DEBUG] Failed to send message to parent:', e);
+
+        // Last fallback attempt - direct string content
+        try {
+          window.parent.postMessage(message, '*');
+          console.log('[AUTH DEBUG] Sent direct string message (fallback)');
+        } catch (finalErr) {
+          console.error('[AUTH DEBUG] All communication attempts failed');
+        }
+      }
+    } else {
+      // Standard approach for desktop
+      try {
+        // Try with detected origin first
+        if (targetOrigin !== '*') {
+          window.parent.postMessage(data, targetOrigin);
+          console.log('[AUTH DEBUG] Sent message with specific origin');
+        } else {
+          // Fallback to wildcard
+          window.parent.postMessage(data, '*');
+          console.log('[AUTH DEBUG] Sent message with wildcard origin');
+        }
+      } catch (e) {
+        console.error(
+          '[AUTH DEBUG] Failed standard approach, trying fallback:',
+          e,
+        );
+
+        // Try stringified as fallback
+        try {
+          window.parent.postMessage(JSON.stringify(data), '*');
+          console.log('[AUTH DEBUG] Sent stringified message (fallback)');
+        } catch (finalErr) {
+          console.error('[AUTH DEBUG] All communication attempts failed');
+        }
+      }
+    }
+  } catch (outerErr) {
+    console.error('[AUTH DEBUG] Outer error in postToParent:', outerErr);
+  }
+};
+
 function AuthProfileWidget() {
   const authObject = useAuth();
 
@@ -839,107 +944,8 @@ function AuthProfileWidget() {
       );
     }
 
-    try {
-      // We need special handling for iOS Safari
-      const isIOS = isIOSDevice();
-
-      // Browser detection for better iOS compatibility
-      if (logger.isEnabled()) {
-        logger.debug(
-          'Browser detection - UserAgent: ' +
-            navigator.userAgent.substring(0, 100) +
-            '...',
-        );
-        logger.debug('Detected as iOS device: ' + isIOS);
-      }
-
-      // Get the parent origin - CRITICAL for cross-origin communication
-      let targetOrigin = '*';
-      try {
-        // Try to determine the parent's origin
-        if (
-          window.location &&
-          window.location.ancestorOrigins &&
-          window.location.ancestorOrigins.length > 0
-        ) {
-          targetOrigin = window.location.ancestorOrigins[0];
-          logger.debug(`Using detected parent origin: ${targetOrigin}`);
-        } else {
-          // Fallback: Try to extract from referrer
-          const referrer = document.referrer;
-          if (referrer) {
-            const url = new URL(referrer);
-            targetOrigin = url.origin;
-            logger.debug(`Using referrer origin: ${targetOrigin}`);
-          } else {
-            logger.warn(
-              'Could not determine parent origin, using wildcard (less secure)',
-            );
-          }
-        }
-      } catch (originErr) {
-        logger.error('Failed to determine parent origin:', originErr);
-      }
-
-      // iOS Safari needs special handling for postMessage
-      if (isIOS) {
-        // iOS Safari needs stringified data for more reliable postMessage
-        logger.info(
-          `✅ Sending stringified response to ${targetOrigin} (iOS format)`,
-        );
-
-        // For iOS, we directly stringify and then send as data field
-        window.parent.postMessage(
-          {
-            data: JSON.stringify(data),
-          },
-          targetOrigin,
-        );
-
-        // iOS sometimes needs multiple attempts to receive messages reliably
-        // Add a slight delay and try again for iOS
-        setTimeout(() => {
-          try {
-            window.parent.postMessage(
-              {
-                data: JSON.stringify(data),
-              },
-              targetOrigin,
-            );
-          } catch (e) {
-            // Ignore errors in the retry
-          }
-        }, 100);
-      } else {
-        // For other browsers, use the standard approach
-        logger.info(
-          `✅ Sending auth profile response to ${targetOrigin} (standard format)`,
-        );
-        window.parent.postMessage(data, targetOrigin);
-      }
-    } catch (err) {
-      logger.error('Error sending message to parent:', err);
-
-      // Last resort fallback - try wildcard origin with minimal data
-      try {
-        logger.warn('Attempting fallback with wildcard origin');
-        const fallbackData = {
-          type: data.type,
-          data: {
-            isAuthenticated: data.data?.isAuthenticated || false,
-            hasAuth: data.data?.hasAuth || false,
-            authTime: new Date().toISOString(),
-            source: 'fallback',
-          },
-        };
-        window.parent.postMessage(
-          isIOSDevice() ? { data: JSON.stringify(fallbackData) } : fallbackData,
-          '*',
-        );
-      } catch (finalErr) {
-        logger.error('All communication attempts failed');
-      }
-    }
+    // Use the cross-domain safe posting method
+    postToParent(data);
   }
 
   // Use this enhanced function for message responses
