@@ -522,11 +522,39 @@ function AuthProfileWidget() {
 
   // Create a helper function to generate the auth profile response
   async function createResponseData() {
+    // Enhanced logging for authentication debugging
+    if (logger.isEnabled()) {
+      logger.debug('Authentication state details:', {
+        isAuthenticated: !!isAuthenticated,
+        hasProfile: !!profile,
+        profileExists: profile ? 'yes' : 'no',
+        tokenExists: tokens ? 'yes' : 'no',
+        tokenType: tokens ? typeof tokens : 'n/a',
+        introData: introData ? `${introData.length} items` : 'none',
+      });
+    }
+
+    // Add a safety check to ensure auth state is properly recognized
+    const authState = isAuthenticated === true;
+
+    if (logger.isEnabled()) {
+      console.log('[AUTH DEBUG] Creating response with auth state:', authState);
+      // Print token debug info (without sensitive data)
+      if (tokens) {
+        console.log('[AUTH DEBUG] Token info:', {
+          accessTokenExists: !!tokens.accessToken,
+          accessTokenType: typeof tokens.accessToken,
+          idTokenExists: !!tokens.idToken,
+          idTokenType: typeof tokens.idToken,
+        });
+      }
+    }
+
     // Get current auth state
     const responseData = {
       type: 'auth-profile',
       data: {
-        isAuthenticated: isAuthenticated || false,
+        isAuthenticated: authState,
         profile: profile
           ? {
               // Clean up profile data and ensure it's serializable
@@ -561,6 +589,23 @@ function AuthProfileWidget() {
           }) || [],
       },
     };
+
+    // Add secondary indicators to help with debugging and ensure data is passed correctly
+    responseData.data.authTime = new Date().toISOString();
+    responseData.data.hasAuth = !!isAuthenticated;
+    responseData.data.hasTokens = !!tokens;
+    responseData.data.hasProfile = !!profile;
+
+    // Enhanced logging for response data
+    if (logger.isEnabled()) {
+      console.log('[AUTH DEBUG] Response data structure:', {
+        type: responseData.type,
+        isAuthenticated: responseData.data.isAuthenticated,
+        hasProfile: responseData.data.hasProfile,
+        hasTokens: responseData.data.hasTokens,
+        menuItems: responseData.data.exploreMenu?.length || 0,
+      });
+    }
 
     // Clean the data to ensure it contains no functions
     function deepCleanForPostMessage(obj) {
@@ -1083,7 +1128,7 @@ function AuthProfileWidget() {
   // Log component render
   logger.debug('AuthProfileWidget rendered');
 
-  // Direct global handler for get-auth-profile message - improve error handling
+  // Direct global handler with improved token handling
   if (typeof window !== 'undefined') {
     // Use a simplified logger for the global context
     const globalLogger = {
@@ -1121,6 +1166,15 @@ function AuthProfileWidget() {
 
     // Update direct response handler to use safe object structures
     const createSafeResponse = (data) => {
+      // Log authentication state for debugging
+      if (globalLogger.isEnabled()) {
+        globalLogger.log('Creating safe response with auth state:', {
+          isAuthenticated: !!data.isAuthenticated,
+          hasProfile: !!data.profile,
+          hasTokens: !!data.tokens,
+        });
+      }
+
       // Create a clone-safe response by ensuring all properties are serializable
       return {
         type: 'auth-profile',
@@ -1137,13 +1191,31 @@ function AuthProfileWidget() {
                 avatar: data.profile.avatar || data.profile.picture || '',
               }
             : null,
-          tokens: data.tokens || null,
+          tokens: data.tokens
+            ? {
+                accessToken:
+                  typeof data.tokens.accessToken === 'object'
+                    ? data.tokens.accessToken.jwtToken ||
+                      JSON.stringify(data.tokens.accessToken)
+                    : data.tokens.accessToken,
+                idToken:
+                  typeof data.tokens.idToken === 'object'
+                    ? data.tokens.idToken.jwtToken ||
+                      JSON.stringify(data.tokens.idToken)
+                    : data.tokens.idToken,
+              }
+            : null,
           exploreMenu: Array.isArray(data.exploreMenu)
             ? data.exploreMenu.map((item) => ({
                 name: item.name || item.title || '',
                 link: item.link || item.url || '#',
               }))
             : [],
+          // Add metadata to help with debugging
+          authTime: new Date().toISOString(),
+          hasAuth: !!data.isAuthenticated,
+          hasTokens: !!data.tokens,
+          hasProfile: !!data.profile,
         },
       };
     };
