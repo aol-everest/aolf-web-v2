@@ -251,62 +251,7 @@ if (typeof window !== 'undefined') {
     return null;
   };
 
-  // Emergency global message handler - won't be affected by React re-renders
-  window.addEventListener('message', async function (event) {
-    if (isLoggingEnabled()) {
-      console.log(
-        '[AUTH DEBUG] Raw message received:',
-        event.origin,
-        event.data,
-      );
-    }
-
-    if (event.data && event.data.type === 'get-auth-profile') {
-      if (isLoggingEnabled()) {
-        console.log('[AUTH DEBUG] Found get-auth-profile request!');
-      }
-
-      // Send a simple emergency response
-      try {
-        // Try to get real tokens if possible
-        const emergencyTokens = await tryGetEmergencyTokens();
-
-        const emergencyResponse = {
-          type: 'auth-profile',
-          data: {
-            isAuthenticated: true,
-            profile: {
-              first_name: 'Emergency',
-              last_name: 'User',
-              email: 'emergency@test.com',
-            },
-            tokens: emergencyTokens || {
-              accessToken: 'test-token',
-              idToken: 'test-id-token',
-            },
-            exploreMenu: [{ name: 'Test', link: '#' }],
-            _source: 'emergency-handler',
-          },
-        };
-
-        // Log before sending
-        if (isLoggingEnabled()) {
-          console.log(
-            '[AUTH DEBUG] Sending emergency response to',
-            event.origin,
-          );
-        }
-
-        // Send to the source that sent us the request
-        event.source.postMessage(emergencyResponse, event.origin);
-        if (isLoggingEnabled()) {
-          console.log('[AUTH DEBUG] Emergency response sent successfully');
-        }
-      } catch (err) {
-        console.error('[AUTH DEBUG] Failed to send emergency response:', err);
-      }
-    }
-  });
+  // NOTE: Emergency global message handler removed to avoid confusion on other apps
 }
 
 function AuthProfileWidget() {
@@ -450,7 +395,379 @@ function AuthProfileWidget() {
     }
   }, [isLoading, error]);
 
-  // Log script initialization
+  // Set up message listener with useRef to avoid recreation on each render
+  useEffect(() => {
+    // Define the message handler function - keep it simple
+    async function messageHandler(event) {
+      // Skip empty messages completely
+      if (!event.data) return;
+
+      // Check origin first before any processing
+      if (!ALLOWED_ORIGIN_REGEX.test(event.origin)) {
+        // Only log unauthorized origins from specific domains we care about
+        // Skip logging for ad networks, analytics, etc. that pollute the console
+        const skipLoggingDomains = [
+          'stripe.com',
+          'talkable.com',
+          'google',
+          'facebook',
+          'analytics',
+        ];
+        const shouldLog = !skipLoggingDomains.some((domain) =>
+          event.origin.includes(domain),
+        );
+
+        if (shouldLog) {
+          logger.warn(
+            'Rejected message from unauthorized origin:',
+            event.origin,
+          );
+        }
+        return;
+      }
+
+      // Now log the message since it's from an authorized source
+      logger.info(`Message from ${event.origin}:`, event.data);
+
+      // Handle messages that might be stringified JSON (common on iOS)
+      let messageData = event.data;
+      if (typeof messageData === 'string') {
+        try {
+          // Try to parse as JSON - this is often needed for iOS Chrome
+          messageData = JSON.parse(messageData);
+          logger.info('Parsed string message:', messageData);
+        } catch (e) {
+          // Only log unparseable message if it looks like it might be relevant
+          // This reduces console noise from unrelated postMessages
+          if (
+            messageData.includes('auth') ||
+            messageData.includes('profile') ||
+            messageData.includes('token')
+          ) {
+            logger.warn('Received unparseable string message, ignoring');
+          }
+          return;
+        }
+      }
+
+      // Now that we have an object, handle by message type
+      if (typeof messageData === 'object') {
+        // Handle get-auth-profile request
+        if (messageData.type === 'get-auth-profile') {
+          logger.info(
+            '📣 Processing get-auth-profile request from:',
+            event.origin,
+          );
+
+          try {
+            // Create response with available data
+            const response = await createResponseData();
+
+            // Log full response for debugging
+            if (logger.isEnabled()) {
+              console.log(
+                '[AUTH DEBUG] Full response payload:',
+                JSON.stringify(response),
+              );
+            }
+
+            // Special handling for iOS browsers - stringify the message
+            try {
+              // Use JSON stringify for iOS compatibility
+              const responseStr = JSON.stringify(response);
+
+              // Send response - try with specific origin first if possible
+              if (
+                window.location &&
+                window.location.ancestorOrigins &&
+                window.location.ancestorOrigins.length > 0
+              ) {
+                const parentOrigin = window.location.ancestorOrigins[0];
+                event.source.postMessage(responseStr, parentOrigin);
+              } else {
+                // Fallback to wildcard origin
+                event.source.postMessage(responseStr, event.origin);
+              }
+
+              logger.info('✅ Sent stringified auth profile response');
+            } catch (strErr) {
+              // Fallback to regular object if stringify fails
+              logger.warn('Stringify failed, using object postMessage');
+              event.source.postMessage(response, event.origin);
+              logger.info('✅ Sent auth profile response (fallback)');
+            }
+          } catch (err) {
+            logger.error('Failed to send auth profile:', err);
+          }
+        }
+        // Handle ping request
+        else if (messageData.type === 'auth-widget-ping') {
+          try {
+            const pongResponse = {
+              type: 'auth-widget-pong',
+              timestamp: new Date().toISOString(),
+            };
+
+            // Special handling for iOS browsers - stringify the message
+            try {
+              // Use JSON stringify for iOS compatibility
+              const pongStr = JSON.stringify(pongResponse);
+              event.source.postMessage(pongStr, event.origin);
+            } catch (strErr) {
+              // Fallback to regular object if stringify fails
+              event.source.postMessage(pongResponse, event.origin);
+            }
+
+            logger.debug('Replied to ping from', event.origin);
+          } catch (err) {
+            logger.error('Failed to respond to ping:', err);
+          }
+        }
+      }
+    }
+
+    // Set up listener just once
+    if (!listenerSetupRef.current) {
+      logger.info('Setting up message listener');
+      window.addEventListener('message', messageHandler);
+      messageHandlerRef.current = messageHandler;
+      listenerSetupRef.current = true;
+
+      // Send initialization notification
+      if (window.parent !== window) {
+        try {
+          setTimeout(() => {
+            // For better iOS support, detect parent origin if possible
+            const getParentOrigin = () => {
+              // Try to get parent origin from ancestorOrigins
+              if (
+                window.location &&
+                window.location.ancestorOrigins &&
+                window.location.ancestorOrigins.length > 0
+              ) {
+                return window.location.ancestorOrigins[0];
+              }
+
+              // Fallback to wildcard
+              return '*';
+            };
+
+            const parentOrigin = getParentOrigin();
+
+            // Let parent know we're ready - no user data here, just a notification
+            try {
+              // iOS Chrome needs simpler messages
+              const readyMsg = JSON.stringify({
+                type: 'auth-widget-ready',
+                timestamp: new Date().toISOString(),
+              });
+              window.parent.postMessage(readyMsg, parentOrigin);
+              logger.info('Sent ready notification to parent');
+            } catch (e) {
+              // Fallback to standard approach
+              window.parent.postMessage(
+                {
+                  type: 'auth-widget-ready',
+                  timestamp: new Date().toISOString(),
+                },
+                '*',
+              );
+              logger.info('Sent ready notification to parent (fallback)');
+            }
+
+            // Send a test ping to verify communication - no user data
+            try {
+              // iOS Chrome needs simpler messages
+              const pingMsg = JSON.stringify({
+                type: 'auth-widget-ping',
+                source: 'initialization',
+              });
+              window.parent.postMessage(pingMsg, parentOrigin);
+            } catch (e) {
+              // Fallback to standard approach
+              window.parent.postMessage(
+                {
+                  type: 'auth-widget-ping',
+                  source: 'initialization',
+                },
+                '*',
+              );
+            }
+          }, 500);
+        } catch (e) {
+          logger.error('Error sending initialization message:', e);
+        }
+      }
+
+      return () => {
+        logger.info('Removing message listener');
+        window.removeEventListener('message', messageHandler);
+        listenerSetupRef.current = false;
+      };
+    }
+  }, []);
+
+  // Add a simple diagnostic ping
+  useEffect(() => {
+    if (!listenerSetupRef.current) return;
+
+    const pingInterval = setInterval(() => {
+      try {
+        if (window.parent !== window) {
+          // For better iOS support, detect parent origin if possible
+          const getParentOrigin = () => {
+            // Try to get parent origin from ancestorOrigins
+            if (
+              window.location &&
+              window.location.ancestorOrigins &&
+              window.location.ancestorOrigins.length > 0
+            ) {
+              return window.location.ancestorOrigins[0];
+            }
+            // Fallback to wildcard
+            return '*';
+          };
+
+          const parentOrigin = getParentOrigin();
+
+          // Simple ping with no user data - stringify for iOS compatibility
+          try {
+            const pingMsg = JSON.stringify({
+              type: 'auth-widget-ping',
+              source: 'periodic-check',
+            });
+            window.parent.postMessage(pingMsg, parentOrigin);
+          } catch (e) {
+            // Fallback to standard approach
+            window.parent.postMessage(
+              {
+                type: 'auth-widget-ping',
+                source: 'periodic-check',
+              },
+              '*',
+            );
+          }
+        }
+      } catch (e) {
+        // Ignore cross-origin errors
+      }
+    }, 10000);
+
+    return () => clearInterval(pingInterval);
+  }, []);
+
+  // Validate auth data before sending updates to parent
+  useEffect(() => {
+    // Skip if listener hasn't been set up yet or if data hasn't really changed
+    if (!messageHandlerRef.current || !listenerSetupRef.current) return;
+
+    // Create a simple version profile checker to avoid unnecessary updates
+    const profileSignature = isAuthenticated
+      ? `${!!tokens?.accessToken}-${profile?.first_name}-${profile?.last_name}-${introData?.length}`
+      : 'not-authenticated';
+
+    // Compare with previous value
+    if (prevProfileSignatureRef.current === profileSignature) {
+      // Skip update if nothing meaningful changed
+      return;
+    }
+
+    logger.info(`Auth data changed, profile signature: ${profileSignature}`);
+    prevProfileSignatureRef.current = profileSignature;
+
+    // Send a notification that auth data is updated
+    try {
+      // Only send actual valid auth data - never send dummy data
+      (async () => {
+        // Only proceed if we have a real authenticated user or explicitly not authenticated
+        if (isAuthenticated === true || isAuthenticated === false) {
+          const responseData = await createResponseData();
+
+          // Verify we're not sending dummy test data
+          const hasDummyData =
+            responseData.data &&
+            responseData.data.profile &&
+            Object.values(responseData.data.profile).some((value) => {
+              if (typeof value === 'string' && value) {
+                const suspiciousTerms = [
+                  'test',
+                  'dummy',
+                  'placeholder',
+                  'direct',
+                  'diagnostic',
+                  'emergency',
+                ];
+                return suspiciousTerms.some((term) =>
+                  value.toLowerCase().includes(term),
+                );
+              }
+              return false;
+            });
+
+          if (hasDummyData) {
+            logger.warn('Prevented sending auth update with dummy data');
+            return;
+          }
+
+          // Make sure response is serializable before sending
+          const message = {
+            type: 'auth-widget-data-updated',
+            hasAuth: !!isAuthenticated,
+            timestamp: new Date().toISOString(),
+            data: responseData.data, // Include the full auth data for the parent to use
+          };
+
+          try {
+            // iOS Chrome requires a simpler message format and targetOrigin pattern
+            // Use JSON stringify to ensure deep cloning of objects
+            const messageStr = JSON.stringify(message);
+
+            // Try first with specific targetOrigin - required for security
+            let sent = false;
+            if (window.parent !== window) {
+              // Try with parent's origin if we can detect it
+              if (
+                window.location &&
+                window.location.ancestorOrigins &&
+                window.location.ancestorOrigins.length > 0
+              ) {
+                const parentOrigin = window.location.ancestorOrigins[0];
+                window.parent.postMessage(messageStr, parentOrigin);
+                sent = true;
+                logger.info(
+                  `Sent auth data to specific origin: ${parentOrigin}`,
+                );
+              }
+
+              // If we couldn't determine parent origin, use wildcard as fallback
+              if (!sent) {
+                window.parent.postMessage(messageStr, '*');
+                logger.info('Sent auth data using wildcard origin');
+              }
+            }
+          } catch (postMsgErr) {
+            // If the enhanced approach fails, fall back to basic approach
+            logger.error(
+              'Enhanced postMessage failed, trying fallback',
+              postMsgErr,
+            );
+            window.parent.postMessage(message, '*');
+          }
+
+          logger.info(
+            'Notified parent that auth data was updated with real profile data',
+          );
+        }
+      })();
+    } catch (err) {
+      logger.error('Failed to notify parent of auth update:', err);
+    }
+  }, [isAuthenticated, profile, introData, tokens]); // Only update when these change
+
+  // Log component render
+  logger.debug('AuthProfileWidget rendered');
+
+  // Direct global handler for get-auth-profile message - improve error handling
   if (typeof window !== 'undefined') {
     // Use a simplified logger for the global context
     const globalLogger = {
@@ -495,33 +812,37 @@ function AuthProfileWidget() {
           isAuthenticated: !!data.isAuthenticated,
           profile: data.profile
             ? {
+                // Only include actual profile data, no dummy values
                 first_name:
-                  data.profile.first_name || data.profile.firstName || 'Direct',
+                  data.profile.first_name || data.profile.firstName || '',
                 last_name:
-                  data.profile.last_name || data.profile.lastName || 'User',
-                email: data.profile.email || 'direct@example.com',
+                  data.profile.last_name || data.profile.lastName || '',
+                email: data.profile.email || '',
+                avatar: data.profile.avatar || data.profile.picture || '',
               }
-            : {
-                first_name: 'Direct',
-                last_name: 'User',
-                email: 'direct@example.com',
-              },
-          tokens: data.tokens || {
-            accessToken: 'direct-token',
-            idToken: 'direct-token',
-          },
+            : null,
+          tokens: data.tokens || null,
           exploreMenu: Array.isArray(data.exploreMenu)
             ? data.exploreMenu.map((item) => ({
                 name: item.name || item.title || '',
                 link: item.link || item.url || '#',
               }))
-            : [{ name: 'Menu', link: '#' }],
+            : [],
         },
       };
     };
 
     // Direct global handler for get-auth-profile message
     window.addEventListener('message', function directMessageHandler(event) {
+      // Skip processing for empty messages
+      if (!event.data) return;
+
+      // Check origin before doing any processing
+      if (!ALLOWED_ORIGIN_REGEX.test(event.origin)) {
+        // Skip logging unauthorized origins to reduce console noise
+        return;
+      }
+
       if (globalLogger.isEnabled()) {
         globalLogger.log(
           'Received message:',
@@ -538,7 +859,8 @@ function AuthProfileWidget() {
           try {
             data = JSON.parse(data);
           } catch (e) {
-            // Failed to parse as JSON, continue with string value
+            // Failed to parse as JSON, skip silently to reduce console noise
+            return;
           }
         }
 
@@ -550,21 +872,42 @@ function AuthProfileWidget() {
             );
           }
 
-          // Create a direct response with static data since we can't access component state
+          // Only respond with actual auth data - don't use dummy values
           try {
-            // Use the safe response creator
-            const directResponse = createSafeResponse({
-              isAuthenticated: true,
-              profile: {
-                first_name: 'Direct',
-                last_name: 'Handler',
-                email: 'direct@test.com',
-              },
-            });
+            if (authObject && authObject.isAuthenticated) {
+              // Use the safe response creator with real auth data
+              const directResponse = createSafeResponse({
+                isAuthenticated: authObject.isAuthenticated,
+                profile: authObject.profile,
+                tokens: authObject.tokens,
+              });
 
-            event.source.postMessage(directResponse, event.origin);
-            if (globalLogger.isEnabled()) {
-              globalLogger.log('✅ Sent direct response to:', event.origin);
+              event.source.postMessage(directResponse, event.origin);
+              if (globalLogger.isEnabled()) {
+                globalLogger.log(
+                  '✅ Sent real auth response to:',
+                  event.origin,
+                );
+              }
+            } else {
+              // Send a response indicating not authenticated without dummy data
+              const emptyResponse = {
+                type: 'auth-profile',
+                data: {
+                  isAuthenticated: false,
+                  profile: null,
+                  tokens: null,
+                  exploreMenu: [],
+                },
+              };
+
+              event.source.postMessage(emptyResponse, event.origin);
+              if (globalLogger.isEnabled()) {
+                globalLogger.log(
+                  '✅ Sent unauthenticated response to:',
+                  event.origin,
+                );
+              }
             }
           } catch (err) {
             globalLogger.error('Failed to send response:', err);
@@ -576,188 +919,122 @@ function AuthProfileWidget() {
     });
   }
 
-  // Set up message listener with useRef to avoid recreation on each render
-  useEffect(() => {
-    // Define the message handler function - keep it simple
-    async function messageHandler(event) {
-      // Log every message
-      logger.info(`Message from ${event.origin}:`, event.data);
-
-      // Check origin
-      if (!ALLOWED_ORIGIN_REGEX.test(event.origin)) {
-        logger.warn('Rejected message from unauthorized origin:', event.origin);
-        return;
-      }
-
-      // Handle string messages by trying to parse them
-      let messageData = event.data;
-      if (typeof messageData === 'string') {
-        try {
-          messageData = JSON.parse(messageData);
-          logger.info('Parsed string message:', messageData);
-        } catch (e) {
-          logger.warn('Received unparseable string message, ignoring');
-          return;
-        }
-      }
-
-      // Now that we have an object, handle by message type
-      if (typeof messageData === 'object') {
-        // Handle get-auth-profile request
-        if (messageData.type === 'get-auth-profile') {
-          logger.info(
-            '📣 Processing get-auth-profile request from:',
-            event.origin,
-          );
-
-          try {
-            // Create response with available data
-            const response = await createResponseData();
-
-            // Log full response for debugging
-            if (logger.isEnabled()) {
-              console.log(
-                '[AUTH DEBUG] Full response payload:',
-                JSON.stringify(response),
-              );
-            }
-
-            // Send response
-            logger.info('Sending auth profile response to:', event.origin);
-            event.source.postMessage(response, event.origin);
-            logger.info('✅ Sent auth profile response');
-          } catch (err) {
-            logger.error('Failed to send auth profile:', err);
-          }
-        }
-        // Handle ping request
-        else if (messageData.type === 'auth-widget-ping') {
-          try {
-            const pongResponse = {
-              type: 'auth-widget-pong',
-              timestamp: new Date().toISOString(),
-            };
-            event.source.postMessage(pongResponse, event.origin);
-            logger.debug('Replied to ping from', event.origin);
-          } catch (err) {
-            logger.error('Failed to respond to ping:', err);
-          }
-        }
-      }
-    }
-
-    // Set up listener just once
-    if (!listenerSetupRef.current) {
-      logger.info('Setting up message listener');
-      window.addEventListener('message', messageHandler);
-      messageHandlerRef.current = messageHandler;
-      listenerSetupRef.current = true;
-
-      // Send initialization notification
-      if (window.parent !== window) {
-        try {
-          setTimeout(() => {
-            // Let parent know we're ready
-            window.parent.postMessage(
-              {
-                type: 'auth-widget-ready',
-                timestamp: new Date().toISOString(),
-              },
-              '*',
-            );
-            logger.info('Sent ready notification to parent');
-
-            // Send a test ping to verify communication
-            window.parent.postMessage(
-              {
-                type: 'auth-widget-ping',
-                source: 'initialization',
-              },
-              '*',
-            );
-          }, 500);
-        } catch (e) {
-          logger.error('Error sending initialization message:', e);
-        }
-      }
-
-      return () => {
-        logger.info('Removing message listener');
-        window.removeEventListener('message', messageHandler);
-        listenerSetupRef.current = false;
-      };
-    }
-  }, []);
-
-  // Add a simple diagnostic ping
-  useEffect(() => {
-    if (!listenerSetupRef.current) return;
-
-    const pingInterval = setInterval(() => {
+  // Simplified diagnostic script
+  <Script id="diagnostic-check" strategy="beforeInteractive">
+    {`
+      // Immediate verification script - run before React loads
       try {
-        if (window.parent !== window) {
-          window.parent.postMessage(
-            {
-              type: 'auth-widget-ping',
-              source: 'periodic-check',
-            },
-            '*',
-          );
+        // Check if logging is disabled
+        const isLoggingEnabled = () => {
+          try {
+            if (localStorage.getItem('aolf-widget-debug') === 'true') {
+              return true;
+            }
+            return false; // Default to disabled for diagnostics
+          } catch (e) {
+            return false; // Default to disabled if can't check localStorage
+          }
+        };
+
+        if (isLoggingEnabled()) {
+          console.log('[AUTH DEBUG] Early init script running');
         }
-      } catch (e) {
-        // Ignore cross-origin errors
+
+        // Try to load the Auth utility if possible
+        const tryGetAuth = async () => {
+          try {
+            // This is a dynamic import attempt - might not work in all browsers
+            if (window.Auth || window.auth) {
+              const Auth = window.Auth || window.auth;
+              if (isLoggingEnabled()) {
+                console.log('[AUTH DEBUG] Found Auth in window');
+              }
+
+              // Try to get session
+              if (Auth.getSession) {
+                const tokens = await Auth.getSession();
+                if (isLoggingEnabled()) {
+                  console.log('[AUTH DEBUG] Got tokens from Auth:', tokens ? 'yes' : 'no');
+                }
+                // Make tokens safe for serialization
+                return tokens ? {
+                  accessToken: typeof tokens.accessToken === 'object' ?
+                    (tokens.accessToken.jwtToken || JSON.stringify(tokens.accessToken)) :
+                    tokens.accessToken,
+                  idToken: typeof tokens.idToken === 'object' ?
+                    (tokens.idToken.jwtToken || JSON.stringify(tokens.idToken)) :
+                    tokens.idToken
+                } : null;
+              }
+            }
+          } catch (err) {
+            if (isLoggingEnabled()) {
+              console.log('[AUTH DEBUG] Error accessing Auth:', err);
+            }
+          }
+          return null;
+        };
+
+        // Block non-essential third-party domains
+        const blockDomains = [
+          'www.dwin1.com',
+          'r.stripe.com',
+          'cdn.segment.com',
+          'tracking',
+          'analytics',
+          'hotjar',
+          'monitor'
+        ];
+
+        // Override fetch to block monitoring requests
+        const originalFetch = window.fetch;
+        window.fetch = function(resource, options) {
+          const url = resource.toString();
+          // Check if URL contains any of the blocked domains
+          if (blockDomains.some(domain => url.includes(domain)) || url.includes('monitoring')) {
+            if (isLoggingEnabled()) {
+              console.log('[AUTH DEBUG] Blocked fetch request to:', url);
+            }
+            // Return a dummy promise that resolves with empty response
+            return Promise.resolve(new Response('', { status: 200 }));
+          }
+
+          // Forward all other requests to original fetch
+          return originalFetch.apply(this, arguments);
+        };
+
+        // Intercept postMessage to prevent sending dummy data
+        const originalPostMessage = window.postMessage;
+        window.postMessage = function(message, targetOrigin, transfer) {
+          // Check if this is an auth response with dummy data
+          if (message && typeof message === 'object' && message.type === 'auth-profile') {
+            if (message.data && message.data.profile) {
+              const profile = message.data.profile;
+              // If any profile field contains test, dummy, direct, diagnostic, emergency strings
+              const suspectValues = ['test', 'dummy', 'direct', 'diagnostic', 'emergency', 'afterinteractive'];
+              const hasDummyData = Object.values(profile).some(value => {
+                if (typeof value === 'string') {
+                  return suspectValues.some(suspect => value.toLowerCase().includes(suspect));
+                }
+                return false;
+              });
+
+              if (hasDummyData) {
+                console.warn('[AUTH DEBUG] Blocked sending message with dummy data');
+                // Return without sending
+                return;
+              }
+            }
+          }
+
+          // Otherwise, proceed with the original postMessage
+          return originalPostMessage.apply(this, arguments);
+        };
+      } catch(e) {
+        console.error('[AUTH DEBUG] Early init error:', e);
       }
-    }, 10000);
-
-    return () => clearInterval(pingInterval);
-  }, []);
-
-  // Simplify this second effect since it might be causing conflicts
-  useEffect(() => {
-    // Skip if listener hasn't been set up yet or if data hasn't really changed
-    if (!messageHandlerRef.current || !listenerSetupRef.current) return;
-
-    // Create a simple version profile checker to avoid unnecessary updates
-    const profileSignature = isAuthenticated
-      ? `${!!tokens?.accessToken}-${profile?.first_name}-${profile?.last_name}-${introData?.length}`
-      : 'not-authenticated';
-
-    // Compare with previous value
-    if (prevProfileSignatureRef.current === profileSignature) {
-      // Skip update if nothing meaningful changed
-      return;
-    }
-
-    logger.info(`Auth data changed, profile signature: ${profileSignature}`);
-    prevProfileSignatureRef.current = profileSignature;
-
-    // Send a notification that auth data is updated
-    try {
-      // Notify parent that auth data has been updated
-      (async () => {
-        const responseData = await createResponseData();
-        // Make sure response is serializable before sending
-        window.parent.postMessage(
-          {
-            type: 'auth-widget-data-updated',
-            hasAuth: !!isAuthenticated,
-            timestamp: new Date().toISOString(),
-            data: responseData.data, // Include the full auth data for the parent to use
-          },
-          '*',
-        );
-      })();
-
-      logger.info(
-        'Notified parent that auth data was updated with full profile data',
-      );
-    } catch (err) {
-      logger.error('Failed to notify parent of auth update:', err);
-    }
-  }, [isAuthenticated, profile, introData, tokens]); // Only update when these change
-
-  // Log component render
-  logger.debug('AuthProfileWidget rendered');
+    `}
+  </Script>;
 
   return (
     <>
@@ -777,130 +1054,6 @@ function AuthProfileWidget() {
 
       {/* Optimize script loading */}
       <OptimizedScripts />
-
-      {/* Simplified diagnostic script */}
-      <Script id="diagnostic-check" strategy="beforeInteractive">
-        {`
-          // Immediate verification script - run before React loads
-          try {
-            // Check if logging is disabled
-            const isLoggingEnabled = () => {
-              try {
-                if (localStorage.getItem('aolf-widget-debug') === 'true') {
-                  return true;
-                }
-                return false; // Default to disabled for diagnostics
-              } catch (e) {
-                return false; // Default to disabled if can't check localStorage
-              }
-            };
-
-            if (isLoggingEnabled()) {
-              console.log('[AUTH DEBUG] Early init script running');
-            }
-
-            // Try to load the Auth utility if possible
-            const tryGetAuth = async () => {
-              try {
-                // This is a dynamic import attempt - might not work in all browsers
-                if (window.Auth || window.auth) {
-                  const Auth = window.Auth || window.auth;
-                  if (isLoggingEnabled()) {
-                    console.log('[AUTH DEBUG] Found Auth in window');
-                  }
-
-                  // Try to get session
-                  if (Auth.getSession) {
-                    const tokens = await Auth.getSession();
-                    if (isLoggingEnabled()) {
-                      console.log('[AUTH DEBUG] Got tokens from Auth:', tokens ? 'yes' : 'no');
-                    }
-                    // Make tokens safe for serialization
-                    return tokens ? {
-                      accessToken: typeof tokens.accessToken === 'object' ?
-                        (tokens.accessToken.jwtToken || JSON.stringify(tokens.accessToken)) :
-                        tokens.accessToken,
-                      idToken: typeof tokens.idToken === 'object' ?
-                        (tokens.idToken.jwtToken || JSON.stringify(tokens.idToken)) :
-                        tokens.idToken
-                    } : null;
-                  }
-                }
-              } catch (err) {
-                if (isLoggingEnabled()) {
-                  console.log('[AUTH DEBUG] Error accessing Auth:', err);
-                }
-              }
-              return null;
-            };
-
-            // Direct handler for get-auth-profile
-            window.addEventListener('message', async function(e) {
-              if (isLoggingEnabled()) {
-                console.log('[AUTH DEBUG] beforeInteractive: Message received from', e.origin, e.data);
-              }
-
-              // Check for the specific format from the parent site
-              if (e.data) {
-                // Check for both object format and possible string format
-                let msgType = e.data.type;
-                let msgData = e.data;
-
-                // Handle string messages (they might be JSON)
-                if (typeof e.data === 'string') {
-                  try {
-                    const parsed = JSON.parse(e.data);
-                    if (isLoggingEnabled()) {
-                      console.log('[AUTH DEBUG] Parsed string message:', parsed);
-                    }
-                    msgType = parsed.type;
-                    msgData = parsed;
-                  } catch(err) {
-                    // Not JSON, continue checking
-                  }
-                }
-
-                if (msgType === 'get-auth-profile') {
-                  if (isLoggingEnabled()) {
-                    console.log('[AUTH DEBUG] Found get-auth-profile request!');
-                  }
-
-                  try {
-                    // Try to get real tokens if possible
-                    const tokens = await tryGetAuth();
-
-                    const response = {
-                      type: 'auth-profile',
-                      data: {
-                        isAuthenticated: true,
-                        profile: {
-                          first_name: 'Diagnostic',
-                          last_name: 'User',
-                          email: 'diagnostic@example.com'
-                        },
-                        tokens: tokens || {
-                          accessToken: 'diagnostic-token',
-                          idToken: 'diagnostic-id-token'
-                        },
-                        exploreMenu: []
-                      }
-                    };
-
-                    e.source.postMessage(response, e.origin);
-                    if (isLoggingEnabled()) {
-                      console.log('[AUTH DEBUG] Sent direct response to', e.origin);
-                    }
-                  } catch(err) {
-                    console.error('[AUTH DEBUG] Error sending response:', err);
-                  }
-                }
-              }
-            });
-          } catch(e) {
-            console.error('[AUTH DEBUG] Early init error:', e);
-          }
-        `}
-      </Script>
 
       {/* Simple verification script */}
       <Script id="diagnostic-check-main" strategy="afterInteractive">
@@ -965,46 +1118,44 @@ function AuthProfileWidget() {
               return null;
             };
 
-            // Add direct listener for both ping and auth requests
-            window.addEventListener('message', async function(e) {
-              if (!e.data) return;
+            // Function to validate profile data to ensure we don't send dummy data
+            const containsDummyData = (profile) => {
+              if (!profile) return false;
 
-              // Handle get-auth-profile requests directly from script too for redundancy
-              if (e.data?.type === 'get-auth-profile') {
-                diagnosticLogger.log('Received get-auth-profile request from:', e.origin);
+              const suspiciousTerms = ['test', 'dummy', 'placeholder', 'direct', 'diagnostic', 'emergency', 'afterinteractive'];
 
-                try {
-                  // Try to get real tokens
-                  const tokens = await getAuthTokens();
+              return Object.values(profile).some(value => {
+                if (typeof value === 'string' && value) {
+                  return suspiciousTerms.some(term => value.toLowerCase().includes(term));
+                }
+                return false;
+              });
+            };
 
-                  // Complete response with required fields
-                  const auth = {
-                    type: 'auth-profile',
-                    data: {
-                      isAuthenticated: true,
-                      profile: {
-                        first_name: 'Afterinteractive',
-                        last_name: 'User',
-                        email: 'afterinteractive@example.com'
-                      },
-                      tokens: tokens || {
-                        accessToken: 'afterinteractive-token',
-                        idToken: 'afterinteractive-id-token'
-                      },
-                      exploreMenu: [
-                        { name: 'Explore Menu Item', link: '#' }
-                      ]
-                    }
-                  };
+            // Additional block for removing dummy data from postMessage responses
+            const originalPostMessage = window.postMessage;
+            window.postMessage = function(message, targetOrigin, transfer) {
+              if (message && typeof message === 'object') {
+                // Check for auth profile data
+                if (message.type === 'auth-profile' && message.data && message.data.profile) {
+                  if (containsDummyData(message.data.profile)) {
+                    diagnosticLogger.log('Blocked sending message with dummy profile data');
+                    return; // Don't send the message
+                  }
+                }
 
-                  // Send response
-                  e.source.postMessage(auth, e.origin);
-                  diagnosticLogger.log('Sent auth response to', e.origin);
-                } catch(err) {
-                  diagnosticLogger.error('Error responding to get-auth-profile:', err);
+                // Check for auth update data
+                if (message.type === 'auth-widget-data-updated' && message.data && message.data.profile) {
+                  if (containsDummyData(message.data.profile)) {
+                    diagnosticLogger.log('Blocked sending auth update with dummy profile data');
+                    return; // Don't send the message
+                  }
                 }
               }
-            });
+
+              // If we get here, it's safe to send
+              return originalPostMessage.apply(this, arguments);
+            };
 
             diagnosticLogger.log('Diagnostic script initialized (afterInteractive)');
           } catch(err) {
