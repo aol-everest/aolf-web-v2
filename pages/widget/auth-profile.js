@@ -445,6 +445,51 @@ if (typeof window !== 'undefined') {
   // NOTE: Emergency global message handler removed to avoid confusion on other apps
 }
 
+// Define iOS detection utility
+const isIOSDevice =
+  typeof window !== 'undefined'
+    ? () => {
+        try {
+          const userAgent = navigator.userAgent || '';
+          return (
+            /iPhone|iPad|iPod|iOS|CriOS/.test(userAgent) ||
+            (/Safari/.test(userAgent) && /Apple/.test(navigator.vendor))
+          );
+        } catch (e) {
+          return false;
+        }
+      }
+    : () => false;
+
+// Add better iOS compatibility
+if (typeof window !== 'undefined') {
+  // Force storage sync on iOS devices
+  if (isIOSDevice()) {
+    try {
+      // Force localStorage sync on iOS Safari
+      const originalGetItem = Storage.prototype.getItem;
+      Storage.prototype.getItem = function (key) {
+        // Force Safari to flush any pending changes
+        document.cookie =
+          'force_storage_sync=1; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+        return originalGetItem.call(this, key);
+      };
+
+      // Debug log iOS detection if requested
+      if (
+        localStorage.getItem('aolf-widget-debug') === 'true' ||
+        window.location.search.includes('debug=')
+      ) {
+        console.log(
+          '[AUTH DEBUG] iOS device detected, applying Safari-specific fixes',
+        );
+      }
+    } catch (e) {
+      console.error('[AUTH DEBUG] Error applying iOS fixes:', e);
+    }
+  }
+}
+
 function AuthProfileWidget() {
   const authObject = useAuth();
 
@@ -458,6 +503,72 @@ function AuthProfileWidget() {
   // Tokens are directly on authObject.tokens, not under passwordLess
   const tokens = authObject?.tokens || {};
 
+  // Enhanced iOS token extraction
+  const getIOSCompatibleTokens = () => {
+    // If we already have good tokens, use them
+    if (tokens && (tokens.accessToken || tokens.idToken)) {
+      return tokens;
+    }
+
+    // For iOS Safari, try additional token extraction methods
+    if (typeof window !== 'undefined') {
+      try {
+        // Method 1: Check for tokens in localStorage
+        const storedTokens = localStorage.getItem('auth_tokens');
+        if (storedTokens) {
+          try {
+            const parsedTokens = JSON.parse(storedTokens);
+            if (
+              parsedTokens &&
+              (parsedTokens.accessToken || parsedTokens.idToken)
+            ) {
+              console.log('[AUTH DEBUG] Retrieved tokens from localStorage');
+              return parsedTokens;
+            }
+          } catch (e) {
+            // Ignore parsing errors
+          }
+        }
+
+        // Method 2: Check for session in different formats
+        if (window.Auth?.getSession) {
+          window.Auth.getSession()
+            .then((session) => {
+              if (session) {
+                console.log(
+                  '[AUTH DEBUG] Retrieved tokens from Auth.getSession',
+                );
+                // Store for future use
+                try {
+                  localStorage.setItem(
+                    'auth_tokens',
+                    JSON.stringify({
+                      accessToken:
+                        session.accessToken?.jwtToken || session.accessToken,
+                      idToken: session.idToken?.jwtToken || session.idToken,
+                    }),
+                  );
+                } catch (e) {
+                  // Ignore storage errors
+                }
+              }
+            })
+            .catch(() => {});
+        }
+      } catch (e) {
+        console.error('[AUTH DEBUG] Error in iOS token extraction:', e);
+      }
+    }
+
+    return tokens; // Return original tokens as fallback
+  };
+
+  // Use enhanced tokens for iOS
+  const enhancedTokens =
+    typeof window !== 'undefined' && isIOSDevice()
+      ? getIOSCompatibleTokens()
+      : tokens;
+
   // Log the extracted data for debugging
   if (logger.isEnabled()) {
     console.log('[AUTH DEBUG] Extracted auth data:', {
@@ -465,7 +576,13 @@ function AuthProfileWidget() {
       profileName: profile
         ? `${profile.first_name} ${profile.last_name}`
         : 'N/A',
-      hasTokens: !!tokens?.accessToken,
+      hasTokens: !!enhancedTokens?.accessToken,
+      platform:
+        typeof window !== 'undefined'
+          ? isIOSDevice()
+            ? 'iOS'
+            : 'Other'
+          : 'SSR',
     });
   }
 
@@ -528,8 +645,8 @@ function AuthProfileWidget() {
         isAuthenticated: !!isAuthenticated,
         hasProfile: !!profile,
         profileExists: profile ? 'yes' : 'no',
-        tokenExists: tokens ? 'yes' : 'no',
-        tokenType: tokens ? typeof tokens : 'n/a',
+        tokenExists: enhancedTokens ? 'yes' : 'no',
+        tokenType: enhancedTokens ? typeof enhancedTokens : 'n/a',
         introData: introData ? `${introData.length} items` : 'none',
       });
     }
@@ -540,12 +657,12 @@ function AuthProfileWidget() {
     if (logger.isEnabled()) {
       console.log('[AUTH DEBUG] Creating response with auth state:', authState);
       // Print token debug info (without sensitive data)
-      if (tokens) {
+      if (enhancedTokens) {
         console.log('[AUTH DEBUG] Token info:', {
-          accessTokenExists: !!tokens.accessToken,
-          accessTokenType: typeof tokens.accessToken,
-          idTokenExists: !!tokens.idToken,
-          idTokenType: typeof tokens.idToken,
+          accessTokenExists: !!enhancedTokens.accessToken,
+          accessTokenType: typeof enhancedTokens.accessToken,
+          idTokenExists: !!enhancedTokens.idToken,
+          idTokenType: typeof enhancedTokens.idToken,
         });
       }
     }
@@ -565,17 +682,18 @@ function AuthProfileWidget() {
             }
           : null,
         // Convert tokens to simple objects that are cloneable
-        tokens: tokens
+        tokens: enhancedTokens
           ? {
               accessToken:
-                typeof tokens.accessToken === 'object'
-                  ? tokens.accessToken.jwtToken ||
-                    JSON.stringify(tokens.accessToken)
-                  : tokens.accessToken,
+                typeof enhancedTokens.accessToken === 'object'
+                  ? enhancedTokens.accessToken.jwtToken ||
+                    JSON.stringify(enhancedTokens.accessToken)
+                  : enhancedTokens.accessToken,
               idToken:
-                typeof tokens.idToken === 'object'
-                  ? tokens.idToken.jwtToken || JSON.stringify(tokens.idToken)
-                  : tokens.idToken,
+                typeof enhancedTokens.idToken === 'object'
+                  ? enhancedTokens.idToken.jwtToken ||
+                    JSON.stringify(enhancedTokens.idToken)
+                  : enhancedTokens.idToken,
               // Exclude functions and non-cloneable properties
             }
           : null,
@@ -593,7 +711,7 @@ function AuthProfileWidget() {
     // Add secondary indicators to help with debugging and ensure data is passed correctly
     responseData.data.authTime = new Date().toISOString();
     responseData.data.hasAuth = !!isAuthenticated;
-    responseData.data.hasTokens = !!tokens;
+    responseData.data.hasTokens = !!enhancedTokens;
     responseData.data.hasProfile = !!profile;
 
     // Enhanced logging for response data
@@ -703,188 +821,167 @@ function AuthProfileWidget() {
       );
       logger.debug(
         'Tokens available:',
-        !!tokens?.accessToken,
-        !!tokens?.idToken,
+        !!enhancedTokens?.accessToken,
+        !!enhancedTokens?.idToken,
       );
     }
-  }, [isAuthenticated, profile, tokens]);
+  }, [isAuthenticated, profile, enhancedTokens]);
+
+  // Function to send data to parent with enhanced iOS compatibility
+  function sendDataToParent(data) {
+    // Safety check for browser environment
+    if (typeof window === 'undefined') return;
+
+    if (logger.isEnabled()) {
+      console.log(
+        '[AUTH DEBUG] Full response payload:',
+        JSON.stringify(data).substring(0, 200) + '...',
+      );
+    }
+
+    try {
+      // We need special handling for iOS Safari
+      const isIOS = isIOSDevice();
+
+      // Browser detection for better iOS compatibility
+      if (logger.isEnabled()) {
+        logger.debug(
+          'Browser detection - UserAgent: ' +
+            navigator.userAgent.substring(0, 100) +
+            '...',
+        );
+        logger.debug('Detected as iOS device: ' + isIOS);
+      }
+
+      // Add more reliable message structure for iOS Safari
+      const targetOrigin = '*';
+
+      // iOS Safari needs special handling for postMessage
+      if (isIOS) {
+        // iOS Safari needs stringified data for more reliable postMessage
+        logger.info('✅ Sent stringified auth profile response (iOS format)');
+
+        // For iOS, we directly stringify and then send as data field
+        window.parent.postMessage(
+          {
+            data: JSON.stringify(data),
+          },
+          targetOrigin,
+        );
+
+        // iOS sometimes needs multiple attempts to receive messages reliably
+        // Add a slight delay and try again for iOS
+        setTimeout(() => {
+          window.parent.postMessage(
+            {
+              data: JSON.stringify(data),
+            },
+            targetOrigin,
+          );
+        }, 100);
+      } else {
+        // For other browsers, use the standard approach
+        logger.info('✅ Sent auth profile response (standard format)');
+        window.parent.postMessage(data, targetOrigin);
+      }
+    } catch (err) {
+      logger.error('Error sending message to parent:', err);
+    }
+  }
+
+  // Use this enhanced function for message responses
+  async function handleMessage(event) {
+    // Skip empty messages completely
+    if (!event.data) return;
+
+    // Check origin first before any processing
+    if (!ALLOWED_ORIGIN_REGEX.test(event.origin)) {
+      // Only log unauthorized origins from specific domains we care about
+      // Skip logging for ad networks, analytics, etc. that pollute the console
+      const skipLoggingDomains = [
+        'stripe.com',
+        'talkable.com',
+        'google',
+        'facebook',
+        'analytics',
+      ];
+      const shouldLog = !skipLoggingDomains.some((domain) =>
+        event.origin.includes(domain),
+      );
+
+      if (shouldLog) {
+        logger.warn('Rejected message from unauthorized origin:', event.origin);
+      }
+      return;
+    }
+
+    // Now log the message since it's from an authorized source
+    logger.info(`Message from ${event.origin}:`, event.data);
+
+    // Handle messages that might be stringified JSON (common on iOS)
+    let messageData = event.data;
+    if (typeof messageData === 'string') {
+      try {
+        // Try to parse as JSON - this is often needed for iOS Chrome
+        messageData = JSON.parse(messageData);
+        logger.info('Parsed string message:', messageData);
+      } catch (e) {
+        // Only log unparseable message if it looks like it might be relevant
+        // This reduces console noise from unrelated postMessages
+        if (
+          messageData.includes('auth') ||
+          messageData.includes('profile') ||
+          messageData.includes('token')
+        ) {
+          logger.warn('Received unparseable string message, ignoring');
+        }
+        return;
+      }
+    }
+
+    // Now that we have an object, handle by message type
+    if (typeof messageData === 'object') {
+      // Handle get-auth-profile request
+      if (messageData.type === 'get-auth-profile') {
+        logger.info(
+          '📣 Processing get-auth-profile request from:',
+          event.origin,
+        );
+
+        try {
+          // Create response with available data
+          const response = await createResponseData();
+
+          // Use the enhanced message sender
+          sendDataToParent(response);
+        } catch (err) {
+          logger.error('Failed to send auth profile:', err);
+        }
+      }
+      // Handle ping request
+      else if (messageData.type === 'auth-widget-ping') {
+        try {
+          const pongResponse = {
+            type: 'auth-widget-pong',
+            timestamp: new Date().toISOString(),
+          };
+
+          // Use the enhanced message sender
+          sendDataToParent(pongResponse);
+
+          logger.debug('Replied to ping from', event.origin);
+        } catch (err) {
+          logger.error('Failed to respond to ping:', err);
+        }
+      }
+    }
+  }
 
   // Set up message listener with useRef to avoid recreation on each render
   useEffect(() => {
     // Define the message handler function - keep it simple
     async function messageHandler(event) {
-      // Skip empty messages completely
-      if (!event.data) return;
-
-      // Check origin first before any processing
-      if (!ALLOWED_ORIGIN_REGEX.test(event.origin)) {
-        // Only log unauthorized origins from specific domains we care about
-        // Skip logging for ad networks, analytics, etc. that pollute the console
-        const skipLoggingDomains = [
-          'stripe.com',
-          'talkable.com',
-          'google',
-          'facebook',
-          'analytics',
-        ];
-        const shouldLog = !skipLoggingDomains.some((domain) =>
-          event.origin.includes(domain),
-        );
-
-        if (shouldLog) {
-          logger.warn(
-            'Rejected message from unauthorized origin:',
-            event.origin,
-          );
-        }
-        return;
-      }
-
-      // Now log the message since it's from an authorized source
-      logger.info(`Message from ${event.origin}:`, event.data);
-
-      // Handle messages that might be stringified JSON (common on iOS)
-      let messageData = event.data;
-      if (typeof messageData === 'string') {
-        try {
-          // Try to parse as JSON - this is often needed for iOS Chrome
-          messageData = JSON.parse(messageData);
-          logger.info('Parsed string message:', messageData);
-        } catch (e) {
-          // Only log unparseable message if it looks like it might be relevant
-          // This reduces console noise from unrelated postMessages
-          if (
-            messageData.includes('auth') ||
-            messageData.includes('profile') ||
-            messageData.includes('token')
-          ) {
-            logger.warn('Received unparseable string message, ignoring');
-          }
-          return;
-        }
-      }
-
-      // Now that we have an object, handle by message type
-      if (typeof messageData === 'object') {
-        // Handle get-auth-profile request
-        if (messageData.type === 'get-auth-profile') {
-          logger.info(
-            '📣 Processing get-auth-profile request from:',
-            event.origin,
-          );
-
-          try {
-            // Create response with available data
-            const response = await createResponseData();
-
-            // Log full response for debugging
-            if (logger.isEnabled()) {
-              console.log(
-                '[AUTH DEBUG] Full response payload:',
-                JSON.stringify(response),
-              );
-            }
-
-            // Special handling for iOS browsers - stringify the message
-            try {
-              // Better iOS device detection - all browsers on iOS use WebKit underneath
-              const userAgent = navigator?.userAgent || '';
-              const isIOSDevice =
-                /iPhone|iPad|iPod|iOS|CriOS/.test(userAgent) ||
-                (/Safari/.test(userAgent) && /Apple/.test(navigator.vendor));
-
-              if (logger.isEnabled()) {
-                logger.debug(`Browser detection - UserAgent: ${userAgent}`);
-                logger.debug(`Detected as iOS device: ${isIOSDevice}`);
-              }
-
-              if (isIOSDevice) {
-                // For iOS devices - ALWAYS use string format
-                const responseStr = JSON.stringify(response);
-                event.source.postMessage(responseStr, event.origin);
-                logger.info(
-                  '✅ Sent stringified auth profile response (iOS format)',
-                );
-              } else {
-                // For other devices - try object first, then string
-                try {
-                  // Attempt to send the object directly first (works better with the receiver code)
-                  event.source.postMessage(response, event.origin);
-                  logger.info('✅ Sent object auth profile response');
-                } catch (objErr) {
-                  // Fall back to string for compatibility
-                  const responseStr = JSON.stringify(response);
-                  event.source.postMessage(responseStr, event.origin);
-                  logger.info(
-                    '✅ Sent stringified auth profile response (fallback)',
-                  );
-                }
-              }
-            } catch (strErr) {
-              // Log the error
-              logger.warn('Response sending failed:', strErr);
-
-              // Attempt a final basic serialized response
-              try {
-                // Create a basic minimal response with core data only
-                const minimalResponse = JSON.stringify({
-                  type: 'auth-profile',
-                  data: {
-                    isAuthenticated: !!isAuthenticated,
-                    profile: profile
-                      ? {
-                          first_name:
-                            profile.first_name || profile.firstName || '',
-                          last_name:
-                            profile.last_name || profile.lastName || '',
-                          email: profile.email || '',
-                        }
-                      : null,
-                    tokens: null, // Omit tokens from minimal response
-                    exploreMenu: [],
-                  },
-                });
-
-                event.source.postMessage(minimalResponse, event.origin);
-                logger.info('✅ Sent minimal auth profile response');
-              } catch (finalErr) {
-                // If all else fails, try to send the simplest possible response
-                logger.error('All serialization attempts failed:', finalErr);
-                const emptyResponse = JSON.stringify({
-                  type: 'auth-profile',
-                  data: { isAuthenticated: false },
-                });
-                event.source.postMessage(emptyResponse, event.origin);
-              }
-            }
-          } catch (err) {
-            logger.error('Failed to send auth profile:', err);
-          }
-        }
-        // Handle ping request
-        else if (messageData.type === 'auth-widget-ping') {
-          try {
-            const pongResponse = {
-              type: 'auth-widget-pong',
-              timestamp: new Date().toISOString(),
-            };
-
-            // Special handling for iOS browsers - stringify the message
-            try {
-              // Use JSON stringify for iOS compatibility
-              const pongStr = JSON.stringify(pongResponse);
-              event.source.postMessage(pongStr, event.origin);
-            } catch (strErr) {
-              // Fallback to regular object if stringify fails
-              event.source.postMessage(pongResponse, event.origin);
-            }
-
-            logger.debug('Replied to ping from', event.origin);
-          } catch (err) {
-            logger.error('Failed to respond to ping:', err);
-          }
-        }
-      }
+      await handleMessage(event);
     }
 
     // Set up listener just once
@@ -1024,7 +1121,7 @@ function AuthProfileWidget() {
 
     // Create a simple version profile checker to avoid unnecessary updates
     const profileSignature = isAuthenticated
-      ? `${!!tokens?.accessToken}-${profile?.first_name}-${profile?.last_name}-${introData?.length}`
+      ? `${!!enhancedTokens?.accessToken}-${profile?.first_name}-${profile?.last_name}-${introData?.length}`
       : 'not-authenticated';
 
     // Compare with previous value
@@ -1079,51 +1176,17 @@ function AuthProfileWidget() {
           };
 
           try {
-            // iOS Chrome requires a simpler message format and targetOrigin pattern
-            // Use JSON stringify to ensure deep cloning of objects
-            const messageStr = JSON.stringify(message);
-
-            // Try first with specific targetOrigin - required for security
-            let sent = false;
-            if (window.parent !== window) {
-              // Try with parent's origin if we can detect it
-              if (
-                window.location &&
-                window.location.ancestorOrigins &&
-                window.location.ancestorOrigins.length > 0
-              ) {
-                const parentOrigin = window.location.ancestorOrigins[0];
-                window.parent.postMessage(messageStr, parentOrigin);
-                sent = true;
-                logger.info(
-                  `Sent auth data to specific origin: ${parentOrigin}`,
-                );
-              }
-
-              // If we couldn't determine parent origin, use wildcard as fallback
-              if (!sent) {
-                window.parent.postMessage(messageStr, '*');
-                logger.info('Sent auth data using wildcard origin');
-              }
-            }
-          } catch (postMsgErr) {
-            // If the enhanced approach fails, fall back to basic approach
-            logger.error(
-              'Enhanced postMessage failed, trying fallback',
-              postMsgErr,
-            );
-            window.parent.postMessage(message, '*');
+            // Use the enhanced message sender
+            sendDataToParent(message);
+          } catch (err) {
+            logger.error('Failed to notify parent of auth update:', err);
           }
-
-          logger.info(
-            'Notified parent that auth data was updated with real profile data',
-          );
         }
       })();
     } catch (err) {
       logger.error('Failed to notify parent of auth update:', err);
     }
-  }, [isAuthenticated, profile, introData, tokens]); // Only update when these change
+  }, [isAuthenticated, profile, introData, enhancedTokens]); // Only update when these change
 
   // Log component render
   logger.debug('AuthProfileWidget rendered');
@@ -1302,40 +1365,8 @@ function AuthProfileWidget() {
               // Use the safe response creator with the cleaned auth data
               const directResponse = createSafeResponse(safeAuthObject);
 
-              // Better iOS device detection - all browsers on iOS use WebKit underneath
-              const userAgent = navigator?.userAgent || '';
-              const isIOSDevice =
-                /iPhone|iPad|iPod|iOS|CriOS/.test(userAgent) ||
-                (/Safari/.test(userAgent) && /Apple/.test(navigator.vendor));
-
-              if (globalLogger.isEnabled()) {
-                globalLogger.log(`Browser detection - UserAgent: ${userAgent}`);
-                globalLogger.log(`Detected as iOS device: ${isIOSDevice}`);
-              }
-
-              if (isIOSDevice) {
-                // For iOS devices - ALWAYS use string format
-                const responseString = JSON.stringify(directResponse);
-                event.source.postMessage(responseString, event.origin);
-              } else {
-                // For desktop/Android - try object first, then string
-                try {
-                  // Try sending the object directly first
-                  event.source.postMessage(directResponse, event.origin);
-                } catch (objErr) {
-                  // Fall back to stringified format
-                  const responseString = JSON.stringify(directResponse);
-                  event.source.postMessage(responseString, event.origin);
-                  globalLogger.log('Used string fallback for response');
-                }
-              }
-
-              if (globalLogger.isEnabled()) {
-                globalLogger.log(
-                  '✅ Sent real auth response to:',
-                  event.origin,
-                );
-              }
+              // Use the enhanced message sender
+              sendDataToParent(directResponse);
             } else {
               // Send a response indicating not authenticated without dummy data
               const emptyResponse = JSON.stringify({
@@ -1348,7 +1379,7 @@ function AuthProfileWidget() {
                 },
               });
 
-              event.source.postMessage(emptyResponse, event.origin);
+              sendDataToParent(emptyResponse);
               if (globalLogger.isEnabled()) {
                 globalLogger.log(
                   '✅ Sent unauthenticated response to:',
@@ -1370,7 +1401,7 @@ function AuthProfileWidget() {
                   exploreMenu: [],
                 },
               });
-              event.source.postMessage(fallbackResponse, event.origin);
+              sendDataToParent(fallbackResponse);
               globalLogger.log('Sent fallback response after error');
             } catch (finalErr) {
               globalLogger.error('All response attempts failed');
