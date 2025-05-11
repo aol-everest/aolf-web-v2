@@ -56,8 +56,8 @@
     };
   };
 
-  const deviceInfo = detectDevice();
-  logger.info('Device detected:', deviceInfo);
+  const deviceDetails = detectDevice();
+  logger.info('Device detected:', deviceDetails);
 
   // Helper function to clean objects for postMessage
   function deepCleanForPostMessage(obj) {
@@ -184,18 +184,20 @@
     document.body.appendChild(widget);
 
     // Add device information to help with debugging
-    const deviceInfo = document.getElementById('device-info');
-    deviceInfo.innerHTML = `
-      <div>Device: ${deviceInfo.isIOS ? '📱 iOS' : deviceInfo.isMobile ? '📱 Mobile' : '🖥️ Desktop'}</div>
-      <div>Browser: ${
-        deviceInfo.isChrome ? 'Chrome' :
-        deviceInfo.isSafari ? 'Safari' :
-        deviceInfo.isFirefox ? 'Firefox' :
-        deviceInfo.isEdge ? 'Edge' : 'Other'
-      }</div>
-      <div>PostMessage Mode: ${deviceInfo.isIOS ? '📝 String JSON' : '🔄 Object'}</div>
-      <div style="font-size:8px;overflow:hidden;text-overflow:ellipsis;">${deviceInfo.userAgent.substring(0, 70)}...</div>
-    `;
+    const deviceInfoElement = document.getElementById('device-info');
+    if (deviceInfoElement) {
+      deviceInfoElement.innerHTML = `
+        <div>Device: ${deviceDetails.isIOS ? '📱 iOS' : deviceDetails.isMobile ? '📱 Mobile' : '🖥️ Desktop'}</div>
+        <div>Browser: ${
+          deviceDetails.isChrome ? 'Chrome' :
+          deviceDetails.isSafari ? 'Safari' :
+          deviceDetails.isFirefox ? 'Firefox' :
+          deviceDetails.isEdge ? 'Edge' : 'Other'
+        }</div>
+        <div>PostMessage Mode: ${deviceDetails.isIOS ? '📝 String JSON' : '🔄 Object'}</div>
+        <div style="font-size:8px;overflow:hidden;text-overflow:ellipsis;">${deviceDetails.userAgent.substring(0, 70)}...</div>
+      `;
+    }
 
     // Add event handlers
     document.getElementById('clear-debug').addEventListener('click', function() {
@@ -254,7 +256,7 @@
 
     try {
       // For iOS devices, always use stringified format
-      if (deviceInfo.isIOS) {
+      if (deviceDetails.isIOS) {
         const messageStr = JSON.stringify(cleanMessage);
         window.postMessage(messageStr, targetOrigin);
         return true;
@@ -342,7 +344,7 @@
     },
 
     showDeviceInfo: function() {
-      return deviceInfo;
+      return deviceDetails;
     },
 
     fixCrossOriginIssue: function() {
