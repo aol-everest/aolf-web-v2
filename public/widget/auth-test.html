@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AOLF Auth Profile Test Page</title>
+  <style>
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      margin: 0;
+      padding: 20px;
+      background: #f5f5f5;
+    }
+    h1 {
+      font-size: 24px;
+      margin-bottom: 20px;
+    }
+    .test-card {
+      background: white;
+      border-radius: 8px;
+      padding: 20px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      margin-bottom: 20px;
+    }
+    .test-buttons {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
+    button {
+      padding: 8px 16px;
+      background: #0066cc;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+    button:hover {
+      background: #0052a3;
+    }
+    .debug-output {
+      background: #1e1e1e;
+      color: #00ff00;
+      padding: 15px;
+      border-radius: 4px;
+      font-family: monospace;
+      white-space: pre-wrap;
+      max-height: 300px;
+      overflow-y: auto;
+      font-size: 12px;
+    }
+    .iframe-container {
+      margin-top: 30px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    iframe {
+      width: 100%;
+      height: 300px;
+      border: none;
+    }
+    .badge {
+      display: inline-block;
+      padding: 3px 8px;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: bold;
+      margin-right: 5px;
+      background-color: #eee;
+    }
+    .badge.success {
+      background-color: #d4edda;
+      color: #155724;
+    }
+    .badge.error {
+      background-color: #f8d7da;
+      color: #721c24;
+    }
+    .badge.warning {
+      background-color: #fff3cd;
+      color: #856404;
+    }
+    .status-info {
+      margin-bottom: 15px;
+      font-size: 14px;
+    }
+    .status-info div {
+      margin-bottom: 5px;
+    }
+    .device-info {
+      display: inline-block;
+      margin-left: 15px;
+      font-size: 12px;
+      color: #666;
+    }
+    @media (max-width: 600px) {
+      .test-buttons button {
+        flex-basis: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="test-card">
+    <h1>AOLF Auth Widget Communication Test <span class="device-info" id="device-info"></span></h1>
+
+    <div class="status-info" id="status-panel">
+      <div><span class="badge" id="status-badge">idle</span> <span id="status-text">Waiting to start tests...</span></div>
+      <div><strong>Last Update:</strong> <span id="last-update">Never</span></div>
+    </div>
+
+    <div class="test-buttons">
+      <button id="load-iframe">Load Auth Iframe</button>
+      <button id="request-auth">Request Auth</button>
+      <button id="reload-iframe">Reload Iframe</button>
+      <button id="try-all-formats">Try All Message Formats</button>
+      <button id="clear-logs">Clear Logs</button>
+    </div>
+
+    <div class="debug-output" id="debug-output"></div>
+  </div>
+
+  <div class="iframe-container" id="iframe-container">
+    <!-- iframe will be loaded here -->
+  </div>
+
+  <script>
+    (function() {
+      // Configuration
+      const widgetUrl = 'https://qa.members.us.artofliving.org/widget/auth-profile';
+
+      // DOM Elements
+      const loadIframeBtn = document.getElementById('load-iframe');
+      const requestAuthBtn = document.getElementById('request-auth');
+      const reloadIframeBtn = document.getElementById('reload-iframe');
+      const tryAllFormatsBtn = document.getElementById('try-all-formats');
+      const clearLogsBtn = document.getElementById('clear-logs');
+      const debugOutput = document.getElementById('debug-output');
+      const iframeContainer = document.getElementById('iframe-container');
+      const statusBadge = document.getElementById('status-badge');
+      const statusText = document.getElementById('status-text');
+      const lastUpdate = document.getElementById('last-update');
+      const deviceInfo = document.getElementById('device-info');
+
+      // Logger
+      const logger = {
+        log: function(message, ...data) {
+          console.log(message, ...data);
+          addLogEntry('log', message, data);
+        },
+        info: function(message, ...data) {
+          console.info(message, ...data);
+          addLogEntry('info', message, data);
+        },
+        warn: function(message, ...data) {
+          console.warn(message, ...data);
+          addLogEntry('warn', message, data);
+        },
+        error: function(message, ...data) {
+          console.error(message, ...data);
+          addLogEntry('error', message, data);
+        }
+      };
+
+      // Device detection
+      function detectDevice() {
+        const ua = navigator.userAgent;
+        const isIOS = /iPhone|iPad|iPod|iOS|CriOS/.test(ua) ||
+                     (/Safari/.test(ua) && /Apple/.test(navigator.vendor) && !/Chrome|Android/.test(ua)) ||
+                     (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1);
+        const isMobile = /Mobi|Android|iPhone|iPad|iPod/.test(ua);
+        const browser =
+          /Chrome/.test(ua) && !/Edge|Edg/.test(ua) ? 'Chrome' :
+          /Safari/.test(ua) && !/Chrome|Android/.test(ua) ? 'Safari' :
+          /Firefox/.test(ua) ? 'Firefox' :
+          /Edge|Edg/.test(ua) ? 'Edge' : 'Other';
+
+        deviceInfo.textContent = `${isIOS ? 'iOS' : isMobile ? 'Mobile' : 'Desktop'} / ${browser}`;
+
+        return { isIOS, isMobile, browser, userAgent: ua };
+      }
+
+      // Helper to add log entry to UI
+      function addLogEntry(type, message, data) {
+        const entry = document.createElement('div');
+        entry.style.marginBottom = '8px';
+        entry.style.borderBottom = '1px solid #333';
+        entry.style.paddingBottom = '5px';
+        entry.style.color =
+          type === 'error' ? '#ff6b6b' :
+          type === 'warn' ? '#ffd166' :
+          type === 'info' ? '#4ecdc4' : '#f8f9fa';
+
+        // Format timestamp
+        const date = new Date();
+        const timestamp = `${date.toTimeString().slice(0, 8)}.${date.getMilliseconds().toString().padStart(3, '0')}`;
+
+        // Format message
+        let content = `[${timestamp}] ${message}`;
+
+        // Add data if present
+        if (data && data.length > 0) {
+          content += ' ' + data.map(item => {
+            if (typeof item === 'object') {
+              try {
+                return JSON.stringify(item, null, 2);
+              } catch (e) {
+                return String(item);
+              }
+            }
+            return String(item);
+          }).join(' ');
+        }
+
+        entry.textContent = content;
+        debugOutput.appendChild(entry);
+        debugOutput.scrollTop = debugOutput.scrollHeight;
+
+        updateStatus(type, message);
+      }
+
+      // Helper to update status
+      function updateStatus(type, message) {
+        lastUpdate.textContent = new Date().toLocaleTimeString();
+
+        switch(type) {
+          case 'error':
+            statusBadge.className = 'badge error';
+            statusBadge.textContent = 'error';
+            break;
+          case 'warn':
+            statusBadge.className = 'badge warning';
+            statusBadge.textContent = 'warning';
+            break;
+          case 'info':
+            statusBadge.className = 'badge success';
+            statusBadge.textContent = 'info';
+            break;
+          default:
+            statusBadge.className = 'badge';
+            statusBadge.textContent = 'log';
+        }
+
+        statusText.textContent = message.length > 50 ? message.substring(0, 50) + '...' : message;
+      }
+
+      // Load iframe
+      function loadIframe() {
+        // Clear existing iframe
+        iframeContainer.innerHTML = '';
+
+        // Create new iframe
+        const iframe = document.createElement('iframe');
+        iframe.id = 'auth-profile-iframe';
+        iframe.src = `${widgetUrl}?client=test7.artofliving.org&debug=true&t=${Date.now()}`;
+        iframe.setAttribute('frameborder', '0');
+        iframe.setAttribute('allow', 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture');
+        iframe.setAttribute('allowfullscreen', 'true');
+        iframe.setAttribute('sandbox', 'allow-scripts allow-same-origin allow-forms allow-popups');
+
+        iframeContainer.appendChild(iframe);
+
+        logger.info('Auth iframe loaded with URL:', iframe.src);
+      }
+
+      // Request auth profile
+      function requestAuthProfile() {
+        const iframe = document.getElementById('auth-profile-iframe');
+        if (!iframe || !iframe.contentWindow) {
+          logger.error('Iframe not found or not accessible');
+          return;
+        }
+
+        try {
+          const message = { type: 'get-auth-profile' };
+          iframe.contentWindow.postMessage(message, '*');
+          logger.info('Sent get-auth-profile request to iframe');
+        } catch (e) {
+          logger.error('Failed to send message to iframe:', e);
+        }
+      }
+
+      // Try all message formats
+      function tryAllMessageFormats() {
+        const iframe = document.getElementById('auth-profile-iframe');
+        if (!iframe || !iframe.contentWindow) {
+          logger.error('Iframe not found or not accessible');
+          return;
+        }
+
+        const message = { type: 'get-auth-profile' };
+        const messageStr = JSON.stringify(message);
+        const nestedMessage = { data: messageStr };
+
+        logger.info('Trying all message formats...');
+
+        // Format 1: Standard object
+        try {
+          iframe.contentWindow.postMessage(message, '*');
+          logger.info('Sent standard object format');
+        } catch (e) {
+          logger.error('Failed to send standard format:', e);
+        }
+
+        // Format 2: String format
+        setTimeout(() => {
+          try {
+            iframe.contentWindow.postMessage(messageStr, '*');
+            logger.info('Sent string format');
+          } catch (e) {
+            logger.error('Failed to send string format:', e);
+          }
+        }, 500);
+
+        // Format 3: Nested format (iOS)
+        setTimeout(() => {
+          try {
+            iframe.contentWindow.postMessage(nestedMessage, '*');
+            logger.info('Sent nested iOS format');
+          } catch (e) {
+            logger.error('Failed to send nested format:', e);
+          }
+        }, 1000);
+      }
+
+      // Listen for message response
+      window.addEventListener('message', function(event) {
+        // Only process messages from our iframe
+        const iframe = document.getElementById('auth-profile-iframe');
+        if (!iframe || !iframe.contentWindow) return;
+
+        try {
+          logger.info(`Received message from ${event.origin}`,
+            typeof event.data === 'string'
+              ? event.data.length > 200 ? event.data.substring(0, 200) + '...' : event.data
+              : event.data);
+
+          // Try to parse nested messages
+          let messageData = event.data;
+
+          // Handle string format
+          if (typeof messageData === 'string') {
+            try {
+              messageData = JSON.parse(messageData);
+              logger.info('Successfully parsed string message', messageData);
+            } catch (e) {
+              logger.warn('Could not parse string message', e);
+            }
+          }
+
+          // Handle iOS nested format
+          if (typeof messageData === 'object' && messageData.data && typeof messageData.data === 'string') {
+            try {
+              const parsedData = JSON.parse(messageData.data);
+              logger.info('Successfully extracted nested iOS format data', parsedData);
+
+              // Check auth status
+              if (parsedData.type === 'auth-profile' && parsedData.data) {
+                const auth = parsedData.data;
+                logger.info('Auth status:', {
+                  isAuthenticated: auth.isAuthenticated,
+                  hasProfile: !!auth.profile,
+                  hasTokens: !!auth.tokens
+                });
+
+                if (auth.isAuthenticated) {
+                  statusBadge.className = 'badge success';
+                  statusBadge.textContent = 'authenticated';
+                  statusText.textContent = `Authenticated as ${auth.profile?.first_name || 'User'}`;
+                } else {
+                  statusBadge.className = 'badge error';
+                  statusBadge.textContent = 'unauthenticated';
+                  statusText.textContent = 'Not authenticated';
+                }
+              }
+            } catch (e) {
+              logger.warn('Could not parse nested data', e);
+            }
+          }
+
+          // Handle direct object format
+          if (typeof messageData === 'object' && messageData.type === 'auth-profile') {
+            const auth = messageData.data;
+            logger.info('Received direct auth data', auth);
+
+            if (auth.isAuthenticated) {
+              statusBadge.className = 'badge success';
+              statusBadge.textContent = 'authenticated';
+              statusText.textContent = `Authenticated as ${auth.profile?.first_name || 'User'}`;
+            } else {
+              statusBadge.className = 'badge error';
+              statusBadge.textContent = 'unauthenticated';
+              statusText.textContent = 'Not authenticated';
+            }
+          }
+
+        } catch (e) {
+          logger.error('Error processing message', e);
+        }
+      });
+
+      // Event listeners
+      loadIframeBtn.addEventListener('click', loadIframe);
+      requestAuthBtn.addEventListener('click', requestAuthProfile);
+      reloadIframeBtn.addEventListener('click', function() {
+        loadIframe();
+        setTimeout(requestAuthProfile, 1000);
+      });
+      tryAllFormatsBtn.addEventListener('click', tryAllMessageFormats);
+      clearLogsBtn.addEventListener('click', function() {
+        debugOutput.innerHTML = '';
+        logger.info('Logs cleared');
+      });
+
+      // Initialize
+      detectDevice();
+      logger.info('Auth test page initialized');
+      logger.info('Device info:', detectDevice());
+      loadIframe();
+      setTimeout(requestAuthProfile, 1500);
+    })();
+  </script>
+
+  <!-- Load debug helper -->
+  <script src="./debug-helper.js"></script>
+</body>
+</html>
