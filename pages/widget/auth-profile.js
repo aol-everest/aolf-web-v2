@@ -128,24 +128,40 @@ function AuthProfileWidget() {
       return;
     }
 
-    // Wait for post-robot to be available
-    const setupInterval = setInterval(() => {
-      if (window.postRobot) {
-        clearInterval(setupInterval);
-        initPostRobot();
-      }
-    }, 100);
+    // Mobile detection for specific handling
+    const deviceIsIOS = isIOS();
 
-    // Timeout after 5 seconds if post-robot doesn't load
-    const setupTimeout = setTimeout(() => {
-      clearInterval(setupInterval);
-      logger.error('Post-robot failed to load within timeout');
-    }, 5000);
+    // Wait for post-robot to be available with longer timeout for mobile
+    const setupInterval = setInterval(
+      () => {
+        if (window.postRobot) {
+          clearInterval(setupInterval);
+          initPostRobot();
+        }
+      },
+      deviceIsIOS ? 200 : 100,
+    );
+
+    // Timeout after longer period on mobile devices
+    const setupTimeout = setTimeout(
+      () => {
+        clearInterval(setupInterval);
+        logger.error('Post-robot failed to load within timeout');
+      },
+      deviceIsIOS ? 10000 : 5000,
+    );
 
     function initPostRobot() {
       clearTimeout(setupTimeout);
       logger.info('Post-robot available, initializing handlers');
-      console.log(introData);
+
+      // Configure post-robot for mobile if needed
+      if (deviceIsIOS && window.postRobot.CONFIG) {
+        // Extend timeout for mobile devices
+        window.postRobot.CONFIG.ACK_TIMEOUT = 5000;
+        window.postRobot.CONFIG.RES_TIMEOUT = 10000;
+        logger.info('Configured post-robot with extended timeouts for mobile');
+      }
 
       // Create auth response data function
       const createResponseData = () => {
@@ -182,7 +198,7 @@ function AuthProfileWidget() {
           hasAuth: !!isAuthenticated,
           hasTokens: !!tokens,
           hasProfile: !!profile,
-          platform: isIOS() ? 'ios' : 'other',
+          platform: deviceIsIOS ? 'ios' : 'other',
         };
       };
 
@@ -196,8 +212,28 @@ function AuthProfileWidget() {
         setCommunicationError(false);
         setCommunicationAttempts(0);
 
-        // Return the response data directly - post-robot handles serialization
-        return createResponseData();
+        // Log additional info for debugging on mobile
+        if (deviceIsIOS && logger.isEnabled()) {
+          logger.debug('Request details:', {
+            source: event.source ? 'Available' : 'Null',
+            sourceOrigin: event.sourceOrigin || 'Not provided',
+            canReply: !!event.source && !!window.postRobot,
+          });
+        }
+
+        try {
+          // Ensure we're responding to a valid source
+          if (!event.source) {
+            logger.error('No valid source to respond to');
+            return createResponseData();
+          }
+
+          // Return the response data directly - post-robot handles serialization
+          return createResponseData();
+        } catch (err) {
+          logger.error('Error in get-auth-profile handler:', err);
+          return createResponseData();
+        }
       });
 
       // When auth data changes, notify parent if we're in an iframe
@@ -239,20 +275,20 @@ function AuthProfileWidget() {
       // Set up notification on auth changes - less frequent on iOS to reduce overhead
       const notifyInterval = setInterval(
         notifyAuthUpdate,
-        isIOS() ? 3000 : 2000,
+        deviceIsIOS ? 3000 : 2000,
       );
 
       // Send ready notification to parent
       if (window.parent !== window) {
         // Delay ready event slightly longer on iOS
-        const readyDelay = isIOS() ? 800 : 500;
+        const readyDelay = deviceIsIOS ? 800 : 500;
 
         try {
           setTimeout(() => {
             window.postRobot
               .send(window.parent, 'auth-widget-ready', {
                 timestamp: new Date().toISOString(),
-                platform: isIOS() ? 'ios' : 'other',
+                platform: deviceIsIOS ? 'ios' : 'other',
               })
               .catch((err) => {
                 logger.error('Failed to send ready notification:', err);
@@ -341,9 +377,34 @@ function AuthProfileWidget() {
                 <div>Auth: \${${isAuthenticated} ? '✅ Authenticated' : '❌ Not Authenticated'}</div>
                 <div>URL: \${window.location.href}</div>
                 <div>PostRobot: \${window.postRobot ? '✅ Loaded' : '❌ Not Loaded'}</div>
+                <div>Is iframe: \${window.parent !== window ? '✅ Yes' : '❌ No'}</div>
+                <div style="font-size:8px;">\${navigator.userAgent.substring(0,60)}...</div>
               \`;
 
               overlay.appendChild(deviceInfo);
+
+              // Add post-robot debug info section
+              if (window.postRobot) {
+                const postRobotInfo = document.createElement('div');
+                postRobotInfo.style.cssText = \`
+                  background-color: #063;
+                  padding: 5px;
+                  margin-bottom: 10px;
+                  border-radius: 4px;
+                  font-size: 9px;
+                \`;
+
+                // Add simple debug controls
+                const debugControls = document.createElement('div');
+                debugControls.innerHTML = \`
+                  <button onclick="window.reloadWidget()" style="background:#600;color:white;border:none;padding:3px;margin:2px;font-size:9px;">Reload</button>
+                  <button onclick="window.parent.postMessage('ping-auth','*')" style="background:#060;color:white;border:none;padding:3px;margin:2px;font-size:9px;">Ping Parent</button>
+                  <button onclick="console.log('Post-Robot:',window.postRobot)" style="background:#006;color:white;border:none;padding:3px;margin:2px;font-size:9px;">Log PostRobot</button>
+                \`;
+
+                postRobotInfo.appendChild(debugControls);
+                overlay.appendChild(postRobotInfo);
+              }
 
               // Add to the document
               document.body.appendChild(overlay);
