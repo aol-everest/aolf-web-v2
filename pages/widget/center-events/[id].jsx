@@ -45,7 +45,7 @@ const settings = {
       settings: {
         arrows: false,
         centerMode: false,
-        centerPadding: '10px',
+        centerPadding: '5px',
         slidesToShow: 2,
         slidesToScroll: 2,
       },
