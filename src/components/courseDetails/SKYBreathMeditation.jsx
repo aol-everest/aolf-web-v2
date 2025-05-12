@@ -1,13 +1,7 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 /* eslint-disable react/no-unescaped-entities */
 import { useContext } from 'react';
-import {
-  MODAL_TYPES,
-  COURSE_MODES,
-  COURSE_TYPES,
-  WORKSHOP_MODE,
-} from '@constants';
-import { useAuth, useGlobalModalContext } from '@contexts';
+import { COURSE_TYPES, WORKSHOP_MODE } from '@constants';
 import { Accordion, Card, AccordionContext } from 'react-bootstrap';
 import { useAccordionToggle } from 'react-bootstrap/AccordionToggle';
 import classNames from 'classnames';
@@ -15,11 +9,8 @@ import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import Slider from 'react-slick';
 import { PriceCard } from './PriceCard';
-import queryString from 'query-string';
-import { pushRouteWithUTMQuery } from '@service';
-import { useRouter } from 'next/router';
 import { FaArrowRightLong } from 'react-icons/fa6';
-import { navigateToLogin, priceCalculation } from '@utils';
+import { priceCalculation } from '@utils';
 
 const settings = {
   slidesToShow: 3,
@@ -59,8 +50,9 @@ export const SKYBreathMeditation = ({
   mode: courseViewMode,
   handleRegister,
 }) => {
-  const { sfid, title } = data || {};
+  const { sfid, title, category } = data || {};
   const { fee } = priceCalculation({ workshop: data });
+  const isWithGurudev = category?.includes('With Gurudev');
 
   return (
     <>
@@ -524,20 +516,22 @@ export const SKYBreathMeditation = ({
                   </Card.Body>
                 </Accordion.Collapse>
               </Card>
-              <Card>
-                <Card.Header>
-                  <ContextAwareToggle eventKey="2">
-                    Can I reschedule my {title} Course after my initial
-                    registration?
-                  </ContextAwareToggle>
-                </Card.Header>
-                <Accordion.Collapse eventKey="2">
-                  <Card.Body>
-                    Yes, you can reschedule to a different {title} Course if you
-                    are unable to attend the original dates selected.
-                  </Card.Body>
-                </Accordion.Collapse>
-              </Card>
+              {!isWithGurudev && (
+                <Card>
+                  <Card.Header>
+                    <ContextAwareToggle eventKey="2">
+                      Can I reschedule my {title} Course after my initial
+                      registration?
+                    </ContextAwareToggle>
+                  </Card.Header>
+                  <Accordion.Collapse eventKey="2">
+                    <Card.Body>
+                      Yes, you can reschedule to a different {title} Course if
+                      you are unable to attend the original dates selected.
+                    </Card.Body>
+                  </Accordion.Collapse>
+                </Card>
+              )}
               <Card>
                 <Card.Header>
                   <ContextAwareToggle eventKey="3">
