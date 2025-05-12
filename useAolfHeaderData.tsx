@@ -102,36 +102,68 @@ const loadDebugHelper = (app2Origin: string): void => {
 };
 
 /**
- * Load post-robot script if not already loaded
+ * Check if post-robot is available
+ * (Script will be loaded directly in the app layout head)
  */
-const loadPostRobot = (app2Origin: string): Promise<void> => {
+const checkPostRobot = (): Promise<void> => {
   return new Promise((resolve, reject) => {
+    // If already loaded, resolve immediately
     if (typeof window !== 'undefined' && window.postRobot) {
+      headerLogger.debug('Post-robot already available in window');
       resolve();
       return;
     }
 
-    const existingScript = document.getElementById('post-robot-script');
-    if (existingScript) {
-      resolve();
-      return;
-    }
+    // Wait for a short time to see if it becomes available (may be loading)
+    let attempts = 0;
+    const maxAttempts = 5;
+    const checkInterval = setInterval(() => {
+      attempts++;
 
-    const script = document.createElement('script');
-    script.id = 'post-robot-script';
-    script.src = `${app2Origin}/widget/post-robot.min.js`;
-    script.async = true;
-    script.onload = () => {
-      headerLogger.debug('Post-robot script loaded');
-      resolve();
-    };
-    script.onerror = (e) => {
-      headerLogger.error('Failed to load post-robot script', e);
-      reject(e);
-    };
-
-    document.head.appendChild(script);
+      if (window.postRobot) {
+        clearInterval(checkInterval);
+        headerLogger.debug('Post-robot became available');
+        resolve();
+      } else if (attempts >= maxAttempts) {
+        clearInterval(checkInterval);
+        const errorMsg = 'Post-robot not available after waiting';
+        headerLogger.error(errorMsg);
+        reject(new Error(errorMsg));
+      }
+    }, 200); // Check every 200ms
   });
+};
+
+/**
+ * Detect if the current device is running iOS
+ */
+const isIOS = (): boolean => {
+  if (typeof window === 'undefined' || !navigator) return false;
+
+  const ua = navigator.userAgent;
+  return (
+    /iPhone|iPad|iPod|iOS|CriOS/.test(ua) ||
+    (/Safari/.test(ua) &&
+      /Apple/.test(navigator.vendor) &&
+      !/Chrome|Android/.test(ua)) ||
+    (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1)
+  );
+};
+
+/**
+ * Get iOS version if applicable
+ */
+const getIOSVersion = (): number | null => {
+  if (!isIOS()) return null;
+
+  const ua = navigator.userAgent;
+  const match = ua.match(/OS (\d+)_(\d+)_?(\d+)?/);
+
+  if (match && match[1]) {
+    return parseInt(match[1], 10);
+  }
+
+  return null;
 };
 
 /**
@@ -178,6 +210,15 @@ export function useAolfHeaderData(app2Origin: string, app2WidgetUrl: string) {
   useEffect(() => {
     headerLogger.info(`Initializing with app2Origin: ${app2Origin}`, { debug });
 
+    // Log device information for debugging
+    const deviceIsIOS = isIOS();
+    const iosVersion = getIOSVersion();
+    if (debug) {
+      headerLogger.info(
+        `Device: ${deviceIsIOS ? 'iOS' : 'non-iOS'} ${iosVersion ? `(iOS ${iosVersion})` : ''}`,
+      );
+    }
+
     // Load debug helper if debug mode is enabled
     if (debug) {
       loadDebugHelper(app2Origin);
@@ -203,7 +244,27 @@ export function useAolfHeaderData(app2Origin: string, app2WidgetUrl: string) {
           ? encodeURIComponent(window.location.origin)
           : '';
 
-      iframe.src = `${app2WidgetUrl}?client=${clientOrigin}${debugParam}`;
+      // Add device info to URL
+      const deviceParam = deviceIsIOS ? '&device=ios' : '';
+      const versionParam = iosVersion ? `&iosVersion=${iosVersion}` : '';
+      const timestamp = `&t=${Date.now()}`;
+
+      iframe.src = `${app2WidgetUrl}?client=${clientOrigin}${debugParam}${deviceParam}${versionParam}${timestamp}`;
+
+      // Add special attributes for iOS
+      if (deviceIsIOS) {
+        iframe.setAttribute('webkit-playsinline', 'true');
+        iframe.setAttribute('playsinline', 'true');
+
+        // Important - for iOS Safari cookie handling
+        if (iosVersion && iosVersion >= 14) {
+          iframe.setAttribute(
+            'sandbox',
+            'allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox allow-storage-access-by-user-activation',
+          );
+          iframe.setAttribute('allow', 'payment');
+        }
+      }
 
       document.body.appendChild(iframe);
 
@@ -211,21 +272,29 @@ export function useAolfHeaderData(app2Origin: string, app2WidgetUrl: string) {
         headerLogger.debug('Added iframe with attributes', {
           id: iframe.id,
           src: iframe.src,
+          isIOS: deviceIsIOS,
+          iosVersion,
         });
       }
     } else {
       headerLogger.debug('Using existing auth-profile-iframe');
     }
 
-    // Load post-robot
-    loadPostRobot(app2Origin)
+    // Just check if post-robot is available (should be loaded in head)
+    checkPostRobot()
       .then(() => {
+        headerLogger.info('Post-robot available, setting up communication');
+
         if (!window.postRobot) {
-          headerLogger.error('Post-robot failed to load properly');
+          headerLogger.error('Post-robot not available after check');
           return;
         }
 
-        headerLogger.info('Post-robot loaded, setting up communication');
+        // Setup communication with the iframe
+        if (!iframe || !iframe.contentWindow) {
+          headerLogger.error('Iframe not available for communication');
+          return;
+        }
 
         // Function to request auth profile from iframe
         const requestAuthProfile = () => {
@@ -234,9 +303,16 @@ export function useAolfHeaderData(app2Origin: string, app2WidgetUrl: string) {
             return;
           }
 
+          headerLogger.debug('Requesting auth-profile data');
+
           try {
+            const origin = iframe.src ? new URL(iframe.src).origin : app2Origin;
+            headerLogger.debug('Sending get-auth-profile request to ' + origin);
+
             window.postRobot
-              .send(iframe.contentWindow, 'get-auth-profile')
+              .send(iframe.contentWindow, 'get-auth-profile', {
+                timestamp: Date.now(),
+              })
               .then((event) => {
                 const authData = event.data;
                 headerLogger.info('Received auth profile data', {
@@ -274,6 +350,11 @@ export function useAolfHeaderData(app2Origin: string, app2WidgetUrl: string) {
                   tokens: authData.tokens,
                   exploreMenu: authData.exploreMenu || [],
                 };
+
+                // Reset error counter on successful communication
+                if (communicationErrors > 0) {
+                  setCommunicationErrors(0);
+                }
 
                 // Update state with the data
                 setHeaderData(processedData);
@@ -335,27 +416,37 @@ export function useAolfHeaderData(app2Origin: string, app2WidgetUrl: string) {
         // Listen for when the widget is ready
         const readyListener = window.postRobot.on('auth-widget-ready', () => {
           headerLogger.debug('Auth widget is ready, requesting auth profile');
-          setTimeout(requestAuthProfile, 100);
+          // Use a slightly longer delay on iOS
+          const readyDelay = isIOS() ? 300 : 100;
+          setTimeout(requestAuthProfile, readyDelay);
         });
 
-        // Request auth profile immediately
+        // Request auth profile immediately as well
         requestAuthProfile();
 
-        // Clean up
+        // Return cleanup function
         return () => {
-          listener.cancel();
-          readyListener.cancel();
+          try {
+            listener.cancel();
+            readyListener.cancel();
+            headerLogger.debug('Cleaned up post-robot listeners');
+          } catch (err) {
+            headerLogger.warn('Error cleaning up listeners', err);
+          }
         };
       })
       .catch((err) => {
-        headerLogger.error('Failed to initialize post-robot', err);
+        headerLogger.error(
+          'Post-robot not available. Please ensure it is loaded in the page head.',
+          err,
+        );
       });
 
     // Cleanup when component unmounts
     return () => {
-      headerLogger.debug('Cleaning up');
+      headerLogger.debug('Cleaning up component');
     };
-  }, [app2Origin, app2WidgetUrl, debug]);
+  }, [app2Origin, app2WidgetUrl, debug, communicationErrors]);
 
   return headerData;
 }
