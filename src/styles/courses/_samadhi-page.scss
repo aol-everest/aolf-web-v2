@@ -277,6 +277,148 @@
       }
     }
   }
+  .quote-section {
+    background-color: #f7f5f4;
+    padding: 71px 0 100px 0;
+    background-image: url(/img/Quote-dektop.png);
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position-y: center;
+    @media only screen and (max-width: 991px) {
+      padding: 30px 0 20px 0;
+    }
+    .main-area {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      span {
+        font-family: 'Lora', serif;
+        font-size: 46px;
+        line-height: 56px !important;
+        color: #fff;
+        padding: 0 50px;
+        font-weight: 400;
+        margin-bottom: 0.5rem;
+        max-width: 100%;
+        font-style: italic;
+        text-align: center;
+      }
+      @media only screen and (max-width: 991px) {
+        span {
+          font-size: 21px;
+          line-height: 22px !important;
+        }
+      }
+    }
+    .quote-section__text {
+      text-align: center;
+      color: #ffffff;
+      margin-top: 1rem;
+
+      font-size: 36px;
+      line-height: 71px;
+      color: #fff;
+      img {
+        width: 144px;
+        height: 144px;
+        @media only screen and (max-width: 991px) {
+          width: 48px;
+          height: 48px;
+          margin-bottom: 15px;
+        }
+      }
+    }
+    @media only screen and (max-width: 991px) {
+      .quote-section__text {
+        font-size: 15px;
+        line-height: 36px !important;
+      }
+    }
+  }
+  .feature-section {
+    background-color: #ffffff;
+    padding-top: 4rem;
+    padding-bottom: 4rem;
+    .feature_block {
+      padding-bottom: 2rem;
+    }
+    .feature_box {
+      display: flex;
+      flex-direction: row;
+      padding: 1rem;
+      margin: 1rem 0;
+      min-height: 15rem;
+      text-align: center;
+      border-radius: 20px;
+      .feature_logo {
+        margin-bottom: 1rem;
+        min-height: 4rem;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding-left: 24px;
+        img {
+          width: 180px;
+        }
+      }
+      .feature-content {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-align: left;
+        margin-left: 2rem;
+        font-size: 29px;
+        line-height: 26px;
+        font-family: 'Noto Serif';
+        font-style: italic;
+        line-height: normal;
+        color: #2e2e2e;
+      }
+    }
+    @media only screen and (max-width: 991px) {
+      .feature_box {
+        margin: 0 0 11px;
+        border-radius: 20px !important;
+        padding: 40px;
+        height: unset;
+        min-height: unset;
+        flex-direction: row;
+        border-radius: 0;
+        max-width: 320px;
+        margin-left: auto;
+        margin-right: auto;
+        .feature_logo {
+          min-height: unset;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          width: 100px;
+          margin: 0px 0;
+          padding-left: 0;
+          img {
+            max-width: 100px;
+          }
+        }
+        .feature-content {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          text-align: left;
+          margin-left: 15px;
+          font-family: 'lora';
+          font-size: 15px;
+          line-height: 15px;
+        }
+      }
+    }
+    .pinkbox {
+      background: #fef2f2;
+    }
+    .greybox {
+      background: #f5f5f5;
+    }
+  }
   .section-sahaj-reviews {
     padding-top: 112px;
     background: url(/img/samadhi-carousel-bg.png) repeat-x top left;

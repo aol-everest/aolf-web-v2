@@ -84,7 +84,8 @@ export const SahajSamadhi = ({
                 Ease
               </div>
               <div className="banner-description">
-                Experience freedom from worry and anxiety
+                Meditate effortlessly from Day One with an ancient Mantra Based
+                Meditation technique
               </div>
               {!sfid && courseViewMode !== WORKSHOP_MODE.VIEW && (
                 <div className="hero-register-button-wrapper">
@@ -346,6 +347,79 @@ export const SahajSamadhi = ({
               </div>
             </SwiperSlide>
           </Swiper>
+        </section>
+        <section class="quote-section">
+          <div class="container">
+            <div class="col-12 main-area">
+              <p class="quote-section__quote">
+                <span>
+                  “Meditation is the journey from sound to silence, from
+                  movement to stillness, from a limited identity to unlimited
+                  space”
+                </span>
+              </p>
+              <p class="quote-section__text">
+                <img src="/img/Guruji-2.png" />
+                <br />~ Gurudev Sri Sri Ravi Shankar
+              </p>
+            </div>
+          </div>
+        </section>
+        <section class="feature-section">
+          <div class="container">
+            <div class="feature_block">
+              <h2 class="feature_title section-title text-center">
+                Featured in
+              </h2>
+            </div>
+            <div class="row">
+              <div class="col-12 col-lg-6 text-left text-lg-left">
+                <div class="feature_box pinkbox">
+                  <div class="feature_logo">
+                    <img src="/img/CNN.webp" alt="transforming lives" />
+                  </div>
+                  <div class="feature-content">
+                    <span class="content">"Life Changing"</span>
+                  </div>
+                </div>
+              </div>
+              <div class="col-12 col-lg-6 text-left text-lg-left">
+                <div class="feature_box greybox">
+                  <div class="feature_logo">
+                    <img src="/img/Yoga.webp" alt="transforming lives" />
+                  </div>
+                  <div class="feature-content">
+                    <span class="content">
+                      "May be the fastest growing spiritual practice on the
+                      planet"
+                    </span>
+                  </div>
+                </div>
+              </div>
+              <div class="col-12 col-lg-6 text-left text-lg-left">
+                <div class="feature_box pinkbox">
+                  <div class="feature_logo">
+                    <img src="/img/Harvard.webp" alt="transforming lives" />
+                  </div>
+                  <div class="feature-content">
+                    <span class="content">
+                      "Show promise in providing relief for depression"
+                    </span>
+                  </div>
+                </div>
+              </div>
+              <div class="col-12 col-lg-6 text-left text-lg-left">
+                <div class="feature_box greybox">
+                  <div class="feature_logo">
+                    <img src="/img/WP.webp" alt="transforming lives" />
+                  </div>
+                  <div class="feature-content">
+                    <span class="content">"Like Fresh air to millions"</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </section>
         <section className="faq">
           <div className="container">
