@@ -20,12 +20,20 @@
       background: #fffbf0;
     }
     .banner {
-      height: 402px;
+      height: 700px;
       width: 100%;
-      background: url(/img/sahaj-samadhi-banner-bg.webp) no-repeat top left;
-      padding: 60px 76px 50px 76px;
-      background-size: auto;
-      background-position: center;
+      background-image: url(/img/aol-p1-hero-bg.webp);
+      background-repeat: no-repeat;
+      background-position: right top;
+      background-size: cover;
+      padding: 108px 76px 100px 76px;
+      .container {
+        @media screen and (max-width: 991px) {
+          height: 100%;
+          display: flex;
+          flex-direction: column;
+        }
+      }
       .courses-title {
         display: none;
         font-size: 16px;
@@ -33,16 +41,23 @@
         text-transform: uppercase;
       }
       &-title {
-        font-size: 40px;
-        line-height: 40px;
+        font-size: 48px;
+        line-height: 50px;
         font-weight: 600;
-        max-width: 480px;
+        max-width: 550px;
         margin-bottom: 40px;
+        color: white;
       }
       &-description {
-        font-size: 18px;
-        line-height: 22px;
+        font-size: 22px;
+        line-height: 25px;
         max-width: 550px;
+        color: white;
+        @media screen and (max-width: 991px) {
+          margin-top: auto;
+          color: #000000;
+          margin-bottom: 50px;
+        }
       }
       @media screen and (max-width: 991px) {
         background-position: bottom center;
@@ -53,13 +68,12 @@
           line-height: 35px;
         }
       }
-      @media screen and (max-width: 767px) {
-        background: url(/img/sahaj-samadhi-banner-mobile.jpg) no-repeat bottom
-          center;
-        height: 600px;
-        padding: 36px 32px 10px;
+      @media screen and (max-width: 991px) {
+        background-image: url(/img/aol-p1-hero-bg-mobile.jpg);
+        height: 859px;
+        background-position: center center;
         background-size: cover;
-        background-position: center bottom;
+        padding: 20px 32px 10px;
         &-title {
           font-size: 26px;
           line-height: 30px;
@@ -67,7 +81,8 @@
         }
         .courses-title {
           display: block;
-          margin-bottom: 24px;
+          margin-bottom: 10px;
+          color: white;
         }
       }
       .hero-register-button-wrapper {
@@ -88,7 +103,22 @@
         }
       }
     }
-
+    .registration-widget {
+      margin-top: -180px;
+      @media screen and (max-width: 991px) {
+        margin-top: 20px;
+      }
+      .register-content .discount-price {
+        display: inline-flex;
+        flex-direction: column;
+        .content {
+          font-size: 42px;
+        }
+        br {
+          display: none;
+        }
+      }
+    }
     .content-video-area {
       display: flex;
       padding: 80px 20px 40px;
