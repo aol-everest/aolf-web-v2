@@ -251,7 +251,7 @@ const CenterEventsCarousel = () => {
     <section className="courses-nearby">
       <div className="container">
         <h2 className="courses-nearby__title section-title text-center">
-          Informational Sessions happening now
+          Information Sessions happening now
         </h2>
 
         <Slider
