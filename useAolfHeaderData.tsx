@@ -50,7 +50,6 @@ export interface AolfExploreMenuItem {
 export interface AolfHeaderData {
   isAuthenticated: boolean;
   profile: AolfHeaderProfile | null;
-  menu: AolfHeaderMenuItem[];
   tokens?: {
     accessToken: string;
     idToken: string;
@@ -116,11 +115,11 @@ const checkPostRobot = (): Promise<void> => {
 
     // Wait for a short time to see if it becomes available (may be loading)
     let attempts = 0;
-    const maxAttempts = 5;
+    const maxAttempts = 10; // Increase max attempts
     const checkInterval = setInterval(() => {
       attempts++;
 
-      if (window.postRobot) {
+      if (window && window.postRobot) {
         clearInterval(checkInterval);
         headerLogger.debug('Post-robot became available');
         resolve();
@@ -130,9 +129,16 @@ const checkPostRobot = (): Promise<void> => {
         headerLogger.error(errorMsg);
         reject(new Error(errorMsg));
       }
-    }, 200); // Check every 200ms
+    }, 300); // Check less frequently to reduce console spam
   });
 };
+
+// Track active listeners globally to prevent duplicates
+let activeListeners: {
+  authUpdate?: { cancel: () => void };
+  ready?: { cancel: () => void };
+  click?: { cancel: () => void };
+} = {};
 
 /**
  * Detect if the current device is running iOS
@@ -233,7 +239,10 @@ export function useAolfHeaderData(app2Origin: string, app2WidgetUrl: string) {
       headerLogger.debug('Creating auth-profile-iframe');
       iframe = document.createElement('iframe');
       iframe.id = 'auth-profile-iframe';
-      iframe.style.display = 'none';
+
+      // Style for interactive visible iframe instead of hidden one
+      iframe.style.cssText =
+        'border:none; overflow:hidden; height:60px; width:auto; min-width:100px;';
 
       // Add debug param if in debug mode
       const debugParam = debug ? '&debug=true' : '';
@@ -253,16 +262,15 @@ export function useAolfHeaderData(app2Origin: string, app2WidgetUrl: string) {
 
       // Add special attributes for iOS
       if (deviceIsIOS) {
-        iframe.setAttribute('webkit-playsinline', 'true');
-        iframe.setAttribute('playsinline', 'true');
+        // Ensure we allow interaction for iOS
+        iframe.setAttribute('allow', 'payment');
 
-        // Important - for iOS Safari cookie handling
-        if (iosVersion && iosVersion >= 14) {
+        // Do not use sandbox on iOS as it can cause postMessage issues
+        if (!iosVersion || iosVersion < 14) {
           iframe.setAttribute(
             'sandbox',
-            'allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox allow-storage-access-by-user-activation',
+            'allow-scripts allow-same-origin allow-forms allow-popups',
           );
-          iframe.setAttribute('allow', 'payment');
         }
       }
 
@@ -294,6 +302,34 @@ export function useAolfHeaderData(app2Origin: string, app2WidgetUrl: string) {
         if (!iframe || !iframe.contentWindow) {
           headerLogger.error('Iframe not available for communication');
           return;
+        }
+
+        // Clean up any existing listeners to prevent duplicates
+        if (activeListeners.authUpdate) {
+          try {
+            activeListeners.authUpdate.cancel();
+            headerLogger.debug('Cleaned up existing auth update listener');
+          } catch (err) {
+            headerLogger.warn('Error cleaning up auth update listener:', err);
+          }
+        }
+
+        if (activeListeners.ready) {
+          try {
+            activeListeners.ready.cancel();
+            headerLogger.debug('Cleaned up existing ready listener');
+          } catch (err) {
+            headerLogger.warn('Error cleaning up ready listener:', err);
+          }
+        }
+
+        if (activeListeners.click) {
+          try {
+            activeListeners.click.cancel();
+            headerLogger.debug('Cleaned up existing click listener');
+          } catch (err) {
+            headerLogger.warn('Error cleaning up click listener:', err);
+          }
         }
 
         // Function to request auth profile from iframe
@@ -334,19 +370,10 @@ export function useAolfHeaderData(app2Origin: string, app2WidgetUrl: string) {
                           authData.profile.last_name ||
                           authData.profile.lastName ||
                           '',
-                        first_name:
-                          authData.profile.first_name ||
-                          authData.profile.firstName ||
-                          '',
-                        last_name:
-                          authData.profile.last_name ||
-                          authData.profile.lastName ||
-                          '',
                         email: authData.profile.email || '',
                         avatar: authData.profile.avatar || '',
                       }
                     : null,
-                  menu: [],
                   tokens: authData.tokens,
                   exploreMenu: authData.exploreMenu || [],
                 };
@@ -374,10 +401,7 @@ export function useAolfHeaderData(app2Origin: string, app2WidgetUrl: string) {
           'auth-widget-data-updated',
           (event) => {
             const authData = event.data;
-            headerLogger.info('Received auth data update', {
-              isAuthenticated: authData.isAuthenticated,
-              hasProfile: !!authData.profile,
-            });
+            headerLogger.info('Received auth data update', authData);
 
             // Process and set the updated data
             const processedData: AolfHeaderData = {
@@ -392,19 +416,10 @@ export function useAolfHeaderData(app2Origin: string, app2WidgetUrl: string) {
                       authData.profile.last_name ||
                       authData.profile.lastName ||
                       '',
-                    first_name:
-                      authData.profile.first_name ||
-                      authData.profile.firstName ||
-                      '',
-                    last_name:
-                      authData.profile.last_name ||
-                      authData.profile.lastName ||
-                      '',
                     email: authData.profile.email || '',
                     avatar: authData.profile.avatar || '',
                   }
                 : null,
-              menu: [],
               tokens: authData.tokens,
               exploreMenu: authData.exploreMenu || [],
             };
@@ -412,6 +427,46 @@ export function useAolfHeaderData(app2Origin: string, app2WidgetUrl: string) {
             setHeaderData(processedData);
           },
         );
+
+        // Listen for click events from the iframe
+        const clickListener = window.postRobot.on(
+          'auth-widget-clicked',
+          (event) => {
+            const clickData = event.data;
+            headerLogger.info(
+              'Received click event from auth widget',
+              clickData,
+            );
+
+            if (clickData.action === 'login') {
+              // Handle login button click - redirect to login page or open login modal
+              headerLogger.info(
+                'Login button clicked, redirecting to login page',
+              );
+
+              // You can replace this with your login URL or modal opening code
+              if (typeof window !== 'undefined') {
+                window.location.href = '/login';
+              }
+            } else if (clickData.action === 'profile') {
+              // Handle profile avatar click - redirect to profile page or open dropdown
+              headerLogger.info(
+                'Profile avatar clicked, redirecting to profile page',
+              );
+
+              // You can replace this with your profile URL or dropdown code
+              if (typeof window !== 'undefined') {
+                window.location.href = '/profile';
+              }
+            }
+          },
+        );
+
+        // Store the click listener reference
+        activeListeners.click = clickListener;
+
+        // Store the listener reference
+        activeListeners.authUpdate = listener;
 
         // Listen for when the widget is ready
         const readyListener = window.postRobot.on('auth-widget-ready', () => {
@@ -421,14 +476,29 @@ export function useAolfHeaderData(app2Origin: string, app2WidgetUrl: string) {
           setTimeout(requestAuthProfile, readyDelay);
         });
 
+        // Store the ready listener reference
+        activeListeners.ready = readyListener;
+
         // Request auth profile immediately as well
         requestAuthProfile();
 
         // Return cleanup function
         return () => {
           try {
-            listener.cancel();
-            readyListener.cancel();
+            // Clean up post-robot listeners
+            if (activeListeners.authUpdate) {
+              activeListeners.authUpdate.cancel();
+            }
+            if (activeListeners.ready) {
+              activeListeners.ready.cancel();
+            }
+            if (activeListeners.click) {
+              activeListeners.click.cancel();
+            }
+
+            // Clear the activeListeners object
+            activeListeners = {};
+
             headerLogger.debug('Cleaned up post-robot listeners');
           } catch (err) {
             headerLogger.warn('Error cleaning up listeners', err);
@@ -440,6 +510,7 @@ export function useAolfHeaderData(app2Origin: string, app2WidgetUrl: string) {
           'Post-robot not available. Please ensure it is loaded in the page head.',
           err,
         );
+        console.error(err);
       });
 
     // Cleanup when component unmounts

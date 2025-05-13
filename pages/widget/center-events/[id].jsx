@@ -1,5 +1,5 @@
 /* eslint-disable no-inline-styles/no-inline-styles */
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { api, tConvert, concatenateStrings } from '@utils';
 import Slider from 'react-slick';
 import usePlacesService from 'react-google-autocomplete/lib/usePlacesAutocompleteService';
@@ -175,6 +175,8 @@ const WorkShopTile = ({ workshop }) => {
 
 const CenterEventsCarousel = () => {
   const router = useRouter();
+  const sliderRef = useRef(null);
+  const [sliderKey, setSliderKey] = useState(0); // force re-mount
   const { id: centerId, ctype: courseType } = router.query;
   const courseTypeFilter = null;
 
@@ -219,21 +221,52 @@ const CenterEventsCarousel = () => {
     });
   };
 
+  // Force re-mount Slider when data changes
+  useEffect(() => {
+    if (data && data.length > 0) {
+      setSliderKey((prev) => prev + 1);
+    }
+  }, [data]);
+
+  // Call slickSetPosition after render and on resize
+  useEffect(() => {
+    function setPosition() {
+      if (
+        sliderRef.current &&
+        sliderRef.current.innerSlider &&
+        typeof sliderRef.current.innerSlider.slickSetPosition === 'function'
+      ) {
+        sliderRef.current.innerSlider.slickSetPosition();
+      }
+    }
+    const t = setTimeout(setPosition, 50);
+    window.addEventListener('resize', setPosition);
+    return () => {
+      clearTimeout(t);
+      window.removeEventListener('resize', setPosition);
+    };
+  }, [data]);
+
   return (
-    <section class="courses-nearby">
-      <div class="container">
-        <h2 class="courses-nearby__title section-title text-center">
+    <section className="courses-nearby">
+      <div className="container">
+        <h2 className="courses-nearby__title section-title text-center">
           Informational Sessions happening now
         </h2>
 
-        <Slider {...settings} className="courses-slider">
-          {(data || []).map((workshop, index) => {
-            return <WorkShopTile workshop={workshop} key={index} />;
-          })}
+        <Slider
+          {...settings}
+          className="courses-slider"
+          ref={sliderRef}
+          key={sliderKey}
+        >
+          {(data || []).map((workshop, index) => (
+            <WorkShopTile workshop={workshop} key={index} />
+          ))}
         </Slider>
 
-        <div class="courses-nearby-actions">
-          <button class="btn-primary" onClick={moreDatesAction}>
+        <div className="courses-nearby-actions">
+          <button className="btn-primary" onClick={moreDatesAction}>
             More Dates
           </button>
         </div>
