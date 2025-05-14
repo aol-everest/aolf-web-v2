@@ -5,9 +5,7 @@ import { useQuery } from '@tanstack/react-query';
 import Head from 'next/head';
 import Script from 'next/script';
 
-// Update to allow all artofliving.org subdomains and localhost for development
-const ALLOWED_ORIGIN_REGEX =
-  /^https?:\/\/(localhost(:\d+)?|([a-z0-9-]+\.)*artofliving\.org)$/i;
+const ALLOWED_ORIGIN_REGEX = /^https:\/\/([a-z0-9-]+\.)*artofliving\.org$/i;
 
 // Custom logger with timestamps and prefixes
 const logger = {
@@ -182,40 +180,17 @@ function AuthProfileWidget() {
     }
   }, [isLoading, error]);
 
-  // Function to create a response object for auth-profile requests
-  const createAuthProfileResponse = () => {
-    const exploreMenu = introData.map((item) => ({
-      name: item.title,
-      link: item.slug ? `/us-en/explore/${item.slug}` : '#',
-    }));
-
-    return {
-      type: 'auth-profile',
-      data: {
-        isAuthenticated,
-        tokens: isAuthenticated
-          ? {
-              accessToken: tokens?.accessToken,
-              idToken: tokens?.idToken,
-            }
-          : null,
-        profile,
-        exploreMenu,
-      },
-    };
-  };
-
   // Set up message listener with useRef to avoid recreation on each render
   useEffect(() => {
     // Define the message handler function
     const createMessageHandler = () => {
-      function handler(event) {
-        // Log raw message event for debugging
+      return function handler(event) {
+        // Log all incoming postMessages for debugging
         logger.debug(
-          `Received raw message event from ${event.origin}, data:`,
-          typeof event.data === 'object'
-            ? JSON.stringify(event.data)
-            : event.data,
+          'Received event from origin:',
+          event.origin,
+          'type:',
+          event.data?.type,
         );
 
         // Validate origin
@@ -224,59 +199,50 @@ function AuthProfileWidget() {
           return;
         }
 
-        // Check for message type
-        if (typeof event.data === 'object') {
-          logger.debug(`Message type: ${event.data.type}`);
+        // Create menu items from intro data
+        const exploreMenu = introData.map((item) => ({
+          name: item.title,
+          link: item.slug ? `/us-en/explore/${item.slug}` : '#',
+        }));
 
-          if (event.data.type === 'get-auth-profile') {
-            logger.info(
-              'Received auth-profile request from origin:',
-              event.origin,
-            );
-
-            // Create response data
-            const responseData = createAuthProfileResponse();
-
-            // Log response size (but not content for security)
-            logger.debug('Response payload size details:', {
-              profileSize: profile ? JSON.stringify(profile).length : 0,
-              menuItemsCount: responseData.data.exploreMenu.length,
-              totalSize: JSON.stringify(responseData).length,
-            });
-
-            // Send the response
-            try {
-              logger.info('Sending auth profile response...');
-              event.source.postMessage(responseData, event.origin);
-              logger.info('Auth profile sent successfully to:', event.origin);
-            } catch (err) {
-              logger.error('Failed to send auth profile:', err);
-            }
-          } else if (event.data.type === 'auth-widget-ping') {
-            // This is our self-diagnostic ping, just reply to confirm working
-            try {
-              event.source.postMessage(
-                {
-                  type: 'auth-widget-pong',
-                  timestamp: new Date().toISOString(),
-                },
-                event.origin,
-              );
-              logger.debug('Replied to diagnostic ping');
-            } catch (err) {
-              logger.error('Failed to respond to ping:', err);
-            }
-          }
-        } else {
-          logger.warn(
-            'Received non-object message from origin:',
+        if (event.data?.type === 'get-auth-profile') {
+          logger.info(
+            'Received auth profile request from origin:',
             event.origin,
-            event.data,
           );
-        }
-      }
 
-      return handler;
+          // Create response data
+          const responseData = {
+            type: 'auth-profile',
+            data: {
+              isAuthenticated,
+              tokens: isAuthenticated
+                ? {
+                    accessToken: tokens?.accessToken,
+                    idToken: tokens?.idToken,
+                  }
+                : null,
+              profile,
+              exploreMenu,
+            },
+          };
+
+          // Log response size (but not content for security)
+          logger.debug('Response payload size details:', {
+            profileSize: profile ? JSON.stringify(profile).length : 0,
+            menuItemsCount: exploreMenu.length,
+            totalSize: JSON.stringify(responseData).length,
+          });
+
+          // Send the response
+          try {
+            event.source.postMessage(responseData, event.origin);
+            logger.info('Auth profile sent successfully to:', event.origin);
+          } catch (err) {
+            logger.error('Failed to send auth profile:', err);
+          }
+        }
+      };
     };
 
     // Only set up the listener once
@@ -321,12 +287,11 @@ function AuthProfileWidget() {
 
     // Create new handler with updated data
     messageHandlerRef.current = function handler(event) {
-      // Log raw message event for debugging
       logger.debug(
-        `Received message from ${event.origin}, data:`,
-        typeof event.data === 'object'
-          ? JSON.stringify(event.data)
-          : event.data,
+        'Received event from origin:',
+        event.origin,
+        'type:',
+        event.data?.type,
       );
 
       // Validate origin
@@ -335,50 +300,47 @@ function AuthProfileWidget() {
         return;
       }
 
-      // Check for message type
-      if (typeof event.data === 'object') {
-        logger.debug(`Message type: ${event.data.type}`);
+      // Create menu items from intro data
+      const exploreMenu = introData.map((item) => ({
+        name: item.title,
+        link: item.slug ? `/us-en/explore/${item.slug}` : '#',
+      }));
 
-        if (event.data.type === 'get-auth-profile') {
-          logger.info(
-            'Received auth-profile request from origin:',
-            event.origin,
-          );
+      if (event.data?.type === 'get-auth-profile') {
+        logger.info('Received auth profile request from origin:', event.origin);
 
-          // Create response data
-          const responseData = createAuthProfileResponse();
+        // Create response data
+        const responseData = {
+          type: 'auth-profile',
+          data: {
+            isAuthenticated,
+            tokens: isAuthenticated
+              ? {
+                  accessToken: tokens?.accessToken,
+                  idToken: tokens?.idToken,
+                }
+              : null,
+            profile,
+            exploreMenu,
+          },
+        };
 
-          // Send the response
-          try {
-            logger.info('Sending auth profile response...');
-            event.source.postMessage(responseData, event.origin);
-            logger.info('Auth profile sent successfully to:', event.origin);
-          } catch (err) {
-            logger.error('Failed to send auth profile:', err);
-          }
-        } else if (event.data.type === 'auth-widget-ping') {
-          // This is our self-diagnostic ping, just reply to confirm working
-          try {
-            event.source.postMessage(
-              { type: 'auth-widget-pong', timestamp: new Date().toISOString() },
-              event.origin,
-            );
-            logger.debug('Replied to diagnostic ping');
-          } catch (err) {
-            logger.error('Failed to respond to ping:', err);
-          }
+        // Send the response
+        try {
+          event.source.postMessage(responseData, event.origin);
+          logger.info('Auth profile sent successfully to:', event.origin);
+        } catch (err) {
+          logger.error('Failed to send auth profile:', err);
         }
-      } else {
-        logger.warn(
-          'Received non-object message from origin:',
-          event.origin,
-          event.data,
-        );
       }
     };
 
     // Add updated handler
     window.addEventListener('message', messageHandlerRef.current);
+
+    return () => {
+      // Cleanup not needed here as it will be done by the main setup effect
+    };
   }, [isAuthenticated, profile, introData, tokens]); // Only update when these change
 
   // Log component render
@@ -412,11 +374,6 @@ function AuthProfileWidget() {
               if (e.data?.type === 'auth-widget-ping') {
                 console.log('[Auth Widget]', new Date().toISOString(), 'Self diagnostic ping received - postMessage is working');
               }
-
-              // Log any incoming get-auth-profile requests
-              if (e.data?.type === 'get-auth-profile') {
-                console.log('[Auth Widget]', new Date().toISOString(), 'get-auth-profile request received from', e.origin);
-              }
             });
 
             // Log that we're ready to receive messages
@@ -425,16 +382,6 @@ function AuthProfileWidget() {
             // Check if this is embedded in an iframe
             if (window.parent !== window) {
               console.log('[Auth Widget]', new Date().toISOString(), 'Widget is embedded in an iframe - correct configuration');
-
-              // Alert parent we're ready (right after load)
-              setTimeout(() => {
-                try {
-                  window.parent.postMessage({ type: 'auth-widget-ready' }, '*');
-                  console.log('[Auth Widget]', new Date().toISOString(), 'Sent ready notification to parent');
-                } catch (e) {
-                  console.error('[Auth Widget]', new Date().toISOString(), 'Error sending ready message:', e);
-                }
-              }, 1000);
             } else {
               console.warn('[Auth Widget]', new Date().toISOString(), 'Widget is NOT embedded in an iframe - this may cause issues');
             }
