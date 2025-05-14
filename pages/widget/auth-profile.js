@@ -298,19 +298,15 @@ function AuthProfileWidget() {
 
       {/* Include post-robot script with retry mechanism */}
       <Script
-        src="https://unpkg.com/post-robot@8.0.32/dist/post-robot.min.js"
+        src="/widget/post-robot.min.js"
         strategy="beforeInteractive"
-        crossOrigin="anonymous"
         onError={() => {
-          // If script fails to load, try alternative CDN
+          // If script fails to load, try again after a delay
           if (typeof window !== 'undefined') {
-            logger.error(
-              'Failed to load post-robot from unpkg, trying jsDelivr...',
-            );
+            logger.error('Failed to load post-robot, retrying...');
             setTimeout(() => {
               const script = document.createElement('script');
-              script.src = `https://cdn.jsdelivr.net/npm/post-robot@8.0.32/dist/post-robot.min.js?t=${Date.now()}`;
-              script.crossOrigin = 'anonymous';
+              script.src = `/widget/post-robot.min.js?retry=${Date.now()}`;
               document.head.appendChild(script);
             }, 1000);
           }
