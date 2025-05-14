@@ -111,12 +111,6 @@ class CustomDocument extends Document {
             src="https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v10.0"
           />
           <script async src="https://www.instagram.com/embed.js" />
-
-          {/* Post-Robot for cross-domain communication */}
-          <script
-            src="https://unpkg.com/post-robot@8.0.32/dist/post-robot.min.js"
-            crossOrigin="anonymous"
-          />
         </Head>
         <body>
           <Main />
