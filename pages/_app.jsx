@@ -32,6 +32,7 @@ import { Passwordless } from '@components/passwordLessAuth/passwordless';
 import { Hub } from 'aws-amplify/utils';
 import { useRouter } from 'next/router';
 import { clearInflightOAuth } from '@passwordLess/storage.js';
+import CookieStorage from '@utils/cookieStorage';
 import dynamic from 'next/dynamic';
 // import { SurveyRequest } from "@components/surveyRequest";
 
@@ -46,6 +47,9 @@ import '@styles/old-design/style.scss';
 
 import SEO from '../next-seo.config';
 
+const isLocal = process.env.NODE_ENV === 'development';
+const PARENT_DOMAIN = getParentDomain();
+
 Passwordless.configure({
   clientId: process.env.NEXT_PUBLIC_COGNITO_CLIENT_ID,
   userPoolId: process.env.NEXT_PUBLIC_COGNITO_USERPOOL,
@@ -56,6 +60,10 @@ Passwordless.configure({
       userVerification: 'required',
     },
   },
+  storage: new CookieStorage({
+    domain: PARENT_DOMAIN,
+    secure: !isLocal,
+  }),
   // debug: console.debug,
 });
 Amplify.configure({
@@ -88,6 +96,13 @@ Amplify.configure({
     },
   },
 });
+
+cognitoUserPoolsTokenProvider.setKeyValueStorage(
+  new CookieStorage({
+    domain: PARENT_DOMAIN,
+    secure: !isLocal,
+  }),
+);
 
 const useOAuthCleanup = () => {
   useEffect(() => {

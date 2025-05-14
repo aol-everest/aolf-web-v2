@@ -14,6 +14,7 @@
  */
 import { parseJwtPayload } from './util.js';
 import { configure } from './config.js';
+import { clearAuthCookies } from '@utils';
 export async function clearInflightOAuth() {
   const { clientId, storage } = configure();
   const amplifyKeyPrefix = `CognitoIdentityServiceProvider.${clientId}`;
@@ -26,6 +27,7 @@ export async function clearInflightOAuth() {
 
 export async function storeTokens(tokens) {
   console.log('Storing tokens...');
+  // await clearAuthCookies();
   const { clientId, storage } = configure();
   const {
     sub,
@@ -108,4 +110,29 @@ export async function retrieveTokens() {
     expireAt: expireAt ? new Date(expireAt) : undefined,
     username,
   };
+}
+
+export async function clearStorage() {
+  const { clientId, storage } = configure();
+  const amplifyKeyPrefix = `CognitoIdentityServiceProvider.${clientId}`;
+  const customKeyPrefix = `Passwordless.${clientId}`;
+  const username = await storage.getItem(`${amplifyKeyPrefix}.LastAuthUser`);
+
+  if (!username) {
+    return;
+  }
+
+  const keysToRemove = [
+    `${amplifyKeyPrefix}.LastAuthUser`,
+    `${amplifyKeyPrefix}.${username}.idToken`,
+    `${amplifyKeyPrefix}.${username}.accessToken`,
+    `${amplifyKeyPrefix}.${username}.refreshToken`,
+    `${amplifyKeyPrefix}.${username}.userData`,
+    `${amplifyKeyPrefix}.${username}.tokenScopesString`,
+    `${customKeyPrefix}.${username}.expireAt`,
+  ];
+
+  keysToRemove.forEach((key) => storage.removeItem(key));
+
+  storage.clear();
 }
