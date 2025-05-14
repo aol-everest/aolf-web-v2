@@ -208,101 +208,12 @@ const safePostMessage = (
   }
 };
 
-// Add this helper function to fix iframe communication issues
-/**
- * Fixes any iframe communication issues on mobile devices
- */
-const fixIfFrameCommunication = (iframe: HTMLIFrameElement | null): void => {
-  if (!iframe || !iframe.contentWindow) return;
-
-  try {
-    // Force reload the iframe with proper wildcards for origin
-    const currentSrc = iframe.src;
-
-    // First modify src to force a reload and reset any broken communication
-    iframe.src = 'about:blank';
-
-    // After a brief delay, restore the iframe but add specific parameters
-    // that help with cross-origin communication
-    setTimeout(() => {
-      // Add specific parameters that help with cross-origin communication
-      const separator = currentSrc.includes('?') ? '&' : '?';
-      const allowWildcardParam = 'allowWildcard=true';
-      const reloadParam = `reload=${Date.now()}`;
-
-      // Set the updated src
-      iframe.src = `${currentSrc}${separator}${allowWildcardParam}&${reloadParam}`;
-
-      headerLogger.info(
-        'Fixed iframe communication by reloading with wildcard parameters',
-      );
-    }, 100);
-  } catch (e) {
-    headerLogger.error('Error fixing iframe communication', e);
-  }
-};
-
-/**
- * Check if the iframe is working correctly
- */
-const checkIframeHealth = (iframe: HTMLIFrameElement | null): boolean => {
-  if (!iframe || !iframe.contentWindow) {
-    return false;
-  }
-
-  try {
-    // Try to detect if iframe is from a different domain
-    try {
-      // If we can access contentWindow.location, then it's same-origin
-      // This will throw an error for cross-origin iframes
-      const href = iframe.contentWindow.location.href;
-      return true;
-    } catch (e) {
-      // This is expected for cross-origin iframes, so we need to check other ways
-    }
-
-    // For cross-origin iframes, check if src attribute is set and iframe is loaded
-    // Use different methods to check if iframe is loaded
-    if (iframe.src) {
-      // Check if iframe has a valid src
-      return iframe.src.length > 0;
-    }
-
-    return false;
-  } catch (e) {
-    return false;
-  }
-};
-
 /**
  * Hook to get authentication data from the AOLF auth widget
  */
 export function useAolfHeaderData(app2Origin: string, app2WidgetUrl: string) {
   const [headerData, setHeaderData] = useState<AolfHeaderData | null>(null);
   const debug = isDebugEnabled();
-  const [communicationErrors, setCommunicationErrors] = useState(0);
-
-  // Set up auto-recovery for communication errors
-  useEffect(() => {
-    if (communicationErrors > 3) {
-      headerLogger.warn(
-        `Detected ${communicationErrors} communication errors, attempting auto-recovery`,
-      );
-
-      // Find the iframe
-      const iframe = document.getElementById(
-        'auth-profile-iframe',
-      ) as HTMLIFrameElement | null;
-
-      // Attempt recovery by reloading the iframe
-      if (iframe) {
-        fixIfFrameCommunication(iframe);
-
-        // Reset error counter
-        setCommunicationErrors(0);
-      }
-    }
-  }, [communicationErrors]);
 
   useEffect(() => {
     headerLogger.info(`Initializing with app2Origin: ${app2Origin}`, { debug });
@@ -342,50 +253,6 @@ export function useAolfHeaderData(app2Origin: string, app2WidgetUrl: string) {
     } else {
       headerLogger.debug('Using existing auth-profile-iframe');
     }
-
-    /**
-     * Safe message sender with improved error handling - properly handles iOS compatibility
-     */
-    const enhancedSafePostMessage = (
-      targetWindow: Window,
-      message: any,
-      targetOrigin: string,
-    ): boolean => {
-      try {
-        // First try with the provided origin
-        const result = safePostMessage(targetWindow, message, targetOrigin);
-        return result;
-      } catch (e) {
-        // Handle origin errors
-        if (
-          e instanceof DOMException &&
-          (e.message.includes('origin') || e.name === 'DataCloneError')
-        ) {
-          headerLogger.error(
-            'Caught postMessage origin error, trying wildcard:',
-            e,
-          );
-
-          // Increment error counter for auto-recovery
-          setCommunicationErrors((prev) => prev + 1);
-
-          // Try with wildcard as fallback
-          try {
-            return safePostMessage(targetWindow, message, '*');
-          } catch (fallbackErr) {
-            headerLogger.error(
-              'Even fallback communication failed:',
-              fallbackErr,
-            );
-            return false;
-          }
-        }
-
-        // For other errors, log and return false
-        headerLogger.error('Failed to send message:', e);
-        return false;
-      }
-    };
 
     /**
      * Handle messages from the iframe
@@ -658,18 +525,8 @@ export function useAolfHeaderData(app2Origin: string, app2WidgetUrl: string) {
           `Sending get-auth-profile request to ${targetOrigin}`,
         );
 
-        // Use the enhanced message sender
-        const success = enhancedSafePostMessage(
-          iframeElement.contentWindow,
-          message,
-          targetOrigin,
-        );
-
-        // If communication failed, try to fix the iframe
-        if (!success) {
-          headerLogger.warn('Communication failed, attempting to fix iframe');
-          fixIfFrameCommunication(iframeElement);
-        }
+        // Use the safe post message helper that handles iOS properly
+        safePostMessage(iframeElement.contentWindow, message, targetOrigin);
       } catch (error) {
         headerLogger.error('Error sending message to iframe', error);
       }
