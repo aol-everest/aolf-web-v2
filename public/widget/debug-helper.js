@@ -94,9 +94,12 @@
     };
   };
 
-  // Add debug overlay for both mobile and desktop
-  const createDebugOverlay = () => {
-    const deviceInfo = detectDevice();
+  // Add debug overlay for mobile
+  const createMobileOverlay = () => {
+    const isIOSDevice = detectDevice().isIOS;
+    const isMobileDevice = detectDevice().isMobile;
+
+    if (!isMobileDevice) return;
 
     // Create the debug overlay
     const overlay = document.createElement('div');
@@ -104,137 +107,52 @@
     overlay.style.cssText = `
       position: fixed;
       bottom: 0;
+      left: 0;
       right: 0;
-      width: ${deviceInfo.isMobile ? '100%' : '400px'};
-      background: rgba(0,0,0,0.85);
+      background: rgba(0,0,0,0.8);
       color: lime;
       font-family: monospace;
-      font-size: ${deviceInfo.isMobile ? '12px' : '14px'};
+      font-size: 12px;
       padding: 10px;
-      max-height: ${deviceInfo.isMobile ? '150px' : '400px'};
+      max-height: 150px;
       overflow-y: auto;
       z-index: 999999;
       display: none;
-      border-top: 2px solid lime;
-      box-shadow: 0 -3px 10px rgba(0,0,0,0.5);
     `;
 
-    // Create toggle button - always visible
+    // Create toggle button
     const toggleBtn = document.createElement('button');
-    toggleBtn.textContent = 'Auth Debug';
+    toggleBtn.textContent = 'Debug';
     toggleBtn.style.cssText = `
       position: fixed;
-      bottom: 10px;
-      right: 10px;
-      background: rgba(0,0,0,0.8);
+      bottom: 5px;
+      right: 5px;
+      background: rgba(0,0,0,0.7);
       color: lime;
       border: 1px solid lime;
       border-radius: 5px;
-      padding: 6px 12px;
-      font-size: ${deviceInfo.isMobile ? '12px' : '14px'};
+      padding: 5px 10px;
+      font-size: 12px;
       z-index: 9999999;
-      cursor: pointer;
-      font-weight: bold;
     `;
 
-    // Add device info and controls to the overlay
-    const deviceSection = document.createElement('div');
-    deviceSection.style.cssText = 'margin-bottom: 15px;';
-    deviceSection.innerHTML = `
-      <div style="background:#333; padding:8px; margin-bottom:10px;">
-        <div><strong>Device:</strong> ${deviceInfo.isIOS ? 'iOS' : deviceInfo.isMobile ? 'Mobile' : 'Desktop'}</div>
-        <div><strong>Browser:</strong> ${
-          deviceInfo.isChrome ? 'Chrome' :
-          deviceInfo.isSafari ? 'Safari' :
-          deviceInfo.isFirefox ? 'Firefox' :
-          deviceInfo.isEdge ? 'Edge' : 'Other'
-        }</div>
-        <div><strong>Platform:</strong> ${deviceInfo.platform}</div>
-        <div><strong>Resolution:</strong> ${window.innerWidth}x${window.innerHeight}</div>
-        <div><strong>Message Mode:</strong> ${deviceInfo.isIOS ? 'iOS Format (nested)' : 'Standard'}</div>
-        <div style="font-size:10px;color:#999;margin-top:5px;word-break:break-all;">${deviceInfo.userAgent.substring(0, 100)}...</div>
-      </div>
+    // Add details to the overlay
+    overlay.innerHTML = `
+      <div><strong>Device:</strong> ${isIOSDevice ? 'iOS' : 'Other'} (${navigator.userAgent.substr(0, 50)}...)</div>
+      <div><strong>Platform:</strong> ${navigator.platform}</div>
+      <div><strong>Resolution:</strong> ${window.innerWidth}x${window.innerHeight}</div>
+      <div><strong>TouchPoints:</strong> ${navigator.maxTouchPoints}</div>
+      <div><strong>URL:</strong> ${window.location.href}</div>
+      <div><strong>Parent:</strong> ${parent !== window ? 'Yes (iframe)' : 'No (top window)'}</div>
+      <div id="debug-overlay-log"></div>
     `;
-
-    // Add control buttons
-    const controlsSection = document.createElement('div');
-    controlsSection.style.cssText = 'display:flex; gap:5px; margin-bottom:10px; flex-wrap:wrap;';
-
-    // Request auth button
-    const requestAuthBtn = document.createElement('button');
-    requestAuthBtn.textContent = 'Request Auth';
-    requestAuthBtn.style.cssText = 'background:#060; color:white; border:none; padding:5px 10px; cursor:pointer;';
-    requestAuthBtn.onclick = () => {
-      if (window.aolfWidgetDiagnostics && window.aolfWidgetDiagnostics.testIOSMessageFormat) {
-        window.aolfWidgetDiagnostics.testIOSMessageFormat();
-      }
-    };
-
-    // Check tokens button
-    const checkTokensBtn = document.createElement('button');
-    checkTokensBtn.textContent = 'Check Tokens';
-    checkTokensBtn.style.cssText = 'background:#600; color:white; border:none; padding:5px 10px; cursor:pointer;';
-    checkTokensBtn.onclick = () => {
-      if (window.aolfWidgetDiagnostics && window.aolfWidgetDiagnostics.checkTokens) {
-        window.aolfWidgetDiagnostics.checkTokens();
-      }
-    };
-
-    // Reload widget button
-    const reloadBtn = document.createElement('button');
-    reloadBtn.textContent = 'Reload Widget';
-    reloadBtn.style.cssText = 'background:#066; color:white; border:none; padding:5px 10px; cursor:pointer;';
-    reloadBtn.onclick = () => {
-      if (window.aolfWidgetDiagnostics && window.aolfWidgetDiagnostics.reloadAuthWidget) {
-        window.aolfWidgetDiagnostics.reloadAuthWidget();
-      }
-    };
-
-    // Clear logs button
-    const clearBtn = document.createElement('button');
-    clearBtn.textContent = 'Clear Logs';
-    clearBtn.style.cssText = 'background:#333; color:white; border:none; padding:5px 10px; cursor:pointer;';
-    clearBtn.onclick = () => {
-      const logArea = document.getElementById('debug-overlay-log');
-      if (logArea) logArea.innerHTML = '';
-    };
-
-    // Add buttons to controls
-    controlsSection.appendChild(requestAuthBtn);
-    controlsSection.appendChild(checkTokensBtn);
-    controlsSection.appendChild(reloadBtn);
-    controlsSection.appendChild(clearBtn);
-
-    // Create log area
-    const logSection = document.createElement('div');
-    logSection.id = 'debug-overlay-log';
-    logSection.style.cssText = 'max-height:300px; overflow-y:auto; font-size:12px;';
-
-    // Assemble overlay
-    overlay.appendChild(deviceSection);
-    overlay.appendChild(controlsSection);
-    overlay.appendChild(logSection);
 
     // Toggle functionality
     let isVisible = false;
     toggleBtn.addEventListener('click', () => {
       isVisible = !isVisible;
       overlay.style.display = isVisible ? 'block' : 'none';
-
-      // Save preference
-      try {
-        localStorage.setItem('aolf-debug-visible', isVisible ? 'true' : 'false');
-      } catch (e) {}
     });
-
-    // Check saved preference
-    try {
-      const savedVisibility = localStorage.getItem('aolf-debug-visible');
-      if (savedVisibility === 'true') {
-        isVisible = true;
-        overlay.style.display = 'block';
-      }
-    } catch (e) {}
 
     // Add to document
     document.body.appendChild(toggleBtn);
@@ -252,32 +170,16 @@
       const addLogEntry = (type, args) => {
         const entry = document.createElement('div');
         entry.style.color = type === 'error' ? 'red' : type === 'warn' ? 'yellow' : type === 'info' ? 'cyan' : 'lime';
-        entry.style.borderBottom = '1px solid #333';
-        entry.style.padding = '4px 0';
-        entry.style.wordBreak = 'break-word';
-
-        const timestamp = new Date().toISOString().split('T')[1].split('.')[0];
-        let content = `[${timestamp}] [${type.toUpperCase()}] `;
-
-        // Format args for display
-        content += args.map(arg => {
-          if (typeof arg === 'object') {
-            try {
-              return JSON.stringify(arg, null, 2);
-            } catch (e) {
-              return String(arg);
-            }
-          }
-          return String(arg);
-        }).join(' ');
-
-        entry.textContent = content;
-        logArea.insertBefore(entry, logArea.firstChild);
+        entry.textContent = `[${type.toUpperCase()}] ${args.map(a => String(a)).join(' ')}`;
+        logArea.appendChild(entry);
 
         // Limit entries
-        if (logArea.children.length > 100) {
-          logArea.removeChild(logArea.lastChild);
+        if (logArea.children.length > 50) {
+          logArea.removeChild(logArea.firstChild);
         }
+
+        // Auto-scroll
+        logArea.scrollTop = logArea.scrollHeight;
       };
 
       // Override console methods
@@ -301,8 +203,6 @@
         return originalConsoleError.apply(console, arguments);
       };
     }
-
-    return { overlay, toggleBtn };
   };
 
   // Add diagnostic tools to help identify authentication issues
@@ -453,9 +353,9 @@
 
     // Initialize after DOM is loaded
     if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', createDebugOverlay);
+      document.addEventListener('DOMContentLoaded', createMobileOverlay);
     } else {
-      setTimeout(createDebugOverlay, 500);
+      setTimeout(createMobileOverlay, 500);
     }
 
     logger.info('Debug helper initialized');

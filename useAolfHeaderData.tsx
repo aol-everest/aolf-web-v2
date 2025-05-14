@@ -135,55 +135,15 @@ const safePostMessage = (
   targetOrigin: string,
 ): boolean => {
   try {
-    // Always verify targetOrigin is valid
-    if (!targetOrigin || targetOrigin === '') {
-      headerLogger.error('Invalid target origin provided:', targetOrigin);
-      targetOrigin = '*'; // Fallback to wildcard, though less secure
-    }
-
-    // IMPORTANT: Fix for iOS - use exact origin instead of wildcard
-    // Extract the origin from the iframe's src if available
-    if (targetOrigin === '*' && targetWindow !== window) {
-      try {
-        // If this is an iframe sending to parent, get parent's origin
-        if (
-          window.parent === targetWindow &&
-          window.location.ancestorOrigins &&
-          window.location.ancestorOrigins.length > 0
-        ) {
-          targetOrigin = window.location.ancestorOrigins[0];
-          headerLogger.debug(`Using detected parent origin: ${targetOrigin}`);
-        }
-        // If trying to send to iframe, use its src origin
-        else if (targetWindow !== window.parent) {
-          const iframeElement = document.getElementById(
-            'auth-profile-iframe',
-          ) as HTMLIFrameElement;
-          if (iframeElement && iframeElement.src) {
-            const url = new URL(iframeElement.src);
-            targetOrigin = url.origin;
-            headerLogger.debug(`Using iframe's src origin: ${targetOrigin}`);
-          }
-        }
-      } catch (e) {
-        headerLogger.warn(
-          'Failed to determine exact origin, using wildcard',
-          e,
-        );
-      }
-    }
-
     // For iOS devices, always use stringified format
     if (isIOSDevice()) {
       const messageStr = JSON.stringify(message);
       targetWindow.postMessage(messageStr, targetOrigin);
-      headerLogger.debug(`Sent stringified message to ${targetOrigin}`);
       return true;
     } else {
       // Try object first (works better on desktop), but be ready to fallback
       try {
         targetWindow.postMessage(message, targetOrigin);
-        headerLogger.debug(`Sent object message to ${targetOrigin}`);
         return true;
       } catch (objErr) {
         // Handle DataCloneError by falling back to string format
@@ -194,9 +154,6 @@ const safePostMessage = (
         ) {
           const messageStr = JSON.stringify(message);
           targetWindow.postMessage(messageStr, targetOrigin);
-          headerLogger.debug(
-            `Sent stringified message to ${targetOrigin} (fallback)`,
-          );
           return true;
         }
         throw objErr; // Re-throw if it's not a DataCloneError
@@ -495,38 +452,10 @@ export function useAolfHeaderData(app2Origin: string, app2WidgetUrl: string) {
 
       try {
         const message = { type: 'get-auth-profile' };
-
-        // Extract the exact origin from the iframe's src
-        let targetOrigin = app2Origin;
-
-        // Verify the origin is valid
-        if (!targetOrigin || targetOrigin === '') {
-          // Try to extract from iframe src
-          try {
-            if (iframeElement.src) {
-              const url = new URL(iframeElement.src);
-              targetOrigin = url.origin;
-              headerLogger.debug(`Using iframe src origin: ${targetOrigin}`);
-            }
-          } catch (e) {
-            headerLogger.warn('Could not extract origin from iframe src', e);
-          }
-
-          // If still empty, fallback to wildcard
-          if (!targetOrigin || targetOrigin === '') {
-            targetOrigin = '*';
-            headerLogger.warn(
-              'Using wildcard origin as fallback (less secure)',
-            );
-          }
-        }
-
-        headerLogger.debug(
-          `Sending get-auth-profile request to ${targetOrigin}`,
-        );
+        headerLogger.debug(`Sending get-auth-profile request to ${app2Origin}`);
 
         // Use the safe post message helper that handles iOS properly
-        safePostMessage(iframeElement.contentWindow, message, targetOrigin);
+        safePostMessage(iframeElement.contentWindow, message, app2Origin);
       } catch (error) {
         headerLogger.error('Error sending message to iframe', error);
       }
