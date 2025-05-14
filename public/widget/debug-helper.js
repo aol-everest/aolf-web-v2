@@ -1,206 +1,303 @@
 /**
  * AOLF Auth Widget Debug Helper
- * A lightweight debugging tool for auth widget communication
- * Enhanced for iOS compatibility
+ *
+ * Include this script in your app to monitor communication with the auth widget iframe.
+ * It will log all messages between your app and the widget iframe.
+ *
+ * Usage:
+ * <script src="https://YOUR-APP2-SUBDOMAIN.artofliving.org/widget/debug-helper.js"></script>
  */
 
 (function() {
-  // Create simple logger
+  // Always run the debug helper regardless of environment to ensure desktop support
+  const isDebugMode = true;
+
+  // Create logger
   const logger = {
-    prefix: '[Debug]',
-    log: (...args) => console.log(logger.prefix, ...args),
-    info: (...args) => console.info(logger.prefix, ...args),
-    warn: (...args) => console.warn(logger.prefix, ...args),
-    error: (...args) => console.error(logger.prefix, ...args)
+    prefix: '[AOLF Widget Debug]',
+    log: (...args) => console.log(logger.prefix, new Date().toISOString(), ...args),
+    info: (...args) => console.info(logger.prefix, new Date().toISOString(), ...args),
+    warn: (...args) => console.warn(logger.prefix, new Date().toISOString(), ...args),
+    error: (...args) => console.error(logger.prefix, new Date().toISOString(), ...args),
+    debug: (...args) => console.debug(logger.prefix, new Date().toISOString(), ...args),
+    // Add formatted JSON output for objects
+    json: (obj) => console.log(logger.prefix, new Date().toISOString(), JSON.stringify(obj, null, 2))
   };
 
-  // Device detection with better iOS detection
-  function detectDevice() {
+  // Detect device type - enhanced for better iOS detection
+  const detectDevice = () => {
     const ua = navigator.userAgent;
+    const platform = navigator.platform || '';
+
     const isIOS = /iPhone|iPad|iPod|iOS|CriOS/.test(ua) ||
-                  (/Safari/.test(ua) && /Apple/.test(navigator.vendor) && !/Chrome|Android/.test(ua)) ||
-                  (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1);
+           (/Safari/.test(ua) && /Apple/.test(navigator.vendor) && !/Chrome|Android/.test(ua)) ||
+           (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1);
 
-    const browser =
-      /Chrome/.test(ua) && !/Edge|Edg/.test(ua) ? 'Chrome' :
-      /Safari/.test(ua) && !/Chrome|Android/.test(ua) ? 'Safari' :
-      /Firefox/.test(ua) ? 'Firefox' :
-      /Edge|Edg/.test(ua) ? 'Edge' : 'Other';
-
-    const isMobile = /Mobi|Android|iPhone|iPad|iPod/.test(ua);
-    const isIOSSafari = isIOS && /Safari/.test(ua) && !/Chrome|CriOS/.test(ua);
-    const iosVersion = isIOS ? (ua.match(/OS (\d+)_(\d+)_?(\d+)?/) || ['']).slice(1).join('.') : 'N/A';
-
-    logger.info(`Device: ${isIOS ? 'iOS' : isMobile ? 'Mobile' : 'Desktop'}, Browser: ${browser}${isIOS ? `, iOS Version: ${iosVersion}` : ''}`);
-
-    return {
-      isIOS,
-      isMobile,
-      browser,
-      ua,
-      isIOSSafari,
-      iosVersion,
-      isKnownProblematicIOS: isIOS && parseFloat(iosVersion) < 15
+    // Get details about browser and platform
+    const device = {
+      userAgent: ua,
+      isIOS: isIOS,
+      isChrome: /Chrome/.test(ua) && !/Edge|Edg/.test(ua),
+      isSafari: /Safari/.test(ua) && !/Chrome|Android/.test(ua),
+      isFirefox: /Firefox/.test(ua),
+      isEdge: /Edge|Edg/.test(ua),
+      isMobile: /Mobi|Android|iPhone|iPad|iPod/.test(ua),
+      isIPad: /iPad/.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1),
+      platform: platform
     };
-  }
 
-  // Track postMessage communication with additional details
-  function monitorMessages() {
+    // Log detailed device info
+    logger.info('Device detected:', device);
+
+    return device;
+  };
+
+  // Enhanced postMessage monitoring
+  const monitorPostMessages = () => {
+    // Listen to all messages
     window.addEventListener('message', (event) => {
       try {
-        const device = detectDevice();
-        const isMessageObject = typeof event.data === 'object';
-        const source = event.source === window.parent ? 'PARENT' :
-                       event.source === window ? 'SELF' : 'OTHER';
+        const eventData = event.data;
 
-        let dataPreview = '';
-        if (typeof event.data === 'string') {
-          dataPreview = event.data.substring(0, 100) + (event.data.length > 100 ? '...' : '');
-        } else if (isMessageObject) {
+        // Try to intelligently display the message data
+        logger.log('postMessage received:',
+          eventData,
+          'from',
+          event.origin
+        );
+
+        // For iOS, check for nested JSON strings
+        if (typeof eventData === 'object' && eventData?.data && typeof eventData.data === 'string') {
           try {
-            dataPreview = JSON.stringify(event.data).substring(0, 100) + '...';
+            const parsedData = JSON.parse(eventData.data);
+            logger.info('iOS format detected - Nested data:', parsedData);
+
+            // Look for auth info and analyze it
+            if (parsedData.type === 'auth-profile' || parsedData.type === 'auth-widget-data-updated') {
+              logger.info('AUTH DATA ANALYSIS:', {
+                isAuthenticated: parsedData.data?.isAuthenticated || false,
+                hasProfile: !!parsedData.data?.profile,
+                hasTokens: !!parsedData.data?.tokens,
+                tokenInfo: parsedData.data?.tokens ? {
+                  hasAccessToken: !!parsedData.data.tokens.accessToken,
+                  hasIdToken: !!parsedData.data.tokens.idToken,
+                } : null
+              });
+            }
           } catch (e) {
-            dataPreview = '[Complex Object]';
+            // Not parseable, ignore
           }
-        }
-
-        logger.log(`📨 Message from: ${source} (${event.origin}), Data: ${dataPreview}`);
-
-        if (device.isIOS && window.debugLogMessageDetails && isMessageObject) {
-          console.group('iOS Message Details');
-          try {
-            console.log('Full message data:', event.data);
-            console.log('Origin:', event.origin);
-            console.log('Source:', source);
-          } catch (err) {
-            console.log('Error logging full details:', err);
-          }
-          console.groupEnd();
         }
       } catch (e) {
-        // Ignore errors
+        logger.error('Error processing message:', e);
       }
     });
-  }
 
-  // Create debug overlay with iOS-specific information
-  function createDebugOverlay() {
-    const device = detectDevice();
+    // Override window postMessage to capture all outgoing messages
+    const originalPostMessage = window.postMessage;
+    window.postMessage = function() {
+      logger.log('postMessage sent:', ...arguments);
+      return originalPostMessage.apply(this, arguments);
+    };
+  };
 
-    // Create overlay container with better iOS styling
+  // Global emergency debug function
+  window.showAolfDebugger = function() {
+    createDebugOverlay();
+    logger.info('Debugger panel forced visible via console command');
+  };
+
+  // Create debug overlay for both mobile and desktop
+  const createDebugOverlay = () => {
+    // Remove any existing debugger first
+    const existingDebugger = document.getElementById('aolf-debug-overlay');
+    if (existingDebugger) {
+      existingDebugger.remove();
+    }
+
+    const deviceInfo = detectDevice();
+
+    // Create the debug overlay
     const overlay = document.createElement('div');
-    overlay.id = 'auth-debug-overlay';
+    overlay.id = 'aolf-debug-overlay';
     overlay.style.cssText = `
       position: fixed;
       bottom: 10px;
       right: 10px;
-      width: ${device.isMobile ? '90%' : '380px'};
+      width: ${deviceInfo.isMobile ? '100%' : '400px'};
       background: rgba(0,0,0,0.85);
-      color: #00ff00;
+      color: lime;
       font-family: monospace;
-      font-size: 12px;
+      font-size: ${deviceInfo.isMobile ? '12px' : '14px'};
       padding: 10px;
-      border-radius: 5px;
-      z-index: 10000000;
-      max-height: 300px;
+      max-height: ${deviceInfo.isMobile ? '50%' : '80%'};
       overflow-y: auto;
-      border: 1px solid #00ff00;
-      box-shadow: 0 0 10px rgba(0,0,0,0.5);
-      -webkit-overflow-scrolling: touch;
+      z-index: 9999999;
+      border: 2px solid lime;
+      border-radius: 5px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.8);
     `;
 
-    // Create toggle button that's easier to tap on iOS
+    // Create toggle button - always visible
     const toggleBtn = document.createElement('button');
-    toggleBtn.textContent = 'Debug';
+    toggleBtn.textContent = 'Auth Debug';
     toggleBtn.style.cssText = `
       position: fixed;
       top: 10px;
       right: 10px;
-      background: #006600;
-      color: white;
-      border: none;
-      border-radius: 4px;
-      padding: ${device.isIOS ? '8px 16px' : '5px 10px'};
-      font-size: ${device.isIOS ? '16px' : '12px'};
+      background: rgba(0,0,0,0.8);
+      color: lime;
+      border: 1px solid lime;
+      border-radius: 5px;
+      padding: 6px 12px;
+      font-size: ${deviceInfo.isMobile ? '12px' : '14px'};
+      z-index: 10000000;
       cursor: pointer;
-      z-index: 10000001;
-      min-width: ${device.isIOS ? '60px' : 'auto'};
-      min-height: ${device.isIOS ? '40px' : 'auto'};
-      touch-action: manipulation;
+      font-weight: bold;
     `;
 
-    // Create header with enhanced device info for iOS
-    const header = document.createElement('div');
-    header.style.cssText = 'margin-bottom: 10px; padding: 5px; background: #333;';
-    header.innerHTML = `
-      <div><strong>Device:</strong> ${device.isIOS ? 'iOS' : device.isMobile ? 'Mobile' : 'Desktop'}</div>
-      <div><strong>Browser:</strong> ${device.browser}</div>
-      ${device.isIOS ? `<div><strong>iOS:</strong> ${device.iosVersion}</div>` : ''}
-      <div><strong>PostRobot:</strong> ${window.postRobot ? '✅' : '❌'}</div>
+    // Add device info and controls to the overlay
+    const deviceSection = document.createElement('div');
+    deviceSection.style.cssText = 'margin-bottom: 15px;';
+    deviceSection.innerHTML = `
+      <div style="background:#333; padding:8px; margin-bottom:10px;">
+        <div><strong>Device:</strong> ${deviceInfo.isIOS ? 'iOS' : deviceInfo.isMobile ? 'Mobile' : 'Desktop'}</div>
+        <div><strong>Browser:</strong> ${
+          deviceInfo.isChrome ? 'Chrome' :
+          deviceInfo.isSafari ? 'Safari' :
+          deviceInfo.isFirefox ? 'Firefox' :
+          deviceInfo.isEdge ? 'Edge' : 'Other'
+        }</div>
+        <div><strong>Platform:</strong> ${deviceInfo.platform}</div>
+        <div><strong>Resolution:</strong> ${window.innerWidth}x${window.innerHeight}</div>
+        <div><strong>Message Mode:</strong> ${deviceInfo.isIOS ? 'iOS Format (nested)' : 'Standard'}</div>
+        <div style="font-size:10px;color:#999;margin-top:5px;word-break:break-all;">${deviceInfo.userAgent.substring(0, 100)}...</div>
+      </div>
     `;
 
-    // Create log container
-    const logContainer = document.createElement('div');
-    logContainer.id = 'debug-log-container';
+    // Add control buttons
+    const controlsSection = document.createElement('div');
+    controlsSection.style.cssText = 'display:flex; gap:5px; margin-bottom:10px; flex-wrap:wrap;';
 
-    // Add buttons container
-    const buttonContainer = document.createElement('div');
-    buttonContainer.style.cssText = 'display: flex; gap: 5px; margin-top: 5px;';
+    // Force authentication test button
+    const forceAuthBtn = document.createElement('button');
+    forceAuthBtn.textContent = 'Force Auth';
+    forceAuthBtn.style.cssText = 'background:#060; color:white; border:none; padding:5px 10px; cursor:pointer;';
+    forceAuthBtn.onclick = () => {
+      logger.info('Attempting to force auth detection...');
 
-    // Add clear button
-    const clearBtn = document.createElement('button');
-    clearBtn.textContent = 'Clear';
-    clearBtn.style.cssText = 'background:#600; color:white; border:none; padding:3px 8px; cursor:pointer; font-size:11px; flex: 1;';
-    clearBtn.onclick = () => {
-      logContainer.innerHTML = '';
-    };
+      // Find the auth iframe
+      const iframe = document.getElementById('auth-profile-iframe');
+      if (iframe && iframe.contentWindow) {
+        // Attempt to send message with different origins
+        try {
+          const message = { type: 'get-auth-profile' };
 
-    // Add reload iframe button
-    const reloadBtn = document.createElement('button');
-    reloadBtn.textContent = 'Reload Auth';
-    reloadBtn.style.cssText = 'background:#060; color:white; border:none; padding:3px 8px; cursor:pointer; font-size:11px; flex: 1;';
-    reloadBtn.onclick = () => {
-      if (window.reloadAuthFrame) {
-        window.reloadAuthFrame();
-      } else {
-        const iframe = document.getElementById('auth-profile-iframe');
-        if (iframe) {
-          const src = iframe.src;
-          iframe.src = 'about:blank';
-          setTimeout(() => {
-            iframe.src = src + (src.includes('?') ? '&' : '?') + 't=' + Date.now();
-            logger.info('Auth iframe reloaded');
-          }, 100);
-        } else {
-          logger.error('Auth iframe not found');
+          // Try different approaches for different browsers
+          if (deviceInfo.isIOS) {
+            logger.info('Using iOS approach');
+            iframe.contentWindow.postMessage(JSON.stringify(message), '*');
+            setTimeout(() => {
+              iframe.contentWindow.postMessage({ data: JSON.stringify(message) }, '*');
+            }, 100);
+          } else {
+            logger.info('Using standard approach');
+            iframe.contentWindow.postMessage(message, '*');
+          }
+
+          logger.info('Force auth message sent');
+        } catch (e) {
+          logger.error('Error forcing auth:', e);
         }
+      } else {
+        logger.error('Auth iframe not found');
       }
     };
 
-    // iOS specific debug button
-    if (device.isIOS) {
-      const iosDebugBtn = document.createElement('button');
-      iosDebugBtn.textContent = 'iOS Debug';
-      iosDebugBtn.style.cssText = 'background:#336; color:white; border:none; padding:3px 8px; cursor:pointer; font-size:11px; flex: 1;';
-      iosDebugBtn.onclick = () => {
-        window.debugLogMessageDetails = !window.debugLogMessageDetails;
-        iosDebugBtn.style.background = window.debugLogMessageDetails ? '#339' : '#336';
-        logger.info('iOS detailed message logging ' + (window.debugLogMessageDetails ? 'enabled' : 'disabled'));
+    // Reload widget iframe button
+    const reloadBtn = document.createElement('button');
+    reloadBtn.textContent = 'Reload Frame';
+    reloadBtn.style.cssText = 'background:#600; color:white; border:none; padding:5px 10px; cursor:pointer;';
+    reloadBtn.onclick = () => {
+      logger.info('Reloading auth iframe...');
 
-        // Force check iframe communication
-        checkIframeComm();
-      };
-      buttonContainer.appendChild(iosDebugBtn);
-    }
+      // Find the auth iframe
+      const iframe = document.getElementById('auth-profile-iframe');
+      if (iframe) {
+        const originalSrc = iframe.src;
+        iframe.src = 'about:blank';
+        setTimeout(() => {
+          const separator = originalSrc.includes('?') ? '&' : '?';
+          iframe.src = originalSrc + separator + 'reload=' + Date.now();
+          logger.info('Iframe reloaded with src:', iframe.src);
+        }, 100);
+      } else {
+        logger.error('Auth iframe not found');
+      }
+    };
+
+    // Check auth status button
+    const checkAuthBtn = document.createElement('button');
+    checkAuthBtn.textContent = 'Check Auth';
+    checkAuthBtn.style.cssText = 'background:#066; color:white; border:none; padding:5px 10px; cursor:pointer;';
+    checkAuthBtn.onclick = () => {
+      logger.info('Checking auth status...');
+
+      // Get auth info from localStorage if available
+      try {
+        let authFound = false;
+        for (let i = 0; i < localStorage.length; i++) {
+          const key = localStorage.key(i);
+          if (key && (key.includes('token') || key.includes('auth') || key.includes('user'))) {
+            logger.info(`Found auth-related key: ${key}, value length:`, localStorage.getItem(key)?.length || 0);
+            authFound = true;
+          }
+        }
+
+        if (!authFound) {
+          logger.info('No auth data found in localStorage');
+        }
+      } catch (e) {
+        logger.error('Error checking localStorage:', e);
+      }
+
+      // Check auth context in window
+      if (window.Auth) {
+        logger.info('Auth object found in window');
+      }
+
+      // Check for header data
+      if (window.headerData) {
+        logger.info('Header data found:', window.headerData);
+      }
+    };
+
+    // Clear logs button
+    const clearBtn = document.createElement('button');
+    clearBtn.textContent = 'Clear Logs';
+    clearBtn.style.cssText = 'background:#333; color:white; border:none; padding:5px 10px; cursor:pointer;';
+    clearBtn.onclick = () => {
+      const logArea = document.getElementById('debug-overlay-log');
+      if (logArea) logArea.innerHTML = '';
+    };
+
+    // Add buttons to controls
+    controlsSection.appendChild(forceAuthBtn);
+    controlsSection.appendChild(reloadBtn);
+    controlsSection.appendChild(checkAuthBtn);
+    controlsSection.appendChild(clearBtn);
+
+    // Create log area
+    const logSection = document.createElement('div');
+    logSection.id = 'debug-overlay-log';
+    logSection.style.cssText = 'max-height:300px; overflow-y:auto; font-size:12px;';
 
     // Assemble overlay
-    buttonContainer.appendChild(clearBtn);
-    buttonContainer.appendChild(reloadBtn);
-    header.appendChild(buttonContainer);
-    overlay.appendChild(header);
-    overlay.appendChild(logContainer);
+    overlay.appendChild(deviceSection);
+    overlay.appendChild(controlsSection);
+    overlay.appendChild(logSection);
 
-    // Toggle functionality
+    // Toggle functionality for the button
     toggleBtn.addEventListener('click', () => {
       overlay.style.display = overlay.style.display === 'none' ? 'block' : 'none';
     });
@@ -209,181 +306,105 @@
     document.body.appendChild(toggleBtn);
     document.body.appendChild(overlay);
 
-    // Start with overlay hidden on desktop, visible on mobile
-    overlay.style.display = device.isMobile ? 'block' : 'none';
+    // Override console.log to also output to overlay
+    const logArea = document.getElementById('debug-overlay-log');
+    const originalConsoleLog = console.log;
+    const originalConsoleInfo = console.info;
+    const originalConsoleWarn = console.warn;
+    const originalConsoleError = console.error;
 
-    // Override console to capture logs
-    const originalConsole = {
-      log: console.log,
-      info: console.info,
-      warn: console.warn,
-      error: console.error
-    };
+    if (logArea) {
+      // Helper to add log entry
+      const addLogEntry = (type, args) => {
+        const entry = document.createElement('div');
+        entry.style.color = type === 'error' ? 'red' : type === 'warn' ? 'yellow' : type === 'info' ? 'cyan' : 'lime';
+        entry.style.borderBottom = '1px solid #333';
+        entry.style.padding = '4px 0';
+        entry.style.wordBreak = 'break-word';
 
-    // Function to add log entry to overlay
-    function addLogEntry(type, args) {
-      if (!logContainer) return;
+        const timestamp = new Date().toISOString().split('T')[1].split('.')[0];
+        let content = `[${timestamp}] [${type.toUpperCase()}] `;
 
-      const entry = document.createElement('div');
-      entry.style.borderBottom = '1px solid #333';
-      entry.style.padding = '3px 0';
-      entry.style.fontSize = '11px';
-      entry.style.color =
-        type === 'error' ? '#ff6666' :
-        type === 'warn' ? '#ffcc00' :
-        type === 'info' ? '#66ccff' : '#ffffff';
+        // Format args for display
+        content += args.map(arg => {
+          if (typeof arg === 'object') {
+            try {
+              return JSON.stringify(arg, null, 2);
+            } catch (e) {
+              return String(arg);
+            }
+          }
+          return String(arg);
+        }).join(' ');
 
-      const time = new Date().toTimeString().split(' ')[0];
-      const argsText = args.map(arg =>
-        typeof arg === 'object' ? JSON.stringify(arg) : String(arg)
-      ).join(' ');
+        entry.textContent = content;
+        logArea.insertBefore(entry, logArea.firstChild);
 
-      entry.textContent = `[${time}] ${type.toUpperCase()}: ${argsText}`;
-      logContainer.insertBefore(entry, logContainer.firstChild);
+        // Limit entries
+        if (logArea.children.length > 100) {
+          logArea.removeChild(logArea.lastChild);
+        }
+      };
 
-      // Limit entries
-      if (logContainer.children.length > 50) {
-        logContainer.removeChild(logContainer.lastChild);
-      }
+      // Override console methods
+      console.log = function() {
+        addLogEntry('log', Array.from(arguments));
+        return originalConsoleLog.apply(console, arguments);
+      };
+
+      console.info = function() {
+        addLogEntry('info', Array.from(arguments));
+        return originalConsoleInfo.apply(console, arguments);
+      };
+
+      console.warn = function() {
+        addLogEntry('warn', Array.from(arguments));
+        return originalConsoleWarn.apply(console, arguments);
+      };
+
+      console.error = function() {
+        addLogEntry('error', Array.from(arguments));
+        return originalConsoleError.apply(console, arguments);
+      };
     }
 
-    // Override console methods
-    console.log = function() {
-      addLogEntry('log', Array.from(arguments));
-      originalConsole.log.apply(console, arguments);
-    };
-
-    console.info = function() {
-      addLogEntry('info', Array.from(arguments));
-      originalConsole.info.apply(console, arguments);
-    };
-
-    console.warn = function() {
-      addLogEntry('warn', Array.from(arguments));
-      originalConsole.warn.apply(console, arguments);
-    };
-
-    console.error = function() {
-      addLogEntry('error', Array.from(arguments));
-      originalConsole.error.apply(console, arguments);
-    };
-
-    return { overlay, toggleBtn, logContainer };
-  }
-
-  // Check iframe communication health
-  function checkIframeComm() {
-    const iframe = document.getElementById('auth-profile-iframe');
-    if (!iframe || !iframe.contentWindow) {
-      logger.error('Auth iframe not available for communication check');
-      return;
-    }
-
-    try {
-      logger.info('Testing communication with auth iframe...');
-
-      if (!window.postRobot) {
-        logger.error('PostRobot not available for communication test');
-        return;
-      }
-
-      window.postRobot
-        .send(iframe.contentWindow, 'get-auth-profile')
-        .then(event => {
-          logger.info('✅ Communication test successful!');
-          logger.info(`Auth state: ${event.data.isAuthenticated ? 'Authenticated' : 'Not authenticated'}`);
-        })
-        .catch(err => {
-          logger.error('❌ Communication test failed:', err.message || err);
-        });
-    } catch (err) {
-      logger.error('❌ Error running communication test:', err.message || err);
-    }
-  }
-
-  // Global function to show debugger
-  window.showAuthDebugger = function() {
-    createDebugOverlay();
-    logger.info('Debug overlay manually activated');
+    return { overlay, toggleBtn };
   };
 
-  // Helper for reloading the auth iframe with iOS optimizations
+  // Add global helper for reloading the auth iframe
   window.reloadAuthFrame = function() {
     const iframe = document.getElementById('auth-profile-iframe');
     if (iframe) {
-      const device = detectDevice();
-      const src = iframe.src;
-
-      logger.info('Reloading auth iframe...');
-
-      // Different reload approach for iOS
-      if (device.isIOS) {
-        // On iOS we do a complete removal and recreation of the iframe
-        const parent = iframe.parentNode;
-        if (parent) {
-          // Create new iframe
-          const newIframe = document.createElement('iframe');
-          newIframe.id = 'auth-profile-iframe';
-
-          // Copy attributes except src
-          Array.from(iframe.attributes).forEach(attr => {
-            if (attr.name !== 'src') {
-              newIframe.setAttribute(attr.name, attr.value);
-            }
-          });
-
-          // Prepare new URL with timestamp
-          const newSrc = src + (src.includes('?') ? '&' : '?') + 't=' + Date.now();
-
-          // First remove old iframe
-          parent.removeChild(iframe);
-
-          // Wait a moment before adding new iframe
-          setTimeout(() => {
-            newIframe.src = newSrc;
-            parent.appendChild(newIframe);
-            logger.info('Auth iframe fully replaced with fresh one');
-          }, 100);
-        }
-      } else {
-        // Standard approach for other platforms
-        iframe.src = 'about:blank';
-        setTimeout(() => {
-          iframe.src = src + (src.includes('?') ? '&' : '?') + 't=' + Date.now();
-          logger.info('Auth iframe reloaded');
-        }, 100);
-      }
+      const originalSrc = iframe.src;
+      iframe.src = 'about:blank';
+      setTimeout(() => {
+        const separator = originalSrc.includes('?') ? '&' : '?';
+        iframe.src = originalSrc + separator + 'reload=' + Date.now() + '&allowWildcard=true';
+        console.log('Auth iframe reloaded with src:', iframe.src);
+      }, 100);
       return true;
     }
     return false;
   };
 
-  // Check auth state helper
-  window.checkAuthState = function() {
-    checkIframeComm();
+  // Force create debug overlay with high visibility on all devices
+  const initDebugger = () => {
+    detectDevice();
+    monitorPostMessages();
+
+    // Initialize after DOM is loaded
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', () => {
+        setTimeout(createDebugOverlay, 500);
+      });
+    } else {
+      setTimeout(createDebugOverlay, 500);
+    }
+
+    logger.info('Debug helper initialized - use window.showAolfDebugger() to show debugger if not visible');
+    console.log('%c AOLF Widget Debugger Active ', 'background: #222; color: lime; font-size: 14px;');
   };
 
-  // Initialize
-  function init() {
-    const device = detectDevice();
-    monitorMessages();
-
-    // Create overlay after a short delay
-    setTimeout(() => {
-      createDebugOverlay();
-      logger.info('Debug helper initialized');
-
-      // If iOS and not in an iframe, show a note about testing
-      if (device.isIOS && window.self === window.top) {
-        logger.info('iOS detected. For best results with the auth widget, test in an actual iframe context.');
-
-        if (device.isKnownProblematicIOS) {
-          logger.warn('Warning: This iOS version may have known issues with iframe communication.');
-        }
-      }
-    }, 500);
-  }
-
-  // Start the debugger
-  init();
+  // Immediately initialize the debugger
+  initDebugger();
 })();
