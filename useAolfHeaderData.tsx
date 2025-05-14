@@ -137,7 +137,6 @@ const checkPostRobot = (): Promise<void> => {
 let activeListeners: {
   authUpdate?: { cancel: () => void };
   ready?: { cancel: () => void };
-  click?: { cancel: () => void };
 } = {};
 
 /**
@@ -239,10 +238,7 @@ export function useAolfHeaderData(app2Origin: string, app2WidgetUrl: string) {
       headerLogger.debug('Creating auth-profile-iframe');
       iframe = document.createElement('iframe');
       iframe.id = 'auth-profile-iframe';
-
-      // Style for interactive visible iframe instead of hidden one
-      iframe.style.cssText =
-        'border:none; overflow:hidden; height:60px; width:auto; min-width:100px;';
+      iframe.style.display = 'none';
 
       // Add debug param if in debug mode
       const debugParam = debug ? '&debug=true' : '';
@@ -262,15 +258,16 @@ export function useAolfHeaderData(app2Origin: string, app2WidgetUrl: string) {
 
       // Add special attributes for iOS
       if (deviceIsIOS) {
-        // Ensure we allow interaction for iOS
-        iframe.setAttribute('allow', 'payment');
+        iframe.setAttribute('webkit-playsinline', 'true');
+        iframe.setAttribute('playsinline', 'true');
 
-        // Do not use sandbox on iOS as it can cause postMessage issues
-        if (!iosVersion || iosVersion < 14) {
+        // Important - for iOS Safari cookie handling
+        if (iosVersion && iosVersion >= 14) {
           iframe.setAttribute(
             'sandbox',
-            'allow-scripts allow-same-origin allow-forms allow-popups',
+            'allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox allow-storage-access-by-user-activation',
           );
+          iframe.setAttribute('allow', 'payment');
         }
       }
 
@@ -320,15 +317,6 @@ export function useAolfHeaderData(app2Origin: string, app2WidgetUrl: string) {
             headerLogger.debug('Cleaned up existing ready listener');
           } catch (err) {
             headerLogger.warn('Error cleaning up ready listener:', err);
-          }
-        }
-
-        if (activeListeners.click) {
-          try {
-            activeListeners.click.cancel();
-            headerLogger.debug('Cleaned up existing click listener');
-          } catch (err) {
-            headerLogger.warn('Error cleaning up click listener:', err);
           }
         }
 
@@ -428,43 +416,6 @@ export function useAolfHeaderData(app2Origin: string, app2WidgetUrl: string) {
           },
         );
 
-        // Listen for click events from the iframe
-        const clickListener = window.postRobot.on(
-          'auth-widget-clicked',
-          (event) => {
-            const clickData = event.data;
-            headerLogger.info(
-              'Received click event from auth widget',
-              clickData,
-            );
-
-            if (clickData.action === 'login') {
-              // Handle login button click - redirect to login page or open login modal
-              headerLogger.info(
-                'Login button clicked, redirecting to login page',
-              );
-
-              // You can replace this with your login URL or modal opening code
-              if (typeof window !== 'undefined') {
-                window.location.href = '/login';
-              }
-            } else if (clickData.action === 'profile') {
-              // Handle profile avatar click - redirect to profile page or open dropdown
-              headerLogger.info(
-                'Profile avatar clicked, redirecting to profile page',
-              );
-
-              // You can replace this with your profile URL or dropdown code
-              if (typeof window !== 'undefined') {
-                window.location.href = '/profile';
-              }
-            }
-          },
-        );
-
-        // Store the click listener reference
-        activeListeners.click = clickListener;
-
         // Store the listener reference
         activeListeners.authUpdate = listener;
 
@@ -491,9 +442,6 @@ export function useAolfHeaderData(app2Origin: string, app2WidgetUrl: string) {
             }
             if (activeListeners.ready) {
               activeListeners.ready.cancel();
-            }
-            if (activeListeners.click) {
-              activeListeners.click.cancel();
             }
 
             // Clear the activeListeners object
