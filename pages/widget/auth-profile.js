@@ -576,7 +576,7 @@ function AuthProfileWidget() {
 
     // Create a simple version profile checker to avoid unnecessary updates
     const profileSignature = isAuthenticated
-      ? `${!!tokens?.accessToken}-${profile?.first_name}-${profile?.last_name}-${introData?.length}`
+      ? `${!!tokens?.accessToken}-${profile?.firstName}-${profile?.lastName}-${introData?.length}`
       : 'not-authenticated';
 
     // Compare with previous value
@@ -591,23 +591,16 @@ function AuthProfileWidget() {
     // Send a notification that auth data is updated
     try {
       // Notify parent that auth data has been updated
-      (async () => {
-        const responseData = await createResponseData();
-        // Make sure response is serializable before sending
-        window.parent.postMessage(
-          {
-            type: 'auth-widget-data-updated',
-            hasAuth: !!isAuthenticated,
-            timestamp: new Date().toISOString(),
-            data: responseData.data, // Include the full auth data for the parent to use
-          },
-          '*',
-        );
-      })();
-
-      logger.info(
-        'Notified parent that auth data was updated with full profile data',
+      window.parent.postMessage(
+        {
+          type: 'auth-widget-data-updated',
+          hasAuth: isAuthenticated,
+          timestamp: new Date().toISOString(),
+        },
+        '*',
       );
+
+      logger.info('Notified parent that auth data was updated');
     } catch (err) {
       logger.error('Failed to notify parent of auth update:', err);
     }
