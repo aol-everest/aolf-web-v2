@@ -145,7 +145,6 @@ function AuthProfileWidget() {
     function initPostRobot() {
       clearTimeout(setupTimeout);
       logger.info('Post-robot available, initializing handlers');
-      console.log(introData);
 
       // Create auth response data function
       const createResponseData = () => {
@@ -153,8 +152,8 @@ function AuthProfileWidget() {
           isAuthenticated: !!isAuthenticated,
           profile: profile
             ? {
-                first_name: profile.first_name || '',
-                last_name: profile.last_name || '',
+                first_name: profile.first_name || profile.firstName || '',
+                last_name: profile.last_name || profile.lastName || '',
                 email: profile.email || '',
                 avatar: profile.avatar || profile.picture || '',
               }

@@ -50,6 +50,7 @@ export interface AolfExploreMenuItem {
 export interface AolfHeaderData {
   isAuthenticated: boolean;
   profile: AolfHeaderProfile | null;
+  menu: AolfHeaderMenuItem[];
   tokens?: {
     accessToken: string;
     idToken: string;
@@ -115,11 +116,11 @@ const checkPostRobot = (): Promise<void> => {
 
     // Wait for a short time to see if it becomes available (may be loading)
     let attempts = 0;
-    const maxAttempts = 10; // Increase max attempts
+    const maxAttempts = 5;
     const checkInterval = setInterval(() => {
       attempts++;
 
-      if (window && window.postRobot) {
+      if (window.postRobot) {
         clearInterval(checkInterval);
         headerLogger.debug('Post-robot became available');
         resolve();
@@ -129,15 +130,9 @@ const checkPostRobot = (): Promise<void> => {
         headerLogger.error(errorMsg);
         reject(new Error(errorMsg));
       }
-    }, 300); // Check less frequently to reduce console spam
+    }, 200); // Check every 200ms
   });
 };
-
-// Track active listeners globally to prevent duplicates
-let activeListeners: {
-  authUpdate?: { cancel: () => void };
-  ready?: { cancel: () => void };
-} = {};
 
 /**
  * Detect if the current device is running iOS
@@ -301,25 +296,6 @@ export function useAolfHeaderData(app2Origin: string, app2WidgetUrl: string) {
           return;
         }
 
-        // Clean up any existing listeners to prevent duplicates
-        if (activeListeners.authUpdate) {
-          try {
-            activeListeners.authUpdate.cancel();
-            headerLogger.debug('Cleaned up existing auth update listener');
-          } catch (err) {
-            headerLogger.warn('Error cleaning up auth update listener:', err);
-          }
-        }
-
-        if (activeListeners.ready) {
-          try {
-            activeListeners.ready.cancel();
-            headerLogger.debug('Cleaned up existing ready listener');
-          } catch (err) {
-            headerLogger.warn('Error cleaning up ready listener:', err);
-          }
-        }
-
         // Function to request auth profile from iframe
         const requestAuthProfile = () => {
           if (!iframe || !iframe.contentWindow) {
@@ -358,10 +334,19 @@ export function useAolfHeaderData(app2Origin: string, app2WidgetUrl: string) {
                           authData.profile.last_name ||
                           authData.profile.lastName ||
                           '',
+                        first_name:
+                          authData.profile.first_name ||
+                          authData.profile.firstName ||
+                          '',
+                        last_name:
+                          authData.profile.last_name ||
+                          authData.profile.lastName ||
+                          '',
                         email: authData.profile.email || '',
                         avatar: authData.profile.avatar || '',
                       }
                     : null,
+                  menu: [],
                   tokens: authData.tokens,
                   exploreMenu: authData.exploreMenu || [],
                 };
@@ -389,7 +374,10 @@ export function useAolfHeaderData(app2Origin: string, app2WidgetUrl: string) {
           'auth-widget-data-updated',
           (event) => {
             const authData = event.data;
-            headerLogger.info('Received auth data update', authData);
+            headerLogger.info('Received auth data update', {
+              isAuthenticated: authData.isAuthenticated,
+              hasProfile: !!authData.profile,
+            });
 
             // Process and set the updated data
             const processedData: AolfHeaderData = {
@@ -404,10 +392,19 @@ export function useAolfHeaderData(app2Origin: string, app2WidgetUrl: string) {
                       authData.profile.last_name ||
                       authData.profile.lastName ||
                       '',
+                    first_name:
+                      authData.profile.first_name ||
+                      authData.profile.firstName ||
+                      '',
+                    last_name:
+                      authData.profile.last_name ||
+                      authData.profile.lastName ||
+                      '',
                     email: authData.profile.email || '',
                     avatar: authData.profile.avatar || '',
                   }
                 : null,
+              menu: [],
               tokens: authData.tokens,
               exploreMenu: authData.exploreMenu || [],
             };
@@ -415,9 +412,6 @@ export function useAolfHeaderData(app2Origin: string, app2WidgetUrl: string) {
             setHeaderData(processedData);
           },
         );
-
-        // Store the listener reference
-        activeListeners.authUpdate = listener;
 
         // Listen for when the widget is ready
         const readyListener = window.postRobot.on('auth-widget-ready', () => {
@@ -427,26 +421,14 @@ export function useAolfHeaderData(app2Origin: string, app2WidgetUrl: string) {
           setTimeout(requestAuthProfile, readyDelay);
         });
 
-        // Store the ready listener reference
-        activeListeners.ready = readyListener;
-
         // Request auth profile immediately as well
         requestAuthProfile();
 
         // Return cleanup function
         return () => {
           try {
-            // Clean up post-robot listeners
-            if (activeListeners.authUpdate) {
-              activeListeners.authUpdate.cancel();
-            }
-            if (activeListeners.ready) {
-              activeListeners.ready.cancel();
-            }
-
-            // Clear the activeListeners object
-            activeListeners = {};
-
+            listener.cancel();
+            readyListener.cancel();
             headerLogger.debug('Cleaned up post-robot listeners');
           } catch (err) {
             headerLogger.warn('Error cleaning up listeners', err);
@@ -458,7 +440,6 @@ export function useAolfHeaderData(app2Origin: string, app2WidgetUrl: string) {
           'Post-robot not available. Please ensure it is loaded in the page head.',
           err,
         );
-        console.error(err);
       });
 
     // Cleanup when component unmounts
