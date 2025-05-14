@@ -27,8 +27,7 @@ const logger = {
       const urlParams = new URLSearchParams(window.location.search);
       if (
         urlParams.get('debug') === 'true' ||
-        urlParams.get('debug') === 'widget' ||
-        urlParams.get('test') === 'auth'
+        urlParams.get('debug') === 'widget'
       ) {
         return true;
       }
@@ -88,55 +87,6 @@ function AuthProfileWidget() {
   const authObject = useAuth();
   const [communicationError, setCommunicationError] = useState(false);
   const [communicationAttempts, setCommunicationAttempts] = useState(0);
-  const [forcedRefresh, setForcedRefresh] = useState(false);
-
-  // Debug helper for mobile issue
-  useEffect(() => {
-    const deviceIsIOS = isIOS();
-    console.log('[Auth Widget Debug]', {
-      isAuthenticated: authObject?.isAuthenticated,
-      hasProfile: !!authObject?.profile,
-      profileDetails: authObject?.profile
-        ? {
-            first_name: authObject.profile.first_name,
-            email: authObject.profile.email?.substring(0, 3) + '...',
-            hasAvatar: !!authObject.profile.avatar,
-          }
-        : 'No profile',
-      platform: deviceIsIOS ? 'iOS' : 'other',
-      userAgent: navigator.userAgent,
-      innerWidth: window.innerWidth,
-      innerHeight: window.innerHeight,
-      tokenInfo: authObject?.tokens ? 'Present' : 'Missing',
-      isMounted: true,
-    });
-
-    // Mobile auth state recovery
-    // If we have tokens but no profile, try to refresh auth state
-    if (
-      deviceIsIOS &&
-      authObject?.tokens &&
-      !authObject?.profile &&
-      !forcedRefresh
-    ) {
-      console.log(
-        '[Auth Widget] Mobile auth state looks incomplete - trying to refresh...',
-      );
-      setForcedRefresh(true);
-
-      // Wait a bit and try to refresh auth state
-      setTimeout(() => {
-        if (authObject?.fetchCurrentUser) {
-          authObject
-            .fetchCurrentUser()
-            .then(() => console.log('[Auth Widget] Auth refresh successful'))
-            .catch((err) =>
-              console.error('[Auth Widget] Auth refresh failed:', err),
-            );
-        }
-      }, 800);
-    }
-  }, [authObject, forcedRefresh]);
 
   // Extract important auth data
   const isAuthenticated = authObject?.isAuthenticated || false;
@@ -482,10 +432,6 @@ function AuthProfileWidget() {
             background-color: #e47c2c;
           }
 
-          .auth-avatar.loading {
-            background-color: #888;
-          }
-
           .auth-avatar:hover {
             transform: scale(1.1);
           }
@@ -599,11 +545,6 @@ function AuthProfileWidget() {
                 </div>
               )}
             </div>
-          </div>
-        ) : forcedRefresh && isIOS() && tokens ? (
-          // Show a loading state on mobile when we're refreshing auth
-          <div className="auth-avatar loading">
-            <div className="initials">...</div>
           </div>
         ) : (
           <button
