@@ -283,52 +283,6 @@ function AuthProfileWidget() {
   const listenerSetupRef = useRef(false);
   const prevProfileSignatureRef = useRef(null);
 
-  // Try to get Auth module
-  const getAuthTokens = async () => {
-    try {
-      if (typeof Auth !== 'undefined') {
-        const authModule = Auth; // Use a local variable to avoid passing the Auth object
-        const session = await authModule.getSession();
-
-        // Make tokens safe for serialization - ensure we're not sending functions
-        return session
-          ? {
-              accessToken:
-                typeof session.accessToken === 'object'
-                  ? session.accessToken.jwtToken ||
-                    JSON.stringify(session.accessToken)
-                  : session.accessToken,
-              idToken:
-                typeof session.idToken === 'object'
-                  ? session.idToken.jwtToken || JSON.stringify(session.idToken)
-                  : session.idToken,
-            }
-          : null;
-      } else if (window.Auth) {
-        const authModule = window.Auth; // Use a local variable to avoid passing the Auth object
-        const session = await authModule.getSession();
-
-        // Make tokens safe for serialization - ensure we're not sending functions
-        return session
-          ? {
-              accessToken:
-                typeof session.accessToken === 'object'
-                  ? session.accessToken.jwtToken ||
-                    JSON.stringify(session.accessToken)
-                  : session.accessToken,
-              idToken:
-                typeof session.idToken === 'object'
-                  ? session.idToken.jwtToken || JSON.stringify(session.idToken)
-                  : session.idToken,
-            }
-          : null;
-      }
-    } catch (err) {
-      console.error('Error getting Auth tokens:', err);
-    }
-    return null;
-  };
-
   // Create a helper function to generate the auth profile response
   async function createResponseData() {
     // Get current auth state
@@ -361,47 +315,34 @@ function AuthProfileWidget() {
             }
           : null,
         exploreMenu:
-          introData?.map((item) => {
-            // Ensure each menu item is serializable without functions
-            return {
-              name: item.title || item.name || '',
-              link: item.url || item.link || '#',
-            };
-          }) || [],
+          introData?.map((item) => ({
+            name: item.title || item.name || '',
+            link: item.url || item.link || '#',
+          })) || [],
       },
     };
 
-    // Clean the data to ensure it contains no functions
-    function deepCleanForPostMessage(obj) {
-      if (!obj || typeof obj !== 'object') return obj;
-
-      // For arrays
-      if (Array.isArray(obj)) {
-        return obj.map((item) => deepCleanForPostMessage(item));
-      }
-
-      // For regular objects
-      const cleanObj = {};
-      for (const key in obj) {
-        if (Object.prototype.hasOwnProperty.call(obj, key)) {
-          const value = obj[key];
-          // Skip functions
-          if (typeof value === 'function') continue;
-
-          // For objects, recursively clean
-          if (value && typeof value === 'object') {
-            cleanObj[key] = deepCleanForPostMessage(value);
-          } else {
-            cleanObj[key] = value;
-          }
-        }
-      }
-      return cleanObj;
-    }
-
-    // Return cleaned response
-    return deepCleanForPostMessage(responseData);
+    return responseData;
   }
+
+  // Log authentication state on changes
+  useEffect(() => {
+    logger.info(
+      `Auth state: ${isAuthenticated ? 'Authenticated' : 'Not authenticated'}`,
+    );
+    if (isAuthenticated) {
+      logger.debug(
+        'User profile available:',
+        profile?.first_name,
+        profile?.last_name,
+      );
+      logger.debug(
+        'Tokens available:',
+        !!tokens?.accessToken,
+        !!tokens?.idToken,
+      );
+    }
+  }, [isAuthenticated, profile, tokens]);
 
   // Optimize for reduced bundle size using conditional imports
   const {
@@ -453,25 +394,6 @@ function AuthProfileWidget() {
       logger.error('Error loading intro series:', error);
     }
   }, [isLoading, error]);
-
-  // Log authentication state on changes
-  useEffect(() => {
-    logger.info(
-      `Auth state: ${isAuthenticated ? 'Authenticated' : 'Not authenticated'}`,
-    );
-    if (isAuthenticated) {
-      logger.debug(
-        'User profile available:',
-        profile?.first_name,
-        profile?.last_name,
-      );
-      logger.debug(
-        'Tokens available:',
-        !!tokens?.accessToken,
-        !!tokens?.idToken,
-      );
-    }
-  }, [isAuthenticated, profile, tokens]);
 
   // Set up message listener with useRef to avoid recreation on each render
   useEffect(() => {
@@ -551,69 +473,28 @@ function AuthProfileWidget() {
 
             // Special handling for iOS browsers - stringify the message
             try {
-              // Check if we should stringify based on browser
-              const isIOSDevice = /iPhone|iPad|iPod|iOS|CriOS/i.test(
-                navigator?.userAgent,
-              );
+              // Use JSON stringify for iOS compatibility
+              const responseStr = JSON.stringify(response);
 
-              if (isIOSDevice) {
-                // For iOS devices - ALWAYS use string format
-                const responseStr = JSON.stringify(response);
-                event.source.postMessage(responseStr, event.origin);
-                logger.info(
-                  '✅ Sent stringified auth profile response (iOS format)',
-                );
+              // Send response - try with specific origin first if possible
+              if (
+                window.location &&
+                window.location.ancestorOrigins &&
+                window.location.ancestorOrigins.length > 0
+              ) {
+                const parentOrigin = window.location.ancestorOrigins[0];
+                event.source.postMessage(responseStr, parentOrigin);
               } else {
-                // For other devices - try direct object first
-                try {
-                  // Attempt to send the object directly first (works better with the receiver code)
-                  event.source.postMessage(response, event.origin);
-                  logger.info('✅ Sent object auth profile response');
-                } catch (objErr) {
-                  // Fall back to string for compatibility
-                  const responseStr = JSON.stringify(response);
-                  event.source.postMessage(responseStr, event.origin);
-                  logger.info(
-                    '✅ Sent stringified auth profile response (fallback)',
-                  );
-                }
+                // Fallback to wildcard origin
+                event.source.postMessage(responseStr, event.origin);
               }
+
+              logger.info('✅ Sent stringified auth profile response');
             } catch (strErr) {
-              // Log the error
-              logger.warn('Response sending failed:', strErr);
-
-              // Attempt a final basic serialized response
-              try {
-                // Create a basic minimal response with core data only
-                const minimalResponse = JSON.stringify({
-                  type: 'auth-profile',
-                  data: {
-                    isAuthenticated: !!isAuthenticated,
-                    profile: profile
-                      ? {
-                          first_name:
-                            profile.first_name || profile.firstName || '',
-                          last_name:
-                            profile.last_name || profile.lastName || '',
-                          email: profile.email || '',
-                        }
-                      : null,
-                    tokens: null, // Omit tokens from minimal response
-                    exploreMenu: [],
-                  },
-                });
-
-                event.source.postMessage(minimalResponse, event.origin);
-                logger.info('✅ Sent minimal auth profile response');
-              } catch (finalErr) {
-                // If all else fails, try to send the simplest possible response
-                logger.error('All serialization attempts failed:', finalErr);
-                const emptyResponse = JSON.stringify({
-                  type: 'auth-profile',
-                  data: { isAuthenticated: false },
-                });
-                event.source.postMessage(emptyResponse, event.origin);
-              }
+              // Fallback to regular object if stringify fails
+              logger.warn('Stringify failed, using object postMessage');
+              event.source.postMessage(response, event.origin);
+              logger.info('✅ Sent auth profile response (fallback)');
             }
           } catch (err) {
             logger.error('Failed to send auth profile:', err);
@@ -994,67 +875,14 @@ function AuthProfileWidget() {
           // Only respond with actual auth data - don't use dummy values
           try {
             if (authObject && authObject.isAuthenticated) {
-              // Extract only serializable data from the auth object to avoid DataCloneError
-              const safeAuthObject = {
-                isAuthenticated: !!authObject.isAuthenticated,
-                profile: authObject.profile
-                  ? {
-                      first_name:
-                        authObject.profile.first_name ||
-                        authObject.profile.firstName ||
-                        '',
-                      last_name:
-                        authObject.profile.last_name ||
-                        authObject.profile.lastName ||
-                        '',
-                      email: authObject.profile.email || '',
-                      avatar:
-                        authObject.profile.avatar ||
-                        authObject.profile.picture ||
-                        '',
-                    }
-                  : null,
-                tokens: authObject.tokens
-                  ? {
-                      accessToken:
-                        typeof authObject.tokens.accessToken === 'object'
-                          ? authObject.tokens.accessToken.jwtToken ||
-                            JSON.stringify(authObject.tokens.accessToken)
-                          : authObject.tokens.accessToken,
-                      idToken:
-                        typeof authObject.tokens.idToken === 'object'
-                          ? authObject.tokens.idToken.jwtToken ||
-                            JSON.stringify(authObject.tokens.idToken)
-                          : authObject.tokens.idToken,
-                    }
-                  : null,
-              };
+              // Use the safe response creator with real auth data
+              const directResponse = createSafeResponse({
+                isAuthenticated: authObject.isAuthenticated,
+                profile: authObject.profile,
+                tokens: authObject.tokens,
+              });
 
-              // Use the safe response creator with the cleaned auth data
-              const directResponse = createSafeResponse(safeAuthObject);
-
-              // Check if we should stringify based on browser
-              const isIOSDevice = /iPhone|iPad|iPod|iOS|CriOS/i.test(
-                navigator?.userAgent,
-              );
-
-              if (isIOSDevice) {
-                // For iOS devices - ALWAYS use string format
-                const responseString = JSON.stringify(directResponse);
-                event.source.postMessage(responseString, event.origin);
-              } else {
-                // For desktop/Android - try object first, then string
-                try {
-                  // Try sending the object directly first
-                  event.source.postMessage(directResponse, event.origin);
-                } catch (objErr) {
-                  // Fall back to stringified format
-                  const responseString = JSON.stringify(directResponse);
-                  event.source.postMessage(responseString, event.origin);
-                  globalLogger.log('Used string fallback for response');
-                }
-              }
-
+              event.source.postMessage(directResponse, event.origin);
               if (globalLogger.isEnabled()) {
                 globalLogger.log(
                   '✅ Sent real auth response to:',
@@ -1063,7 +891,7 @@ function AuthProfileWidget() {
               }
             } else {
               // Send a response indicating not authenticated without dummy data
-              const emptyResponse = JSON.stringify({
+              const emptyResponse = {
                 type: 'auth-profile',
                 data: {
                   isAuthenticated: false,
@@ -1071,7 +899,7 @@ function AuthProfileWidget() {
                   tokens: null,
                   exploreMenu: [],
                 },
-              });
+              };
 
               event.source.postMessage(emptyResponse, event.origin);
               if (globalLogger.isEnabled()) {
@@ -1083,23 +911,6 @@ function AuthProfileWidget() {
             }
           } catch (err) {
             globalLogger.error('Failed to send response:', err);
-
-            // Last resort fallback - send minimal data
-            try {
-              const fallbackResponse = JSON.stringify({
-                type: 'auth-profile',
-                data: {
-                  isAuthenticated: false,
-                  profile: null,
-                  tokens: null,
-                  exploreMenu: [],
-                },
-              });
-              event.source.postMessage(fallbackResponse, event.origin);
-              globalLogger.log('Sent fallback response after error');
-            } catch (finalErr) {
-              globalLogger.error('All response attempts failed');
-            }
           }
         }
       } catch (err) {
@@ -1275,11 +1086,10 @@ function AuthProfileWidget() {
             const getAuthTokens = async () => {
               try {
                 if (typeof Auth !== 'undefined') {
-                  const authModule = Auth; // Use a local variable to avoid passing the Auth object
                   diagnosticLogger.log('Auth module found');
-                  const session = await authModule.getSession();
+                  const session = await Auth.getSession();
                   diagnosticLogger.log('Got session from Auth');
-                  // Make tokens safe for serialization - ensure we're not sending functions
+                  // Make tokens safe for serialization
                   return session ? {
                     accessToken: typeof session.accessToken === 'object' ?
                       (session.accessToken.jwtToken || JSON.stringify(session.accessToken)) :
@@ -1289,11 +1099,10 @@ function AuthProfileWidget() {
                       session.idToken
                   } : null;
                 } else if (window.Auth) {
-                  const authModule = window.Auth; // Use a local variable to avoid passing the Auth object
                   diagnosticLogger.log('Auth found on window');
-                  const session = await authModule.getSession();
+                  const session = await window.Auth.getSession();
                   diagnosticLogger.log('Got session from window.Auth');
-                  // Make tokens safe for serialization - ensure we're not sending functions
+                  // Make tokens safe for serialization
                   return session ? {
                     accessToken: typeof session.accessToken === 'object' ?
                       (session.accessToken.jwtToken || JSON.stringify(session.accessToken)) :
@@ -1326,94 +1135,27 @@ function AuthProfileWidget() {
             // Additional block for removing dummy data from postMessage responses
             const originalPostMessage = window.postMessage;
             window.postMessage = function(message, targetOrigin, transfer) {
-              // Before sending any message, ensure it's properly serializable
-              let safeMessage = message;
-
-              // If it's an object, deep clone it and remove functions
               if (message && typeof message === 'object') {
-                try {
-                  // We'll first convert to JSON and back to purge any functions or non-serializable data
-                  safeMessage = JSON.parse(JSON.stringify(message));
-                } catch (err) {
-                  // If it fails JSON serialization, we need to create a clean version manually
-                  diagnosticLogger.error('Message failed JSON serialization, using fallback cleanup');
-
-                  // Simple clean - only handle basic object
-                  if (!Array.isArray(message)) {
-                    safeMessage = {};
-                    // Copy only primitive values, skip functions
-                    for (const key in message) {
-                      if (typeof message[key] !== 'function') {
-                        try {
-                          // Test if this property can be cloned
-                          JSON.stringify(message[key]);
-                          safeMessage[key] = message[key];
-                        } catch (e) {
-                          // Skip this property if it can't be serialized
-                        }
-                      }
-                    }
-                  }
-                }
-
                 // Check for auth profile data
-                if (safeMessage.type === 'auth-profile' && safeMessage.data && safeMessage.data.profile) {
-                  if (containsDummyData(safeMessage.data.profile)) {
+                if (message.type === 'auth-profile' && message.data && message.data.profile) {
+                  if (containsDummyData(message.data.profile)) {
                     diagnosticLogger.log('Blocked sending message with dummy profile data');
                     return; // Don't send the message
                   }
                 }
 
                 // Check for auth update data
-                if (safeMessage.type === 'auth-widget-data-updated' && safeMessage.data && safeMessage.data.profile) {
-                  if (containsDummyData(safeMessage.data.profile)) {
+                if (message.type === 'auth-widget-data-updated' && message.data && message.data.profile) {
+                  if (containsDummyData(message.data.profile)) {
                     diagnosticLogger.log('Blocked sending auth update with dummy profile data');
                     return; // Don't send the message
                   }
                 }
               }
 
-              // Try sending the safe message
-              try {
-                return originalPostMessage.call(this, safeMessage, targetOrigin, transfer);
-              } catch (err) {
-                diagnosticLogger.error('Failed to postMessage even after cleanup:', err);
-                // Last resort - try stringifying the entire message
-                try {
-                  if (typeof safeMessage === 'object' && safeMessage !== null) {
-                    const stringMessage = JSON.stringify(safeMessage);
-                    return originalPostMessage.call(this, stringMessage, targetOrigin, transfer);
-                  }
-                } catch (finalErr) {
-                  diagnosticLogger.error('All postMessage attempts failed');
-                }
-              }
+              // If we get here, it's safe to send
+              return originalPostMessage.apply(this, arguments);
             };
-
-            // Block all direct responses to auth-profile requests
-            // Instead, let the main React component handle it
-            window.addEventListener('message', function(event) {
-              // Only act as a blocker - don't send any responses
-              if (event.data) {
-                let data = event.data;
-                if (typeof data === 'string') {
-                  try {
-                    data = JSON.parse(data);
-                  } catch(e) {
-                    return; // Not JSON, ignore
-                  }
-                }
-
-                // If this is an auth request, let the main handlers take care of it
-                // Do not respond here with any data (not even dummy blocked data)
-                if (data && data.type === 'get-auth-profile') {
-                  if (isLoggingEnabled()) {
-                    diagnosticLogger.log('Auth profile request received - letting main handler process it');
-                  }
-                  // Don't do anything here - no response sent
-                }
-              }
-            }, true); // Use capture phase to run before other handlers
 
             diagnosticLogger.log('Diagnostic script initialized (afterInteractive)');
           } catch(err) {
