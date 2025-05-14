@@ -1,16 +1,5 @@
 import { useEffect, useState } from 'react';
-
-// Create a simple logger implementation if the imported one is not available
-const headerLogger = {
-  info: (message: string, data?: any) =>
-    console.info(`[HeaderData] ${message}`, data || ''),
-  debug: (message: string, data?: any) =>
-    console.debug(`[HeaderData] ${message}`, data || ''),
-  warn: (message: string, data?: any) =>
-    console.warn(`[HeaderData] ${message}`, data || ''),
-  error: (message: string, data?: any) =>
-    console.error(`[HeaderData] ${message}`, data || ''),
-};
+import { headerLogger } from '@/utils/logger';
 
 export interface AolfHeaderProfile {
   firstName?: string;
@@ -244,45 +233,18 @@ export function useAolfHeaderData(app2Origin: string, app2WidgetUrl: string) {
             ? messageData.data
             : messageData.data;
 
-        // Enhanced authentication state logging - this helps identify issues
         headerLogger.info(`Received ${messageData.type} data`, {
-          isAuthenticated: !!authData?.isAuthenticated,
-          hasAuth: !!authData?.hasAuth,
+          isAuthenticated: authData?.isAuthenticated,
           hasProfile: !!authData?.profile,
           hasTokens: !!authData?.tokens,
-          accessTokenPresent: !!authData?.tokens?.accessToken,
-          idTokenPresent: !!authData?.tokens?.idToken,
-          timeStamp: authData?.authTime || new Date().toISOString(),
           menuItems: authData?.menu?.length || 0,
           exploreItems: authData?.exploreMenu?.length || 0,
         });
 
         if (authData) {
-          // Check additional authentication indicators
-          const isLoggedIn =
-            !!authData.isAuthenticated ||
-            !!authData.hasAuth ||
-            (!!authData.tokens &&
-              (!!authData.tokens.accessToken || !!authData.tokens.idToken));
-
-          if (debug) {
-            headerLogger.debug(
-              `Auth verification - Final state: ${isLoggedIn ? 'AUTHENTICATED' : 'NOT AUTHENTICATED'}`,
-              {
-                isAuthenticated: !!authData.isAuthenticated,
-                hasAuth: !!authData.hasAuth,
-                hasTokens: !!authData.tokens,
-                tokensValid: authData.tokens
-                  ? !!authData.tokens.accessToken
-                  : false,
-              },
-            );
-          }
-
           // Process the data to ensure consistent naming
           const processedData: AolfHeaderData = {
-            // Use the verified authentication state
-            isAuthenticated: isLoggedIn,
+            isAuthenticated: !!authData.isAuthenticated,
             profile: authData.profile
               ? {
                   // Support both naming conventions (first_name/firstName)
@@ -313,32 +275,13 @@ export function useAolfHeaderData(app2Origin: string, app2WidgetUrl: string) {
               : null,
             // Convert menu items if available, or use empty array
             menu: Array.isArray(authData.menu) ? authData.menu : [],
-            // Pass through tokens if available - ensure they're properly extracted
-            tokens:
-              authData.tokens &&
-              (authData.tokens.accessToken || authData.tokens.idToken)
-                ? {
-                    accessToken: authData.tokens.accessToken || '',
-                    idToken: authData.tokens.idToken || '',
-                  }
-                : undefined,
+            // Pass through tokens if available
+            tokens: authData.tokens,
             // Convert exploreMenu items if available
             exploreMenu: Array.isArray(authData.exploreMenu)
               ? authData.exploreMenu
               : [],
           };
-
-          // Display token information in debug mode to help identify issues
-          if (debug && authData.tokens) {
-            headerLogger.debug('Token information', {
-              hasAccessToken: !!authData.tokens.accessToken,
-              accessTokenLength: authData.tokens.accessToken
-                ? String(authData.tokens.accessToken).substring(0, 10) + '...'
-                : 'none',
-              hasIdToken: !!authData.tokens.idToken,
-              idTokenPresent: !!authData.tokens.idToken,
-            });
-          }
 
           setHeaderData(processedData);
         }

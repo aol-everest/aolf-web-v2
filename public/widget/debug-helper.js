@@ -130,15 +130,8 @@
 
     // Add message-specific details
     if (msgType === 'auth-profile' || msgType === 'auth-widget-data-updated') {
-      // Highlight authentication state more prominently
-      const isAuth = data.data?.isAuthenticated || data.data?.hasAuth;
-      const authText = isAuth ? '✅ AUTHENTICATED' : '❌ NOT AUTHENTICATED';
-      const authColor = isAuth ? '#00aa00' : '#cc0000';
-
       html += `
-        <div style="margin-left:10px;font-weight:bold;color:${authColor};">${authText}</div>
         <div style="margin-left:10px;">Auth: ${data.data?.isAuthenticated ? '✓' : '✗'}</div>
-        <div style="margin-left:10px;">hasAuth: ${data.data?.hasAuth ? '✓' : '✗'}</div>
         <div style="margin-left:10px;">Menu items: ${data.data?.exploreMenu?.length || 0}</div>
         <div style="margin-left:10px;">Profile: ${data.data?.profile ? '✓' : '✗'}</div>
         <div style="margin-left:10px;">Profile name: ${
@@ -148,8 +141,6 @@
           'N/A'
         }</div>
         <div style="margin-left:10px;">Tokens: ${data.data?.tokens ? '✓' : '✗'}</div>
-        <div style="margin-left:10px;">accessToken: ${!!data.data?.tokens?.accessToken ? '✓' : '✗'}</div>
-        <div style="margin-left:10px;">idToken: ${!!data.data?.tokens?.idToken ? '✓' : '✗'}</div>
       `;
     } else if (msgType === 'auth-widget-ping') {
       html += `<div style="margin-left:10px;">Source: ${data.source || 'unknown'}</div>`;
@@ -182,8 +173,6 @@
     widget.innerHTML = `
       <div style="border-bottom:1px solid #ccc;padding-bottom:5px;margin-bottom:5px;font-weight:bold;">
         AOLF Widget Debug
-        <button id="check-auth" style="float:right;padding:0 5px;margin-right:5px;background:#c09;color:white;font-size:10px;">Auth?</button>
-        <button id="reload-widget" style="float:right;padding:0 5px;margin-right:5px;background:#f60;color:white;font-size:10px;">Reload</button>
         <button id="ping-widget" style="float:right;padding:0 5px;margin-right:5px;background:#090;color:white;font-size:10px;">Ping</button>
         <button id="refresh-auth" style="float:right;padding:0 5px;margin-right:5px;background:#009;color:white;font-size:10px;">Get Auth</button>
         <button id="clear-debug" style="float:right;padding:0 5px;">Clear</button>
@@ -225,39 +214,6 @@
     document.getElementById('refresh-auth').addEventListener('click', function() {
       if (window.aolfDebugCommands && window.aolfDebugCommands.requestAuthProfile) {
         window.aolfDebugCommands.requestAuthProfile();
-      }
-    });
-
-    // Add event handlers for the new buttons
-    document.getElementById('check-auth').addEventListener('click', function() {
-      if (window.aolfDebugCommands && window.aolfDebugCommands.checkAuthStatus) {
-        const result = window.aolfDebugCommands.checkAuthStatus();
-
-        // Display the result in the debug log
-        const logDiv = document.getElementById('debug-log');
-        if (logDiv) {
-          const msgDiv = document.createElement('div');
-          msgDiv.style.borderBottom = '1px dotted #ccc';
-          msgDiv.style.marginBottom = '5px';
-          msgDiv.style.paddingBottom = '5px';
-
-          msgDiv.innerHTML = `
-            <div style="color:#c09;font-weight:bold;">Auth Status Check</div>
-            <div style="margin-left:10px;">Result: ${result.status}</div>
-            <div style="margin-left:10px;">Is Authenticated: ${result.isAuthenticated ? '✓' : '✗'}</div>
-            <div style="margin-left:10px;">Auth Messages: ${result.authMessages ? result.authMessages.length : 0}</div>
-            <div style="color:#666;font-size:10px;">${new Date().toISOString()}</div>
-          `;
-
-          // Add to top of log
-          logDiv.prepend(msgDiv);
-        }
-      }
-    });
-
-    document.getElementById('reload-widget').addEventListener('click', function() {
-      if (window.aolfDebugCommands && window.aolfDebugCommands.reloadAuthWidget) {
-        window.aolfDebugCommands.reloadAuthWidget();
       }
     });
 
@@ -428,114 +384,6 @@
       }
 
       return false;
-    },
-
-    // New command to check authentication status
-    checkAuthStatus: function() {
-      const iframe = document.getElementById('auth-profile-iframe');
-      if (!iframe) {
-        logger.error('Auth iframe not found');
-        return { status: 'Error', message: 'Auth iframe not found' };
-      }
-
-      try {
-        // Get all auth-profile messages received in the last 10 seconds
-        const logDiv = document.getElementById('debug-log');
-        let authMessages = [];
-        let isAuthenticated = false;
-        let latestTimestamp = '';
-        let tokens = null;
-        let profile = null;
-
-        if (logDiv) {
-          // Look for auth-related messages in the log
-          Array.from(logDiv.children).forEach(node => {
-            const html = node.innerHTML;
-            if (html.includes('auth-profile') || html.includes('auth-widget-data-updated')) {
-              // Extract authentication info if possible
-              if (html.includes('Auth: ✓')) {
-                isAuthenticated = true;
-              }
-
-              // Add to messages list
-              authMessages.push({
-                type: html.includes('auth-profile') ? 'auth-profile' : 'auth-widget-data-updated',
-                authenticated: html.includes('Auth: ✓'),
-                hasProfile: html.includes('Profile: ✓'),
-                timestamp: new Date().toISOString()
-              });
-            }
-          });
-        }
-
-        // Get data from parent frame
-        try {
-          // Try to read authentication state from parent frame
-          if (window.parent && window.parent !== window) {
-            // We can't directly access parent frame due to cross-origin restrictions
-            // But we can infer some information from the debug overlay
-            const result = {
-              isAuthenticated,
-              authMessages,
-              lastMessageTime: authMessages.length > 0 ? authMessages[0].timestamp : 'none',
-              totalMessages: authMessages.length,
-              tokens: tokens ? 'present' : 'none',
-              profile: profile ? 'present' : 'none'
-            };
-
-            logger.info('Auth status check results:', result);
-            return result;
-          }
-        } catch (e) {
-          // Cross-origin restriction, ignore
-        }
-
-        // Send a special auth check request
-        const message = {
-          type: 'auth-check-request',
-          timestamp: new Date().toISOString()
-        };
-
-        const target = iframe.src.split('/').slice(0, 3).join('/');
-        safePostMessage(iframe.contentWindow, message, target);
-        logger.info('Sent special auth check request');
-
-        return {
-          status: 'Check Sent',
-          authMessages,
-          isAuthenticated,
-          message: 'Auth check request sent to widget'
-        };
-      } catch (e) {
-        logger.error('Error checking auth status:', e);
-        return {
-          status: 'Error',
-          message: 'Failed to check auth status: ' + e.message
-        };
-      }
-    },
-
-    // New command to force the iframe to reload
-    reloadAuthWidget: function() {
-      const iframe = document.getElementById('auth-profile-iframe');
-      if (!iframe) {
-        logger.error('Auth iframe not found');
-        return false;
-      }
-
-      try {
-        const originalSrc = iframe.src;
-
-        // Force reload by updating the src
-        const separator = originalSrc.includes('?') ? '&' : '?';
-        iframe.src = originalSrc + separator + 'reload=' + Date.now();
-
-        logger.info('Reloaded auth widget iframe');
-        return true;
-      } catch (e) {
-        logger.error('Failed to reload auth widget:', e);
-        return false;
-      }
     }
   };
 
