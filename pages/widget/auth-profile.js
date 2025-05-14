@@ -183,107 +183,6 @@ function AuthProfileWidget() {
     }
   }, [isLoading, error]);
 
-  // Log script initialization
-  if (typeof window !== 'undefined') {
-    // Use a simplified logger for the global context
-    const globalLogger = {
-      log: (...args) =>
-        console.log('[Auth Widget Direct]', new Date().toISOString(), ...args),
-      error: (...args) =>
-        console.error(
-          '[Auth Widget Direct]',
-          new Date().toISOString(),
-          ...args,
-        ),
-    };
-
-    globalLogger.log('Script loaded');
-
-    // Update direct response handler to use safe object structures
-    const createSafeResponse = (data) => {
-      // Create a clone-safe response by ensuring all properties are serializable
-      return {
-        type: 'auth-profile',
-        data: {
-          isAuthenticated: !!data.isAuthenticated,
-          profile: data.profile
-            ? {
-                first_name:
-                  data.profile.first_name || data.profile.firstName || 'Direct',
-                last_name:
-                  data.profile.last_name || data.profile.lastName || 'User',
-                email: data.profile.email || 'direct@example.com',
-              }
-            : {
-                first_name: 'Direct',
-                last_name: 'User',
-                email: 'direct@example.com',
-              },
-          tokens: data.tokens || {
-            accessToken: 'direct-token',
-            idToken: 'direct-token',
-          },
-          exploreMenu: Array.isArray(data.exploreMenu)
-            ? data.exploreMenu.map((item) => ({
-                name: item.name || item.title || '',
-                link: item.link || item.url || '#',
-              }))
-            : [{ name: 'Menu', link: '#' }],
-        },
-      };
-    };
-
-    // Direct global handler for get-auth-profile message
-    window.addEventListener('message', function directMessageHandler(event) {
-      globalLogger.log(
-        'Received message:',
-        typeof event.data === 'string'
-          ? event.data
-          : JSON.stringify(event.data),
-      );
-
-      try {
-        // Check if this is the message we're looking for
-        let data = event.data;
-        if (typeof data === 'string') {
-          try {
-            data = JSON.parse(data);
-          } catch (e) {
-            // Failed to parse as JSON, continue with string value
-          }
-        }
-
-        if (data && data.type === 'get-auth-profile') {
-          globalLogger.log(
-            '📣 Received get-auth-profile request from:',
-            event.origin,
-          );
-
-          // Send a simple response immediately
-          try {
-            const simpleResponse = {
-              type: 'auth-profile',
-              data: {
-                isAuthenticated: true,
-                profile: { firstName: 'Test', lastName: 'User' },
-                tokens: { accessToken: 'test-token' },
-                exploreMenu: [{ name: 'Test Menu', link: '#' }],
-                _source: 'direct-handler',
-              },
-            });
-
-            event.source.postMessage(simpleResponse, event.origin);
-            globalLogger.log('✅ Sent direct response to:', event.origin);
-          } catch (err) {
-            globalLogger.error('Failed to send response:', err);
-          }
-        }
-      } catch (err) {
-        globalLogger.error('Error processing message:', err);
-      }
-    });
-  }
-
   // Set up message listener with useRef to avoid recreation on each render
   useEffect(() => {
     // Define the message handler function - keep it simple
@@ -313,10 +212,7 @@ function AuthProfileWidget() {
       if (typeof messageData === 'object') {
         // Handle get-auth-profile request
         if (messageData.type === 'get-auth-profile') {
-          logger.info(
-            '📣 Processing get-auth-profile request from:',
-            event.origin,
-          );
+          logger.info('📣 Received auth-profile request from:', event.origin);
 
           // Create response with available data
           const response = {
@@ -334,13 +230,11 @@ function AuthProfileWidget() {
                 name: item.title,
                 link: item.slug ? `/us-en/explore/${item.slug}` : '#',
               })),
-              _source: 'message-handler',
             },
           };
 
           // Send response
           try {
-            logger.info('Sending auth profile response to:', event.origin);
             event.source.postMessage(response, event.origin);
             logger.info('✅ Sent auth profile response');
           } catch (err) {
@@ -350,11 +244,10 @@ function AuthProfileWidget() {
         // Handle ping request
         else if (messageData.type === 'auth-widget-ping') {
           try {
-            const pongResponse = {
-              type: 'auth-widget-pong',
-              timestamp: new Date().toISOString(),
-            };
-            event.source.postMessage(pongResponse, event.origin);
+            event.source.postMessage(
+              { type: 'auth-widget-pong', timestamp: new Date().toISOString() },
+              event.origin,
+            );
             logger.debug('Replied to ping from', event.origin);
           } catch (err) {
             logger.error('Failed to respond to ping:', err);
@@ -489,80 +382,20 @@ function AuthProfileWidget() {
       <OptimizedScripts />
 
       {/* Simplified diagnostic script */}
-      <Script id="diagnostic-check" strategy="beforeInteractive">
-        {`
-          // Immediate verification script - run before React loads
-          try {
-            const emergencyLogger = {
-              log: (...args) => console.log('[Auth Widget Emergency]', new Date().toISOString(), ...args),
-              error: (...args) => console.error('[Auth Widget Emergency]', new Date().toISOString(), ...args)
-            };
-
-            emergencyLogger.log('Early initialization');
-
-            // Add direct listener for auth requests that runs before React
-            window.addEventListener('message', function emergencyHandler(e) {
-              if (!e.data) return;
-
-              try {
-                let data = e.data;
-                if (typeof data === 'string') {
-                  try {
-                    data = JSON.parse(data);
-                  } catch(e) {
-                    // Failed to parse as JSON, continue with string value
-                  }
-                }
-
-                if (data && data.type === 'get-auth-profile') {
-                  emergencyLogger.log('Received get-auth-profile request from:', e.origin);
-
-                  // Send immediate emergency response
-                  const emergencyResponse = {
-                    type: 'auth-profile',
-                    data: {
-                      isAuthenticated: true,
-                      profile: { firstName: 'Emergency', lastName: 'User' },
-                      tokens: { accessToken: 'emergency-token' },
-                      exploreMenu: [],
-                      _source: 'emergency-handler'
-                    }
-                  };
-
-                  try {
-                    e.source.postMessage(emergencyResponse, e.origin);
-                    emergencyLogger.log('Sent emergency response to:', e.origin);
-                  } catch (err) {
-                    emergencyLogger.error('Failed to send emergency response:', err);
-                  }
-                }
-              } catch (err) {
-                emergencyLogger.error('Error handling message:', err);
-              }
-            });
-          } catch(e) {
-            console.error('[Auth Widget Emergency]', new Date().toISOString(), 'Early initialization error:', e);
-          }
-        `}
-      </Script>
-
-      {/* Simple verification script */}
-      <Script id="diagnostic-check-main" strategy="afterInteractive">
+      <Script id="diagnostic-check" strategy="afterInteractive">
         {`
           // Simple verification script
           try {
-            const diagnosticLogger = {
-              log: (...args) => console.log('[Auth Widget Diagnostic]', new Date().toISOString(), ...args),
-              error: (...args) => console.error('[Auth Widget Diagnostic]', new Date().toISOString(), ...args)
-            };
-
             // Add direct listener for both ping and auth requests
             window.addEventListener('message', function(e) {
               if (!e.data) return;
 
+              // Log all messages in a consistent format
+              console.log('[Auth Widget]', new Date().toISOString(),
+                'Message received:', e.data?.type || 'unknown', 'from', e.origin);
+
               // Handle get-auth-profile requests directly from script too for redundancy
               if (e.data?.type === 'get-auth-profile') {
-                diagnosticLogger.log('Received get-auth-profile request from:', e.origin);
                 try {
                   // Simple quick response with basic data
                   const auth = {
@@ -575,16 +408,30 @@ function AuthProfileWidget() {
 
                   // Send response
                   e.source.postMessage(auth, e.origin);
-                  diagnosticLogger.log('Sent auth response to', e.origin);
-                } catch(err) {
-                  diagnosticLogger.error('Error responding to get-auth-profile:', err);
+                  console.log('[Auth Widget]', new Date().toISOString(),
+                    'Sent emergency auth response to', e.origin);
+                } catch (err) {
+                  console.error('[Auth Widget]', new Date().toISOString(),
+                    'Error in diagnostic response:', err);
                 }
               }
             });
 
-            diagnosticLogger.log('Diagnostic script initialized (afterInteractive)');
-          } catch(err) {
-            console.error('[Auth Widget Diagnostic] Error:', err);
+            console.log('[Auth Widget]', new Date().toISOString(),
+              'Diagnostic script ready and listening for messages');
+
+            // Announce ready state
+            if (window.parent !== window) {
+              setTimeout(() => {
+                window.parent.postMessage({
+                  type: 'auth-widget-ready',
+                  timestamp: new Date().toISOString()
+                }, '*');
+                console.log('[Auth Widget]', new Date().toISOString(), 'Ready notification sent');
+              }, 1000);
+            }
+          } catch(e) {
+            console.error('[Auth Widget]', new Date().toISOString(), 'Diagnostic script error:', e);
           }
         `}
       </Script>
