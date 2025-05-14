@@ -93,38 +93,18 @@ const loadDebugHelper = (app2Origin: string): void => {
   document.head.appendChild(script);
 };
 
-// Improved iOS detection
-function isIOSDevice(): boolean {
-  if (typeof window === 'undefined' || !window.navigator) return false;
+/**
+ * Detect if device is iOS (required for message format handling)
+ */
+const isIOSDevice = (): boolean => {
+  if (typeof window === 'undefined' || !navigator) return false;
 
-  try {
-    const ua = window.navigator.userAgent;
-    const platform = window.navigator.platform || '';
-
-    // First check: iOS-specific platforms
-    const isIOSPlatform = /iPad|iPhone|iPod/.test(platform);
-
-    // Second check: iOS-specific user agents (includes iPad that pretends to be desktop)
-    const isIOSUserAgent = /iPhone|iPad|iPod|iOS|CriOS/.test(ua);
-
-    // Third check: Safari browser on Apple hardware
-    const isSafariOnApple =
-      /Safari/.test(ua) &&
-      /Apple/.test(navigator.vendor) &&
-      !/Chrome|Android/.test(ua);
-
-    // Fourth check: special case for iOS 13+ iPads that report as MacOS
-    const isIPadOS =
-      /Macintosh/.test(ua) &&
-      navigator.maxTouchPoints > 1 &&
-      typeof window.ontouchstart !== 'undefined';
-
-    return isIOSPlatform || isIOSUserAgent || isSafariOnApple || isIPadOS;
-  } catch (e) {
-    headerLogger.error('Error detecting iOS device:', e);
-    return false;
-  }
-}
+  const userAgent = navigator.userAgent || '';
+  return (
+    /iPhone|iPad|iPod|iOS|CriOS/.test(userAgent) ||
+    (/Safari/.test(userAgent) && /Apple/.test(navigator.vendor || ''))
+  );
+};
 
 /**
  * Safe message sender - properly handles iOS compatibility
@@ -238,11 +218,8 @@ export function useAolfHeaderData(app2Origin: string, app2WidgetUrl: string) {
         return;
       }
 
-      // Parse message data - with enhanced iOS compatibility
-      // iOS Safari often sends data in a nested format like {data: "{\"type\":\"auth-profile\",\"data\":{...}"}
+      // Parse message data if it's a string (for iOS browser compatibility)
       let messageData = event.data;
-
-      // First handle string message format (standard)
       if (typeof messageData === 'string') {
         try {
           messageData = JSON.parse(messageData);
@@ -257,33 +234,15 @@ export function useAolfHeaderData(app2Origin: string, app2WidgetUrl: string) {
         }
       }
 
-      // Handle iOS Safari's special nesting format - look for nested stringified data
-      if (
-        typeof messageData === 'object' &&
-        messageData?.data &&
-        typeof messageData.data === 'string'
-      ) {
-        try {
-          const innerData = JSON.parse(messageData.data);
-          messageData = innerData; // Replace with the parsed inner data
-          if (debug) {
-            headerLogger.debug('Successfully extracted nested iOS format data');
-          }
-        } catch (e) {
-          // Not JSON data or not in the expected format, keep using the original format
-          headerLogger.debug(
-            'Nested data string was not valid JSON, using as-is',
-          );
-        }
-      }
-
       // Handle different message types
       if (
         messageData?.type === 'auth-profile' ||
         messageData?.type === 'auth-widget-data-updated'
       ) {
         const authData =
-          messageData.type === 'auth-profile' ? messageData.data : messageData;
+          messageData.type === 'auth-profile'
+            ? messageData.data
+            : messageData.data;
 
         // Enhanced authentication state logging - this helps identify issues
         headerLogger.info(`Received ${messageData.type} data`, {
@@ -417,26 +376,6 @@ export function useAolfHeaderData(app2Origin: string, app2WidgetUrl: string) {
         // Log pong responses in debug mode
         if (debug) {
           headerLogger.debug('Received pong from auth widget');
-        }
-      } else if (messageData?.type === 'reload-auth-widget') {
-        // Handle widget reload request (from debug tools)
-        headerLogger.info('Received request to reload auth widget iframe');
-
-        try {
-          // Reload the iframe with a fresh connection
-          if (iframe) {
-            const originalSrc = iframe.src;
-            // First clear the src
-            iframe.src = 'about:blank';
-
-            // Then after a brief pause, restore the original src
-            setTimeout(() => {
-              headerLogger.info('Reloading auth widget iframe');
-              iframe.src = originalSrc;
-            }, 100);
-          }
-        } catch (e) {
-          headerLogger.error('Error reloading auth widget iframe', e);
         }
       }
     }
