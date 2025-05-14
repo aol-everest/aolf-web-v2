@@ -120,45 +120,37 @@ export default function Header() {
 
 ## Debugging and Logging
 
-The auth-profile widget includes comprehensive logging to help troubleshoot issues. **Logging is disabled by default** in all environments to reduce console noise.
-
-### Enabling Debug Mode
-
-To enable debugging and logging:
-```js
-localStorage.setItem("aolf-widget-debug", "true");
-// Or use the global helper:
-window.AolfWidgetControls.enableLogging();
-// Refresh the page after setting this
-```
-
-To disable:
-```js
-localStorage.removeItem("aolf-widget-debug");
-// Or use the global helper:
-window.AolfWidgetControls.disableLogging();
-```
-
-Debug mode will be automatically enabled when:
-- The URL includes `?debug=true` or `?debug=widget`
-- The hostname includes "localhost" or ".local"
-
-Note that errors and warnings will always be logged regardless of debug settings for critical issue detection.
+The auth-profile widget includes comprehensive logging to help troubleshoot issues. The logs are only detailed in development environments and minimized in production.
 
 ### Using the Debug Helper
 
-For client-side applications that need visual debug tools, add the debug helper script:
+For client-side applications that need to debug widget communication, add the debug helper script:
 
 ```html
 <!-- Add this before your app's scripts -->
 <script src="https://YOUR-APP2-SUBDOMAIN.artofliving.org/widget/debug-helper.js"></script>
 ```
 
-The debug helper (only active when debug mode is enabled):
+The debug helper:
 - Adds a visual debug panel in the corner of your app
 - Shows all postMessage communication with the widget
 - Logs iframe creation and loading
 - Displays authentication status and data received
+
+The debug helper only activates when:
+- The URL includes `?debug=true` or `?debug=widget`
+- localStorage has `aolf-widget-debug` set to "true"
+- The hostname includes "localhost" or ".local"
+
+To enable debugging in production, run this in your browser console:
+```js
+localStorage.setItem("aolf-widget-debug", "true");
+```
+
+To disable:
+```js
+localStorage.removeItem("aolf-widget-debug");
+```
 
 - Make sure to update the iframe src and APP2_ORIGIN to match your actual app2 deployment.
 - Any subdomain of `artofliving.org` will be accepted by the widget responder.
