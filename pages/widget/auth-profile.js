@@ -1,49 +1,30 @@
 import { useEffect } from 'react';
 import { useAuth } from '@contexts';
-import { api } from '@utils';
-import { useQuery } from '@tanstack/react-query';
+import { orgConfig } from '@org';
+import { AOL_MENU, IAHV_MENU, PWHT_MENU, HB_MENU } from '@config/navigation';
 
 const ALLOWED_ORIGIN_REGEX = /^https:\/\/([a-z0-9-]+\.)*artofliving\.org$/i;
 
+function getMenu(orgName) {
+  switch (orgName) {
+    case 'AOL':
+      return AOL_MENU;
+    case 'IAHV':
+      return IAHV_MENU;
+    case 'PWHT':
+      return PWHT_MENU;
+    default:
+      return HB_MENU;
+  }
+}
+
 export default function AuthProfileWidget() {
   const { isAuthenticated, profile } = useAuth() || {};
-  const { data: introData = [] } = useQuery({
-    queryKey: ['get-started-intro-series'],
-    queryFn: async () => {
-      try {
-        const response = await api.get({
-          path: 'get-started-intro-series',
-        });
-        return response?.data;
-      } catch (error) {
-        // Handle authentication errors gracefully
-        if (error.message?.includes('User needs to be authenticated')) {
-          console.log('User not authenticated, skipping intro series fetch');
-          return [];
-        }
-        throw error;
-      }
-    },
-    // Only fetch this data if the user is authenticated
-    enabled: isAuthenticated,
-    // Prevent unnecessary refetches
-    staleTime: 5 * 60 * 1000, // 5 minutes
-    cacheTime: 10 * 60 * 1000, // 10 minutes
-    refetchOnWindowFocus: false,
-    refetchOnMount: false,
-  });
+  const menu = getMenu(orgConfig.name);
 
   useEffect(() => {
     function handler(event) {
       if (!ALLOWED_ORIGIN_REGEX.test(event.origin)) return;
-
-      const exploreMenu = [
-        ...introData.map((item) => ({
-          name: item.title,
-          link: item.slug ? `/us-en/explore/${item.slug}` : '#',
-        })),
-      ];
-
       if (event.data?.type === 'get-auth-profile') {
         event.source.postMessage(
           {
@@ -51,7 +32,7 @@ export default function AuthProfileWidget() {
             data: {
               isAuthenticated,
               profile,
-              exploreMenu,
+              menu,
             },
           },
           event.origin,
@@ -60,7 +41,7 @@ export default function AuthProfileWidget() {
     }
     window.addEventListener('message', handler);
     return () => window.removeEventListener('message', handler);
-  }, [isAuthenticated, profile, introData]);
+  }, [isAuthenticated, profile, menu]);
 
   return null;
 }
