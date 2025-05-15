@@ -156,6 +156,7 @@ export const PaymentFormNew = ({
     timings = [],
     email: contactEmail,
     contactName,
+    notes,
   } = workshop;
 
   const isSahajSamadhiMeditationType =
@@ -892,7 +893,27 @@ export const PaymentFormNew = ({
                           )}
                         {!isPwht && <TrustScore />}
                       </div>
-
+                      <div className="section-box checkout-notes">
+                        <div className="section__body">
+                          <div className="note-title">
+                            <div className="note-icon">
+                              <img
+                                src="/img/icon-menu-board.png"
+                                width={24}
+                                height={24}
+                                alt="icon"
+                              />
+                            </div>
+                            <div className="note-title-text">Notes:</div>
+                          </div>
+                          {productTypeId === '100792747' && notes !== null && (
+                            <div
+                              className="note-content"
+                              dangerouslySetInnerHTML={{ __html: notes }}
+                            ></div>
+                          )}
+                        </div>
+                      </div>
                       {!isPwht && (
                         <div className="section-box features-desktop">
                           <div className="section__body">
