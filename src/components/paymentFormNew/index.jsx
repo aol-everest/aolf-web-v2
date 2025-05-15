@@ -892,7 +892,27 @@ export const PaymentFormNew = ({
                           )}
                         {!isPwht && <TrustScore />}
                       </div>
-
+                      <div className="section-box checkout-notes">
+                        <div className="section__body">
+                          <div className="note-title">
+                            <div className="note-icon">
+                              <img
+                                src="/img/icon-menu-board.png"
+                                width={24}
+                                height={24}
+                                alt="icon"
+                              />
+                            </div>
+                            <div className="note-title-text">Notes:</div>
+                          </div>
+                          <div className="note-content">
+                            <p>
+                              <strong>Note Content Goes here</strong>
+                            </p>
+                            <p>Hello hello...</p>
+                          </div>
+                        </div>
+                      </div>
                       {!isPwht && (
                         <div className="section-box features-desktop">
                           <div className="section__body">
