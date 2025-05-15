@@ -156,6 +156,7 @@ export const PaymentFormNew = ({
     timings = [],
     email: contactEmail,
     contactName,
+    notes,
   } = workshop;
 
   const isSahajSamadhiMeditationType =
@@ -905,12 +906,12 @@ export const PaymentFormNew = ({
                             </div>
                             <div className="note-title-text">Notes:</div>
                           </div>
-                          <div className="note-content">
-                            <p>
-                              <strong>Note Content Goes here</strong>
-                            </p>
-                            <p>Hello hello...</p>
-                          </div>
+                          {productTypeId === '100792747' && notes !== null && (
+                            <div
+                              className="note-content"
+                              dangerouslySetInnerHTML={{ __html: notes }}
+                            ></div>
+                          )}
                         </div>
                       </div>
                       {!isPwht && (
