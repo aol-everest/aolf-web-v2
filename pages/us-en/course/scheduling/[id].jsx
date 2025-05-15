@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect, useTransition } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useQueryState, parseAsString } from 'nuqs';
 import { useRouter } from 'next/router';
 import queryString from 'query-string';
@@ -1028,6 +1028,7 @@ const SchedulingPaymentForm = ({
 
 const SchedulingCheckoutFlow = () => {
   const router = useRouter();
+  const { isAuthenticated } = useAuth();
   const { track } = useAnalytics();
   const [mode] = useQueryState('mode');
   const [ctype] = useQueryState('ctype');
@@ -1094,7 +1095,7 @@ const SchedulingCheckoutFlow = () => {
           id: workshopId,
           rp: 'checkout',
         },
-        isUnauthorized: true,
+        isUnauthorized: !isAuthenticated,
       });
       return response.data;
     },
@@ -1115,8 +1116,6 @@ const SchedulingCheckoutFlow = () => {
 
   if (isError) return <ErrorPage statusCode={500} title={error.message} />;
   if (isLoading || !workshopId) return <PageLoading />;
-
-  const { title: courseTitle } = activeWorkshop || {};
 
   const stripePromise = loadStripe(activeWorkshop.publishableKey);
 

@@ -4,17 +4,11 @@ import { useAccordionToggle } from 'react-bootstrap/AccordionToggle';
 import { Accordion, Card, AccordionContext } from 'react-bootstrap';
 import { PriceCard } from './PriceCard';
 import { useContext } from 'react';
-import {
-  MODAL_TYPES,
-  COURSE_MODES,
-  COURSE_TYPES,
-  WORKSHOP_MODE,
-} from '@constants';
+import { COURSE_TYPES, WORKSHOP_MODE } from '@constants';
 import { FaArrowRightLong } from 'react-icons/fa6';
 import { priceCalculation } from '@utils';
-import { Navigation, Pagination, Scrollbar, A11y } from 'swiper';
+import { Pagination, A11y } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { navigateToLogin } from '@utils';
 // Import Swiper styles
 import 'swiper/css';
 import 'swiper/css/pagination';
@@ -45,8 +39,12 @@ export const SahajSamadhi = ({
   mode: courseViewMode,
   handleRegister,
 }) => {
-  const { sfid, title, isGuestCheckoutEnabled, productTypeId } = data || {};
-  const { fee, delfee } = sfid ? priceCalculation({ workshop: data }) : {};
+  const { sfid, title, category } = data || {};
+  const { fee } = sfid ? priceCalculation({ workshop: data }) : {};
+  const isWithGurudev = category?.includes('With Gurudev');
+  const updatedTitle = isWithGurudev
+    ? title.replace(' with Gurudev', '')
+    : title;
 
   const ContextAwareToggle = ({ children, eventKey, callback }) => {
     const currentEventKey = useContext(AccordionContext);
@@ -80,11 +78,14 @@ export const SahajSamadhi = ({
             <div className="container">
               <div className="courses-title">Courses</div>
               <div className="banner-title">
-                {title}
-                <sup>TM</sup>: Your Path to Effortless Ease
+                {updatedTitle}
+                <sup>TM</sup>
+                {!!isWithGurudev && ' With Gurudev'}: Your Path to Effortless
+                Ease
               </div>
               <div className="banner-description">
-                Experience freedom from worry and anxiety
+                Meditate effortlessly from Day One with an ancient Mantra Based
+                Meditation technique
               </div>
               {!sfid && courseViewMode !== WORKSHOP_MODE.VIEW && (
                 <div className="hero-register-button-wrapper">
@@ -147,7 +148,7 @@ export const SahajSamadhi = ({
 
           <div className="container content-video-area">
             <div className="video-section-textbox">
-              <h2 className="section-title">What is {title}?</h2>
+              <h2 className="section-title">What is Sahaj Samadhi?</h2>
               <p>
                 Sahaj translates to "effortless," and Samadhi signifies a state
                 of profound meditation. In simple terms, it's a technique to
@@ -173,7 +174,7 @@ export const SahajSamadhi = ({
           </div>
           <div className="container samadhi-benefits-section">
             <h2 className="section-title">
-              <strong>Benefits</strong> of {title}
+              <strong>Benefits</strong> of Sahaj Samadhi
             </h2>
             <div className="section-description">
               Powerful breathing techniques and wisdom that can change your life
@@ -265,7 +266,9 @@ export const SahajSamadhi = ({
         )}
 
         <section className="section-sahaj-reviews">
-          <h2 className="section-title">How {title} is Changing Lives?</h2>
+          <h2 className="section-title">
+            How Sahaj Samadhi is Changing Lives?
+          </h2>
           <Swiper {...swiperOption} className="reviews-slider">
             <SwiperSlide>
               <div className="review-box">
@@ -345,6 +348,79 @@ export const SahajSamadhi = ({
             </SwiperSlide>
           </Swiper>
         </section>
+        <section class="quote-section">
+          <div class="container">
+            <div class="col-12 main-area">
+              <p class="quote-section__quote">
+                <span>
+                  “Meditation is the journey from sound to silence, from
+                  movement to stillness, from a limited identity to unlimited
+                  space”
+                </span>
+              </p>
+              <p class="quote-section__text">
+                <img src="/img/Guruji-2.png" />
+                <br />~ Gurudev Sri Sri Ravi Shankar
+              </p>
+            </div>
+          </div>
+        </section>
+        <section class="feature-section">
+          <div class="container">
+            <div class="feature_block">
+              <h2 class="feature_title section-title text-center">
+                Featured in
+              </h2>
+            </div>
+            <div class="row">
+              <div class="col-12 col-lg-6 text-left text-lg-left">
+                <div class="feature_box pinkbox">
+                  <div class="feature_logo">
+                    <img src="/img/CNN.webp" alt="transforming lives" />
+                  </div>
+                  <div class="feature-content">
+                    <span class="content">"Life Changing"</span>
+                  </div>
+                </div>
+              </div>
+              <div class="col-12 col-lg-6 text-left text-lg-left">
+                <div class="feature_box greybox">
+                  <div class="feature_logo">
+                    <img src="/img/Yoga.webp" alt="transforming lives" />
+                  </div>
+                  <div class="feature-content">
+                    <span class="content">
+                      "May be the fastest growing spiritual practice on the
+                      planet"
+                    </span>
+                  </div>
+                </div>
+              </div>
+              <div class="col-12 col-lg-6 text-left text-lg-left">
+                <div class="feature_box pinkbox">
+                  <div class="feature_logo">
+                    <img src="/img/Harvard.webp" alt="transforming lives" />
+                  </div>
+                  <div class="feature-content">
+                    <span class="content">
+                      "Show promise in providing relief for depression"
+                    </span>
+                  </div>
+                </div>
+              </div>
+              <div class="col-12 col-lg-6 text-left text-lg-left">
+                <div class="feature_box greybox">
+                  <div class="feature_logo">
+                    <img src="/img/WP.webp" alt="transforming lives" />
+                  </div>
+                  <div class="feature-content">
+                    <span class="content">"Like Fresh air to millions"</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
         <section className="faq">
           <div className="container">
             <h2 className="section-title pl-0 pr-0">FAQs</h2>
@@ -358,8 +434,8 @@ export const SahajSamadhi = ({
                 <Accordion.Collapse eventKey="0">
                   <Card.Body>
                     You can learn Sahaj Samadhi Meditation in 3 days with 2
-                    hours of live online sessions each day with a certified
-                    instructor.
+                    hours of live online or in-person sessions each day with a
+                    certified instructor.
                   </Card.Body>
                 </Accordion.Collapse>
               </Card>

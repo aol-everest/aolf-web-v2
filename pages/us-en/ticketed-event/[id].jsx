@@ -156,6 +156,7 @@ function TicketedEvent() {
     email,
     notes,
     addOnProducts,
+    complianceQuestionnaire,
   } = event || {};
 
   useEffect(() => {
@@ -345,10 +346,18 @@ function TicketedEvent() {
     }));
   };
 
+  const questionnaireArray = complianceQuestionnaire
+    ? complianceQuestionnaire.map((current) => ({
+        key: current.questionSfid,
+        value: true,
+      }))
+    : [];
+
   return (
     <Formik
       initialValues={{
         couponCode: couponCode || '',
+        questionnaire: questionnaireArray,
       }}
       validationSchema={Yup.object().shape({})}
       innerRef={formRef}

@@ -552,7 +552,7 @@ export const IAHV_MENU = [
   }, */
 ];
 
-const PWHT_MENU = [
+export const PWHT_MENU = [
   {
     name: 'Upcoming Workshops',
     link: '/us-en/courses',

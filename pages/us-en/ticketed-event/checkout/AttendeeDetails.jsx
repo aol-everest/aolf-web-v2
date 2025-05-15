@@ -79,10 +79,13 @@ export default function AttendeeDetails({
 
   const handleCopyData = (formik, ticket, index) => (e) => {
     const value = e.target.value;
+    console.log('value', index);
+    console.log('index', value);
     if (value !== null) {
       const fromTicket = formik.values.tickets.find(
         (d) => d.attendeeRecordExternalId === value,
       );
+      console.log('fromTicket', fromTicket);
       if (fromTicket) {
         formik.setFieldValue(
           `tickets.${index}.firstName`,
@@ -105,7 +108,25 @@ export default function AttendeeDetails({
             })),
           });
         });
+      } else {
+        formik.setFieldValue(`tickets.${index}.firstName`, '');
+        formik.setFieldValue(`tickets.${index}.lastName`, '');
+        formik.setFieldValue(`tickets.${index}.contactPhone`, '');
+        formik.setFieldValue(`tickets.${index}.email`, '');
+        // Trigger validation after copying
+        formik.validateForm().then(() => {
+          formik.setTouched({
+            tickets: formik.values.tickets.map(() => ({
+              firstName: false,
+              lastName: false,
+              email: false,
+              contactPhone: false,
+            })),
+          });
+        });
       }
+    } else {
+      console.log('elseee');
     }
   };
 
@@ -223,14 +244,19 @@ export default function AttendeeDetails({
                                                 )}
                                               >
                                                 <option value="">
-                                                  Other Attendee
+                                                  New Attendee
                                                 </option>
                                                 {formik.values.tickets.map(
                                                   (ticketAttendee) => {
-                                                    if (
+                                                    const isNotSelf =
                                                       ticketAttendee.attendeeRecordExternalId !==
-                                                      ticketId
-                                                    ) {
+                                                      ticketId;
+
+                                                    const hasData =
+                                                      ticketAttendee.firstName?.trim() ||
+                                                      ticketAttendee.lastName?.trim();
+
+                                                    if (isNotSelf && hasData) {
                                                       return (
                                                         <option
                                                           value={

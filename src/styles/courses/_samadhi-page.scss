@@ -20,12 +20,20 @@
       background: #fffbf0;
     }
     .banner {
-      height: 402px;
+      height: 700px;
       width: 100%;
-      background: url(/img/sahaj-samadhi-banner-bg.webp) no-repeat top left;
-      padding: 60px 76px 50px 76px;
-      background-size: auto;
-      background-position: center;
+      background-image: url(/img/aol-p1-hero-bg.webp);
+      background-repeat: no-repeat;
+      background-position: right top;
+      background-size: cover;
+      padding: 108px 76px 100px 76px;
+      .container {
+        @media screen and (max-width: 991px) {
+          height: 100%;
+          display: flex;
+          flex-direction: column;
+        }
+      }
       .courses-title {
         display: none;
         font-size: 16px;
@@ -33,16 +41,23 @@
         text-transform: uppercase;
       }
       &-title {
-        font-size: 40px;
-        line-height: 40px;
+        font-size: 48px;
+        line-height: 50px;
         font-weight: 600;
-        max-width: 480px;
+        max-width: 550px;
         margin-bottom: 40px;
+        color: white;
       }
       &-description {
-        font-size: 18px;
-        line-height: 22px;
+        font-size: 22px;
+        line-height: 25px;
         max-width: 550px;
+        color: white;
+        @media screen and (max-width: 991px) {
+          margin-top: auto;
+          color: #000000;
+          margin-bottom: 50px;
+        }
       }
       @media screen and (max-width: 991px) {
         background-position: bottom center;
@@ -53,13 +68,12 @@
           line-height: 35px;
         }
       }
-      @media screen and (max-width: 767px) {
-        background: url(/img/sahaj-samadhi-banner-mobile.jpg) no-repeat bottom
-          center;
-        height: 600px;
-        padding: 36px 32px 10px;
+      @media screen and (max-width: 991px) {
+        background-image: url(/img/aol-p1-hero-bg-mobile.jpg);
+        height: 859px;
+        background-position: center center;
         background-size: cover;
-        background-position: center bottom;
+        padding: 20px 32px 10px;
         &-title {
           font-size: 26px;
           line-height: 30px;
@@ -67,7 +81,8 @@
         }
         .courses-title {
           display: block;
-          margin-bottom: 24px;
+          margin-bottom: 10px;
+          color: white;
         }
       }
       .hero-register-button-wrapper {
@@ -88,7 +103,23 @@
         }
       }
     }
-
+    .registration-widget {
+      margin-top: -180px;
+      @media screen and (max-width: 991px) {
+        margin-top: 20px;
+      }
+      .register-content .discount-price {
+        display: inline-flex;
+        flex-direction: column;
+        .content {
+          font-size: 42px;
+          line-height: 45px;
+        }
+        br {
+          display: none;
+        }
+      }
+    }
     .content-video-area {
       display: flex;
       padding: 80px 20px 40px;
@@ -275,6 +306,148 @@
         border-radius: 10px;
         padding: 1rem 4rem;
       }
+    }
+  }
+  .quote-section {
+    background-color: #f7f5f4;
+    padding: 71px 0 100px 0;
+    background-image: url(/img/Quote-dektop.png);
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position-y: center;
+    @media only screen and (max-width: 991px) {
+      padding: 30px 0 20px 0;
+    }
+    .main-area {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      span {
+        font-family: 'Lora', serif;
+        font-size: 46px;
+        line-height: 56px !important;
+        color: #fff;
+        padding: 0 50px;
+        font-weight: 400;
+        margin-bottom: 0.5rem;
+        max-width: 100%;
+        font-style: italic;
+        text-align: center;
+      }
+      @media only screen and (max-width: 991px) {
+        span {
+          font-size: 21px;
+          line-height: 22px !important;
+        }
+      }
+    }
+    .quote-section__text {
+      text-align: center;
+      color: #ffffff;
+      margin-top: 1rem;
+
+      font-size: 36px;
+      line-height: 71px;
+      color: #fff;
+      img {
+        width: 144px;
+        height: 144px;
+        @media only screen and (max-width: 991px) {
+          width: 48px;
+          height: 48px;
+          margin-bottom: 15px;
+        }
+      }
+    }
+    @media only screen and (max-width: 991px) {
+      .quote-section__text {
+        font-size: 15px;
+        line-height: 36px !important;
+      }
+    }
+  }
+  .feature-section {
+    background-color: #ffffff;
+    padding-top: 4rem;
+    padding-bottom: 4rem;
+    .feature_block {
+      padding-bottom: 2rem;
+    }
+    .feature_box {
+      display: flex;
+      flex-direction: row;
+      padding: 1rem;
+      margin: 1rem 0;
+      min-height: 15rem;
+      text-align: center;
+      border-radius: 20px;
+      .feature_logo {
+        margin-bottom: 1rem;
+        min-height: 4rem;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding-left: 24px;
+        img {
+          width: 180px;
+        }
+      }
+      .feature-content {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-align: left;
+        margin-left: 2rem;
+        font-size: 29px;
+        line-height: 26px;
+        font-family: 'Noto Serif';
+        font-style: italic;
+        line-height: normal;
+        color: #2e2e2e;
+      }
+    }
+    @media only screen and (max-width: 991px) {
+      .feature_box {
+        margin: 0 0 11px;
+        border-radius: 20px !important;
+        padding: 40px;
+        height: unset;
+        min-height: unset;
+        flex-direction: row;
+        border-radius: 0;
+        max-width: 320px;
+        margin-left: auto;
+        margin-right: auto;
+        .feature_logo {
+          min-height: unset;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          width: 100px;
+          margin: 0px 0;
+          padding-left: 0;
+          img {
+            max-width: 100px;
+          }
+        }
+        .feature-content {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          text-align: left;
+          margin-left: 15px;
+          font-family: 'lora';
+          font-size: 15px;
+          line-height: 15px;
+        }
+      }
+    }
+    .pinkbox {
+      background: #fef2f2;
+    }
+    .greybox {
+      background: #f5f5f5;
     }
   }
   .section-sahaj-reviews {
