@@ -522,26 +522,31 @@ const Scheduling = ({ initialLocation }) => {
 
         // Find the matching date range
         for (const enableItem of dateAvailable) {
+          const allDateMoments = enableItem.allDates.map((d) => moment(d));
+
           const fromMoment = moment(enableItem.firstDate);
-          const toMoment = moment(
-            enableItem.allDates[enableItem.allDates.length - 1],
-          );
 
-          // Check if selected date is the start date or within range
-          if (
-            today.isSame(fromMoment, 'date') ||
-            today.isBetween(fromMoment, toMoment, 'days', '[]')
-          ) {
-            const intervalSelected = getDates(fromMoment, toMoment);
-
-            // Set the dates without triggering onChange
-            instance.setDate(intervalSelected, false);
-
-            // Update our state
-            setSelectedDates(
-              intervalSelected.map((d) => moment(d).format('YYYY-MM-DD')),
+          // Check if today is in this date group (inclusive)
+          if (today.isSame(fromMoment, 'date')) {
+            // Try to find index of selected date in allDates
+            const matchIndex = allDateMoments.findIndex((d) =>
+              d.isSame(today, 'day'),
             );
-            break;
+
+            // If found and not the last date in the list
+            if (matchIndex !== -1) {
+              const intervalSelected = allDateMoments
+                .slice(matchIndex)
+                .map((d) => d.toDate());
+
+              instance.setDate(intervalSelected, false);
+
+              setSelectedDates(
+                intervalSelected.map((d) => moment(d).format('YYYY-MM-DD')),
+              );
+
+              break;
+            }
           }
         }
       }
@@ -577,16 +582,6 @@ const Scheduling = ({ initialLocation }) => {
     },
     [],
   );
-
-  const getDates = (startDate, stopDate) => {
-    let dateArray = [];
-    let currentDate = startDate;
-    while (currentDate <= stopDate) {
-      dateArray.push(currentDate.toDate());
-      currentDate = currentDate.add(1, 'days');
-    }
-    return dateArray;
-  };
 
   const resetCalender = useCallback(() => {
     workshopHandlers.resetSelection();
@@ -898,6 +893,7 @@ const Scheduling = ({ initialLocation }) => {
           handleWorkshopModalCalendarMonthChange={
             handleWorkshopModalCalendarMonthChange
           }
+          resetCalender={resetCalender}
           currentMonthYear={currentMonthYear}
           loading={loading || isLoading}
           setActiveWorkshop={workshopHandlers.setActiveWorkshop}

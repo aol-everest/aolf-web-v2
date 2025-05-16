@@ -27,6 +27,7 @@ const WorkshopSelectModal = React.memo(
     handleAutoScrollForMobile,
     workshopMaster,
     handleNavigateToDetailsPage,
+    resetCalender,
   }) => {
     const { track } = useAnalytics();
     const [selection, setSelection] = useState({
@@ -181,6 +182,7 @@ const WorkshopSelectModal = React.memo(
     const handleModalToggle = useCallback(() => {
       setSelectedDates([]);
       setActiveWorkshop({});
+      resetCalender();
       setSelectedWorkshopId(null);
       setSelection({
         workshop: null,
