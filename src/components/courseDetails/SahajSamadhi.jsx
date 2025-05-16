@@ -43,7 +43,7 @@ export const SahajSamadhi = ({
   const { fee } = sfid ? priceCalculation({ workshop: data }) : {};
   const isWithGurudev = category?.includes('With Gurudev');
   const updatedTitle = isWithGurudev
-    ? title.replace(' with Gurudev', '')
+    ? title.replace(' in presence of Gurudev', '')
     : title;
 
   const ContextAwareToggle = ({ children, eventKey, callback }) => {
@@ -80,8 +80,8 @@ export const SahajSamadhi = ({
               <div className="banner-title">
                 {updatedTitle}
                 <sup>TM</sup>
-                {!!isWithGurudev && ' With Gurudev'}: Your Path to Effortless
-                Ease
+                {!!isWithGurudev && ' in presence of Gurudev'}: Your Path to
+                Effortless Ease
               </div>
               <div className="banner-description">
                 Meditate effortlessly from Day One with an ancient Mantra Based
