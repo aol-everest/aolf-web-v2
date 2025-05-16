@@ -212,6 +212,8 @@ export const PaymentFormNew = ({
     workshop?.afterCreditPrice === 0 || workshop?.unitPrice === 0
   );
 
+  const isBoonSanyamCourse = productTypeId === '100792747';
+
   useEffect(() => {
     onValidateDiscount(validateDiscount);
   }, [validateDiscount, onValidateDiscount]);
@@ -893,28 +895,29 @@ export const PaymentFormNew = ({
                           )}
                         {!isPwht && <TrustScore />}
                       </div>
-                      <div className="section-box checkout-notes">
-                        <div className="section__body">
-                          <div className="note-title">
-                            <div className="note-icon">
-                              <img
-                                src="/img/icon-menu-board.png"
-                                width={24}
-                                height={24}
-                                alt="icon"
-                              />
+                      {isBoonSanyamCourse && notes != null && (
+                        <div className="section-box checkout-notes">
+                          <div className="section__body">
+                            <div className="note-title">
+                              <div className="note-icon">
+                                <img
+                                  src="/img/icon-menu-board.png"
+                                  width={24}
+                                  height={24}
+                                  alt="icon"
+                                />
+                              </div>
+                              <div className="note-title-text">Notes:</div>
                             </div>
-                            <div className="note-title-text">Notes:</div>
-                          </div>
-                          {productTypeId === '100792747' && notes !== null && (
+
                             <div
                               className="note-content"
                               dangerouslySetInnerHTML={{ __html: notes }}
                             ></div>
-                          )}
+                          </div>
                         </div>
-                      </div>
-                      {!isPwht && (
+                      )}
+                      {!isPwht && !isBoonSanyamCourse && (
                         <div className="section-box features-desktop">
                           <div className="section__body">
                             <FeaturesList
@@ -1010,6 +1013,7 @@ export const PaymentFormNew = ({
                               isCorporateEvent={false}
                               questionnaireArray={questionnaireArray}
                               screen="DESKTOP"
+                              isBoonSanyamCourse={isBoonSanyamCourse}
                             />
 
                             <div className="note">
