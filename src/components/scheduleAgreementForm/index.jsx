@@ -13,6 +13,7 @@ export const ScheduleAgreementForm = ({
   workshop,
   parentClass = 'mt-4',
   hideValidation = false,
+  isBoonSanyamCourse = false,
 }) => {
   const { track, page } = useAnalytics();
   const validateQuestionnaire = (complianceQuestionnaire) => (value) => {
@@ -78,22 +79,34 @@ export const ScheduleAgreementForm = ({
 
               <label htmlFor="privacy" className="events-news">
                 I agree to the{' '}
-                <Link
-                  prefetch={false}
-                  href={
-                    isIahv
-                      ? 'https://members.us.iahv.org/policy/ppa-course'
-                      : isCorporateEvent
-                        ? '/policy/ppa-corporate'
-                        : '/policy/ppa-course'
-                  }
-                  legacyBehavior
-                >
-                  <a target="_blank" rel="noreferrer">
-                    Program Participant agreement including privacy and
-                    cancellation policy.
-                  </a>
-                </Link>
+                {!isBoonSanyamCourse ? (
+                  <Link
+                    prefetch={false}
+                    href={
+                      isIahv
+                        ? 'https://members.us.iahv.org/policy/ppa-course'
+                        : isCorporateEvent
+                          ? '/policy/ppa-corporate'
+                          : '/policy/ppa-course'
+                    }
+                    legacyBehavior
+                  >
+                    <a target="_blank" rel="noreferrer">
+                      Program Participant agreement including privacy and
+                      cancellation policy.
+                    </a>
+                  </Link>
+                ) : (
+                  <Link
+                    prefetch={false}
+                    href="https://artoflivingretreatcenter.org/program-participant-agreement/?__hstc=80379463.98ac18cff5c2221f10208903490cef0b.1729531142586.1747310941158.1747342458226.382&__hssc=80379463.4.1747342458226&__hsfp=4009502119"
+                    legacyBehavior
+                  >
+                    <a target="_blank" rel="noreferrer">
+                      Program Participant agreement.
+                    </a>
+                  </Link>
+                )}
               </label>
             </div>
             {!hideValidation && meta.touched && meta.error && (
