@@ -78,3 +78,18 @@ export const FEATURES_DATA_SILENT = [
       'Join a community of over 800 million people whose lives have been positively transformed through these events.',
   },
 ];
+
+export const FEATURES_DATA_SLEEP_ENXIETY = [
+  {
+    icon: '/img/spirituality-icon.svg',
+    title: 'Certified SKY Instructors',
+    content:
+      'Learn from the best! Our SKY instructors are certified and go through over 500 hours of training to provide you with an interactive and enriching learning experience.',
+  },
+  {
+    icon: '/img/experience-icon.svg',
+    title: 'Millions of Lives Touched',
+    content:
+      'Join a community of over 800 million people whose lives have been positively transformed through SKY Breath Meditation and other events.',
+  },
+];

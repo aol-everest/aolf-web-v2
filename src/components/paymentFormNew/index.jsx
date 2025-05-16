@@ -161,6 +161,9 @@ export const PaymentFormNew = ({
   const isSahajSamadhiMeditationType =
     COURSE_TYPES.SAHAJ_SAMADHI_MEDITATION.value.indexOf(productTypeId) >= 0;
 
+  const isSleepAnxietyType =
+    COURSE_TYPES.SLEEP_ANXIETY.value.indexOf(productTypeId) >= 0;
+
   const isSilentRetreatType =
     COURSE_TYPES.SILENT_RETREAT.value.indexOf(productTypeId) >= 0;
 
@@ -901,6 +904,7 @@ export const PaymentFormNew = ({
                                 isSahajSamadhiMeditationType
                               }
                               isSilentRetreatType={isSilentRetreatType}
+                              isSleepAnxietyType={isSleepAnxietyType}
                             />
                           </div>
                         </div>
