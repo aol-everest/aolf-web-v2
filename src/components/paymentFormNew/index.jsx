@@ -1064,6 +1064,7 @@ export const PaymentFormNew = ({
                               isSahajSamadhiMeditationType
                             }
                             isSilentRetreatType={isSilentRetreatType}
+                            isSleepAnxietyType={isSleepAnxietyType}
                           />
                         </div>
                       </div>
