@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unescaped-entities */
 import { COURSE_TYPES, MEMBERSHIP_TYPES, PAYMENT_TYPES } from '@constants';
 import classNames from 'classnames';
 import { Field } from 'formik';
@@ -79,8 +80,8 @@ export const CostDetailsCardNewCheckout = ({
           </a>
 
           <p className="comments__quote comments__quote--max-width mt-4">
-            “I used to suffer from anxiety and my health was greatly affected by
-            it. I feel so free and light now.”
+            "I used to suffer from anxiety and my health was greatly affected by
+            it. I feel so free and light now."
             <span className="d-block mt-3 font-normal">- Millie I.</span>
           </p>
         </div>
@@ -419,9 +420,10 @@ export const CostDetailsCardNewCheckout = ({
                       <option
                         value={residentialAddOn.priceBookEntryId}
                         key={residentialAddOn.priceBookEntryId}
+                        disabled={residentialAddOn.isFull}
                       >
                         {residentialAddOn.productName}
-                        {residentialAddOn.isFull && 'Full'} $
+                        {residentialAddOn.isFull && ' (Full)'} $
                         {residentialAddOn.unitPrice +
                           (expenseAddOn?.unitPrice || 0)}
                       </option>
