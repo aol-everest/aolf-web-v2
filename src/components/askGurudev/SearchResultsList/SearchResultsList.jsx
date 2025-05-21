@@ -15,7 +15,7 @@ const SearchResultsList = ({
   return (
     <AnimatePresence mode="popLayout" initial={false}>
       <SearchResult
-        result={result}
+        selectedResult={result}
         setPlayingId={setPlayingId}
         playingId={playingId}
         handleVoteSelect={handleVoteSelect}
