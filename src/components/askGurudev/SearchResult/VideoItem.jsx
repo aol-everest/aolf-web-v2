@@ -119,10 +119,10 @@ const VideoItem = (props) => {
   }
 
   return (
-    <div onClick={watchAction}>
+    <div onClick={watchAction} className="youtube-wrapper">
       <YouTube
         videoId={videoId}
-        loading="loading"
+        loading="lazy"
         opts={playerVars}
         onReady={onReady}
         onPlay={onPlay}

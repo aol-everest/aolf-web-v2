@@ -542,6 +542,13 @@
       width: 100%;
       min-height: 410px;
       text-align: center;
+      .youtube-wrapper {
+        position: relative;
+        width: 100%;
+        padding-bottom: 56.25%;
+        height: 0;
+        overflow: hidden;
+      }
       .youtube-iframe {
         position: absolute;
         top: 0;
