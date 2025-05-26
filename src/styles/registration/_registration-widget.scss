@@ -62,7 +62,20 @@
         text-align: left;
         color: #aeaeae;
       }
-
+      &:has(.title) {
+        .title {
+          display: block;
+        }
+        br {
+          display: none;
+        }
+        .content {
+          display: block;
+          font-size: 42px;
+          font-weight: 300;
+          line-height: 50px;
+        }
+      }
       .title {
         font-family: 'museo_sans500';
         font-size: 20px;

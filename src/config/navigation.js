@@ -225,16 +225,31 @@ export const AOL_MENU = [
       },
     ],
   },
-  // {
-  //   name: 'Events',
-  //   submenu: [
-  //     {
-  //       name: 'Mobile, AL',
-  //       link: 'https://event.us.artofliving.org/us-en/lp1/journey-within-alabama/',
-  //       props: { target: '_blank' },
-  //     },
-  //   ],
-  // },
+  {
+    name: 'Events',
+    submenu: [
+      {
+        name: 'Orlando, FL',
+        link: 'https://event.us.artofliving.org/us-en/lp1/journey-within-orlando/',
+        props: { target: '_blank' },
+      },
+      {
+        name: 'Jacksonville, FL',
+        link: 'https://event.us.artofliving.org/us-en/lp1-journey-within-jacksonville/',
+        props: { target: '_blank' },
+      },
+      {
+        name: 'Bay Area, CA',
+        link: 'https://event.us.artofliving.org/us-en/lp1/sfba/wellness-with-gurudev/',
+        props: { target: '_blank' },
+      },
+      {
+        name: 'Boone, NC',
+        link: 'https://artoflivingretreatcenter.org/sri-sri-ravi-shankar/gurudev-programs/',
+        props: { target: '_blank' },
+      },
+    ],
+  },
   {
     name: 'Centers',
     submenu: [
@@ -537,19 +552,19 @@ export const IAHV_MENU = [
       },
     ],
   },
-  /* {
-    name: "Events",
-    submenu: [
-      {
-        name: "World Culture Festival",
-        link: "https://wcf.artofliving.org/",
-      },
-      {
-        name: "Summer Tour 2023",
-        link: "/us-en/lp/sixthsensetour",
-      },
-    ],
-  }, */
+  // {
+  //   name: 'Events',
+  //   submenu: [
+  //     {
+  //       name: 'World Culture Festival',
+  //       link: 'https://wcf.artofliving.org/',
+  //     },
+  //     {
+  //       name: 'Summer Tour 2023',
+  //       link: '/us-en/lp/sixthsensetour',
+  //     },
+  //   ],
+  // },
 ];
 
 export const PWHT_MENU = [
