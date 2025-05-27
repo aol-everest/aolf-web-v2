@@ -20,10 +20,13 @@ export const ProfileHeader = ({
 }) => {
   const [isSuccess, setIsSuccess] = useState(false);
   const [amount, setAmount] = useState(0);
-  const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [showReinstate, setShowReinstate] = useState(false);
   const [modalKey, setModalKey] = useState(0);
+
+  const stripePromise = loadStripe(
+    process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY,
+  );
 
   const reinstateRequired = subscriptions?.find(
     ({ isReinstateRequiredForSubscription }) =>
@@ -44,15 +47,27 @@ export const ProfileHeader = ({
     },
   });
 
-  const updateSuccess = (amount) => {
-    setLoading(false);
+  const updateSuccess = (amount, modalProps) => {
     setIsSuccess(true);
     setAmount(amount);
+    renderModal({
+      ...modalProps,
+      amount: amount,
+      showReinstate: true,
+      className: 'course-details-card',
+      isJoinModal: false,
+    });
   };
 
-  const updateError = (error) => {
-    setLoading(false);
+  const updateError = (error, modalProps) => {
     setError(error);
+    renderModal({
+      ...modalProps,
+      error: error,
+      showReinstate: true,
+      className: 'course-details-card',
+      isJoinModal: false,
+    });
   };
 
   const cancelMembershipAction = (modalSubscriptionId) => (e) => {
@@ -80,10 +95,10 @@ export const ProfileHeader = ({
     showReinstate,
     updateSuccess,
     updateError,
+    userSubscriptions,
+    subscriptionId,
+    setShowReinstate,
   }) => {
-    const stripePromise = loadStripe(
-      process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY,
-    );
     return (
       <>
         {modalSubscription.descriptionHeader && (
@@ -160,6 +175,19 @@ export const ProfileHeader = ({
                 updateSuccess={updateSuccess}
                 updateError={updateError}
                 subscription={subscription}
+                modalProps={{
+                  modalSubscription,
+                  subscription,
+                  error,
+                  isSuccess,
+                  amount,
+                  showReinstate,
+                  updateSuccess,
+                  updateError,
+                  userSubscriptions,
+                  subscriptionId,
+                  setShowReinstate,
+                }}
               />
             </Elements>
           </div>
@@ -234,19 +262,24 @@ export const ProfileHeader = ({
                   onClick={(e) => {
                     e.preventDefault();
                     setModalKey((k) => k + 1);
+                    setError(null);
+                    setIsSuccess(false);
+                    setAmount(0);
                     renderModal({
                       modalSubscription,
                       subscription,
                       modalKey,
                       userSubscriptions,
-                      error,
-                      isSuccess,
-                      amount,
+                      error: null,
+                      isSuccess: false,
+                      amount: 0,
                       setShowReinstate,
                       updateSuccess,
                       updateError,
                       subscriptionId,
                       showReinstate: true,
+                      className: 'course-details-card',
+                      isJoinModal: false,
                     });
                   }}
                 >

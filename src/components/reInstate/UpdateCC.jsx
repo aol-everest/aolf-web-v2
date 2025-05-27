@@ -25,7 +25,12 @@ const createOptions = {
     },
   },
 };
-export const UpdateCC = ({ updateSuccess, updateError, subscription }) => {
+export const UpdateCC = ({
+  updateSuccess,
+  updateError,
+  subscription,
+  modalProps,
+}) => {
   const [loading, setLoading] = useState(false);
   const [amount, setAmount] = useState(0);
   const stripe = useStripe();
@@ -54,7 +59,8 @@ export const UpdateCC = ({ updateSuccess, updateError, subscription }) => {
         }
         setAmount(data.totalPendingAmount);
       } catch (ex) {
-        updateError(ex.message);
+        console.log('ex', ex);
+        updateError(ex.message, modalProps);
       }
       setLoading(false);
     }
@@ -104,7 +110,7 @@ export const UpdateCC = ({ updateSuccess, updateError, subscription }) => {
       if (status === 400) {
         throw new Error(errorMessage);
       }
-      updateSuccess(data.totalPendingAmount);
+      updateSuccess(data.totalPendingAmount, modalProps);
     } catch (ex) {
       updateError(ex.message);
     }
