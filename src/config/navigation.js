@@ -244,6 +244,11 @@ export const AOL_MENU = [
         props: { target: '_blank' },
       },
       {
+        name: 'Albuquerque, NM',
+        link: 'https://aolf.me/jw-albuquerque',
+        props: { target: '_blank' },
+      },
+      {
         name: 'Boone, NC',
         link: 'https://artoflivingretreatcenter.org/sri-sri-ravi-shankar/gurudev-programs/',
         props: { target: '_blank' },
