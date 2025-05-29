@@ -961,6 +961,7 @@ const SchedulingPaymentForm = ({
                             loading={loading}
                             parentStyle={{ display: 'flex' }}
                             email={values.email}
+                            onPaymentMethodSelected={handleTrackEvent}
                           />
                         )}
 
