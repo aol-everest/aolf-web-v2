@@ -294,10 +294,6 @@ const GuidedMeditation = () => {
     'length',
     customParseEnum(LENGTHS),
   );
-  const [levelFilter, setLevelFilter] = useQueryState(
-    'level',
-    customParseEnum(LEVELS),
-  );
   const [selectedMeditationId, setSelectedMeditationId] =
     useQueryState('meditation');
   const [selectedMeditation, setSelectedMeditation] = useState(null);
@@ -311,7 +307,7 @@ const GuidedMeditation = () => {
   const { showVideoPlayer } = useGlobalVideoPlayerContext();
 
   const { data: guidedMeditations = [], isLoading: loading } = useQuery({
-    queryKey: ['getContentsByFolder', lengthFilter, levelFilter],
+    queryKey: ['getContentsByFolder', lengthFilter],
     queryFn: async () => {
       const response = await api.get({
         path: 'getContentsByFolder',
@@ -319,8 +315,6 @@ const GuidedMeditation = () => {
           folderId: rootFolderID,
           ...(lengthFilter &&
             lengthFilter.value !== 'all' && { length: lengthFilter.value }),
-          ...(levelFilter &&
-            levelFilter.value !== 'all' && { level: levelFilter.value }),
         },
       });
       return response.data;
@@ -378,9 +372,6 @@ const GuidedMeditation = () => {
     switch (field) {
       case 'lengthFilter':
         setLengthFilter(selectedValue);
-        break;
-      case 'levelFilter':
-        setLevelFilter(selectedValue);
         break;
     }
   };
@@ -472,42 +463,6 @@ const GuidedMeditation = () => {
                   </ul>
                 )}
               </Popup>
-              <Popup
-                value={levelFilter}
-                buttonText={levelFilter?.label}
-                closeEvent={onFilterChange('levelFilter')}
-                label=""
-                parentClassName="dde"
-              >
-                {({ closeHandler }) => (
-                  <ul className="courses-filter__list">
-                    <li
-                      className="courses-filter__list-item"
-                      onClick={closeHandler(LEVELS.ALL_LEVELS)}
-                    >
-                      {LEVELS.ALL_LEVELS.label}
-                    </li>
-                    <li
-                      className="courses-filter__list-item"
-                      onClick={closeHandler(LEVELS.BEGINNERS)}
-                    >
-                      {LEVELS.BEGINNERS.label}
-                    </li>
-                    <li
-                      className="courses-filter__list-item"
-                      onClick={closeHandler(LEVELS.INTERMEDIATE)}
-                    >
-                      {LEVELS.INTERMEDIATE.label}
-                    </li>
-                    <li
-                      className="courses-filter__list-item"
-                      onClick={closeHandler(LEVELS.EXPERT)}
-                    >
-                      {LEVELS.EXPERT.label}
-                    </li>
-                  </ul>
-                )}
-              </Popup>
             </div>
             <div className="total-count">
               Displaying {guidedMeditations?.length || 0} free meditations
@@ -538,8 +493,14 @@ const GuidedMeditation = () => {
           </div>
         </div>
       </section>
-      <div className="QR-wrapper">
-        <img src="/img/QR-Code-Guided-Meditation-app.png" alt="QR Code" />
+      <div
+        className="QR-wrapper "
+        style={{
+          border: '10px solid rgb(95 153 223)',
+          borderRadius: '10px',
+        }}
+      >
+        <img src="/img/Guided-Meditation-app-qr-code.png" alt="QR Code" />
       </div>
       <div className="app-download">
         <img src="/img/mobile-app-store-ios.webp" alt="iOS" />
