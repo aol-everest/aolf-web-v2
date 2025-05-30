@@ -53,6 +53,10 @@ export const withUserInfo = (WrappedComponent) => {
       name,
       userProfilePic: profilePic,
       subscriptions = [],
+      email,
+      isStudentVerified,
+      studentVerificationDate,
+      studentVerificationExpiryDate,
     } = profile || {};
 
     const userSubscriptions = subscriptions.reduce(
@@ -263,6 +267,12 @@ export const withUserInfo = (WrappedComponent) => {
                   <ProfileHeader
                     subscriptions={subscriptions}
                     userSubscriptions={userSubscriptions}
+                    isStudentVerified={isStudentVerified}
+                    email={email}
+                    studentVerificationDate={studentVerificationDate}
+                    studentVerificationExpiryDate={
+                      studentVerificationExpiryDate
+                    }
                   />
                   <div className="user-logout">
                     <a onClick={logoutAction}>
