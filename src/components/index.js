@@ -26,3 +26,4 @@ export { UsePagesViews } from './usePagesViews';
 export { WCFHeader } from './wcfHeader';
 export { PaymentFormScheduling } from './paymentFormScheduling';
 export { PaymentFormCheckoutNew } from './PaymentFormCheckoutNew';
+export { SharePopup } from './SharePopup';

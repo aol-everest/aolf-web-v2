@@ -28,7 +28,7 @@ import { useAnalytics } from 'use-analytics';
 import { pushRouteWithUTMQuery } from '@service';
 import queryString from 'query-string';
 import { useInView } from 'react-intersection-observer';
-import { PageLoading } from '@components';
+import { PageLoading, SharePopup } from '@components';
 import classNames from 'classnames';
 import { orgConfig } from '@org';
 import DateRangePicker from 'rsuite/DateRangePicker';
@@ -142,6 +142,13 @@ const CourseTile = ({ data, isAuthenticated }) => {
     category,
     corporateName,
   } = data || {};
+
+  const currentShareLink =
+    isGuestCheckoutEnabled || isAuthenticated
+      ? `${window.location.origin}/us-en/course/${sfid}`
+      : `${window.location.origin}/us-en/course/${sfid}?ctype=${productTypeId}&page=c-o&${queryString.stringify(
+          router.query,
+        )}`;
 
   const enrollAction = () => {
     track('allcourses_enroll_click', {
@@ -270,6 +277,7 @@ const CourseTile = ({ data, isAuthenticated }) => {
             )}
           </>
         )}
+        <SharePopup currentShareLink={currentShareLink} />
       </div>
       {corporateName && <div class="course-university">{corporateName}</div>}
       {mode !== 'Online' && locationCity && (
@@ -335,6 +343,13 @@ const CourseTileWithTitle = ({ data, isAuthenticated }) => {
     isPurchased,
     category,
   } = data || {};
+
+  const currentShareLink =
+    isGuestCheckoutEnabled || isAuthenticated
+      ? `${window.location.origin}/us-en/course/${sfid}`
+      : `${window.location.origin}/us-en/course/${sfid}?ctype=${productTypeId}&page=c-o&${queryString.stringify(
+          router.query,
+        )}`;
 
   const enrollAction = () => {
     track('allcourses_enroll_click', {
@@ -408,6 +423,7 @@ const CourseTileWithTitle = ({ data, isAuthenticated }) => {
             )}
           </div>
         )}
+        <SharePopup currentShareLink={currentShareLink} />
       </div>
       {mode !== 'Online' && locationCity && (
         <div className="course-location">
@@ -506,7 +522,6 @@ const Course = () => {
 
   const [cityFilter] = useQueryState('city');
   const [centerFilter] = useQueryState('center');
-  const [centerNameFilter] = useQueryState('center-name');
   const [limit] = useQueryState('limit');
   const [searchKey, setSearchKey] = useState('');
   const [showFilterModal, setShowFilterModal] = useState(false);

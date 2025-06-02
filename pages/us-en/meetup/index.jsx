@@ -32,7 +32,11 @@ import { useRouter } from 'next/router';
 import { useAnalytics } from 'use-analytics';
 import { pushRouteWithUTMQuery } from '@service';
 import { useInView } from 'react-intersection-observer';
-import { PageLoading, RetreatPrerequisiteWarning } from '@components';
+import {
+  PageLoading,
+  RetreatPrerequisiteWarning,
+  SharePopup,
+} from '@components';
 import classNames from 'classnames';
 import { orgConfig } from '@org';
 import DateRangePicker from 'rsuite/DateRangePicker';
@@ -141,7 +145,10 @@ const MeetupTile = ({ data }) => {
     meetupDuration,
     isEventFull,
     isPurchased,
+    sfid,
   } = data || {};
+
+  const currentShareLink = `${window.location.origin}/us-en/meetup/checkout/${sfid}`;
 
   const updateMeetupDuration = `${meetupDuration.replace(/Minutes/g, '')} Min`;
 
@@ -391,6 +398,7 @@ const MeetupTile = ({ data }) => {
           </div>
           <div className="course-duration">{getCourseDuration()}</div>
         </div>
+        <SharePopup currentShareLink={currentShareLink} />
       </div>
 
       <div className="course-location">
