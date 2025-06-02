@@ -9,7 +9,7 @@ import React, {
 } from 'react';
 import { Hub } from 'aws-amplify/utils';
 import { signOut as amplifySignOut } from 'aws-amplify/auth';
-import { Auth, clearAuthCookies } from '@utils';
+import { Auth } from '@utils';
 import { signOut } from '@passwordLess/common.js';
 import { parseJwtPayload, setTimeoutWallClock } from '@passwordLess/util.js';
 import { signInWithLink, requestSignInLink } from '@passwordLess/magic-link.js';
@@ -65,7 +65,6 @@ export const AuthProvider = ({
       console.log('Error fetching current user:', error);
       // Clear cookies if we get specific auth-related errors
       console.log('Clearing auth cookies for NotAuthorizedException...');
-      await clearAuthCookies();
       throw new Error(
         'Unable to load your profile details. Please refresh the page or contact support if the issue persists.',
       );
@@ -87,7 +86,6 @@ export const AuthProvider = ({
             parseJwtPayload(tokens.accessToken);
           } catch (e) {
             console.log('Found invalid tokens, clearing auth state');
-            await clearAuthCookies();
             await clearStorage();
           }
         }
@@ -102,7 +100,6 @@ export const AuthProvider = ({
       setError(null);
       switch (payload.event) {
         case 'signedIn':
-          // await clearAuthCookies();
           console.log('user have been signedIn successfully.');
           await fetchCurrentUser();
           break;
@@ -112,14 +109,12 @@ export const AuthProvider = ({
           localStorage.clear();
           clearStorage();
           console.log('Clearing auth cookies for signedOut...');
-          await clearAuthCookies();
           break;
         case 'tokenRefresh':
           console.log('auth tokens have been refreshed.');
           break;
         case 'tokenRefresh_failure':
           console.log('failure while refreshing auth tokens.');
-          await clearAuthCookies();
           setError('An error has occurred during token refresh.');
           setCurrentUser({ isAuthenticated: false });
           break;
@@ -132,7 +127,6 @@ export const AuthProvider = ({
           console.log(
             'failure while trying to resolve signInWithRedirect API.',
           );
-          await clearAuthCookies();
           break;
         case 'customOAuthState':
           customState = payload.data;
