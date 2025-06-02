@@ -30,7 +30,7 @@ import { useAnalytics } from 'use-analytics';
 import { pushRouteWithUTMQuery } from '@service';
 import queryString from 'query-string';
 import { useInView } from 'react-intersection-observer';
-import { PageLoading } from '@components';
+import { PageLoading, SharePopup } from '@components';
 import { usePopper } from 'react-popper';
 import classNames from 'classnames';
 import { orgConfig } from '@org';
@@ -99,11 +99,8 @@ const CourseTile = ({ data, inIframe }) => {
   const searchParams = useSearchParams();
   const showAddressFields = searchParams.get('showAddressFields');
   const router = useRouter();
-  const { track } = useAnalytics();
-  const { showModal } = useGlobalModalContext();
   const {
     mode,
-    primaryTeacherName,
     productTypeId,
     eventStartDate,
     eventEndDate,
@@ -114,20 +111,22 @@ const CourseTile = ({ data, inIframe }) => {
     locationCity,
     locationProvince,
     locationStreet,
-    isGuestCheckoutEnabled = false,
-    coTeacher1Name,
     timings,
     unitPrice,
-    listPrice,
     isEventFull,
     isPurchased,
   } = data || {};
 
+  let queryParams = { ctype: productTypeId };
+  if (showAddressFields) {
+    queryParams = { ...queryParams, showAddressFields };
+  }
+
+  const currentShareLink = `${window.location.origin}/us-en/ticketed-event/${sfid}?${queryString.stringify(
+    queryParams,
+  )}`;
+
   const enrollAction = () => {
-    let queryParams = { ctype: productTypeId };
-    if (showAddressFields) {
-      queryParams = { ...queryParams, showAddressFields };
-    }
     if (inIframe) {
       window.open(
         `/us-en/ticketed-event/${sfid}?${queryString.stringify(queryParams)}`,
@@ -187,6 +186,7 @@ const CourseTile = ({ data, inIframe }) => {
             <span>${unitPrice === 0 || unitPrice === 1 ? '0' : unitPrice}</span>
           </div>
         )}
+        <SharePopup currentShareLink={currentShareLink} />
       </div>
       <div className="course-location">
         {mode !== 'Online' &&

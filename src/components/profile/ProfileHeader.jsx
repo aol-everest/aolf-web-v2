@@ -1,6 +1,12 @@
 /* eslint-disable no-inline-styles/no-inline-styles */
 import { useState } from 'react';
-import { COURSE_TYPES, MEMBERSHIP_TYPES, MODAL_TYPES } from '@constants';
+import {
+  COURSE_TYPES,
+  MEMBERSHIP_TYPES,
+  MODAL_TYPES,
+  MESSAGE_EMAIL_VERIFICATION_SUCCESS,
+} from '@constants';
+import { Loader } from '@components';
 import { useGlobalModalContext } from '@contexts';
 import { orgConfig } from '@org';
 import { pushRouteWithUTMQuery } from '@service';
@@ -17,8 +23,13 @@ import 'react-tooltip/dist/react-tooltip.css';
 export const ProfileHeader = ({
   subscriptions = [],
   userSubscriptions = {},
+  isStudentVerified,
+  email,
+  studentVerificationDate,
+  studentVerificationExpiryDate,
 }) => {
   const [isSuccess, setIsSuccess] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [amount, setAmount] = useState(0);
   const [error, setError] = useState(null);
   const [showReinstate, setShowReinstate] = useState(false);
@@ -32,6 +43,26 @@ export const ProfileHeader = ({
     ({ isReinstateRequiredForSubscription }) =>
       isReinstateRequiredForSubscription,
   );
+
+  const validateStudentEmail = (email) => {
+    if (!email) {
+      return false;
+    }
+    const regex = new RegExp(process.env.NEXT_PUBLIC_STUDENT_EMAIL_REGEX);
+    const isStudentEmail = regex.test(email) && email.indexOf('alumni') < 0;
+    return isStudentEmail;
+  };
+
+  const isStudentFlowEnabled =
+    process.env.NEXT_PUBLIC_ENABLE_STUDENT_FLOW === 'true';
+
+  const showVerifyStudentStatus =
+    isStudentFlowEnabled &&
+    validateStudentEmail(email) &&
+    (!isStudentVerified ||
+      (isStudentVerified &&
+        dayjs(new Date()).diff(dayjs(studentVerificationDate), 'y', true) > 1 &&
+        dayjs(studentVerificationExpiryDate).isAfter(dayjs(new Date()))));
 
   const router = useRouter();
 
@@ -382,6 +413,45 @@ export const ProfileHeader = ({
       }
     };
 
+  const handleVerifyStudentEmail = async () => {
+    setLoading(true);
+    try {
+      await api.post({
+        path: 'verify-email',
+        body: {
+          email: email,
+        },
+      });
+    } catch (ex) {
+      console.log(ex);
+    }
+    setLoading(false);
+    showModal(MODAL_TYPES.EMPTY_MODAL, {
+      title: 'Verification code sent.',
+      children: (handleModalToggle) => (
+        <div className="alert__modal modal-window modal-window_no-log modal fixed-right fade active show">
+          <div className=" modal-dialog modal-dialog-centered active">
+            <div className="modal-content tw-justify-center">
+              <h2 className="modal-content-title !tw-text-2xl">
+                {MESSAGE_EMAIL_VERIFICATION_SUCCESS}
+              </h2>
+
+              <p className="tw-flex tw-justify-center">
+                <a
+                  href="#"
+                  className="btn btn-lg btn-primary tw-mt-6"
+                  onClick={handleModalToggle}
+                >
+                  Close
+                </a>
+              </p>
+            </div>
+          </div>
+        </div>
+      ),
+    });
+  };
+
   const subscriptionPanel = (subscription) => {
     return (
       <>
@@ -390,6 +460,7 @@ export const ProfileHeader = ({
           since{' '}
           {dayjs(subscription.subscriptionStartDate).format('MMMM DD, YYYY')}
         </div>
+
         {MEMBERSHIP_TYPES.FREE_MEMBERSHIP.value !==
           subscription.subscriptionMasterSfid && (
           <a
@@ -410,6 +481,7 @@ export const ProfileHeader = ({
 
   return (
     <>
+      {loading && <Loader />}
       {subscriptions.map((subscription) => (
         <div
           key={subscription.sfid || subscription.subscriptionMasterSfid}
@@ -418,6 +490,16 @@ export const ProfileHeader = ({
           {subscriptionPanel(subscription)}
         </div>
       ))}
+      {showVerifyStudentStatus && (
+        <a
+          href="#"
+          style={{ fontSize: 14 }}
+          className="link link_dark link-modal"
+          onClick={handleVerifyStudentEmail}
+        >
+          <strong>Verify student status</strong>
+        </a>
+      )}
       {subscriptionBuyBtnPanel(
         userSubscriptions,
         showPurchaseMembershipModalAction,

@@ -192,6 +192,9 @@ export default function AskGurudev() {
         )}
         <div className="container">
           <h1 className="page-title">Ask Gurudev</h1>
+          <p className="tw-mt-4 tw-text-sm tw-text-gray-500 tw-text-center">
+            Discover answers from Gurudev’s talks, discourses, and satsangs
+          </p>
           <CategoryTabs
             setSelectedCategory={setSelectedCategory}
             selectedCategory={selectedCategory}
