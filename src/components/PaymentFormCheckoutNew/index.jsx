@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useQueryState } from 'nuqs';
 import { Loader } from '@components';
+import StripeCardSection from './StripeCardSection';
 import { useRouter } from 'next/router';
 import { usePayment, usePriceCalculation } from '@hooks';
 import dayjs from 'dayjs';
@@ -100,6 +101,8 @@ export const PaymentFormCheckoutNew = ({
   setActiveStep,
   enrollmentCompletionAction,
   enrollmentCompletionLink,
+  isStripeIntentPayment,
+  isLoggedUser,
 }) => {
   const { track, identify } = useAnalytics();
   const router = useRouter();
@@ -110,6 +113,7 @@ export const PaymentFormCheckoutNew = ({
   const formRef = useRef();
 
   const [discountResponse, setDiscountResponse] = useState(null);
+  const [isChangingCard, setIsChangingCard] = useState(false);
   const [currentFormValues, setCurrentFormValues] = useState({});
 
   const stripe = useStripe();
@@ -143,6 +147,8 @@ export const PaymentFormCheckoutNew = ({
     isCCNotRequired: workshop.isCCNotRequired,
   });
 
+  console.log('isPaymentRequired', isPaymentRequired);
+
   const {
     complianceQuestionnaire,
     title,
@@ -152,7 +158,31 @@ export const PaymentFormCheckoutNew = ({
     timings = [],
     unitPrice,
     otherPaymentOptions,
+    paymentMethod,
   } = workshop;
+
+  const { cardLast4Digit = null } = paymentMethod;
+
+  const createOptions = {
+    style: {
+      base: {
+        fontSize: '16px',
+        lineHeight: 2,
+        fontWeight: 200,
+        fontStyle: 'normal',
+        color: '#303650',
+        fontFamily: 'Work Sans, sans-serif',
+        '::placeholder': {
+          color: '#9598a6',
+          fontFamily: 'Work Sans, sans-serif',
+          fontSize: '16px',
+        },
+      },
+      invalid: {
+        color: '#9e2146',
+      },
+    },
+  };
 
   const {
     first_name,
@@ -313,7 +343,7 @@ export const PaymentFormCheckoutNew = ({
           products,
           complianceQuestionnaire,
           isInstalmentOpted: false,
-          isStripeIntentPayment: true,
+          ...(isPaymentRequired && { isStripeIntentPayment }),
         },
         utm: filterAllowedParams(router.query),
       };
@@ -546,6 +576,11 @@ export const PaymentFormCheckoutNew = ({
     setDiscountResponse(discount);
   };
 
+  const toggleCardChangeDetail = (e) => {
+    if (e) e.preventDefault();
+    setIsChangingCard((isChangingCard) => !isChangingCard);
+  };
+
   let initialValue = {
     firstName: '',
     lastName: '',
@@ -560,6 +595,8 @@ export const PaymentFormCheckoutNew = ({
     paymentMode: !otherPaymentOptions?.includes('Paypal')
       ? PAYMENT_MODES.STRIPE_PAYMENT_MODE
       : '',
+    shouldTokenize:
+      !isLoggedUser || isChangingCard || paymentMethod.type !== 'card',
   };
 
   if (isAuthenticated) {
@@ -575,9 +612,6 @@ export const PaymentFormCheckoutNew = ({
       contactPhone: personMobilePhone,
     };
   }
-
-  const showPaymentOptions =
-    otherPaymentOptions && otherPaymentOptions.indexOf('Paypal') > -1;
 
   return (
     <>
@@ -845,7 +879,7 @@ export const PaymentFormCheckoutNew = ({
                             )}
 
                             <div className="section-box !tw-border-y-0">
-                              {fee > 0 && (
+                              {isPaymentRequired && (
                                 <>
                                   <h2 className="section__title d-flex">
                                     Payment Method
@@ -866,8 +900,19 @@ export const PaymentFormCheckoutNew = ({
                                     </span>
                                   </h2>
                                   <div className="section__body">
-                                    <PaymentElement
-                                      options={paymentElementOptions}
+                                    <StripeCardSection
+                                      isStripeIntentPayment={
+                                        isStripeIntentPayment
+                                      }
+                                      paymentElementOptions={
+                                        paymentElementOptions
+                                      }
+                                      cardLast4Digit={cardLast4Digit}
+                                      isChangingCard={isChangingCard}
+                                      toggleCardChangeDetail={
+                                        toggleCardChangeDetail
+                                      }
+                                      createOptions={createOptions}
                                     />
                                   </div>
                                 </>

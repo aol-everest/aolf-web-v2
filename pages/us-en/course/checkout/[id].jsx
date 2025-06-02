@@ -424,12 +424,14 @@ const Checkout = () => {
     if (isSahajSamadhiMeditationType || isSKYType) {
       return (
         <PaymentFormCheckoutNew
+          isStripeIntentPayment={isStripeIntentPayment}
           workshop={workshop}
           courseType={courseType}
           activeStep={activeStep}
           setActiveStep={setActiveStep}
           enrollmentCompletionAction={enrollmentCompletionAction}
           enrollmentCompletionLink={enrollmentCompletionLink}
+          isLoggedUser={isAuthenticated}
         />
       );
     }
