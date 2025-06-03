@@ -31,10 +31,11 @@ import { useQuery } from '@tanstack/react-query';
 import ErrorPage from 'next/error';
 import { PageLoading } from '@components';
 import { ScheduleAgreementForm } from '@components/scheduleAgreementForm';
-import AttendeeDetails from './AttendeeDetails';
+import AttendeeDetails from '@components/ticketed-event/AttendeeDetails';
 import { FaChevronLeft } from 'react-icons/fa6';
 import { z } from 'zod';
 import CourseNotFoundError from '@components/errors/CourseNotFoundError';
+import { useFormPersist } from '@hooks';
 
 const ticketSchema = z.record(z.string(), z.number());
 
@@ -159,6 +160,7 @@ const TicketCheckoutForm = ({ event }) => {
     'couponCode',
     parseAsString,
   );
+  const [attendeeKey] = useQueryState('attendeeKey', parseAsString);
 
   const elements = useElements();
   const { showAlert } = useGlobalAlertContext();
@@ -239,6 +241,30 @@ const TicketCheckoutForm = ({ event }) => {
   } = profile || {};
 
   const { totalDiscount = 0 } = discountResponse || {};
+
+  const {
+    persistedData: persistedAttendeeData,
+    saveData: saveAttendeeData,
+    clearData: clearAttendeeData,
+  } = useFormPersist(attendeeKey, {
+    storagePrefix: 'attendee_persist_',
+  });
+
+  useEffect(() => {
+    if (persistedAttendeeData && isAllAttedeeInformationRequired) {
+      setAttendeeDetails(persistedAttendeeData);
+      setPricingTierLocal(persistedAttendeeData);
+      setShowAttendeeDetails(false);
+    }
+  }, [persistedAttendeeData, isAllAttedeeInformationRequired]);
+
+  const handleSubmitAttendees = (showAttendee, updatedAttendeeData) => {
+    setShowAttendeeDetails(showAttendee);
+    setAttendeeDetails(updatedAttendeeData);
+    setPricingTierLocal([...updatedAttendeeData]);
+
+    saveAttendeeData(updatedAttendeeData);
+  };
 
   const login = () => {
     navigateToLogin(router);
@@ -406,6 +432,8 @@ const TicketCheckoutForm = ({ event }) => {
       }
 
       if (data || paypalObj) {
+        clearAttendeeData();
+
         if (data.totalOrderAmount === 0) {
           pushRouteWithUTMQuery(
             router,
@@ -545,11 +573,6 @@ const TicketCheckoutForm = ({ event }) => {
     );
   };
 
-  const handleSubmitAttendees = (showAttendee, updatedAttendeeData) => {
-    setShowAttendeeDetails(showAttendee);
-    setAttendeeDetails(updatedAttendeeData);
-    setPricingTierLocal([...updatedAttendeeData]);
-  };
   const handleAttendeeDetails = () => {
     setShowAttendeeDetails(true);
   };

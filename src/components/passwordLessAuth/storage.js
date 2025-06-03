@@ -128,9 +128,13 @@ export async function clearStorage() {
     `${amplifyKeyPrefix}.${username}.userData`,
     `${amplifyKeyPrefix}.${username}.tokenScopesString`,
     `${customKeyPrefix}.${username}.expireAt`,
+    `__user_id`,
+    'amznfbgid',
+    '__anon_id',
+    '__user_traits',
   ];
 
   keysToRemove.forEach((key) => storage.removeItem(key));
 
-  storage.clear();
+  // storage.clear();
 }

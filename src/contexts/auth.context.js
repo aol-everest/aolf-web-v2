@@ -106,7 +106,6 @@ export const AuthProvider = ({
         case 'signedOut':
           console.log('user have been signedOut successfully.');
           setCurrentUser({ isAuthenticated: false });
-          localStorage.clear();
           clearStorage();
           console.log('Clearing auth cookies for signedOut...');
           break;
@@ -735,7 +734,6 @@ const usePasswordlessAuth = (fetchCurrentUser) => {
       });
       signingOut.signedOut.catch(setLastError);
       amplifySignOut();
-      localStorage.clear();
       clearStorage();
       console.log('Logged out and cache cleared');
       return signingOut;
