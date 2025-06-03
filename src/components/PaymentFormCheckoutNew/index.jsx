@@ -158,7 +158,6 @@ export const PaymentFormCheckoutNew = ({
     unitPrice,
     otherPaymentOptions,
     paymentMethod,
-    isGuestCheckoutEnabled,
   } = workshop;
 
   const { cardLast4Digit = null } = paymentMethod;
@@ -870,11 +869,9 @@ export const PaymentFormCheckoutNew = ({
                                     });
 
                                     await signOut();
-                                    if (!isGuestCheckoutEnabled) {
-                                      router.push(
-                                        `/us-en/signin?next=${encodeURIComponent(location.pathname + location.search)}`,
-                                      );
-                                    }
+                                    router.push(
+                                      `/us-en/signin?next=${encodeURIComponent(location.pathname + location.search)}`,
+                                    );
                                   }}
                                 >
                                   logout?
