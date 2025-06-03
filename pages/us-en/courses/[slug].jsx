@@ -679,6 +679,7 @@ const Course = () => {
   };
 
   const onFilterChange = (field) => async (value) => {
+    window.scrollTo({ top: 0, behavior: 'smooth' }); // Scroll to top on filter change
     switch (field) {
       case 'courseTypeFilter':
         //setCourseTypeFilter(value);
@@ -712,6 +713,7 @@ const Course = () => {
 
   const onFilterClearEvent = (field) => async (e) => {
     if (e) e.preventDefault();
+    window.scrollTo({ top: 0, behavior: 'smooth' }); // Scroll to top on filter clear
     switch (field) {
       case 'courseTypeFilter':
         // setCourseTypeFilter(null);
@@ -737,6 +739,7 @@ const Course = () => {
 
   const onFilterChangeEvent = (field) => (value) => async (e) => {
     if (e) e.preventDefault();
+    window.scrollTo({ top: 0, behavior: 'smooth' }); // Scroll to top on filter change (event)
     switch (field) {
       case 'courseTypeFilter':
         // setCourseTypeFilter(value);
@@ -769,6 +772,7 @@ const Course = () => {
   };
 
   const changeCourseType = (courseType) => {
+    window.scrollTo({ top: 0, behavior: 'smooth' }); // Scroll to top when changing course type
     const { slug, ...rest } = router.query;
     router.push(
       {
