@@ -29,6 +29,7 @@ export const ScheduleLocationFilterOnline = ({
         showOnlyRegions={showOnlyRegions}
         formikProps={formikProps}
         formikKey={formikKey}
+        doAutoFocus={false}
       />
     </div>
   );

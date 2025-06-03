@@ -111,6 +111,7 @@ export const PaymentFormCheckoutNew = ({
   const [defaultUserEmail] = useQueryState('email');
 
   const formRef = useRef();
+  const scrollToRef = useRef(null);
 
   const [discountResponse, setDiscountResponse] = useState(null);
   const [isChangingCard, setIsChangingCard] = useState(false);
@@ -147,8 +148,6 @@ export const PaymentFormCheckoutNew = ({
     isCCNotRequired: workshop.isCCNotRequired,
   });
 
-  console.log('isPaymentRequired', isPaymentRequired);
-
   const {
     complianceQuestionnaire,
     title,
@@ -159,6 +158,7 @@ export const PaymentFormCheckoutNew = ({
     unitPrice,
     otherPaymentOptions,
     paymentMethod,
+    isGuestCheckoutEnabled,
   } = workshop;
 
   const { cardLast4Digit = null } = paymentMethod;
@@ -429,6 +429,32 @@ export const PaymentFormCheckoutNew = ({
     },
   };
 
+  const validatePaymentRequirements = (values) => {
+    const { paymentMode } = values;
+
+    if (!isPaymentRequired) {
+      return true;
+    }
+
+    if (!paymentMode) {
+      showAlert(ALERT_TYPES.ERROR_ALERT, {
+        message: 'Please select a payment method',
+      });
+      return false;
+    }
+
+    if (paymentMode === PAYMENT_MODES.STRIPE_PAYMENT_MODE) {
+      if (!stripe || !elements) {
+        showAlert(ALERT_TYPES.ERROR_ALERT, {
+          message: 'Payment system is not ready. Please try again.',
+        });
+        return false;
+      }
+    }
+
+    return true;
+  };
+
   const handleFormSubmit = async () => {
     if (formRef.current) {
       const { values, validateForm } = formRef.current;
@@ -447,7 +473,6 @@ export const PaymentFormCheckoutNew = ({
 
       if (Object.keys(errors).length > 0) {
         const errorFields = Object.keys(errors);
-        console.log('errorFields', errorFields);
         showAlert(ALERT_TYPES.INLINE_ERROR_ALERT, {
           children: (
             <div>
@@ -473,8 +498,8 @@ export const PaymentFormCheckoutNew = ({
         return;
       }
 
-      if (!isPaymentRequired) {
-        return true;
+      if (!validatePaymentRequirements(values)) {
+        return;
       }
 
       formRef.current.submitForm();
@@ -602,8 +627,8 @@ export const PaymentFormCheckoutNew = ({
   if (isAuthenticated) {
     initialValue = {
       ...initialValue,
-      firstName: first_name,
-      lastName: last_name,
+      firstName: first_name || '',
+      lastName: last_name || '',
       email: email,
       contactAddress: personMailingStreet || '',
       contactCity: personMailingCity || '',
@@ -611,6 +636,10 @@ export const PaymentFormCheckoutNew = ({
       contactZip: personMailingPostalCode || '',
       contactPhone: personMobilePhone,
     };
+  }
+
+  if (scrollToRef.current) {
+    scrollToRef.current.scrollIntoView({ behavior: 'smooth' });
   }
 
   return (
@@ -768,7 +797,7 @@ export const PaymentFormCheckoutNew = ({
                       </div>
                     </div>
                     <div className="second-col">
-                      <div className="payment-box">
+                      <div className="payment-box" ref={scrollToRef}>
                         <div
                           className={`checkout-title ${activeStep === CheckoutStates.USER_INFO ? 'mb-1 ' : 'mb-3'}`}
                         >
@@ -839,7 +868,13 @@ export const PaymentFormCheckoutNew = ({
                                       },
                                       errors: {},
                                     });
+
                                     await signOut();
+                                    if (!isGuestCheckoutEnabled) {
+                                      router.push(
+                                        `/us-en/signin?next=${encodeURIComponent(location.pathname + location.search)}`,
+                                      );
+                                    }
                                   }}
                                 >
                                   logout?

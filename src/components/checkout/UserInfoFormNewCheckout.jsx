@@ -1,4 +1,4 @@
-import { Fragment } from 'react';
+import { Fragment, useRef, useEffect } from 'react';
 import {
   PhoneInputNewCheckout,
   StyledInputNewCheckout,
@@ -22,6 +22,8 @@ export const UserInfoFormNewCheckout = ({
   handleLocationFilterChange,
   locationValue,
 }) => {
+  const inputRef = useRef(null);
+
   const { data: corporates = [] } = useQuery({
     queryKey: ['corporates'],
     queryFn: async () => {
@@ -43,6 +45,13 @@ export const UserInfoFormNewCheckout = ({
       { value: 'other', label: 'Other' },
     ];
   }
+
+  useEffect(() => {
+    if (inputRef.current) {
+      inputRef.current.focus();
+    }
+  }, []);
+
   return (
     <Fragment>
       <div className="form-inputs checkout-fields">
@@ -50,6 +59,7 @@ export const UserInfoFormNewCheckout = ({
           className="form-item required"
           placeholder="First Name"
           formikProps={formikProps}
+          ref={inputRef}
           formikKey="firstName"
           label="First Name"
         ></StyledInputNewCheckout>
