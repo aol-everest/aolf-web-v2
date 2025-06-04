@@ -798,32 +798,52 @@ export const PaymentFormCheckoutNew = ({
                     <div className="second-col">
                       <div className="payment-box" ref={scrollToRef}>
                         <div
-                          className={`checkout-title ${activeStep === CheckoutStates.USER_INFO ? 'mb-1 ' : 'mb-3'}`}
+                          className={`checkout-title row m-0 justify-content-between align-items-center${activeStep === CheckoutStates.USER_INFO ? 'mb-1 ' : 'mb-3'}`}
                         >
                           {activeStep === CheckoutStates.USER_INFO ||
                           (activeStep === CheckoutStates.EMAIL_INPUT && email)
                             ? 'Pay and enroll'
                             : 'Enter Your Email'}
+                          <a
+                            href="#"
+                            className="tw-text-base"
+                            onClick={() => {
+                              resetForm({
+                                values: {
+                                  ...values,
+                                  ...initialValue,
+                                },
+                                errors: {},
+                              });
+                              router.push(
+                                `/us-en/signin?next=${encodeURIComponent(location.pathname + location.search)}`,
+                              );
+                            }}
+                          >
+                            Login
+                          </a>
                         </div>
                         {activeStep === CheckoutStates.EMAIL_INPUT && !email ? (
-                          <StyledInputNewCheckout
-                            type="email"
-                            label="Email Address"
-                            className="form-item required mb-4"
-                            placeholder="Email"
-                            formikProps={formikProps}
-                            formikKey="email"
-                            isReadOnly={false}
-                            onCut={(event) => {
-                              event.preventDefault();
-                            }}
-                            onCopy={(event) => {
-                              event.preventDefault();
-                            }}
-                            onPaste={(event) => {
-                              event.preventDefault();
-                            }}
-                          ></StyledInputNewCheckout>
+                          <>
+                            <StyledInputNewCheckout
+                              type="email"
+                              label="Email Address"
+                              className="form-item required mb-4"
+                              placeholder="Email"
+                              formikProps={formikProps}
+                              formikKey="email"
+                              isReadOnly={false}
+                              onCut={(event) => {
+                                event.preventDefault();
+                              }}
+                              onCopy={(event) => {
+                                event.preventDefault();
+                              }}
+                              onPaste={(event) => {
+                                event.preventDefault();
+                              }}
+                            ></StyledInputNewCheckout>
+                          </>
                         ) : (
                           <div class="checkout-user-info">
                             {values.email}{' '}
