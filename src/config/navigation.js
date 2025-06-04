@@ -131,6 +131,14 @@ export const AOL_MENU = [
         name: 'Podcasts',
         link: '/us-en/wisdom/podcast',
       },
+      {
+        name: 'Articles',
+        link: 'https://www.artofliving.org/us-en/sri-sri-blog',
+      },
+      {
+        name: 'Ask Gurudev',
+        link: '/us-en/ask-gurudev',
+      },
     ],
   },
   {
@@ -330,10 +338,6 @@ export const AOL_MENU = [
       {
         name: 'App',
         link: '/us-en/lp/journey-app',
-      },
-      {
-        name: 'Blog',
-        link: 'https://www.artofliving.org/us-en/sri-sri-blog',
       },
       {
         name: 'Science',
