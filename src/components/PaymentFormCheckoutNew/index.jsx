@@ -804,24 +804,26 @@ export const PaymentFormCheckoutNew = ({
                           (activeStep === CheckoutStates.EMAIL_INPUT && email)
                             ? 'Pay and enroll'
                             : 'Enter Your Email'}
-                          <a
-                            href="#"
-                            className="tw-text-base"
-                            onClick={() => {
-                              resetForm({
-                                values: {
-                                  ...values,
-                                  ...initialValue,
-                                },
-                                errors: {},
-                              });
-                              router.push(
-                                `/us-en/signin?next=${encodeURIComponent(location.pathname + location.search)}`,
-                              );
-                            }}
-                          >
-                            Login
-                          </a>
+                          {!isAuthenticated && (
+                            <a
+                              href="#"
+                              className="tw-text-base"
+                              onClick={() => {
+                                resetForm({
+                                  values: {
+                                    ...values,
+                                    ...initialValue,
+                                  },
+                                  errors: {},
+                                });
+                                router.push(
+                                  `/us-en/signin?next=${encodeURIComponent(location.pathname + location.search)}`,
+                                );
+                              }}
+                            >
+                              Login
+                            </a>
+                          )}
                         </div>
                         {activeStep === CheckoutStates.EMAIL_INPUT && !email ? (
                           <>
