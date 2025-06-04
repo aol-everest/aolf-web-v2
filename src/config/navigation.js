@@ -137,8 +137,7 @@ export const AOL_MENU = [
       },
       {
         name: 'Ask Gurudev',
-        link: 'https://members.us.artofliving.org/us-en/ask-gurudev',
-        props: { target: '_blank' },
+        link: '/us-en/ask-gurudev',
       },
     ],
   },
