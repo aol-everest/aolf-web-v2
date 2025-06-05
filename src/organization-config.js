@@ -141,7 +141,7 @@ const allOrganizationConfig = [
       keywords:
         'veterans, military families, PTSD, stress relief, meditation, breathing techniques, military transition',
     },
-    courseModes: ['ONLINE', 'IN_PERSON'],
+    courseModes: ['ONLINE', 'IN_PERSON', 'DESTINATION_RETREATS'],
     meetupModes: ['ONLINE', 'IN_PERSON'],
     eventModes: ['ONLINE', 'IN_PERSON'],
     courseTypes: ['SKY_HAPPINESS_RETREAT'],

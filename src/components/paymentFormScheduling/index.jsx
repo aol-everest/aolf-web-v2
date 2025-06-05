@@ -843,6 +843,7 @@ export const PaymentFormScheduling = ({
                                       errors: {},
                                     });
                                     await signOut();
+                                    window.reload();
                                   }}
                                 >
                                   logout?

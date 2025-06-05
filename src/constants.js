@@ -309,7 +309,7 @@ export const COURSE_TYPES_MASTER = {
   ],
   PWHT: [
     {
-      name: `Beginner's Courses`,
+      name: `Step-1 : Introductory Course`,
       courseTypes: {
         SKY_RESILIENCE: {
           slug: 'sky-resilience',
@@ -425,7 +425,7 @@ export const COURSE_TYPES = {
     name: 'SKY Resilience Training',
     value: process.env.NEXT_PUBLIC_SKY_RESILIENCE_CTYPE || '',
     description:
-      'Learn how to heal yourself and others through Marma, the most restorative Ayurvedic treatment.',
+      'Experience SKY Breath, a science-backed practice that reduces stress, regulates emotions, improves sleep and restores well-being.',
   },
   BLESSINGS_COURSE: {
     slug: 'blessings-course',

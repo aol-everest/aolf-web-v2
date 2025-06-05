@@ -21,11 +21,12 @@ const CourseTypeTile = ({ courseType }) => {
 
   return (
     <div className="course-item">
-      <Script
-        id="intelliticks-script"
-        strategy="afterInteractive"
-        dangerouslySetInnerHTML={{
-          __html: `(function(I, L, T, i, c, k, s) {
+      {!orgConfig.name === 'PWHT' && (
+        <Script
+          id="intelliticks-script"
+          strategy="afterInteractive"
+          dangerouslySetInnerHTML={{
+            __html: `(function(I, L, T, i, c, k, s) {
             if(I.iticks) return;
             I.iticks = {host: c, settings: s, clientId: k, cdn: L, queue: []};
             var h = T.head || T.documentElement;
@@ -37,8 +38,9 @@ const CourseTypeTile = ({ courseType }) => {
             I.iticks.call = function(a, b) { I.iticks.queue.push([a, b]); };
           })(window, 'https://cdn-v1.intelliticks.com/prod/common', document, 'script', 'https://app.intelliticks.com', 'LZ8KCvfnuX6wbRgga_c', {});
           `,
-        }}
-      />
+          }}
+        />
+      )}
       <div className="course-img">
         <img
           src={`/img/courses/${courseType.slug}.webp`}
