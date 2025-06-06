@@ -128,16 +128,16 @@ export const AOL_MENU = [
         link: '#',
       },*/
       {
-        name: 'Podcasts',
-        link: '/us-en/wisdom/podcast',
+        name: 'Ask Gurudev',
+        link: '/us-en/ask-gurudev',
       },
       {
         name: 'Articles',
         link: 'https://www.artofliving.org/us-en/sri-sri-blog',
       },
       {
-        name: 'Ask Gurudev',
-        link: '/us-en/ask-gurudev',
+        name: 'Podcasts',
+        link: '/us-en/wisdom/podcast',
       },
     ],
   },
