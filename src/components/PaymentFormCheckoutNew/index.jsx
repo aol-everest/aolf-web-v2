@@ -891,9 +891,7 @@ export const PaymentFormCheckoutNew = ({
                                     });
 
                                     await signOut();
-                                    router.push(
-                                      `/us-en/signin?next=${encodeURIComponent(location.pathname + location.search)}`,
-                                    );
+                                    router.reload();
                                   }}
                                 >
                                   logout?

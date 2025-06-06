@@ -121,9 +121,7 @@ const Checkout = () => {
   const [validateDiscount, setValidateDiscount] = useState(false);
   const [activeStep, setActiveStep] = useQueryState(
     'step',
-    parseAsString.withDefault(
-      isAuthenticated ? CheckoutStates.USER_INFO : CheckoutStates.EMAIL_INPUT,
-    ),
+    parseAsString.withDefault(CheckoutStates.EMAIL_INPUT),
   );
 
   const [courseType, setCourseType] = useQueryState(
