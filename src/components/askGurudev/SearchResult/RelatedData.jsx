@@ -24,10 +24,11 @@ const RelatedData = ({ results, setActiveKey, activeKey, copyToClipboard }) => {
 
   return (
     <>
-      {relatedData?.length && (
+      {!!relatedData?.length && (
         <div class="related-questions-wrap">
           <div class="box-title">
-            <span class="icon-aol iconaol-chat-flower"></span>Related
+            <span class="icon-aol iconaol-chat-flower"></span>Similar Questions
+            & Answers
           </div>
           <Accordion className="accordion" defaultActiveKey={activeKey}>
             {relatedData.map((data) => {

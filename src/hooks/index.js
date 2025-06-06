@@ -6,3 +6,4 @@ export { usePageTriggers } from './usePageTriggers';
 export { usePayment } from './usePayment';
 export { useStripeLoader } from './useStripeLoader';
 export { usePriceCalculation } from './usePriceCalculation';
+export { useFormPersist } from './useFormPersist';

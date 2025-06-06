@@ -9,6 +9,7 @@ export const AddressSearchSchedulingOnline = ({
   value,
   formikProps,
   formikKey,
+  doAutoFocus = true,
 }) => {
   const {
     placesService,
@@ -36,7 +37,7 @@ export const AddressSearchSchedulingOnline = ({
   const inputRef = useRef(null);
 
   useEffect(() => {
-    if (inputRef.current) {
+    if (inputRef.current && doAutoFocus) {
       inputRef.current.focus();
       // formikProps.setFieldTouched(formikKey, true);
     }

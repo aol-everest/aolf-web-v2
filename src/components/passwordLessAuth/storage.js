@@ -14,7 +14,6 @@
  */
 import { parseJwtPayload } from './util.js';
 import { configure } from './config.js';
-import { clearAuthCookies } from '@utils';
 export async function clearInflightOAuth() {
   const { clientId, storage } = configure();
   const amplifyKeyPrefix = `CognitoIdentityServiceProvider.${clientId}`;
@@ -27,7 +26,6 @@ export async function clearInflightOAuth() {
 
 export async function storeTokens(tokens) {
   console.log('Storing tokens...');
-  // await clearAuthCookies();
   const { clientId, storage } = configure();
   const {
     sub,
@@ -130,9 +128,13 @@ export async function clearStorage() {
     `${amplifyKeyPrefix}.${username}.userData`,
     `${amplifyKeyPrefix}.${username}.tokenScopesString`,
     `${customKeyPrefix}.${username}.expireAt`,
+    `__user_id`,
+    'amznfbgid',
+    '__anon_id',
+    '__user_traits',
   ];
 
   keysToRemove.forEach((key) => storage.removeItem(key));
 
-  storage.clear();
+  // storage.clear();
 }

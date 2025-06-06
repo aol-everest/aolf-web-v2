@@ -28,7 +28,7 @@ import { useAnalytics } from 'use-analytics';
 import { pushRouteWithUTMQuery } from '@service';
 import queryString from 'query-string';
 import { useInView } from 'react-intersection-observer';
-import { PageLoading } from '@components';
+import { PageLoading, SharePopup } from '@components';
 import classNames from 'classnames';
 import { orgConfig } from '@org';
 import DateRangePicker from 'rsuite/DateRangePicker';
@@ -142,6 +142,13 @@ const CourseTile = ({ data, isAuthenticated }) => {
     category,
     corporateName,
   } = data || {};
+
+  const currentShareLink =
+    isGuestCheckoutEnabled || isAuthenticated
+      ? `${window.location.origin}/us-en/course/${sfid}`
+      : `${window.location.origin}/us-en/course/${sfid}?ctype=${productTypeId}&page=c-o&${queryString.stringify(
+          router.query,
+        )}`;
 
   const enrollAction = () => {
     track('allcourses_enroll_click', {
@@ -270,6 +277,7 @@ const CourseTile = ({ data, isAuthenticated }) => {
             )}
           </>
         )}
+        <SharePopup currentShareLink={currentShareLink} />
       </div>
       {corporateName && <div class="course-university">{corporateName}</div>}
       {mode !== 'Online' && locationCity && (
@@ -335,6 +343,13 @@ const CourseTileWithTitle = ({ data, isAuthenticated }) => {
     isPurchased,
     category,
   } = data || {};
+
+  const currentShareLink =
+    isGuestCheckoutEnabled || isAuthenticated
+      ? `${window.location.origin}/us-en/course/${sfid}`
+      : `${window.location.origin}/us-en/course/${sfid}?ctype=${productTypeId}&page=c-o&${queryString.stringify(
+          router.query,
+        )}`;
 
   const enrollAction = () => {
     track('allcourses_enroll_click', {
@@ -408,6 +423,7 @@ const CourseTileWithTitle = ({ data, isAuthenticated }) => {
             )}
           </div>
         )}
+        <SharePopup currentShareLink={currentShareLink} />
       </div>
       {mode !== 'Online' && locationCity && (
         <div className="course-location">
@@ -506,7 +522,6 @@ const Course = () => {
 
   const [cityFilter] = useQueryState('city');
   const [centerFilter] = useQueryState('center');
-  const [centerNameFilter] = useQueryState('center-name');
   const [limit] = useQueryState('limit');
   const [searchKey, setSearchKey] = useState('');
   const [showFilterModal, setShowFilterModal] = useState(false);
@@ -643,10 +658,7 @@ const Course = () => {
     track('Product List Viewed', {
       category: 'Course',
     });
-    if (
-      (orgConfig.name === 'AOL' || orgConfig.name === 'PWHT') &&
-      !timeZoneFilter
-    ) {
+    if (orgConfig.name === 'AOL' && !timeZoneFilter) {
       setTimeZoneFilter(fillDefaultTimeZone());
     }
   }, [router.isReady]);
@@ -664,6 +676,7 @@ const Course = () => {
   };
 
   const onFilterChange = (field) => async (value) => {
+    window.scrollTo({ top: 0, behavior: 'smooth' }); // Scroll to top on filter change
     switch (field) {
       case 'courseTypeFilter':
         //setCourseTypeFilter(value);
@@ -697,6 +710,7 @@ const Course = () => {
 
   const onFilterClearEvent = (field) => async (e) => {
     if (e) e.preventDefault();
+    window.scrollTo({ top: 0, behavior: 'smooth' }); // Scroll to top on filter clear
     switch (field) {
       case 'courseTypeFilter':
         // setCourseTypeFilter(null);
@@ -722,6 +736,7 @@ const Course = () => {
 
   const onFilterChangeEvent = (field) => (value) => async (e) => {
     if (e) e.preventDefault();
+    window.scrollTo({ top: 0, behavior: 'smooth' }); // Scroll to top on filter change (event)
     switch (field) {
       case 'courseTypeFilter':
         // setCourseTypeFilter(value);
@@ -754,6 +769,7 @@ const Course = () => {
   };
 
   const changeCourseType = (courseType) => {
+    window.scrollTo({ top: 0, behavior: 'smooth' }); // Scroll to top when changing course type
     const { slug, ...rest } = router.query;
     router.push(
       {
@@ -895,11 +911,12 @@ const Course = () => {
         defaultTitle={`${courseTypeFilter?.name} - Course Dates and Registration`}
         description={courseTypeFilter?.description}
       />
-      <Script
-        id="intelliticks-script"
-        strategy="afterInteractive"
-        dangerouslySetInnerHTML={{
-          __html: `(function(I, L, T, i, c, k, s) {
+      {!orgConfig.name === 'PWHT' && (
+        <Script
+          id="intelliticks-script"
+          strategy="afterInteractive"
+          dangerouslySetInnerHTML={{
+            __html: `(function(I, L, T, i, c, k, s) {
             if(I.iticks) return;
             I.iticks = {host: c, settings: s, clientId: k, cdn: L, queue: []};
             var h = T.head || T.documentElement;
@@ -911,8 +928,9 @@ const Course = () => {
             I.iticks.call = function(a, b) { I.iticks.queue.push([a, b]); };
           })(window, 'https://cdn-v1.intelliticks.com/prod/common', document, 'script', 'https://app.intelliticks.com', 'LZ8KCvfnuX6wbRgga_c', {});
           `,
-        }}
-      />
+          }}
+        />
+      )}
       <section className="title-header">
         {courseTypeFilter && (
           <>
@@ -931,52 +949,51 @@ const Course = () => {
               className="course-filter-listing search-form col-12 d-flex align-items-center"
             >
               <button className="filter-save-button">Save Changes</button>
+
+              <Popup
+                tabIndex="2"
+                value={COURSE_MODES[courseModeFilter] && courseModeFilter}
+                buttonText={
+                  courseModeFilter && COURSE_MODES[courseModeFilter]
+                    ? COURSE_MODES[courseModeFilter].name
+                    : null
+                }
+                closeEvent={onFilterChange('courseModeFilter')}
+                label="Course Format"
+              >
+                {({ closeHandler }) => (
+                  <>
+                    {orgConfig.courseModes.map((courseMode, index) => {
+                      return (
+                        <li
+                          key={index}
+                          className="courses-filter__list-item"
+                          onClick={closeHandler(courseMode)}
+                        >
+                          {COURSE_MODES[courseMode].name}
+                        </li>
+                      );
+                    })}
+                  </>
+                )}
+              </Popup>
               {!hideFiltersForPwht && (
-                <>
-                  <Popup
-                    tabIndex="2"
-                    value={COURSE_MODES[courseModeFilter] && courseModeFilter}
-                    buttonText={
-                      courseModeFilter && COURSE_MODES[courseModeFilter]
-                        ? COURSE_MODES[courseModeFilter].name
-                        : null
-                    }
-                    closeEvent={onFilterChange('courseModeFilter')}
-                    label="Course Format"
-                  >
-                    {({ closeHandler }) => (
-                      <>
-                        {orgConfig.courseModes.map((courseMode, index) => {
-                          return (
-                            <li
-                              key={index}
-                              className="courses-filter__list-item"
-                              onClick={closeHandler(courseMode)}
-                            >
-                              {COURSE_MODES[courseMode].name}
-                            </li>
-                          );
-                        })}
-                      </>
-                    )}
-                  </Popup>
-                  <Popup
-                    tabIndex="1"
-                    value={locationFilter}
-                    buttonText={
-                      locationFilter ? `${locationFilter.locationName}` : null
-                    }
-                    closeEvent={onFilterChange('locationFilter')}
-                    label="Location"
-                  >
-                    {({ closeHandler }) => (
-                      <AddressSearch
-                        closeHandler={closeHandler}
-                        placeholder="Search for Location"
-                      />
-                    )}
-                  </Popup>
-                </>
+                <Popup
+                  tabIndex="1"
+                  value={locationFilter}
+                  buttonText={
+                    locationFilter ? `${locationFilter.locationName}` : null
+                  }
+                  closeEvent={onFilterChange('locationFilter')}
+                  label="Location"
+                >
+                  {({ closeHandler }) => (
+                    <AddressSearch
+                      closeHandler={closeHandler}
+                      placeholder="Search for Location"
+                    />
+                  )}
+                </Popup>
               )}
               <Popup
                 tabIndex="4"
@@ -1128,14 +1145,16 @@ const Course = () => {
                 </div>
               )}
 
-              <Popup
-                tabIndex="2"
-                value={onlyWeekend}
-                closeEvent={onFilterChange('onlyWeekend')}
-                showList={false}
-                label="Weekend Courses / Events"
-                buttonText={onlyWeekend ? 'Weekend Courses / Events' : null}
-              ></Popup>
+              {!hideFiltersForPwht && (
+                <Popup
+                  tabIndex="2"
+                  value={onlyWeekend}
+                  closeEvent={onFilterChange('onlyWeekend')}
+                  showList={false}
+                  label="Weekend Courses / Events"
+                  buttonText={onlyWeekend ? 'Weekend Courses / Events' : null}
+                ></Popup>
+              )}
 
               {!hideFiltersForPwht && (
                 <Popup
@@ -1238,6 +1257,7 @@ const Course = () => {
                         </div>
                       )}
                     </div>
+
                     <MobileFilterModal
                       label="Course format"
                       value={
@@ -1277,19 +1297,24 @@ const Course = () => {
                         </SmartDropDown>
                       </div>
                     </MobileFilterModal>
-                    <MobileFilterModal
-                      label="Location"
-                      value={
-                        locationFilter ? `${locationFilter.locationName}` : null
-                      }
-                      clearEvent={onFilterClearEvent('locationFilter')}
-                      scrollRef={scrollRef}
-                    >
-                      <AddressSearch
-                        closeHandler={onFilterChange('locationFilter')}
-                        placeholder="Search for Location"
-                      />
-                    </MobileFilterModal>
+
+                    {!hideFiltersForPwht && (
+                      <MobileFilterModal
+                        label="Location"
+                        value={
+                          locationFilter
+                            ? `${locationFilter.locationName}`
+                            : null
+                        }
+                        clearEvent={onFilterClearEvent('locationFilter')}
+                        scrollRef={scrollRef}
+                      >
+                        <AddressSearch
+                          closeHandler={onFilterChange('locationFilter')}
+                          placeholder="Search for Location"
+                        />
+                      </MobileFilterModal>
+                    )}
                     <MobileFilterModal
                       label="Time Zone"
                       value={
@@ -1388,115 +1413,125 @@ const Course = () => {
                         </SmartDropDown>
                       </div>
                     </MobileFilterModal>
-                    <MobileFilterModal
-                      label="Dates"
-                      value={
-                        filterStartEndDateStr ? filterStartEndDateStr : null
-                      }
-                      clearEvent={onDatesChange}
-                      scrollRef={scrollRef}
-                    >
-                      <div className="datepicker-block">
-                        <DateRangePicker
-                          placeholder="Dates"
-                          showHeader={false}
-                          onChange={onDatesChange}
-                          showOneCalendar
-                          ranges={[]}
-                          editable={false}
-                          shouldDisableDate={combine(
-                            allowedMaxDays(14),
-                            beforeToday(),
-                          )}
-                          value={filterStartEndDate}
-                        />
-                      </div>
-                    </MobileFilterModal>
-                    <label>Weekend Courses / Events</label>
-                    <div
-                      className={classNames('courses-filter', {
-                        'with-selected': onlyWeekend,
-                      })}
-                    >
-                      <button
-                        className={classNames(
-                          'btn_outline_box btn-modal_dropdown full-btn mt-3',
-                          {
-                            '!tw-text-slate-300': !onlyWeekend,
-                          },
-                        )}
-                        data-filter="weekend-mobile-courses"
-                        data-type="checkbox"
-                        onClick={() => {
-                          setOnlyWeekend(!onlyWeekend ? true : null);
-                        }}
+                    {!hideFiltersForPwht && (
+                      <MobileFilterModal
+                        label="Dates"
+                        value={
+                          filterStartEndDateStr ? filterStartEndDateStr : null
+                        }
+                        clearEvent={onDatesChange}
+                        scrollRef={scrollRef}
                       >
-                        Weekend Courses / Events
-                      </button>
-                      <button
-                        className="courses-filter__remove"
-                        data-filter="weekend-mobile-courses"
-                        data-placeholder="Online"
-                        onClick={() => {
-                          setOnlyWeekend(null);
-                        }}
-                      >
-                        <svg
-                          width="20"
-                          height="21"
-                          viewBox="0 0 20 21"
-                          fill="none"
-                          xmlns="http://www.w3.org/2000/svg"
+                        <div className="datepicker-block">
+                          <DateRangePicker
+                            placeholder="Dates"
+                            showHeader={false}
+                            onChange={onDatesChange}
+                            showOneCalendar
+                            ranges={[]}
+                            editable={false}
+                            shouldDisableDate={combine(
+                              allowedMaxDays(14),
+                              beforeToday(),
+                            )}
+                            value={filterStartEndDate}
+                          />
+                        </div>
+                      </MobileFilterModal>
+                    )}
+                    {!hideFiltersForPwht && (
+                      <>
+                        <label>Weekend Courses / Events</label>
+                        <div
+                          className={classNames('courses-filter', {
+                            'with-selected': onlyWeekend,
+                          })}
                         >
-                          <rect
-                            x="0.5"
-                            y="1"
-                            width="19"
-                            height="19"
-                            rx="9.5"
-                            fill="#ABB1BA"
-                          />
-                          <rect
-                            x="0.5"
-                            y="1"
-                            width="19"
-                            height="19"
-                            rx="9.5"
-                            stroke="white"
-                          />
-                          <path
-                            d="M13.5 7L6.5 14"
-                            stroke="white"
-                            strokeWidth="1.5"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                          />
-                          <path
-                            d="M13.5 14L6.5 7"
-                            stroke="white"
-                            strokeWidth="1.5"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                          />
-                        </svg>
-                      </button>
-                    </div>
+                          <button
+                            className={classNames(
+                              'btn_outline_box btn-modal_dropdown full-btn mt-3',
+                              {
+                                '!tw-text-slate-300': !onlyWeekend,
+                              },
+                            )}
+                            data-filter="weekend-mobile-courses"
+                            data-type="checkbox"
+                            onClick={() => {
+                              setOnlyWeekend(!onlyWeekend ? true : null);
+                            }}
+                          >
+                            Weekend Courses / Events
+                          </button>
+                          <button
+                            className="courses-filter__remove"
+                            data-filter="weekend-mobile-courses"
+                            data-placeholder="Online"
+                            onClick={() => {
+                              setOnlyWeekend(null);
+                            }}
+                          >
+                            <svg
+                              width="20"
+                              height="21"
+                              viewBox="0 0 20 21"
+                              fill="none"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <rect
+                                x="0.5"
+                                y="1"
+                                width="19"
+                                height="19"
+                                rx="9.5"
+                                fill="#ABB1BA"
+                              />
+                              <rect
+                                x="0.5"
+                                y="1"
+                                width="19"
+                                height="19"
+                                rx="9.5"
+                                stroke="white"
+                              />
+                              <path
+                                d="M13.5 7L6.5 14"
+                                stroke="white"
+                                strokeWidth="1.5"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                              />
+                              <path
+                                d="M13.5 14L6.5 7"
+                                stroke="white"
+                                strokeWidth="1.5"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                              />
+                            </svg>
+                          </button>
+                        </div>
 
-                    <MobileFilterModal
-                      label="Instructor"
-                      value={instructorFilter ? instructorFilter.label : null}
-                      clearEvent={onFilterClearEvent('instructorFilter')}
-                      scrollRef={scrollRef}
-                    >
-                      <SmartInput
-                        containerClassName="smart-input-mobile"
-                        placeholder="Search Instructor"
-                        value={searchKey}
-                        onSearchKeyChange={(value) => setSearchKey(value)}
-                        dataList={instructorList}
-                        closeHandler={onFilterChangeEvent('instructorFilter')}
-                      ></SmartInput>
-                    </MobileFilterModal>
+                        <MobileFilterModal
+                          label="Instructor"
+                          value={
+                            instructorFilter ? instructorFilter.label : null
+                          }
+                          clearEvent={onFilterClearEvent('instructorFilter')}
+                          scrollRef={scrollRef}
+                        >
+                          <SmartInput
+                            containerClassName="smart-input-mobile"
+                            placeholder="Search Instructor"
+                            value={searchKey}
+                            onSearchKeyChange={(value) => setSearchKey(value)}
+                            dataList={instructorList}
+                            closeHandler={onFilterChangeEvent(
+                              'instructorFilter',
+                            )}
+                          ></SmartInput>
+                        </MobileFilterModal>
+                      </>
+                    )}
                   </div>
                 )}
                 {showFilterModal && (

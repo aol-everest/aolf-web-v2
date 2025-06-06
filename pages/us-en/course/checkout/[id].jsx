@@ -3,6 +3,7 @@ import {
   PageLoading,
   PaymentFormGeneric,
   PaymentFormHB,
+  PaymentFormCheckoutNew,
 } from '@components';
 import {
   ALERT_TYPES,
@@ -22,7 +23,11 @@ import {
   returnRouteWithUTMQuery,
 } from '@service';
 import { Elements } from '@stripe/react-stripe-js';
-import { api, convertToUpperCaseAndReplaceSpacesForURL } from '@utils';
+import {
+  api,
+  convertToUpperCaseAndReplaceSpacesForURL,
+  findKeyByProductTypeId,
+} from '@utils';
 import dayjs from 'dayjs';
 import { NextSeo } from 'next-seo';
 import ErrorPage from 'next/error';
@@ -31,9 +36,7 @@ import { useEffect, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import queryString from 'query-string';
 import { useAnalytics } from 'use-analytics';
-import { filterAllowedParams, removeNull } from '@utils/utmParam';
 import { PaymentFormNew } from '@components/paymentFormNew';
-import { orgConfig } from '@org';
 import { navigateToLogin } from '@utils';
 import { useStripeLoader } from '@hooks';
 import CourseNotFoundError from '@components/errors/CourseNotFoundError';
@@ -66,6 +69,7 @@ const Checkout = () => {
   const [campaignid] = useQueryState('campaignid', parseAsString);
   const [sourceBundle] = useQueryState('source-bundle', parseAsString);
   const [mbsy] = useQueryState('mbsy', parseAsString);
+  const [ctype] = useQueryState('ctype');
   const [isOldCheckout] = useQueryState(
     'isOldCheckout',
     parseAsBoolean.withDefault(false),
@@ -103,6 +107,11 @@ const Checkout = () => {
   // Add check for valid stripe initialization
   const isStripeReady = !!stripePromise;
 
+  const CheckoutStates = {
+    EMAIL_INPUT: 'EMAIL_INPUT',
+    USER_INFO: 'USER_INFO',
+  };
+
   const { showAlert, hideAlert } = useGlobalAlertContext();
   const { showModal } = useGlobalModalContext();
   const [showTopMessage, setShowTopMessage] = useState(false);
@@ -110,6 +119,24 @@ const Checkout = () => {
   const [comboProductSfid, setComboProductSfid] = useState('');
   const { track, page } = useAnalytics();
   const [validateDiscount, setValidateDiscount] = useState(false);
+  const [activeStep, setActiveStep] = useQueryState(
+    'step',
+    parseAsString.withDefault(
+      isAuthenticated ? CheckoutStates.USER_INFO : CheckoutStates.EMAIL_INPUT,
+    ),
+  );
+
+  const [courseType, setCourseType] = useQueryState(
+    'courseType',
+    parseAsString.withDefault('SKY_BREATH_MEDITATION'),
+  );
+
+  useEffect(() => {
+    if (ctype) {
+      const courseTypeKey = findKeyByProductTypeId(ctype);
+      setCourseType(courseTypeKey);
+    }
+  }, [ctype]);
 
   const handleValidateDiscount = (isValid) => {
     setValidateDiscount(isValid);
@@ -376,17 +403,38 @@ const Checkout = () => {
   }
   if (isLoading || !workshopId) return <PageLoading />;
 
-  const isHealingBreath = orgConfig.name === 'HB';
-
   const isSkyHappinessRetreat =
     COURSE_TYPES.SKY_HAPPINESS_RETREAT.value.indexOf(workshop.productTypeId) >=
     0;
+
+  const isSKYType =
+    COURSE_TYPES.SKY_BREATH_MEDITATION.value.indexOf(workshop.productTypeId) >=
+    0;
+
+  const isSahajSamadhiMeditationType =
+    COURSE_TYPES.SAHAJ_SAMADHI_MEDITATION.value.indexOf(
+      workshop.productTypeId,
+    ) >= 0;
 
   const isStripeIntentPayment = !!workshop.isStripeIntentPaymentEnabled;
 
   const isHBCheckoutPage = businessOrg === 'HB';
 
   const renderPaymentForm = () => {
+    if (isSahajSamadhiMeditationType || isSKYType) {
+      return (
+        <PaymentFormCheckoutNew
+          isStripeIntentPayment={isStripeIntentPayment}
+          workshop={workshop}
+          courseType={courseType}
+          activeStep={activeStep}
+          setActiveStep={setActiveStep}
+          enrollmentCompletionAction={enrollmentCompletionAction}
+          enrollmentCompletionLink={enrollmentCompletionLink}
+          isLoggedUser={isAuthenticated}
+        />
+      );
+    }
     if (isOldCheckout) {
       return (
         <div className="order hb-checkout-page">

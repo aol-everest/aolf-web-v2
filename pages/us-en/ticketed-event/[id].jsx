@@ -20,6 +20,7 @@ import { DiscountInputNew } from '@components/discountInputNew';
 import { AiTwotoneAlert } from 'react-icons/ai';
 import moment from 'moment';
 import CourseNotFoundError from '@components/errors/CourseNotFoundError';
+import { useFormPersist } from '@hooks';
 
 const ticketSchema = z.record(z.string(), z.number());
 
@@ -110,6 +111,11 @@ function TicketedEvent() {
   const { id: eventId } = router.query;
   const formRef = useRef();
   const [discountResponse, setDiscountResponse] = useState(null);
+
+  // Initialize form persist hook
+  const { persistKey } = useFormPersist(null, {
+    storagePrefix: 'attendee_persist_',
+  });
 
   const {
     data: event,
@@ -254,7 +260,10 @@ function TicketedEvent() {
       return;
     }
 
-    let queryParams = { ticket: JSON.stringify(selectedTickets) };
+    let queryParams = {
+      ticket: JSON.stringify(selectedTickets),
+      attendeeKey: persistKey,
+    };
 
     if (couponCode) {
       queryParams = { ...queryParams, couponCode };
