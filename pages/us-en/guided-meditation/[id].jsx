@@ -1,19 +1,17 @@
 /* eslint-disable react/no-unescaped-entities */
 /* eslint-disable no-inline-styles/no-inline-styles */
 import React, { useEffect, useRef } from 'react';
-import { Popup } from '@components';
+import { Navigation, Pagination, Scrollbar, A11y } from 'swiper';
+import { Swiper, SwiperSlide } from 'swiper/react';
 // Import Swiper styles
 import 'swiper/css';
 import 'swiper/css/pagination';
 import 'swiper/css/scrollbar';
 import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { api } from '@utils';
-import { useQueryState, createParser } from 'nuqs';
-// Import video-react components
-import { Player, ControlBar, BigPlayButton } from 'video-react';
-// Import video-react styles
-import 'video-react/dist/video-react.css';
+import { api, navigateToLogin, timeConvert } from '@utils';
+import { useQueryString } from '@hooks';
+import AudioPlayerSmall from '@components/audioPlayer/audioPlayerSmall';
 import { Loader } from '@components/loader';
 import {
   useAuth,
@@ -21,502 +19,811 @@ import {
   useGlobalAudioPlayerContext,
   useGlobalVideoPlayerContext,
 } from '@contexts';
+import { meditatePlayEvent, pushRouteWithUTMQuery } from '@service';
+import HubSpotForm from '@components/hubSpotForm';
 import { useRouter } from 'next/router';
+import { fetchContentfulDataDetails } from '@service';
+import AudioPlayerOnScreen from '@components/audioPlayer/AudioPlayerOnScreen';
 
-const customParseEnum = (enumObj) => {
-  return createParser({
-    parse(queryValue) {
-      console.log(
-        'Object.values(enumObj)',
-        Object.values(enumObj).find((value) => value.value === queryValue),
-      );
-      if (
-        queryValue &&
-        Object.values(enumObj).find((value) => value.value === queryValue)
-      ) {
-        return Object.values(enumObj).find(
-          (value) => value.value === queryValue,
-        );
-      } else {
-        return null;
-      }
+const swiperOption = {
+  modules: [Navigation, Scrollbar, A11y, Pagination],
+  slidesPerView: 1,
+  spaceBetween: 10,
+  pagination: { clickable: true, el: false },
+  breakpoints: {
+    640: {
+      slidesPerView: 1,
+      spaceBetween: 20,
     },
-    serialize(value) {
-      if (value) return value.value;
-      return null;
+    768: {
+      slidesPerView: 2,
+      spaceBetween: 30,
     },
-  }).withDefault?.(
-    Object.values(enumObj).find((value) => value.value === 'all'),
-  );
-};
-
-const MeditationItem = ({ duration, imageSrc, title, onClick }) => (
-  <div
-    className="fgm-course-item"
-    data-toggle="modal"
-    data-target="#meditationModal"
-    onClick={onClick}
-  >
-    <div className="play-time">{duration}</div>
-    <div className="fgm-image-wrap">
-      <img src={imageSrc} alt={title} />
-    </div>
-    <div className="fgm-course-title">{title}</div>
-  </div>
-);
-
-// Inline styles for the meditation modal
-const modalStyles = {
-  modalAudioWrap: {
-    margin: '20px 0',
-    padding: '20px',
-    backgroundColor: '#f8f9fa',
-    borderRadius: '8px',
-  },
-  meditationTopics: {
-    marginTop: '20px',
-    padding: '15px 0',
-  },
-  topicList: {
-    display: 'flex',
-    flexWrap: 'wrap',
-    gap: '12px',
-    marginTop: '10px',
-  },
-  topicItem: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '8px',
-    backgroundColor: '#f0f4f8',
-    padding: '8px 12px',
-    borderRadius: '20px',
-    fontSize: '14px',
-  },
-  topicIcon: {
-    width: '20px',
-    height: '20px',
-  },
-  videoPlayerWrap: {
-    marginBottom: '20px',
-    borderRadius: '8px',
-    overflow: 'hidden',
-    boxShadow: '0 4px 10px rgba(0,0,0,0.1)',
+    1024: {
+      slidesPerView: 3,
+      spaceBetween: 30,
+    },
   },
 };
 
-const LENGTHS = {
-  ALL_LENGTHS: {
-    label: 'All lengths',
-    value: 'all',
-  },
-  SHORT: {
-    label: 'Short',
-    value: 'short',
-  },
-  MEDIUM: {
-    label: 'Medium',
-    value: 'medium',
-  },
-  LONG: {
-    label: 'Long',
-    value: 'long',
-  },
-};
+export const getServerSideProps = async (context) => {
+  const response = await api.get({
+    path: 'randomMeditation',
+  });
 
-const LEVELS = {
-  ALL_LEVELS: {
-    label: 'All levels',
-    value: 'all',
-  },
-  BEGINNERS: {
-    label: 'Beginners',
-    value: 'beginners',
-  },
-  INTERMEDIATE: {
-    label: 'Intermediate',
-    value: 'intermediate',
-  },
-  EXPERT: {
-    label: 'Expert',
-    value: 'expert',
-  },
-};
-
-// MeditationModal component
-const MeditationModal = ({ selectedMeditation, isOpen, onClose }) => {
-  const playerRef = useRef(null);
-
-  // Handle auto-play when modal opens
-  useEffect(() => {
-    if (isOpen && playerRef.current) {
-      // Small delay to ensure player is loaded
-      setTimeout(() => {
-        playerRef.current.play();
-      }, 300);
-    }
-  }, [isOpen]);
-
-  // Handle close with video stopping
-  const handleClose = () => {
-    if (playerRef.current) {
-      playerRef.current.pause();
-    }
-    onClose();
+  return {
+    props: { randomMeditateData: response.data },
   };
-
-  if (!isOpen) return null;
-
-  return (
-    <div
-      className="meditation-video-modal modal fade bd-example-modal-lg show"
-      id="meditationModal"
-      tabIndex="-1"
-      role="dialog"
-      aria-labelledby="exampleModalLabel"
-      style={{ display: 'block', backgroundColor: 'rgba(0,0,0,0.5)' }}
-      onClick={(e) => {
-        // Close modal when clicking on the backdrop (not on modal content)
-        if (e.target.id === 'meditationModal') {
-          handleClose();
-        }
-      }}
-    >
-      <div
-        className="modal-dialog modal-dialog-centered modal-lg"
-        role="document"
-      >
-        <div className="modal-content">
-          <div className="modal-header">
-            <button
-              type="button"
-              className="close"
-              onClick={handleClose}
-              aria-label="Close"
-            >
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <div className="modal-body">
-            <div
-              className="modal-video-wrap"
-              style={{ position: 'relative', ...modalStyles.videoPlayerWrap }}
-            >
-              <Player
-                ref={playerRef}
-                playsInline
-                fluid={true}
-                poster={
-                  selectedMeditation?.coverImage?.file?.url
-                    ? `https:${selectedMeditation.coverImage.file.url}`
-                    : '/img/ds-course-preview-1.webp'
-                }
-                src={selectedMeditation?.videoUrl}
-              >
-                <ControlBar autoHide={true} className="my-custom-class" />
-                <BigPlayButton position="center" />
-              </Player>
-            </div>
-
-            <div className="video-title">
-              {selectedMeditation?.title || 'Sri Sri Yoga Foundation Program'}
-            </div>
-            <div className="video-desc">
-              {selectedMeditation?.description ||
-                'In this video, meet happiness expert and celebrated author Rajshree Patel and discover a new approach to sleep. Through this course, you will find a set of effective and simple techniques to enhance the quality of your rest. Welcome and enjoy!'}
-            </div>
-            <div className="video-other-info">
-              <div className="other-info-item">
-                <label>Activity</label>
-                <div className="text">Meditation</div>
-              </div>
-              <div className="other-info-item">
-                <label>Type</label>
-                <div className="text">
-                  {selectedMeditation?.category &&
-                  selectedMeditation.category.length > 0
-                    ? selectedMeditation.category.join(', ')
-                    : 'Guided'}
-                </div>
-              </div>
-              <div className="other-info-item">
-                <label>Duration</label>
-                <div className="text">
-                  {selectedMeditation?.duration
-                    ? `${Math.floor(selectedMeditation.duration / 60)} min ${selectedMeditation.duration % 60} sec`
-                    : '20 min'}
-                </div>
-              </div>
-              <div className="other-info-item">
-                <label>Teacher</label>
-                <div className="text">
-                  {selectedMeditation?.teacher?.name || 'Gurudev'}
-                </div>
-              </div>
-            </div>
-
-            {selectedMeditation?.topic &&
-              selectedMeditation.topic.length > 0 && (
-                <div
-                  className="meditation-topics"
-                  style={modalStyles.meditationTopics}
-                >
-                  <h4>Topics</h4>
-                  <div className="topic-list" style={modalStyles.topicList}>
-                    {selectedMeditation.topic.map((topic, index) => (
-                      <div
-                        key={`topic-${topic.id || ''}-${index}`}
-                        className="topic-item"
-                        style={modalStyles.topicItem}
-                      >
-                        {topic.icon?.file?.url && (
-                          <img
-                            src={`https:${topic.icon.file.url}`}
-                            alt={topic.name}
-                            className="topic-icon"
-                            style={modalStyles.topicIcon}
-                          />
-                        )}
-                        <span>{topic.name}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-          </div>
-        </div>
-      </div>
-    </div>
-  );
 };
 
-const GuidedMeditation = () => {
-  const [lengthFilter, setLengthFilter] = useQueryState(
-    'length',
-    customParseEnum(LENGTHS),
-  );
-  const [selectedMeditationId, setSelectedMeditationId] =
-    useQueryState('meditation');
-  const [selectedMeditation, setSelectedMeditation] = useState(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [manuallySelectedId, setManuallySelectedId] = useState(null);
+const GuidedMeditation = (props) => {
+  const [accordionIndex, setAccordionIndex] = useState(0);
+  const [categoryId, setCategoryId] = useQueryString('categoryId');
   const router = useRouter();
+  const scrollToRef = useRef(null);
   const { id: rootFolderID } = router.query;
+  const swiperRef = useRef(null);
   const { isAuthenticated } = useAuth();
   const { showPlayer, hidePlayer } = useGlobalAudioPlayerContext();
   const { showAlert, hideAlert } = useGlobalAlertContext();
   const { showVideoPlayer } = useGlobalVideoPlayerContext();
+  const { randomMeditateData = {} } = props;
+  const [randomMeditate, setRandomMeditate] = useState({});
 
-  const { data: guidedMeditations = [], isLoading: loading } = useQuery({
-    queryKey: ['getContentsByFolder', lengthFilter],
+  useEffect(() => {
+    const getContentfulData = async () => {
+      const audioVideoDetails = await fetchContentfulDataDetails(
+        randomMeditateData?.contentfulId || '',
+      );
+      setRandomMeditate({ ...randomMeditateData, ...audioVideoDetails });
+    };
+
+    getContentfulData();
+  }, []);
+
+  // For geting the first load Data with root folder id
+  const { data: rootFolder = {} } = useQuery({
+    queryKey: ['library'],
     queryFn: async () => {
       const response = await api.get({
-        path: 'getContentsByFolder',
-        params: {
+        path: 'library',
+        param: {
           folderId: rootFolderID,
-          freeOnly: true,
-          ...(lengthFilter &&
-            lengthFilter.value !== 'all' && { length: lengthFilter.value }),
+          accessible: true,
         },
+      });
+      const [rootFolder] = response.data.folder;
+      if (!rootFolder) {
+        throw new Error('No library found. Invalid Folder Id.');
+      }
+      return rootFolder;
+    },
+  });
+
+  // For geting the Category Data
+  const { isLoading: loading, data } = useQuery({
+    queryKey: ['library', categoryId],
+    queryFn: async () => {
+      const response = await api.get({
+        path: 'library',
+        param: {
+          folderId: categoryId,
+          accessible: true,
+        },
+      });
+      const [contentFolder] = response.data.folder;
+      return contentFolder;
+    },
+    enabled: !!categoryId,
+  });
+
+  const onFilterChange = (value) => {
+    setCategoryId(value);
+  };
+
+  const handlePrev = () => {
+    if (swiperRef.current && swiperRef.current.swiper) {
+      swiperRef.current.swiper.slidePrev();
+    }
+  };
+
+  const handleNext = () => {
+    if (swiperRef.current && swiperRef.current.swiper) {
+      swiperRef.current.swiper.slideNext();
+    }
+  };
+
+  const { data: subsciptionCategories = [] } = useQuery({
+    queryKey: 'subsciption',
+    queryFn: async () => {
+      const response = await api.get({
+        path: 'subsciption',
       });
       return response.data;
     },
   });
+  const purchaseMembershipAction = (id) => (e) => {
+    hideAlert();
+    pushRouteWithUTMQuery(router, `/us-en/membership/${id}`);
+  };
 
-  const meditateClickHandle = async (meditate) => {
-    // Set manually selected ID to prevent infinite loop with useEffect
-    setManuallySelectedId(meditate.id);
-
-    // Get the correct video URL based on the available data
-    let videoUrl = null;
-    if (meditate.videoUrl) {
-      videoUrl = meditate.videoUrl;
-    } else if (meditate.contentType === 'Video' && meditate.track?.file?.url) {
-      // Format: //videos.ctfassets.net/path/to/video.mp4
-      videoUrl = `https:${meditate.track.file.url}`;
-    }
-
-    // Store the selected meditation for context with the correct video URL
-    setSelectedMeditationId(meditate.id);
-    setSelectedMeditation({
-      ...meditate,
-      videoUrl,
-    });
-
-    if (
-      meditate.contentType === 'Audio' ||
-      meditate.contentType === 'audio/x-m4a'
-    ) {
-      // For audio, use the global audio player without showing the modal
-      const audioSrc = meditate.track?.file?.url
-        ? `https:${meditate.track.file.url}`
-        : null;
-
-      showPlayer({
-        track: {
-          title: meditate.title,
-          artist: meditate.teacher?.name,
-          image: meditate.coverImage?.file?.url
-            ? `https:${meditate.coverImage.file.url}`
-            : null,
-          audioSrc,
-        },
-        autoPlay: true, // The AudioPlayer component now handles autoPlay automatically
+  const meditateClickHandle = async (e, meditate) => {
+    if (e) e.preventDefault();
+    if (!isAuthenticated) {
+      navigateToLogin(router);
+    } else {
+      await meditatePlayEvent({
+        meditate,
+        showAlert,
+        hideAlert,
+        showPlayer,
+        hidePlayer,
+        showVideoPlayer,
+        subsciptionCategories,
+        purchaseMembershipAction,
+        router,
       });
-    } else if (meditate.contentType === 'Video') {
-      // For video, open the modal and use the video player
-      setIsModalOpen(true);
-      hidePlayer();
     }
   };
 
-  const onFilterChange = (field) => async (selectedValue) => {
-    switch (field) {
-      case 'lengthFilter':
-        setLengthFilter(selectedValue);
-        break;
+  const handleGoToHubSpotForm = () => {
+    if (scrollToRef.current) {
+      scrollToRef.current.scrollIntoView({ behavior: 'smooth' });
     }
   };
 
-  const closeModal = () => {
-    setIsModalOpen(false);
-  };
+  const contentFolders = rootFolder?.folder;
 
-  // Handle escape key press to close modal
-  useEffect(() => {
-    const handleEscapeKey = (event) => {
-      if (event.key === 'Escape' && isModalOpen) {
-        closeModal();
-      }
-    };
+  let listingFolders = contentFolders?.filter(
+    (folder) => folder.isListingFolder,
+  );
 
-    document.addEventListener('keydown', handleEscapeKey);
-    return () => {
-      document.removeEventListener('keydown', handleEscapeKey);
-    };
-  }, [isModalOpen]);
+  const popularFolder = listingFolders?.find(
+    (folder) =>
+      folder.title && folder.title.toLowerCase().indexOf('popular') > -1,
+  );
 
-  // Play meditation on page load if selectedMeditationId is present in query params
-  useEffect(() => {
-    if (
-      selectedMeditationId &&
-      guidedMeditations.length > 0 &&
-      selectedMeditationId !== manuallySelectedId
-    ) {
-      const meditation = guidedMeditations.find(
-        (m) => m.id === selectedMeditationId,
-      );
-      if (meditation) {
-        meditateClickHandle(meditation);
-      }
-    }
-  }, [
-    selectedMeditationId,
-    guidedMeditations,
-    meditateClickHandle,
-    manuallySelectedId,
-  ]);
+  const nonListingFolders = contentFolders?.filter(
+    (folder) => !folder.isListingFolder,
+  );
+
+  const categoryContent = categoryId
+    ? data
+    : popularFolder?.content?.length > 0
+      ? popularFolder?.content
+      : [];
+
+  const meditationHabbit = (
+    <>
+      Everyone can benefit from meditation, yet only those who cultivate a
+      regular habit will experience the cumulative depth and breadth of those
+      benefits—and see lasting positive change.
+      <br />
+      <br />
+      Top tips to creating a habit:
+      <br />
+      <br />
+      <strong>1. Set a time & place</strong>
+      <br />
+      Meditation will more easily integrate into your daily routine.
+      <br />
+      <br />
+      <strong>2. Consistency is key</strong>
+      <br />
+      Even on days when the mind feels really busy, keep going!
+      <br />
+      <br />
+      <strong>3. Choose a realistic duration</strong>
+      <br />
+      Regularity wins over duration.
+      <br />
+      <br />
+      <strong>4. Be kind to yourself</strong>
+      <br />
+      If you miss a day, just begin again. Compare how you feel on days you
+      meditate vs days you don’t. It’s a big motivator!
+    </>
+  );
 
   return (
-    <main className="free-guided-meditations">
+    <main className="guided-meditation">
       {loading && <Loader />}
-      <section className="title-header">
+      <section className="banner-section">
         <div className="container">
-          <h1 className="page-title">Free guided meditations by Gurudev</h1>
+          <div className="banner-title">{`Your Guide
+          to Meditation`}</div>
+          <div className="banner-desc">
+            Meditation is the delicate art of doing nothing and letting go of
+            all effort to reconnect with the serenity that is your very nature,
+            to feel revived, refreshed, and restored again
+          </div>
+          <div className="banner-audio">
+            <AudioPlayerOnScreen
+              id="global-player"
+              pageParam={{
+                track: {
+                  title: randomMeditate.title,
+                  artist: randomMeditate.teacher?.name,
+                  image: randomMeditate.coverImage?.url,
+                  audioSrc: randomMeditate.track?.fields?.file?.url,
+                },
+              }}
+            />
+          </div>
         </div>
       </section>
-      <section>
+      <section className="benefits-meditation">
         <div className="container">
-          <div className="filter-wrapper">
-            <div className="filters">
-              <Popup
-                value={lengthFilter}
-                buttonText={lengthFilter?.label}
-                closeEvent={onFilterChange('lengthFilter')}
-                label=""
-                parentClassName="dde"
-              >
-                {({ closeHandler }) => (
-                  <ul className="courses-filter__list">
-                    <li
-                      className="courses-filter__list-item"
-                      onClick={closeHandler(LENGTHS.ALL_LENGTHS)}
-                    >
-                      {LENGTHS.ALL_LENGTHS.label}
-                    </li>
-                    <li
-                      className="courses-filter__list-item"
-                      onClick={closeHandler(LENGTHS.SHORT)}
-                    >
-                      {LENGTHS.SHORT.label}
-                    </li>
-                    <li
-                      className="courses-filter__list-item"
-                      onClick={closeHandler(LENGTHS.MEDIUM)}
-                    >
-                      {LENGTHS.MEDIUM.label}
-                    </li>
-                    <li
-                      className="courses-filter__list-item"
-                      onClick={closeHandler(LENGTHS.LONG)}
-                    >
-                      {LENGTHS.LONG.label}
-                    </li>
-                  </ul>
-                )}
-              </Popup>
+          <h2 className="section-title">Benefits of meditation</h2>
+          <div className="section-desc">
+            Science shows that consistent meditation practice can
+          </div>
+          <div className="benefits-list">
+            <div className="benefit-item">
+              <div className="benefit-icon">
+                <span className="icon-aol iconaol-focus"></span>
+              </div>
+              <div className="benefit-text">Increase focus</div>
             </div>
-            <div className="total-count">
-              Displaying {guidedMeditations?.length || 0} free meditations
+            <div className="benefit-item">
+              <div className="benefit-icon">
+                <span className="icon-aol iconaol-mindfulness"></span>
+              </div>
+              <div className="benefit-text">Calm the mind</div>
+            </div>
+            <div className="benefit-item">
+              <div className="benefit-icon">
+                <span className="icon-aol iconaol-sleep"></span>
+              </div>
+              <div className="benefit-text">Improve sleep</div>
+            </div>
+            <div className="benefit-item">
+              <div className="benefit-icon">
+                <span className="icon-aol iconaol-lighting"></span>
+              </div>
+              <div className="benefit-text">Boost energy</div>
+            </div>
+            <div className="benefit-item">
+              <div className="benefit-icon">
+                <span className="icon-aol iconaol-reduce-stress"></span>
+              </div>
+              <div className="benefit-text">Reduce stress</div>
+            </div>
+            <div className="benefit-item">
+              <div className="benefit-icon">
+                <span className="icon-aol iconaol-brain"></span>
+              </div>
+              <div className="benefit-text">Foster greater mindfulness</div>
+            </div>
+            <div className="benefit-item">
+              <div className="benefit-icon">
+                <span className="icon-aol iconaol-charity"></span>
+              </div>
+              <div className="benefit-text">Enhance mind-body health</div>
+            </div>
+            <div className="benefit-item">
+              <div className="benefit-icon">
+                <span className="icon-aol iconaol-emotion"></span>
+              </div>
+              <div className="benefit-text">Increase positive emotions</div>
             </div>
           </div>
         </div>
       </section>
-      <section className="section-courses">
+      <section className="section-why-try">
         <div className="container">
-          <div className="fgm-courses-listing">
-            {guidedMeditations?.map((item, index) => (
-              <MeditationItem
-                key={`meditation-${item.id || ''}-${item.folder}-${index}`}
-                duration={
-                  item.duration
-                    ? `${Math.floor(item.duration / 60)} min`
-                    : '5 min'
-                }
-                imageSrc={
-                  item.coverImage?.file?.url
-                    ? `https:${item.coverImage.file.url}`
-                    : `/img/ds-course-preview-${(index % 7) + 1}.webp`
-                }
-                title={item.title || 'Guided Meditation'}
-                onClick={() => meditateClickHandle(item)}
+          <div className="why-try-content-box">
+            <div className="cb-info-container">
+              <h2 className="section-title">
+                Why try Art of Living meditations?
+              </h2>
+              <p>
+                Gurudev is the founder of Art of Living and a world-renowned
+                master of meditation. Our guided meditations and techniques are
+                rooted in an ancient tradition yet modernized for contemporary
+                life. They take you directly to the heart of meditation in a
+                deep and effortless way.
+              </p>
+              <p>
+                <strong>
+                  They take you directly to the heart of meditation in the most
+                  deep and effortless way.
+                </strong>
+              </p>
+            </div>
+            <div className="cb-image-container">
+              <img src="/img/gurudev-talking.webp" alt="gurudev" width="100%" />
+            </div>
+          </div>
+        </div>
+      </section>
+      <section className="section-quote">
+        <div className="container">
+          <div className="quote-top-icon">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width={106}
+              height={52}
+              fill="none"
+            >
+              <g clipPath="url(#a)">
+                <mask
+                  id="b"
+                  width={106}
+                  height={107}
+                  x={0}
+                  y={0}
+                  maskUnits="userSpaceOnUse"
+                  style={{
+                    maskType: 'luminance',
+                  }}
+                >
+                  <path fill="#fff" d="M106 0H0v106.122h106V0Z" />
+                </mask>
+                <g mask="url(#b)">
+                  <path
+                    fill="#31364E"
+                    d="m62.209-.785-7.686 48.066L79.504 5.52 55.862 48.055l37.742-30.688L56.856 49.24l45.949-15.914-45.421 17.369 48.616.779-48.616.769L102.8 69.623 56.855 53.698l36.742 31.883L55.86 54.884l23.634 42.54-24.973-41.766 7.675 48.067L53 55.926l-9.208 47.797 7.686-48.066L26.495 97.42l23.643-42.535-37.742 30.688 36.748-31.875-45.95 15.915 45.421-17.37L0 51.465l48.615-.77L3.198 33.317 49.144 49.24 12.403 17.358l37.735 30.697-23.633-42.54L51.477 47.28 43.802-.787 53 47.013 62.21-.786Z"
+                  />
+                </g>
+              </g>
+              <defs>
+                <clipPath id="a">
+                  <path fill="#fff" d="M0 0h106v52H0z" />
+                </clipPath>
+              </defs>
+            </svg>
+          </div>
+          <div className="quote-text">
+            "You've been meditating even before your birth, when you were in
+            your mother's womb, doing nothing-just being. That is meditation.
+            There's a natural tendency in every human being to desire that state
+            of absolute comfort."
+          </div>
+          <div className="quote-author">Gurudev Sri Sri Ravi Shankar</div>
+        </div>
+      </section>
+      <section className="section-top-pics">
+        <div className="container">
+          <h2 className="section-title">Meditation is for everyone</h2>
+          <div className="section-desc">Guided meditations for any mood.</div>
+          <div className="categories-pills">
+            {nonListingFolders &&
+              nonListingFolders.map((category) => (
+                <a
+                  className={`cat-pill ${categoryId === category.id ? 'active' : ''}`}
+                  key={category.id}
+                  onClick={() =>
+                    onFilterChange(
+                      categoryId === category.id ? '' : category.id,
+                    )
+                  }
+                >
+                  {category.title}
+                </a>
+              ))}
+          </div>
+          {categoryContent?.content?.length > 0 && (
+            <div className="top-picks-container">
+              <div className="top-picks-content top-picks-slider swiper">
+                <div className="top-picks-header">
+                  <div className="top-picks-title">
+                    {categoryId ? data.title : 'Top picks'}
+                  </div>
+                  <div className="top-picks-actions">
+                    <div
+                      className="slide-button-prev slide-button"
+                      onClick={handlePrev}
+                    >
+                      <span className="icon-aol iconaol-arrow-long-left"></span>
+                    </div>
+                    <div
+                      className="slide-button-next slide-button"
+                      onClick={handleNext}
+                    >
+                      <span className="icon-aol iconaol-arrow-long-right"></span>
+                    </div>
+                  </div>
+                </div>
+                <Swiper
+                  {...swiperOption}
+                  className="reviews-slider"
+                  navigation={{
+                    prevEl: '.slide-button-prev',
+                    nextEl: '.slide-button-next',
+                  }}
+                  onInit={(swiper) => {
+                    swiper.params.navigation.prevEl = '.slide-button-prev';
+                    swiper.params.navigation.nextEl = '.slide-button-next';
+                    swiper.navigation.update();
+                  }}
+                >
+                  {categoryContent?.content?.map((meditate, index) => {
+                    return (
+                      <SwiperSlide key={index}>
+                        <div
+                          className="swiper-slide"
+                          onClick={(e) => meditateClickHandle(e, meditate)}
+                        >
+                          <div className="top-pick-preview-area">
+                            <img
+                              src={
+                                meditate?.coverImage?.url ||
+                                '/img/top-pick-preview1.webp'
+                              }
+                              className="top-pick-img"
+                              alt="top pick"
+                              width="100%"
+                            />
+                            <div className="preview-info">
+                              <div className="play-time">
+                                {timeConvert(meditate.duration)}
+                              </div>
+                              {!meditate.accessible && (
+                                <div className="lock-info">
+                                  <span className="icon-aol iconaol-lock"></span>
+                                </div>
+                              )}
+                            </div>
+                          </div>
+                          <div className="top-pick-content-info">
+                            <div className="top-pick-title">
+                              {meditate.title}
+                            </div>
+                            <div className="top-pick-author">
+                              <span className="icon-aol iconaol-profile"></span>
+                              {meditate.primaryTeacherName}
+                            </div>
+                          </div>
+                        </div>
+                      </SwiperSlide>
+                    );
+                  })}
+                </Swiper>
+              </div>
+            </div>
+          )}
+        </div>
+      </section>
+      <section className="experience-journey">
+        <div className="container">
+          <div className="experience-journey-content-wrap" ref={scrollToRef}>
+            <div className="ej-content-info">
+              <h2 className="section-title">
+                Experience deep calm & inner stillness
+              </h2>
+              <div className="section-desc">
+                <strong>Join the 7-day on-demand meditation journey</strong> to
+                deeply relax and reconnect with inner peace, calm, and joy. Dive
+                into a profound restorative experience, guided by world-renowned
+                meditation master, Gurudev.
+              </div>
+              <div className="experience-features">
+                <div className="ef-item">
+                  <div className="ef-icon">
+                    <span className="icon-aol iconaol-emotion"></span>
+                  </div>
+                  <div className="ef-text">
+                    Receive a new meditation each day
+                  </div>
+                </div>
+                <div className="ef-item">
+                  <div className="ef-icon">
+                    <span className="icon-aol iconaol-sleep"></span>
+                  </div>
+                  <div className="ef-text">
+                    Release stress & reconnect with calm
+                  </div>
+                </div>
+                <div className="ef-item">
+                  <div className="ef-icon">
+                    <span className="icon-aol iconaol-chat-flower"></span>
+                  </div>
+                  <div className="ef-text">Acquire new meditation tips</div>
+                </div>
+                <div className="ef-item">
+                  <div className="ef-icon">
+                    <span className="icon-aol iconaol-key"></span>
+                  </div>
+                  <div className="ef-text">
+                    Gain access to valuable insights
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="journey-form-wrap">
+              <HubSpotForm
+                formId="38e9752d-78df-4079-b18f-c90e579b0969"
+                sfdcCampaignId="7011I000000CWMgQAO"
               />
-            ))}
+            </div>
           </div>
         </div>
       </section>
-      <div
-        className="QR-wrapper "
-        style={{
-          border: '10px solid rgb(95 153 223)',
-          borderRadius: '10px',
-        }}
-      >
-        <img src="/img/Guided-Meditation-app-qr-code.png" alt="QR Code" />
-      </div>
-      <div className="app-download">
-        <img src="/img/mobile-app-store-ios.webp" alt="iOS" />
-        <img src="/img/mobile-app-store-android.webp" alt="Android" />
-      </div>
+      <section className="featured-in">
+        <div className="container">
+          <h2 className="section-title">Featured In</h2>
+          <div className="featured-listing">
+            <div className="featured-item">
+              <div className="featured-item-logo">
+                <img src="/img/WP.webp" alt="washington post" />
+              </div>
+              <div className="featured-item-text">
+                "Like fresh air to millions"
+              </div>
+            </div>
+            <div className="featured-item">
+              <div className="featured-item-logo">
+                <img src="/img/Harvard.webp" alt="Harvard Health Publishing" />
+              </div>
+              <div className="featured-item-text">
+                "Shows promise in providing relief for depression"
+              </div>
+            </div>
+            <div className="featured-item">
+              <div className="featured-item-logo">
+                <img src="/img/Yoga.webp" alt="Yoga Journal" />
+              </div>
+              <div className="featured-item-text">
+                "May be the fastest growing spiritual practice on the planet"
+              </div>
+            </div>
+            <div className="featured-item">
+              <div className="featured-item-logo">
+                <img src="/img/CNN.webp" alt="CNN" />
+              </div>
+              <div className="featured-item-text">"Life Changing"</div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <section className="section-testimonials">
+        <div className="container">
+          <div className="top-text">TESTIMONIALS</div>
+          <h2 className="section-title">What people are sharing</h2>
+          <div className="testimonials-listing">
+            <div className="testimonial-item">
+              <div className="author-picutre">
+                <img
+                  src="/img/testimony-adinah.webp"
+                  alt="Adinah"
+                  height="70"
+                  width="70"
+                />
+              </div>
+              <div className="testimony-text">
+                “Wow. It made a significant impression on me, was very very
+                enjoyable, at times profound, and I plan to keep practicing.”
+              </div>
+              <div className="author-name">Adinah</div>
+            </div>
+            <div className="testimonial-item">
+              <div className="author-picutre">
+                <img
+                  src="/img/testimony-joanna.webp"
+                  alt="Joanna"
+                  height="70"
+                  width="70"
+                />
+              </div>
+              <div className="testimony-text">
+                “It was awesome! I regained my mental health. And I also feel so
+                much lighter and happier. I got out of my funk that was getting
+                me unmotivated.”
+              </div>
+              <div className="author-name">Joanna</div>
+            </div>
+            <div className="testimonial-item">
+              <div className="author-picutre">
+                <img
+                  src="/img/testimony-vijitha.webp"
+                  alt="Vijitha"
+                  height="70"
+                  width="70"
+                />
+              </div>
+              <div className="testimony-text">
+                “It was liberating. Any time my mind is wiggling between the
+                past and the future, I notice it and have found a hack to bring
+                myself back to the present.”
+              </div>
+              <div className="author-name">Vijitha</div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <section className="section-faq">
+        <div className="container">
+          <h2 className="section-title">Frequently Asked Questions</h2>
+          <div id="accordion" className="accordion">
+            <div
+              className="card"
+              onClick={() => setAccordionIndex(accordionIndex === 0 ? null : 0)}
+            >
+              <div className="card-header" id="headingOne">
+                <h5 className="mb-0">
+                  <button
+                    className="btn btn-link"
+                    data-toggle="collapse"
+                    data-target="#collapseOne"
+                    aria-expanded={accordionIndex === 0 ? true : false}
+                    aria-controls="collapseOne"
+                  >
+                    Is meditation for me?
+                  </button>
+                </h5>
+              </div>
 
-      <MeditationModal
-        selectedMeditation={selectedMeditation}
-        isOpen={isModalOpen}
-        onClose={closeModal}
-      />
+              <div
+                id="collapseOne"
+                className={`collapse ${accordionIndex === 0 ? 'show' : ''}`}
+                aria-labelledby="headingOne"
+                data-parent="#accordion"
+              >
+                <div className="card-body">
+                  {`Yes! Everyone benefits from meditation. It is accessible to everyone.
+
+                    There are so many reasons people start meditating—the benefits support all aspects of life, wherever you are.
+
+                    Experience is the best way to discover just how profound the practice is.`}
+                </div>
+              </div>
+            </div>
+            <div
+              className="card"
+              onClick={() => setAccordionIndex(accordionIndex === 1 ? null : 1)}
+            >
+              <div className="card-header" id="headingThree">
+                <h5 className="mb-0">
+                  <button
+                    className="btn btn-link collapsed"
+                    data-toggle="collapse"
+                    data-target="#collapseThree"
+                    aria-expanded={accordionIndex === 1 ? true : false}
+                    aria-controls="collapseThree"
+                  >
+                    How do I make meditation a habit?
+                  </button>
+                </h5>
+              </div>
+              <div
+                id="collapseThree"
+                className={`collapse ${accordionIndex === 1 ? 'show' : ''}`}
+                aria-labelledby="headingThree"
+                data-parent="#accordion"
+              >
+                <div className="card-body">{meditationHabbit}</div>
+              </div>
+            </div>
+            <div
+              className="card"
+              onClick={() => setAccordionIndex(accordionIndex === 2 ? null : 2)}
+            >
+              <div className="card-header" id="headingFour">
+                <h5 className="mb-0">
+                  <button
+                    className="btn btn-link collapsed"
+                    data-toggle="collapse"
+                    data-target="#collapseFour"
+                    aria-expanded={accordionIndex === 2 ? true : false}
+                    aria-controls="collapseFour"
+                  >
+                    Do I have to sit cross-legged?
+                  </button>
+                </h5>
+              </div>
+              <div
+                id="collapseFour"
+                className={`collapse ${accordionIndex === 2 ? 'show' : ''}`}
+                aria-labelledby="headingFour"
+                data-parent="#accordion"
+              >
+                <div className="card-body">
+                  {`No! Simply find a comfortable seated spot where you’ll be undisturbed and can relax.
+
+                    Get comfortable with your coziest blanket, and feel free to sit back on a chair, sofa, or meditation cushion! Otherwise, it’ll be quite the challenge to relax your mind.`}
+                </div>
+              </div>
+            </div>
+            <div
+              className="card"
+              onClick={() => setAccordionIndex(accordionIndex === 3 ? null : 3)}
+            >
+              <div className="card-header" id="headingFive">
+                <h5 className="mb-0">
+                  <button
+                    className="btn btn-link collapsed"
+                    data-toggle="collapse"
+                    data-target="#collapseFive"
+                    aria-expanded={accordionIndex === 3 ? true : false}
+                    aria-controls="collapseFive"
+                  >
+                    When is the best time to meditate?
+                  </button>
+                </h5>
+              </div>
+              <div
+                id="collapseFive"
+                className={`collapse ${accordionIndex === 3 ? 'show' : ''}`}
+                aria-labelledby="headingFive"
+                data-parent="#accordion"
+              >
+                <div className="card-body">
+                  {`Morning meditations are often considered best (preferably before breakfast), but choose a time that works for you—building the habit is what matters most.
+
+                    Establishing a daily meditation routine with a set time will really help you stay on track! The body and mind are habitual creatures and will start to expect the practice at that time, so you’ll naturally begin to settle, making it easier to sit and maintain this life-enhancing routine.
+                  `}
+                </div>
+              </div>
+            </div>
+            <div
+              className="card"
+              onClick={() => setAccordionIndex(accordionIndex === 4 ? null : 4)}
+            >
+              <div className="card-header" id="headingSix">
+                <h5 className="mb-0">
+                  <button
+                    className="btn btn-link collapsed"
+                    data-toggle="collapse"
+                    data-target="#collapseSix"
+                    aria-expanded={accordionIndex === 4 ? true : false}
+                    aria-controls="collapseSix"
+                  >
+                    How do I start meditating?
+                  </button>
+                </h5>
+              </div>
+              <div
+                id="collapseSix"
+                className={`collapse ${accordionIndex === 4 ? 'show' : ''}`}
+                aria-labelledby="headingSix"
+                data-parent="#accordion"
+              >
+                <div className="card-body">
+                  We recommend starting with our{' '}
+                  <a onClick={handleGoToHubSpotForm}>
+                    free 7-Day Guided Meditation Journey.
+                  </a>{' '}
+                  You’ll be guided every step of the way with powerful daily
+                  guided meditations and insight, led by world-renowned
+                  meditation master, Gurudev.{' '}
+                  <a onClick={handleGoToHubSpotForm}>
+                    Save your FREE spot today
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <section className="section-key-highlights">
+        <div className="container">
+          <div className="key-highlights">
+            <div className="key-item">
+              <div className="key-item--title">42</div>
+              <div className="key-item--desc">Years of transforming lives</div>
+            </div>
+            <div className="key-item">
+              <div className="key-item--title">180</div>
+              <div className="key-item--desc">
+                Countries where our programs made a difference
+              </div>
+            </div>
+            <div className="key-item">
+              <div className="key-item--title">800M+</div>
+              <div className="key-item--desc">
+                Lives touched through our courses & events
+              </div>
+            </div>
+            <div className="key-item">
+              <div className="key-item--title">10,000+</div>
+              <div className="key-item--desc">Centers worldwide</div>
+            </div>
+          </div>
+        </div>
+      </section>
     </main>
   );
 };
-
-GuidedMeditation.hideFooter = true;
 
 export default GuidedMeditation;
