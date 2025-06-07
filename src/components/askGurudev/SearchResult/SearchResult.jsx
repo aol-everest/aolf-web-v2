@@ -28,6 +28,14 @@ const SearchResult = React.forwardRef(function SearchResult(
   const [activeKey, setActiveKey] = useState('unknown');
   const router = useRouter();
 
+  useEffect(() => {
+    setUpdatedResults(results);
+  }, [results]);
+
+  useEffect(() => {
+    setResult(selectedResult);
+  }, [selectedResult]);
+
   const currentUrl = `${window.location.origin}${router.asPath}`;
 
   const isSourceUrl = useMemo(() => {
