@@ -234,30 +234,30 @@ export const AOL_MENU = [
     ],
   },
   {
-    name: 'Events',
+    name: 'Meet Gurudev',
     submenu: [
       {
-        name: 'Orlando, FL',
+        name: 'In Orlando, FL',
         link: 'https://event.us.artofliving.org/us-en/lp1/journey-within-orlando/',
         props: { target: '_blank' },
       },
       {
-        name: 'Jacksonville, FL',
+        name: 'In Jacksonville, FL',
         link: 'https://event.us.artofliving.org/us-en/lp1-journey-within-jacksonville/',
         props: { target: '_blank' },
       },
       {
-        name: 'Bay Area, CA',
+        name: 'In Bay Area, CA',
         link: 'https://event.us.artofliving.org/us-en/lp1/sfba/wellness-with-gurudev/',
         props: { target: '_blank' },
       },
       {
-        name: 'Albuquerque, NM',
+        name: 'In Albuquerque, NM',
         link: 'https://aolf.me/jw-albuquerque',
         props: { target: '_blank' },
       },
       {
-        name: 'Boone, NC',
+        name: 'In Boone, NC',
         link: 'https://artoflivingretreatcenter.org/sri-sri-ravi-shankar/gurudev-programs/',
         props: { target: '_blank' },
       },
