@@ -31,6 +31,9 @@ export default function AttendeeDetails({
   tickets,
   handleSubmitAttendees,
   detailsRequired,
+  userProfile,
+  isUserLoggedIn,
+  formikRef,
 }) {
   const [expanded, setExpanded] = useState(null);
   const [initialTickets, setInitialTickets] = useState([]);
@@ -50,17 +53,30 @@ export default function AttendeeDetails({
   useEffect(() => {
     let updatedTickets;
     if (!tickets?.[0]?.attendeeRecordExternalId) {
-      updatedTickets = tickets.flatMap((item) => {
-        return Array.from({ length: item.numberOfTickets }, (_, index) => ({
-          ...item,
-          number: index + 1,
-          attendeeRecordExternalId: generateUniqueId(),
-          numberOfTickets: 1,
-          firstName: '',
-          lastName: '',
-          email: '',
-          contactPhone: '',
-        }));
+      updatedTickets = tickets.flatMap((item, tierIndex) => {
+        return Array.from({ length: item.numberOfTickets }, (_, index) => {
+          const isFirstAttendee = tierIndex === 0 && index === 0;
+          return {
+            ...item,
+            number: index + 1,
+            attendeeRecordExternalId: generateUniqueId(),
+            numberOfTickets: 1,
+            firstName:
+              isFirstAttendee && isUserLoggedIn
+                ? userProfile?.first_name || ''
+                : '',
+            lastName:
+              isFirstAttendee && isUserLoggedIn
+                ? userProfile?.last_name || ''
+                : '',
+            email:
+              isFirstAttendee && isUserLoggedIn ? userProfile?.email || '' : '',
+            contactPhone:
+              isFirstAttendee && isUserLoggedIn
+                ? userProfile?.personMobilePhone || ''
+                : '',
+          };
+        });
       });
     } else {
       updatedTickets = tickets;
@@ -71,7 +87,7 @@ export default function AttendeeDetails({
       setExpanded(updatedTickets[0].attendeeRecordExternalId);
     }
     setInitialTickets(updatedTickets);
-  }, [tickets]);
+  }, [tickets, userProfile, isUserLoggedIn]);
 
   const handleExpandItem = (ticket) => {
     setExpanded(ticket.attendeeRecordExternalId);
@@ -146,7 +162,7 @@ export default function AttendeeDetails({
                 enableReinitialize={true}
                 validateOnMount={true}
                 onSubmit={(values) => {
-                  handleSubmitAttendees(false, values.tickets);
+                  handleSubmitAttendees(false, values.tickets, formikRef);
                 }}
               >
                 {(formik) => {

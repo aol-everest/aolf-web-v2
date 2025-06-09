@@ -258,12 +258,46 @@ const TicketCheckoutForm = ({ event }) => {
     }
   }, [persistedAttendeeData, isAllAttedeeInformationRequired]);
 
-  const handleSubmitAttendees = (showAttendee, updatedAttendeeData) => {
+  const handleSubmitAttendees = (
+    showAttendee,
+    updatedAttendeeData,
+    formikRef,
+  ) => {
     setShowAttendeeDetails(showAttendee);
     setAttendeeDetails(updatedAttendeeData);
     setPricingTierLocal([...updatedAttendeeData]);
 
     saveAttendeeData(updatedAttendeeData);
+
+    // If user is not logged in, carry forward first attendee info to checkout form
+    if (
+      !isUserLoggedIn &&
+      updatedAttendeeData.length > 0 &&
+      formikRef &&
+      formikRef.current
+    ) {
+      const firstAttendee = updatedAttendeeData[0];
+      if (
+        firstAttendee.firstName ||
+        firstAttendee.lastName ||
+        firstAttendee.email ||
+        firstAttendee.contactPhone
+      ) {
+        formikRef.current.setFieldValue(
+          'firstName',
+          firstAttendee.firstName || '',
+        );
+        formikRef.current.setFieldValue(
+          'lastName',
+          firstAttendee.lastName || '',
+        );
+        formikRef.current.setFieldValue('email', firstAttendee.email || '');
+        formikRef.current.setFieldValue(
+          'contactPhone',
+          firstAttendee.contactPhone || '',
+        );
+      }
+    }
   };
 
   const login = () => {
@@ -689,6 +723,9 @@ const TicketCheckoutForm = ({ event }) => {
                           tickets={pricingTiersLocalState}
                           handleSubmitAttendees={handleSubmitAttendees}
                           detailsRequired={isAllAttedeeInformationRequired}
+                          userProfile={profile}
+                          isUserLoggedIn={isUserLoggedIn}
+                          formikRef={formRef}
                         />
                       ) : (
                         <>
@@ -733,6 +770,7 @@ const TicketCheckoutForm = ({ event }) => {
                                   showContactState={showAddressFields}
                                   showContactCity={showAddressFields}
                                   showContactZip={showAddressFields}
+                                  isLoggedUser={isUserLoggedIn}
                                 />
                               </form>
                             </div>
