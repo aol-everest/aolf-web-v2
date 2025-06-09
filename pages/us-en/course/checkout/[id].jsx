@@ -151,6 +151,37 @@ const Checkout = () => {
     }, 2000);
     if (!workshop) return;
 
+    // Check if event is full
+    if (!workshop.isEventFull) {
+      showAlert(ALERT_TYPES.CUSTOM_ALERT, {
+        className: 'event-full-alert',
+        title: 'Course Full',
+        closeModalAction: () => {
+          hideAlert();
+          pushRouteWithUTMQuery(router, '/us-en/courses');
+        },
+        footer: () => {
+          return (
+            <button
+              className="btn-secondary"
+              onClick={() => {
+                hideAlert();
+                pushRouteWithUTMQuery(router, '/us-en/courses');
+              }}
+            >
+              Find a Course
+            </button>
+          );
+        },
+        children: (
+          <p className="course-join-card__text">
+            Course is full and you can explore more available courses by
+            clicking on find a course button.
+          </p>
+        ),
+      });
+    }
+
     if (
       workshop.isInitialRequisiteCompleted === false &&
       workshop.initialBusinessRules.length > 0

@@ -1,9 +1,9 @@
 import { PageLoading } from '@components';
 import { MeetupPaymentForm } from '@components/meetup/meetupPaymentForm';
-import { useAuth } from '@contexts';
+import { useAuth, useGlobalAlertContext } from '@contexts';
 import { withAuth } from '@hoc';
 import { useQueryString } from '@hooks';
-import { replaceRouteWithUTMQuery } from '@service';
+import { pushRouteWithUTMQuery, replaceRouteWithUTMQuery } from '@service';
 import { Elements } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
 import { api } from '@utils';
@@ -11,6 +11,8 @@ import { NextSeo } from 'next-seo';
 import ErrorPage from 'next/error';
 import { useRouter } from 'next/router';
 import { useQuery } from '@tanstack/react-query';
+import { useEffect } from 'react';
+import { ALERT_TYPES } from '@constants';
 import isUrl from 'is-url';
 
 const stripePromise = loadStripe(
@@ -33,6 +35,7 @@ export const getServerSideProps = async (context) => {
 
 const Checkout = (props) => {
   const { profile, isAuthenticated } = useAuth();
+  const { showAlert, hideAlert } = useGlobalAlertContext();
   const router = useRouter();
   const { id: workshopId } = router.query;
   const {
@@ -61,6 +64,38 @@ const Checkout = (props) => {
   const [mbsy_source] = useQueryString('mbsy_source');
   const [campaignid] = useQueryString('campaignid');
   const [mbsy] = useQueryString('mbsy');
+
+  useEffect(() => {
+    if (meetup?.isEventFull) {
+      showAlert(ALERT_TYPES.CUSTOM_ALERT, {
+        className: 'event-full-alert',
+        title: 'Meetup Full',
+        closeModalAction: () => {
+          hideAlert();
+          pushRouteWithUTMQuery(router, '/us-en/meetup');
+        },
+        footer: () => {
+          return (
+            <button
+              className="btn-secondary"
+              onClick={() => {
+                hideAlert();
+                pushRouteWithUTMQuery(router, '/us-en/meetup');
+              }}
+            >
+              Find a Meetup
+            </button>
+          );
+        },
+        children: (
+          <p className="course-join-card__text">
+            Meetup is full and you can explore more available courses by
+            clicking on find a meetup button.
+          </p>
+        ),
+      });
+    }
+  }, [meetup]);
 
   const enrollmentCompletionAction = ({ attendeeId }) => {
     replaceRouteWithUTMQuery(router, {
