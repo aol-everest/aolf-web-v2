@@ -168,13 +168,34 @@ function TicketedEvent() {
   useEffect(() => {
     if (isEventFull) {
       try {
-        showAlert(ALERT_TYPES.WARNING_ALERT, {
-          children: 'The Event is full. Please try for some other event',
+        showAlert(ALERT_TYPES.CUSTOM_ALERT, {
+          className: 'event-full-alert',
+          title: 'Event Full',
           closeModalAction: () => {
             pushRouteWithUTMQuery(router, {
-              pathname: `/us-en/ticketed-event`,
+              pathname: `/us-en/courses`,
             });
           },
+          footer: () => {
+            return (
+              <button
+                className="btn-secondary"
+                onClick={() => {
+                  pushRouteWithUTMQuery(router, {
+                    pathname: `/us-en/courses`,
+                  });
+                }}
+              >
+                Find a Course
+              </button>
+            );
+          },
+          children: (
+            <p className="course-join-card__text">
+              Event is full and you can explore more available courses by
+              clicking on find a course button.
+            </p>
+          ),
         });
       } catch (error) {
         console.log('error', error);

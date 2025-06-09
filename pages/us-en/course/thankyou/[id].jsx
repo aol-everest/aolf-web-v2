@@ -1,6 +1,6 @@
 /* eslint-disable react/no-unescaped-entities */
 /* eslint-disable no-irregular-whitespace */
-import { AddToCalendarModal, PageLoading } from '@components';
+import { AddToCalendarModal, PageLoading, WalletPassButton } from '@components';
 import {
   InPersonGenericCourse,
   OnlineCourse,
@@ -713,13 +713,23 @@ const Thankyou = ({ currentHost }) => {
                       {!isGenericWorkshop &&
                         !isMeditationDeluxe &&
                         !gatewayToInfinity && (
-                          <a
-                            className="get-started__link"
-                            href="#"
-                            onClick={addToCalendarAction}
-                          >
-                            Add to Calendar
-                          </a>
+                          <>
+                            <a
+                              className="get-started__link"
+                              href="#"
+                              onClick={addToCalendarAction}
+                            >
+                              Add to Calendar
+                            </a>
+                            <div className="tw-mt-4">
+                              <WalletPassButton
+                                workshop={workshop}
+                                attendeeRecord={attendeeRecord}
+                                attendeeId={attendeeId}
+                                className="tw-mb-2"
+                              />
+                            </div>
+                          </>
                         )}
 
                       {!gatewayToInfinity && !isMeditationDeluxe && (
