@@ -94,6 +94,9 @@ const VideoItem = (props) => {
 
   const onPlay = async (e) => {
     // setInitialPlaying(true);
+    if (player.isMuted()) {
+      player.unMute();
+    }
     if (playingId !== videoId) {
       onPlayAction(videoId);
     }
