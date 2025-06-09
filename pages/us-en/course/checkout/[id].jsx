@@ -152,7 +152,7 @@ const Checkout = () => {
     if (!workshop) return;
 
     // Check if event is full
-    if (!workshop.isEventFull) {
+    if (workshop.isEventFull) {
       showAlert(ALERT_TYPES.CUSTOM_ALERT, {
         className: 'event-full-alert',
         title: 'Course Full',

@@ -27,3 +27,5 @@ export { WCFHeader } from './wcfHeader';
 export { PaymentFormScheduling } from './paymentFormScheduling';
 export { PaymentFormCheckoutNew } from './PaymentFormCheckoutNew';
 export { SharePopup } from './SharePopup';
+export { default as WalletPassButton } from './WalletPassButton';
+export { default as PassPreview } from './PassPreview';

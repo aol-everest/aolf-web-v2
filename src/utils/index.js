@@ -7,3 +7,11 @@ export { priceCalculation } from './priceCalculation';
 export { tConvert } from './tConvert';
 export { Talkable } from './talkable';
 export { getUserTimeZoneAbbreviation } from './timezone';
+export {
+  generateWalletPass,
+  formatPassData,
+  detectDeviceWallet,
+  downloadFile,
+  addToGoogleWallet,
+  handleWalletAction,
+} from './walletPass';
