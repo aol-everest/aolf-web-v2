@@ -175,8 +175,8 @@ const Checkout = () => {
         },
         children: (
           <p className="course-join-card__text">
-            Course is full and you can explore more available courses by
-            clicking on find a course button.
+            This course is currently full. Explore more available courses by
+            clicking the &apos;Find a Course&apos; button.
           </p>
         ),
       });

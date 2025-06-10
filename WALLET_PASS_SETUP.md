@@ -15,6 +15,8 @@ The wallet pass system generates both Apple Wallet (.pkpass) and Google Pay pass
 - ✅ Course details display on passes
 - ✅ Downloadable from thank you page
 - ✅ Email link integration ready
+- ✅ Heroku/cloud deployment ready (ephemeral file system compatible)
+- ✅ Certificate handling via environment variables
 
 ## Required Dependencies
 
@@ -98,7 +100,7 @@ openssl pkcs12 -in pass.p12 -out signerKey.pem -nodes
 
 ## Environment Variables
 
-Add these to your `.env.local` file:
+### Local Development (.env.local)
 
 ```env
 # Apple Wallet Configuration
@@ -110,6 +112,25 @@ APPLE_SIGNER_KEY_PASSPHRASE=your_private_key_passphrase
 GOOGLE_WALLET_ISSUER_ID=your_issuer_id
 GOOGLE_WALLET_ISSUER_EMAIL=your-service-account@project.iam.gserviceaccount.com
 GOOGLE_WALLET_PRIVATE_KEY="-----BEGIN PRIVATE KEY-----\nYOUR_PRIVATE_KEY_HERE\n-----END PRIVATE KEY-----"
+```
+
+### Production Deployment (Heroku/Cloud)
+
+For production environments with ephemeral file systems, store certificates as base64-encoded environment variables:
+
+```bash
+# Convert certificates to base64
+base64 -w 0 certificates/wwdr.pem > wwdr_base64.txt
+base64 -w 0 certificates/signerCert.pem > signer_cert_base64.txt
+base64 -w 0 certificates/signerKey.pem > signer_key_base64.txt
+
+# Set environment variables (Heroku example)
+heroku config:set APPLE_WWDR_CERT_BASE64="$(cat wwdr_base64.txt)"
+heroku config:set APPLE_SIGNER_CERT_BASE64="$(cat signer_cert_base64.txt)"
+heroku config:set APPLE_SIGNER_KEY_BASE64="$(cat signer_key_base64.txt)"
+heroku config:set APPLE_PASS_TYPE_IDENTIFIER="pass.com.aolf.course"
+heroku config:set APPLE_TEAM_IDENTIFIER="YOUR_TEAM_ID"
+heroku config:set APPLE_SIGNER_KEY_PASSPHRASE="your_passphrase"
 ```
 
 ## Directory Structure
@@ -229,13 +250,33 @@ NODE_ENV=development
 
 This will log detailed information about pass generation.
 
-## Production Considerations
+## Deployment
 
-1. **File Storage:** Replace temporary file storage with cloud storage (AWS S3, Google Cloud Storage)
+### Heroku Deployment
+
+The system is fully compatible with Heroku's ephemeral file system:
+
+```bash
+# Quick deployment test
+curl -X POST https://your-app.herokuapp.com/api/generateWalletPass \
+  -H "Content-Type: application/json" \
+  -d '{"serialNumber":"test123","title":"Test Course","organizationName":"Art of Living","description":"Test Course Registration","qrCodeData":"{\"test\":\"data\"}"}'
+```
+
+Key features for cloud deployment:
+
+- ✅ Certificates stored as base64 environment variables
+- ✅ No temporary file storage dependency
+- ✅ Memory-efficient pass generation
+- ✅ Automatic fallback when certificates unavailable
+
+### Production Considerations
+
+1. **Certificate Storage:** Use base64-encoded environment variables for cloud platforms
 2. **Security:** Store certificates securely (environment variables, secrets manager)
 3. **Caching:** Implement pass caching to avoid regenerating identical passes
 4. **Monitoring:** Add error tracking and pass generation analytics
-5. **Cleanup:** Implement automatic cleanup of temporary files
+5. **Scalability:** System handles ephemeral file systems automatically
 
 ## Support
 

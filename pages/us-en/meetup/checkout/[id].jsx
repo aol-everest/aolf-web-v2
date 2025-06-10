@@ -89,8 +89,8 @@ const Checkout = (props) => {
         },
         children: (
           <p className="course-join-card__text">
-            Meetup is full and you can explore more available courses by
-            clicking on find a meetup button.
+            This meetup is currently full. Explore more available courses by
+            clicking the &apos;Find a Meetup&apos; button.
           </p>
         ),
       });
