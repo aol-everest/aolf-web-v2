@@ -99,7 +99,7 @@ export const formatPassData = (workshop, attendeeRecord, attendeeId) => {
     // Pass identification
     serialNumber: `${attendeeId}_${courseId}`,
     passTypeIdentifier:
-      process.env.APPLE_PASS_TYPE_IDENTIFIER || 'pass.com.aolf.course',
+      process.env.APPLE_PASS_TYPE_IDENTIFIER || 'pass.com.artofliving',
 
     // Course information
     title: title || meetupTitle || 'Art of Living Course',

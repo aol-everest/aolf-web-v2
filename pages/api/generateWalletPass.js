@@ -413,8 +413,8 @@ async function createDefaultPassModel(modelPath) {
   const passJson = {
     formatVersion: 1,
     passTypeIdentifier:
-      process.env.APPLE_PASS_TYPE_IDENTIFIER || 'pass.com.aolf.course',
-    teamIdentifier: process.env.APPLE_TEAM_IDENTIFIER || 'YOUR_TEAM_ID',
+      process.env.APPLE_PASS_TYPE_IDENTIFIER || 'pass.com.artofliving',
+    teamIdentifier: process.env.APPLE_TEAM_IDENTIFIER || 'YNTUJH5452',
     organizationName: 'Art of Living Foundation',
     description: 'Course Registration Pass',
     logoText: defaultStyle.logoText,
