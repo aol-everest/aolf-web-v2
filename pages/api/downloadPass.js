@@ -49,16 +49,20 @@ export default function handler(req, res) {
       return res.status(400).json({ error: 'Pass ID or data is required' });
     }
 
-    // Set appropriate headers for .pkpass download
+    // Set appropriate headers for .pkpass download with multiple fallbacks
     res.setHeader('Content-Type', 'application/vnd.apple.pkpass');
+    res.setHeader('X-Content-Type-Options', 'nosniff');
     res.setHeader(
       'Content-Disposition',
-      `attachment; filename="${downloadFilename}"`,
+      `attachment; filename="${downloadFilename}"; filename*=UTF-8''${encodeURIComponent(downloadFilename)}`,
     );
     res.setHeader('Content-Length', passBuffer.length);
     res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
     res.setHeader('Pragma', 'no-cache');
     res.setHeader('Expires', '0');
+
+    // Additional headers to force correct file handling
+    res.setHeader('Content-Transfer-Encoding', 'binary');
 
     res.send(passBuffer);
   } catch (error) {

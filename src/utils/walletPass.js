@@ -158,7 +158,7 @@ export const detectDeviceWallet = () => {
 };
 
 /**
- * Downloads a file from URL
+ * Downloads a file from URL with proper .pkpass handling
  * @param {string} url - File URL
  * @param {string} filename - Filename for download
  */
@@ -167,6 +167,54 @@ export const downloadFile = (url, filename) => {
   console.log('🔗 URL:', url);
   console.log('📎 Filename:', filename);
 
+  // For .pkpass files, use fetch to ensure proper handling
+  if (filename.endsWith('.pkpass')) {
+    console.log('🍎 Downloading .pkpass file with fetch');
+    fetch(url)
+      .then((response) => {
+        if (!response.ok) throw new Error('Network response was not ok');
+        return response.blob();
+      })
+      .then((blob) => {
+        // Create blob with correct MIME type
+        const pkpassBlob = new Blob([blob], {
+          type: 'application/vnd.apple.pkpass',
+        });
+
+        // Create download URL
+        const downloadUrl = window.URL.createObjectURL(pkpassBlob);
+
+        // Create and click download link
+        const link = document.createElement('a');
+        link.href = downloadUrl;
+        link.download = filename;
+        link.style.display = 'none';
+        document.body.appendChild(link);
+
+        console.log('🖱️ Clicking download link...');
+        link.click();
+
+        // Cleanup
+        document.body.removeChild(link);
+        window.URL.revokeObjectURL(downloadUrl);
+        console.log('✅ .pkpass download completed');
+      })
+      .catch((error) => {
+        console.error('❌ Error downloading .pkpass file:', error);
+        // Fallback to standard download
+        standardDownload(url, filename);
+      });
+  } else {
+    standardDownload(url, filename);
+  }
+};
+
+/**
+ * Standard download fallback
+ * @param {string} url - File URL
+ * @param {string} filename - Filename for download
+ */
+const standardDownload = (url, filename) => {
   const link = document.createElement('a');
   link.href = url;
   link.download = filename;
