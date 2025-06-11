@@ -38,18 +38,32 @@ function getCertificatesFromEnv() {
  * Checks if certificates are available (development vs production)
  */
 function areCertificatesAvailable() {
+  console.log('🔍 Checking certificate availability...');
+
   // First try environment variables (production/Heroku)
-  if (getCertificatesFromEnv()) {
+  const envCerts = getCertificatesFromEnv();
+  if (envCerts) {
+    console.log('✅ Certificates found in environment variables');
     return true;
   }
+  console.log('❌ No certificates in environment variables');
 
   // Fallback to local files (development)
   const certificatesPath = path.join(process.cwd(), 'certificates');
-  const requiredCerts = ['wwdr.pem', 'signerCert.pem', 'signerKey.pem'];
+  console.log('🔍 Checking local certificates directory:', certificatesPath);
 
-  return requiredCerts.every((cert) =>
-    fs.existsSync(path.join(certificatesPath, cert)),
-  );
+  const requiredCerts = ['wwdr.pem', 'signerCert.pem', 'signerKey.pem'];
+  const certsExist = requiredCerts.every((cert) => {
+    const certPath = path.join(certificatesPath, cert);
+    const exists = fs.existsSync(certPath);
+    console.log(
+      `📜 ${cert}: ${exists ? '✅ Found' : '❌ Missing'} at ${certPath}`,
+    );
+    return exists;
+  });
+
+  console.log('📋 All local certificates available:', certsExist);
+  return certsExist;
 }
 
 /**
@@ -57,15 +71,27 @@ function areCertificatesAvailable() {
  * Generates both Apple Wallet (.pkpass) and Google Pay JWT for wallet passes
  */
 export default async function handler(req, res) {
+  console.log('🚀 API: generateWalletPass called');
+  console.log('📝 Method:', req.method);
+
   if (req.method !== 'POST') {
+    console.log('❌ Invalid method:', req.method);
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
   try {
     const passData = req.body;
+    console.log('📦 Pass data received:', {
+      title: passData.title,
+      attendeeName: passData.attendeeName,
+      serialNumber: passData.serialNumber,
+      organizationName: passData.organizationName,
+    });
 
     // Check if certificates are available (environment or local files)
+    console.log('🔍 Checking certificate availability...');
     const hasCertificates = areCertificatesAvailable();
+    console.log('📜 Certificates available:', hasCertificates);
 
     let applePassBuffer = null;
     let appleWalletUrl = null;
@@ -73,32 +99,53 @@ export default async function handler(req, res) {
 
     // Generate Apple Wallet pass only if certificates are available
     if (hasCertificates) {
+      console.log('🍎 Generating Apple Wallet pass...');
       try {
         applePassBuffer = await generateAppleWalletPass(passData);
         applePassId = `${passData.serialNumber}_${Date.now()}`;
+        console.log(
+          '✅ Apple pass generated successfully, size:',
+          applePassBuffer.length,
+          'bytes',
+        );
 
         // For Heroku, we'll return the pass as a data URL instead of storing it
         const passBase64 = applePassBuffer.toString('base64');
         appleWalletUrl = `/api/downloadPass?data=${passBase64}&filename=${applePassId}.pkpass`;
+        console.log('🔗 Apple Wallet URL created:', appleWalletUrl);
       } catch (error) {
-        console.warn('Apple Wallet pass generation failed:', error.message);
+        console.error('❌ Apple Wallet pass generation failed:', error.message);
+        console.error('❌ Apple Wallet error stack:', error.stack);
       }
     } else {
       console.warn(
-        'Apple Wallet certificates not found. Skipping Apple Wallet pass generation.',
+        '⚠️ Apple Wallet certificates not found. Skipping Apple Wallet pass generation.',
       );
     }
 
     // Generate Google Wallet pass
+    console.log('🤖 Generating Google Wallet pass...');
     let googleWalletJwt = null;
     try {
       googleWalletJwt = await generateGoogleWalletJwt(passData);
+      console.log('✅ Google Wallet JWT generated successfully');
     } catch (error) {
-      console.warn('Google Wallet pass generation failed:', error.message);
+      console.error('❌ Google Wallet pass generation failed:', error.message);
+      console.error('❌ Google Wallet error stack:', error.stack);
     }
 
     // Return success if at least one wallet type was generated
     if (appleWalletUrl || googleWalletJwt) {
+      console.log('✅ Pass generation successful');
+      console.log(
+        '🍎 Apple Wallet URL:',
+        appleWalletUrl ? 'Generated' : 'Not available',
+      );
+      console.log(
+        '🤖 Google Wallet JWT:',
+        googleWalletJwt ? 'Generated' : 'Not available',
+      );
+
       res.status(200).json({
         success: true,
         appleWalletUrl,
