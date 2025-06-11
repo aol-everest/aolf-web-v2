@@ -9,6 +9,23 @@ import {
 } from '../../src/utils/passDesigner.js';
 
 /**
+ * Formats date to ISO 8601 format required by Google Wallet
+ * @param {string|Date} date - Date to format
+ * @returns {string} - ISO 8601 formatted date
+ */
+function formatToISO8601(date) {
+  if (!date) return new Date().toISOString();
+
+  try {
+    const dateObj = typeof date === 'string' ? new Date(date) : date;
+    return dateObj.toISOString();
+  } catch (error) {
+    console.warn('Date formatting error:', error);
+    return new Date().toISOString();
+  }
+}
+
+/**
  * Gets certificates from environment variables (for Heroku deployment)
  */
 function getCertificatesFromEnv() {
@@ -300,8 +317,8 @@ async function generateGoogleWalletJwt(passData) {
       },
     },
     dateTime: {
-      start: passData.startDate,
-      end: passData.endDate,
+      start: formatToISO8601(passData.startDate),
+      end: formatToISO8601(passData.endDate),
     },
     logo: {
       sourceUri: {
