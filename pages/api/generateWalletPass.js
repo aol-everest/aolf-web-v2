@@ -318,13 +318,13 @@ async function generateGoogleWalletJwt(passData) {
       name: {
         defaultValue: {
           language: 'en-US',
-          value: passData.location || 'Art of Living Center',
+          value: passData.location || 'Online',
         },
       },
       address: {
         defaultValue: {
           language: 'en-US',
-          value: passData.location || 'Art of Living Center',
+          value: passData.location || 'Online',
         },
       },
     },
@@ -377,7 +377,7 @@ async function generateGoogleWalletJwt(passData) {
       },
       {
         header: 'Registration Info',
-        body: `Attendee: ${passData.attendeeName}\nOrder: ${passData.orderExternalId}\nEmail: ${passData.attendeeEmail}`,
+        body: `Attendee: ${passData.attendeeName}\nOrder: ${passData.orderExternalId || 'N/A'}\nEmail: ${passData.attendeeEmail}`,
         id: 'REGISTRATION_INFO',
       },
     ],
@@ -407,7 +407,11 @@ async function generateGoogleWalletJwt(passData) {
   const claims = {
     iss: issuerEmail,
     aud: 'google',
-    origins: [process.env.NEXT_PUBLIC_SITE_URL || 'www.artofliving.org'],
+    origins: [
+      'https://qa.members.us.artofliving.org',
+      'https://members.us.artofliving.org',
+      'www.artofliving.org',
+    ],
     typ: 'savetowallet',
     iat: Math.floor(Date.now() / 1000),
     payload: {
