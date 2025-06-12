@@ -130,9 +130,9 @@ export const PaymentFormCheckoutNew = ({
   });
 
   const {
-    basePrice: fee,
     displayPrice: delfee,
     isPaymentRequired,
+    total: finalPrice,
   } = usePriceCalculation({
     workshop,
     agreementCMEAccepted: false,
@@ -347,7 +347,7 @@ export const PaymentFormCheckoutNew = ({
         utm: filterAllowedParams(router.query),
       };
 
-      if (fee <= 0) {
+      if (finalPrice <= 0) {
         payLoad.shoppingRequest.isStripeIntentPayment = false;
       }
 
@@ -382,18 +382,18 @@ export const PaymentFormCheckoutNew = ({
     if (!stripe || !elements) {
       return;
     }
-    let finalPrice = fee;
+    let finalPriceUpdated = finalPrice;
     if (values.comboDetailId && values.comboDetailId !== workshop.id) {
       const selectedBundle = workshop.availableBundles.find(
         (b) => b.comboProductSfid === values.comboDetailId,
       );
       if (selectedBundle) {
-        finalPrice = selectedBundle.comboUnitPrice;
+        finalPriceUpdated = selectedBundle.comboUnitPrice;
       }
     }
-    if (finalPrice > 0) {
+    if (finalPriceUpdated > 0) {
       elements.update({
-        amount: finalPrice * 100,
+        amount: finalPriceUpdated * 100,
       });
     }
     const paymentElement = elements.getElement(PaymentElement);
@@ -699,10 +699,10 @@ export const PaymentFormCheckoutNew = ({
                         <div className="payment-total-box">
                           <label>Total:</label>
                           <div className="amount">
-                            {delfee && (delfee !== fee || delfee > fee) && (
-                              <s>${delfee}</s>
-                            )}
-                            {` `}${fee.toFixed(2) || '0'}
+                            {delfee &&
+                              (delfee !== finalPrice ||
+                                delfee > finalPrice) && <s>${delfee}</s>}
+                            {` `} ${finalPrice.toFixed(2)}
                           </div>
                         </div>
                         <div className="payment-details">
