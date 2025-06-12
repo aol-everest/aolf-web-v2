@@ -25,22 +25,35 @@ const WalletPassButton = ({
   const deviceType = detectDeviceWallet();
 
   const handleGeneratePass = async () => {
-    if (isGenerating) return;
+    if (isGenerating) {
+      console.log('🔄 Already generating pass, skipping...');
+      return;
+    }
 
+    console.log('🚀 Starting wallet pass generation...');
+    console.log('📱 Device type detected:', deviceType);
     setIsGenerating(true);
 
     try {
       // Format the pass data
       const passData = formatPassData(workshop, attendeeRecord, attendeeId);
+      console.log('📋 Pass data formatted:', {
+        title: passData.title,
+        attendeeName: passData.attendeeName,
+        serialNumber: passData.serialNumber,
+        organizationName: passData.organizationName,
+      });
 
       // Generate the wallet pass
+      console.log('📡 Calling generateWalletPass API...');
       const response = await generateWalletPass(passData);
+      console.log('✅ API Response received:', response);
 
       if (response.success) {
         // Handle development mode
         if (response.developmentMode) {
           alert(
-            `Development Mode:\n\n${response.message}\n\nBoth Apple Wallet and Google Pay require proper setup for production use.`,
+            `Development Mode:\n\n${response.message}\n\nBoth Apple Wallet and Google Wallet require proper setup for production use.`,
           );
           return;
         }
@@ -51,13 +64,16 @@ const WalletPassButton = ({
             console.warn('Apple Wallet:', response.warnings.appleCertificates);
           }
           if (response.warnings.googleWallet) {
-            console.warn('Google Pay:', response.warnings.googleWallet);
+            console.warn('Google Wallet:', response.warnings.googleWallet);
           }
         }
 
+        console.log('🎯 Handling wallet action for device:', deviceType);
         const result = handleWalletAction(response, deviceType);
+        console.log('🎯 Wallet action result:', result);
 
         if (result.showBothOptions) {
+          console.log('📱 Showing both wallet options');
           setPassUrls(response);
           setShowBothOptions(true);
         }
@@ -65,20 +81,31 @@ const WalletPassButton = ({
         throw new Error(response.message || 'Failed to generate wallet pass');
       }
     } catch (error) {
-      console.error('Error generating wallet pass:', error);
+      console.error('❌ Error generating wallet pass:', error);
+      console.error('❌ Error details:', {
+        message: error.message,
+        stack: error.stack,
+        response: error.response?.data,
+      });
       if (onError) {
         onError(error.message || 'Failed to generate wallet pass');
       } else {
         alert('Failed to generate wallet pass. Please try again.');
       }
     } finally {
+      console.log('🏁 Pass generation finished, resetting state');
       setIsGenerating(false);
     }
   };
 
   const handleAppleWallet = () => {
+    console.log('🍎 Apple Wallet button clicked');
+    console.log('🔗 Apple Wallet URL:', passUrls?.appleWalletUrl);
     if (passUrls?.appleWalletUrl) {
+      console.log('🚀 Opening Apple Wallet URL...');
       window.open(passUrls.appleWalletUrl, '_blank');
+    } else {
+      console.error('❌ No Apple Wallet URL available');
     }
   };
 
@@ -127,7 +154,7 @@ const WalletPassButton = ({
               <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" />
               <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" />
             </svg>
-            Add to Google Pay
+            Add to Google Wallet
           </button>
         </div>
         <button
@@ -148,7 +175,7 @@ const WalletPassButton = ({
       case 'apple':
         return 'Add to Apple Wallet';
       case 'google':
-        return 'Add to Google Pay';
+        return 'Add to Google Wallet';
       default:
         return 'Add to Wallet';
     }
@@ -248,7 +275,13 @@ const WalletPassButton = ({
               Back
             </button>
             <button
-              onClick={handleGeneratePass}
+              onClick={(e) => {
+                console.log('🖱️ Preview generate button clicked!');
+                console.log('📱 Current device type:', deviceType);
+                console.log('⚡ Is generating:', isGenerating);
+                console.log('🎯 Event:', e);
+                handleGeneratePass();
+              }}
               disabled={isGenerating}
               className={getButtonStyles()}
             >
@@ -264,7 +297,13 @@ const WalletPassButton = ({
     <div className={`wallet-pass-button ${className}`}>
       <div className="tw-flex tw-gap-2">
         <button
-          onClick={handleGeneratePass}
+          onClick={(e) => {
+            console.log('🖱️ Main wallet button clicked!');
+            console.log('📱 Current device type:', deviceType);
+            console.log('⚡ Is generating:', isGenerating);
+            console.log('🎯 Event:', e);
+            handleGeneratePass();
+          }}
           disabled={isGenerating}
           className={getButtonStyles()}
         >
