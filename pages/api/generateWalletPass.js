@@ -126,10 +126,22 @@ export default async function handler(req, res) {
           'bytes',
         );
 
-        // For Heroku, we'll return the pass as a data URL instead of storing it
-        const passBase64 = applePassBuffer.toString('base64');
-        appleWalletUrl = `/api/downloadPass?data=${passBase64}&filename=${applePassId}.pkpass`;
+        // Store pass temporarily and return download URL
+        // Use /tmp for Heroku compatibility (writable directory)
+        const tempDir =
+          process.env.NODE_ENV === 'production'
+            ? '/tmp'
+            : path.join(process.cwd(), 'temp');
+        if (!fs.existsSync(tempDir)) {
+          fs.mkdirSync(tempDir, { recursive: true });
+        }
+
+        const tempFilePath = path.join(tempDir, `${applePassId}.pkpass`);
+        fs.writeFileSync(tempFilePath, applePassBuffer);
+
+        appleWalletUrl = `/api/downloadPass?id=${applePassId}`;
         console.log('🔗 Apple Wallet URL created:', appleWalletUrl);
+        console.log('💾 Pass temporarily stored at:', tempFilePath);
       } catch (error) {
         console.error('❌ Apple Wallet pass generation failed:', error.message);
         console.error('❌ Apple Wallet error stack:', error.stack);

@@ -26,7 +26,12 @@ export default function handler(req, res) {
         return res.status(400).json({ error: 'Pass ID is required' });
       }
 
-      const passPath = path.join(process.cwd(), 'temp', `${id}.pkpass`);
+      // Use /tmp for Heroku compatibility (writable directory)
+      const tempDir =
+        process.env.NODE_ENV === 'production'
+          ? '/tmp'
+          : path.join(process.cwd(), 'temp');
+      const passPath = path.join(tempDir, `${id}.pkpass`);
 
       if (!fs.existsSync(passPath)) {
         return res.status(404).json({ error: 'Pass not found' });
