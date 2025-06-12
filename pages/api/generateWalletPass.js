@@ -410,7 +410,7 @@ async function generateGoogleWalletJwt(passData) {
     origins: [
       'https://qa.members.us.artofliving.org',
       'https://members.us.artofliving.org',
-      'www.artofliving.org',
+      'https://www.artofliving.org',
     ],
     typ: 'savetowallet',
     iat: Math.floor(Date.now() / 1000),
