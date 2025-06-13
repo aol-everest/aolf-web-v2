@@ -18,7 +18,7 @@ import { useAuth, useGlobalAlertContext } from '@contexts';
 import { useAnalytics } from 'use-analytics';
 import { ABBRS, ALERT_TYPES, COURSE_MODES, PAYMENT_MODES } from '@constants';
 import { ScheduleAgreementForm } from '@components/scheduleAgreementForm';
-// import { StripeExpressElement } from '@components/checkout/StripeExpressElementOnly';
+import { StripeExpressElement } from '@components/checkout/StripeExpressElementOnly';
 import {
   StyledInputNewCheckout,
   UserInfoFormNewCheckout,
@@ -29,7 +29,7 @@ import {
   useElements,
 } from '@stripe/react-stripe-js';
 import * as Yup from 'yup';
-import { Formik } from 'formik';
+import { Formik, Field } from 'formik';
 import { filterAllowedParams } from '@utils/utmParam';
 import { DiscountInputNew } from '@components/discountInputNew';
 
@@ -104,7 +104,7 @@ export const PaymentFormCheckoutNew = ({
   isStripeIntentPayment,
   isLoggedUser,
 }) => {
-  const { track, identify } = useAnalytics();
+  const { track, identify, page } = useAnalytics();
   const router = useRouter();
   const { profile = {}, passwordLess, isAuthenticated } = useAuth();
   const { signOut } = passwordLess;
@@ -521,6 +521,12 @@ export const PaymentFormCheckoutNew = ({
         email: formRef.current.values.email,
       });
     }
+
+    page({
+      category: 'course_registration',
+      name: 'course_checkout',
+      course_type: courseType,
+    });
 
     track('submit_email', {
       screen_name: 'course_checkout',
@@ -992,7 +998,7 @@ export const PaymentFormCheckoutNew = ({
                             healthinfo@us.artofliving.org
                           </a>
                         </div>
-                        {/* {activeStep === CheckoutStates.EMAIL_INPUT && (
+                        {activeStep === CheckoutStates.EMAIL_INPUT && (
                           <Field
                             name="payment"
                             component={StripeExpressElement}
@@ -1001,7 +1007,7 @@ export const PaymentFormCheckoutNew = ({
                             parentStyle={{ display: 'flex' }}
                             email={values.email}
                           />
-                        )} */}
+                        )}
 
                         <div className="payment-actions">
                           {activeStep === CheckoutStates.USER_INFO ? (

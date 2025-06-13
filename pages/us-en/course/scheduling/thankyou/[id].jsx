@@ -116,9 +116,15 @@ const Thankyou = () => {
 
   useEffect(() => {
     if (workshop) {
+      page({
+        category: 'course_registration',
+        name: 'course_registration_thank_you',
+        course_type: courseType,
+      });
       track('complete_registration', {
         screen_name: 'course_registration_thank_you',
         event_target: 'register_button',
+        category: 'course_registration',
         course_type: courseType,
         location_type: workshop.mode,
         course_dates_display: getCourseDateDisplay(workshop),

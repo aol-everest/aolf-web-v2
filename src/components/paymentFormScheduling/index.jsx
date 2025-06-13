@@ -108,7 +108,7 @@ export const PaymentFormScheduling = ({
   handleChangeDates,
   showSteps = true,
 }) => {
-  const { track, identify } = useAnalytics();
+  const { track, identify, page } = useAnalytics();
   const router = useRouter();
   const { profile = {}, passwordLess, isAuthenticated } = useAuth();
   const { signOut } = passwordLess;
@@ -479,8 +479,14 @@ export const PaymentFormScheduling = ({
       });
     }
 
+    page({
+      category: 'course_registration',
+      name: 'course_scheduling_checkout',
+      course_type: courseType,
+    });
     track('submit_email', {
       screen_name: 'course_scheduling_checkout',
+      category: 'course_registration',
       event_target: 'register_button',
       course_type: courseType,
       location_type: workshop.mode,
