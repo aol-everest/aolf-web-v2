@@ -340,6 +340,10 @@ export const AOL_MENU = [
         link: '/us-en/lp/journey-app',
       },
       {
+        name: 'Blog',
+        link: 'https://www.artofliving.org/us-en/blog/',
+      },
+      {
         name: 'Science',
         link: 'https://www.artofliving.org/us-en/meditation/benefits/research-sudarshan-kriya',
       },
