@@ -111,7 +111,7 @@ export const PaymentFormCheckoutNew = ({
   const [defaultUserEmail] = useQueryState('email');
 
   const formRef = useRef();
-  const scrollToRef = useRef(null);
+  // const scrollToRef = useRef(null);
 
   const [discountResponse, setDiscountResponse] = useState(null);
   const [isChangingCard, setIsChangingCard] = useState(false);
@@ -378,6 +378,16 @@ export const PaymentFormCheckoutNew = ({
     }
   };
 
+  useEffect(() => {
+    const paymentBox = document.querySelector('.payment-box');
+    if (paymentBox) {
+      window.scrollTo({
+        top: document.documentElement.scrollHeight, // Scroll to the bottom
+        behavior: 'smooth',
+      });
+    }
+  }, []); // Runs only on component mount (when the pa
+
   const formikOnChange = (values) => {
     if (!stripe || !elements) {
       return;
@@ -643,10 +653,6 @@ export const PaymentFormCheckoutNew = ({
     };
   }
 
-  if (scrollToRef.current) {
-    scrollToRef.current.scrollIntoView({ behavior: 'smooth' });
-  }
-
   return (
     <>
       {loading && <Loader />}
@@ -802,7 +808,7 @@ export const PaymentFormCheckoutNew = ({
                       </div>
                     </div>
                     <div className="second-col">
-                      <div className="payment-box" ref={scrollToRef}>
+                      <div className="payment-box">
                         <div
                           className={`checkout-title row m-0 justify-content-between align-items-center${activeStep === CheckoutStates.USER_INFO ? 'mb-1 ' : 'mb-3'}`}
                         >
