@@ -247,6 +247,11 @@ export const AOL_MENU = [
         props: { target: '_blank' },
       },
       {
+        name: 'In Cayman Islands',
+        link: 'https://event.us.artofliving.org/us-en/lp1/journey-within-grandcayman/',
+        props: { target: '_blank' },
+      },
+      {
         name: 'In Bay Area, CA',
         link: 'https://event.us.artofliving.org/us-en/lp1/sfba/wellness-with-gurudev/',
         props: { target: '_blank' },
