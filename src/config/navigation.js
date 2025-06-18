@@ -323,10 +323,6 @@ export const AOL_MENU = [
         name: 'Preferences',
         link: '/us-en/profile/preferences',
       },
-      {
-        name: 'Refer a friend',
-        link: '/us-en/profile/refer-a-friend',
-      },
     ],
   },
   {
@@ -484,10 +480,6 @@ export const IAHV_MENU = [
       {
         name: 'Preferences',
         link: '/us-en/profile/preferences',
-      },
-      {
-        name: 'Refer a friend',
-        link: '/us-en/profile/refer-a-friend',
       },
     ],
   },

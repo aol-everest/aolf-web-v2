@@ -14,13 +14,7 @@ import { ABBRS, ALERT_TYPES, COURSE_MODES, COURSE_TYPES } from '@constants';
 import { useGlobalAlertContext } from '@contexts';
 import { orgConfig } from '@org';
 import { pushRouteWithUTMQuery } from '@service';
-import {
-  Talkable,
-  api,
-  calculateBusinessDays,
-  isMobile,
-  tConvert,
-} from '@utils';
+import { api, calculateBusinessDays, isMobile, tConvert } from '@utils';
 import { hasCookie, setCookie } from 'cookies-next';
 import dayjs from 'dayjs';
 import localizedFormat from 'dayjs/plugin/localizedFormat';
@@ -268,22 +262,7 @@ const Thankyou = ({ currentHost }) => {
         },
       ],
     });
-    Talkable.purchase(
-      {
-        order_number: orderExternalId, // Unique order number. Example: '100011'
-        subtotal: ammountPaid, // Order subtotal (pre-tax, post-discount). Example: '23.97'
-        coupon_code: isTalkableCoupon ? couponCode || '' : '', // Coupon code that was used at checkout (pass multiple as an array). Example: 'SAVE20'
-        shipping_address: '',
-        shipping_zip: '',
-        sku: productTypeId, // Product ID unique identifier
-        title: workshop?.title, // Title of the product
-        url: `${currentHost}/us-en/course/${courseId}`,
-      },
-      {
-        email: userEmail,
-        traffic_source: '', // The source of the traffic driven to the campaign. Example: 'facebook'
-      },
-    );
+
     setCookie(orderExternalId, 'DONE');
   }, [result]);
 
@@ -358,7 +337,6 @@ const Thankyou = ({ currentHost }) => {
     couponCode,
     selectedGenericSlot = {},
     pricebookName = '',
-    isTalkableCoupon,
     first_name,
     last_name,
     userExternalId,

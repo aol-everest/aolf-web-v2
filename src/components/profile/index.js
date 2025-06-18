@@ -2,7 +2,6 @@ export { ChangeCardDetail } from './ChangeCardDetail';
 export { ChangeEmail } from './ChangeEmail';
 export { ChangePassword } from './ChangePassword';
 export { ChangeProfile } from './ChangeProfile';
-export { CouponStack } from './CouponStack';
 export { EventList } from './EventList';
 export { PastCourses } from './PastCourses';
 export { ProfileHeader } from './ProfileHeader';

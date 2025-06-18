@@ -30,7 +30,6 @@ const MESSAGE_ALREADY_CASE_REGISTERED_ERROR = `We have already received your req
 const UPCOMING_EVENTS = '/us-en/profile/upcoming-courses';
 const PAST_COURSES = '/us-en/profile/past-courses';
 const UPDATE_PROFILE = '/us-en/profile/update-profile';
-const REFER_A_FRIEND = '/us-en/profile/refer-a-friend';
 const CARD_DETAILS = '/us-en/profile/card-details';
 const CHANGE_PASSWORD = '/us-en/profile/change-password';
 const PREFERENCES = '/us-en/profile/preferences';
@@ -130,7 +129,6 @@ export const withUserInfo = (WrappedComponent) => {
       { href: PAST_COURSES, label: 'Past Courses' },
       { href: UPCOMING_EVENTS, label: 'Upcoming Activities' },
       { href: PREFERENCES, label: 'Preferences' },
-      { href: REFER_A_FRIEND, label: 'Refer a Friend' },
     ];
 
     // Define the alerts based on the request status

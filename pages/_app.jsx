@@ -15,7 +15,7 @@ import { GlobalVideoPlayer } from '@components/globalVideoPlayer';
 import { AuthProvider, MeditationProvider } from '@contexts';
 import { orgConfig } from '@org';
 import { analytics } from '@service';
-import { Auth, Compose, Talkable, api, getParentDomain } from '@utils';
+import { Auth, Compose, api, getParentDomain } from '@utils';
 import { DefaultSeo, NextSeo } from 'next-seo';
 import { useEffect, useState, useMemo, memo } from 'react';
 import {
@@ -222,12 +222,6 @@ const useUserProfile = () => {
 
 // Separate authentication handling
 const handleUserAuthentication = (profile) => {
-  Talkable.authenticate({
-    email: profile.email,
-    first_name: profile.first_name,
-    last_name: profile.last_name,
-  });
-
   const userSubscriptions = profile.subscriptions
     ? JSON.stringify(
         profile.subscriptions.map(({ sfid, name }) => ({

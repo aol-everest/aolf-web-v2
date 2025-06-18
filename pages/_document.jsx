@@ -115,9 +115,7 @@ class CustomDocument extends Document {
         <body>
           <Main />
           <NextScript />
-          {process.env.NEXT_PUBLIC_TALKABLE_INSTANCE_URL && (
-            <script async src={process.env.NEXT_PUBLIC_TALKABLE_INSTANCE_URL} />
-          )}
+
           <noscript>
             <iframe
               src={`https://www.googletagmanager.com/ns.html?id=${process.env.NEXT_PUBLIC_GTM_ID}`}
