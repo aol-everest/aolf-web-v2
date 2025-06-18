@@ -631,6 +631,7 @@ const Thankyou = ({ currentHost }) => {
             '10703362',
             '10703363',
             '435714',
+            '1511420',
           ].indexOf(productTypeId) >= 0 &&
           !isRepeater && (
             <>
