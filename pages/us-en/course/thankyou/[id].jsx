@@ -25,7 +25,7 @@ import ErrorPage from 'next/error';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { useQueryString } from '@hooks';
+import { useQueryString, usePendingWaiveGrants } from '@hooks';
 import { useAnalytics } from 'use-analytics';
 
 dayjs.extend(utc);
@@ -118,6 +118,9 @@ const Thankyou = ({ currentHost }) => {
   const { track, page, identify } = useAnalytics();
   const [courseType] = useQueryString('courseType');
   const { id: attendeeId, comboId, sscid, referral } = router.query;
+
+  // Handle pending waiveGrants action after successful checkout
+  usePendingWaiveGrants(attendeeId);
   const {
     data: result,
     isLoading,
