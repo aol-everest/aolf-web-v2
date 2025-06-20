@@ -237,16 +237,6 @@ export const AOL_MENU = [
     name: 'Meet Gurudev',
     submenu: [
       {
-        name: 'In Orlando, FL',
-        link: 'https://event.us.artofliving.org/us-en/lp1/journey-within-orlando/',
-        props: { target: '_blank' },
-      },
-      {
-        name: 'In Jacksonville, FL',
-        link: 'https://event.us.artofliving.org/us-en/lp1-journey-within-jacksonville/',
-        props: { target: '_blank' },
-      },
-      {
         name: 'In Cayman Islands',
         link: 'https://event.us.artofliving.org/us-en/lp1/journey-within-grandcayman/',
         props: { target: '_blank' },
@@ -322,10 +312,6 @@ export const AOL_MENU = [
       {
         name: 'Preferences',
         link: '/us-en/profile/preferences',
-      },
-      {
-        name: 'Refer a friend',
-        link: '/us-en/profile/refer-a-friend',
       },
     ],
   },
@@ -484,10 +470,6 @@ export const IAHV_MENU = [
       {
         name: 'Preferences',
         link: '/us-en/profile/preferences',
-      },
-      {
-        name: 'Refer a friend',
-        link: '/us-en/profile/refer-a-friend',
       },
     ],
   },

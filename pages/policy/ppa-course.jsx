@@ -1,7 +1,8 @@
 /* eslint-disable no-irregular-whitespace */
 /* eslint-disable react/no-unescaped-entities */
 import { ALERT_TYPES } from '@constants';
-import { useGlobalAlertContext } from '@contexts';
+import { useAuth, useGlobalAlertContext } from '@contexts';
+import { useFormPersist } from '@hooks';
 import { api } from '@utils';
 import { NextSeo } from 'next-seo';
 
@@ -13,16 +14,39 @@ const successMessage = () => {
   );
 };
 
+const pendingSuccessMessage = () => {
+  return (
+    <p className="course-join-card__text">
+      Your request to withhold your grant of rights has been saved. It will be
+      processed after you complete authentication or checkout.
+    </p>
+  );
+};
+
 const PPACourse = () => {
+  const { isAuthenticated } = useAuth();
   const { showAlert } = useGlobalAlertContext();
-  const handleClick = async () => {
+  const { saveData } = useFormPersist('pendingWaiveGrants', {
+    expiryTime: 1 * 60 * 60 * 1000, // 1 hours
+  });
+  const handleClick = async (e) => {
+    e.preventDefault();
     try {
-      await api.post({
-        path: 'waiveOffUserGrants',
-        body: { waiveGrants: true },
-      });
+      if (isAuthenticated) {
+        await api.post({
+          path: 'waiveOffUserGrants',
+          body: { waiveGrants: true },
+        });
+      } else {
+        // Store waiveGrants action for later processing after authentication/checkout
+        saveData({
+          waiveGrants: true,
+          timestamp: Date.now(),
+          action: 'waiveOffUserGrants',
+        });
+      }
       showAlert(ALERT_TYPES.SUCCESS_ALERT, {
-        children: successMessage,
+        children: isAuthenticated ? successMessage() : pendingSuccessMessage(),
         title: 'Confirmed',
       });
     } catch (ex) {

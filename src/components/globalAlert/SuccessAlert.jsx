@@ -5,6 +5,7 @@ import Style from './GlobalAlert.module.scss';
 export const SuccessAlert = () => {
   const { hideAlert, store } = useGlobalAlertContext();
   const { alertProps } = store || {};
+  console.log('alertProps', alertProps);
   const {
     closeModalAction,
     confirmBtnText = 'Got it',
