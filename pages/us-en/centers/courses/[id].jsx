@@ -37,7 +37,7 @@ import DateRangePicker from 'rsuite/DateRangePicker';
 import dynamic from 'next/dynamic';
 import { navigateToLogin } from '@utils';
 import { NextSeo } from 'next-seo';
-import { SmartInput, SmartDropDown, Popup } from '@components';
+import { SmartInput, SmartDropDown, Popup, SharePopup } from '@components';
 import { MobileFilterModal } from '@components/filterComps/mobileFilterModal';
 
 // (Optional) Import component styles. If you are using Less, import the `index.less` file.
@@ -103,7 +103,6 @@ const parseAsStartEndDate = createParser({
 const parseCourseType = (courseTypesOptions) => {
   return createParser({
     parse(queryValue) {
-      console.log('queryValue', queryValue);
       if (queryValue && courseTypesOptions[queryValue]) {
         return courseTypesOptions[queryValue];
       } else {
@@ -111,7 +110,6 @@ const parseCourseType = (courseTypesOptions) => {
       }
     },
     serialize(value) {
-      console.log('value', value);
       if (value) return value?.slug;
       return null;
     },
@@ -214,6 +212,13 @@ const CourseTile = ({ data, isAuthenticated }) => {
     });
   };
 
+  const currentShareLink =
+    isGuestCheckoutEnabled || isAuthenticated
+      ? `${window.location.origin}/us-en/course/${sfid}`
+      : `${window.location.origin}/us-en/course/${sfid}?ctype=${productTypeId}&page=c-o&${queryString.stringify(
+          router.query,
+        )}`;
+
   return (
     <div
       className={classNames('course-item', {
@@ -244,6 +249,7 @@ const CourseTile = ({ data, isAuthenticated }) => {
             )}
           </div>
         )}
+        <SharePopup currentShareLink={currentShareLink} />
       </div>
       {mode !== 'Online' && locationCity && (
         <div className="course-location">

@@ -11,7 +11,6 @@ function ProcessPayment() {
   const searchParams = useSearchParams();
   const { showAlert } = useGlobalAlertContext();
   const { id, stripeOrg } = router.query;
-  console.log('stripeOrg', stripeOrg);
   const next = searchParams.get('next');
   const previous = searchParams.get('previous');
   const clientSecret = searchParams.get('payment_intent_client_secret');
@@ -19,8 +18,6 @@ function ProcessPayment() {
   useEffect(() => {
     if (!router.isReady) return;
     if (!stripeOrg) {
-      //router.replace(next);
-      console.log('stripeOrg not found');
       return;
     }
 
@@ -206,7 +203,6 @@ function ProcessPayment() {
               `${paymentIntent.last_payment_error?.message} with code ${paymentIntent.last_payment_error?.decline_code}` ||
               `Unexpected payment status ${paymentIntent.status}.`;
 
-            console.log('internalErrorMessage', internalErrorMessage);
             router.replace({
               pathname: `/us-en/payment-failed/${id}`,
               query: {

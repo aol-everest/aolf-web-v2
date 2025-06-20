@@ -95,13 +95,10 @@ export default function AttendeeDetails({
 
   const handleCopyData = (formik, ticket, index) => (e) => {
     const value = e.target.value;
-    console.log('value', index);
-    console.log('index', value);
     if (value !== null) {
       const fromTicket = formik.values.tickets.find(
         (d) => d.attendeeRecordExternalId === value,
       );
-      console.log('fromTicket', fromTicket);
       if (fromTicket) {
         formik.setFieldValue(
           `tickets.${index}.firstName`,
@@ -141,8 +138,6 @@ export default function AttendeeDetails({
           });
         });
       }
-    } else {
-      console.log('elseee');
     }
   };
 
@@ -166,10 +161,6 @@ export default function AttendeeDetails({
                 }}
               >
                 {(formik) => {
-                  console.log('formik.errors', formik.errors);
-                  console.log('formik.isValid', formik.isValid);
-                  console.log('formik.dirty', formik.dirty);
-
                   const ticketByTier = groupBy(
                     formik.values.tickets,
                     'pricingTierName',

@@ -7,9 +7,10 @@ import {
   tConvert,
 } from '@utils';
 import ContentLoader from 'react-content-loader';
+import queryString from 'query-string';
 import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
-import React, { useEffect, useState, useRef } from 'react';
-import { useQueryState, parseAsBoolean, parseAsJson, createParser } from 'nuqs';
+import React, { useEffect, useState } from 'react';
+import { useQueryState, parseAsBoolean, createParser } from 'nuqs';
 import { useUIDSeed } from 'react-uid';
 import { useAuth, useGlobalAlertContext } from '@contexts';
 import { withCenterInfo } from '@hoc';
@@ -23,7 +24,7 @@ import {
   COURSE_TYPES,
   COURSE_MODES_MAP,
 } from '@constants';
-import { RetreatPrerequisiteWarning } from '@components';
+import { RetreatPrerequisiteWarning, SharePopup } from '@components';
 import { useGlobalModalContext } from '@contexts';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
@@ -151,6 +152,8 @@ const MeetupTile = ({ data }) => {
     meetupDuration,
     isEventFull,
     isPurchased,
+    productTypeId,
+    sfid,
   } = data || {};
 
   const updateMeetupDuration = `${meetupDuration.replace(/Minutes/g, '')} Min`;
@@ -300,6 +303,10 @@ const MeetupTile = ({ data }) => {
     }
   };
 
+  const currentShareLink = `${window.location.origin}/us-en/meetup/checkout/${sfid}?ctype=${productTypeId}&${queryString.stringify(
+    router.query,
+  )}`;
+
   const showEnrollmentCompletionAction = (selectedMeetup, data) => {
     const { attendeeId } = data;
 
@@ -400,6 +407,7 @@ const MeetupTile = ({ data }) => {
           </div>
           <div className="course-duration">{getCourseDuration()}</div>
         </div>
+        {!isEventFull && <SharePopup currentShareLink={currentShareLink} />}
       </div>
 
       <div className="course-location">

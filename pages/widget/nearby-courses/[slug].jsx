@@ -1,5 +1,6 @@
 /* eslint-disable no-inline-styles/no-inline-styles */
 import React, { useState } from 'react';
+import queryString from 'query-string';
 import { api, tConvert, concatenateStrings } from '@utils';
 import Slider from 'react-slick';
 import usePlacesService from 'react-google-autocomplete/lib/usePlacesAutocompleteService';
@@ -9,6 +10,7 @@ import { ABBRS, COURSE_TYPES_MASTER, COURSE_TYPES } from '@constants';
 import { useQuery } from '@tanstack/react-query';
 import { useRouter } from 'next/router';
 import { orgConfig } from '@org';
+import { SharePopup } from '@components';
 
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
@@ -206,7 +208,7 @@ export async function getServerSideProps(context) {
   };
 }
 
-const WorkShopTile = ({ workshop }) => {
+const WorkShopTile = ({ workshop, handleSharePopup }) => {
   const {
     mode,
     eventStartDate,
@@ -220,6 +222,8 @@ const WorkShopTile = ({ workshop }) => {
     listPrice,
     productTypeId,
   } = workshop || {};
+  const isOnline = mode === 'Online';
+
   const router = useRouter();
   const getCourseDeration = () => {
     return (
@@ -232,7 +236,6 @@ const WorkShopTile = ({ workshop }) => {
   };
 
   const enrollAction = () => {
-    const isOnline = mode === 'Online';
     iframeRouteWithUTMQuery(router, {
       pathname: `/us-en/course/scheduling/${sfid}`,
       query: {
@@ -241,6 +244,11 @@ const WorkShopTile = ({ workshop }) => {
       },
     });
   };
+
+  const currentShareLink = `${window.location.origin}/us-en/course/scheduling/${sfid}?ctype=${productTypeId}&mode: ${isOnline ? 'online' : 'inPerson'}&${queryString.stringify(
+    router.query,
+  )}`;
+
   return (
     <div class="slide">
       <div class="course-item-box">
@@ -248,6 +256,21 @@ const WorkShopTile = ({ workshop }) => {
           <div class="row">
             <div class="course-item-date">{getCourseDeration()}</div>
             <div className="course-item-price">$ {listPrice}</div>
+            <div class="course-share">
+              <button
+                class="share-button"
+                onClick={() => {
+                  handleSharePopup(workshop);
+                }}
+              >
+                <img
+                  src="/img/share-icon.svg"
+                  alt="Share"
+                  width="24"
+                  class="icon-share"
+                />
+              </button>
+            </div>
           </div>
           <div class="payment-details">
             <div class="payby">
@@ -322,6 +345,8 @@ const NearbyCoursesCarousel = ({ initialLocation = null, nearbyWorkshops }) => {
     },
   });
   const [isReadyForSelection, setReadyForSelection] = useState(true);
+  const [showSharePopup, setShowSharePopup] = useState(false);
+  const [currentShareLink, setCurrentShareLink] = useState('');
 
   const [location, setLocation] = useState({
     address: initialLocation.locationName,
@@ -331,9 +356,7 @@ const NearbyCoursesCarousel = ({ initialLocation = null, nearbyWorkshops }) => {
     timezone: initialLocation.timezone,
   });
 
-  console.log(location);
-
-  const { data, isLoading, isError, error } = useQuery({
+  const { data } = useQuery({
     queryKey: [
       'nearbyWorkshops',
       location.latitude,
@@ -351,8 +374,6 @@ const NearbyCoursesCarousel = ({ initialLocation = null, nearbyWorkshops }) => {
         ctype: courseTypeFilter.value,
         timeZone: location.timezone,
       };
-
-      console.log('fetching data');
 
       const response = await api.get({
         path: 'nearbyWorkshops',
@@ -449,6 +470,36 @@ const NearbyCoursesCarousel = ({ initialLocation = null, nearbyWorkshops }) => {
     });
   };
 
+  const handleSharePopup = (item) => {
+    const isOnline = item.mode === 'Online';
+    const shareLink = `${window.location.origin}/us-en/course/scheduling/${item.sfid}?ctype=${item.productTypeId}&mode=${isOnline ? 'online' : 'inPerson'}&page=c-o&${queryString.stringify(
+      router.query,
+    )}`;
+    setCurrentShareLink(shareLink);
+    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+    if (navigator.share && isMobile) {
+      navigator
+        .share({
+          title: 'Check this out!',
+          text: 'Have a look at this amazing content on Art of Living!',
+          url: shareLink,
+        })
+        .then(() => {
+          console.log('Content shared successfully');
+        })
+        .catch((error) => {
+          console.error('Error sharing content:', error);
+        });
+    } else {
+      setShowSharePopup(true);
+    }
+  };
+
+  const handleSetShowSharePopup = () => {
+    setCurrentShareLink('');
+    setShowSharePopup(false);
+  };
+
   return (
     <section class="courses-nearby">
       <div class="container">
@@ -519,9 +570,22 @@ const NearbyCoursesCarousel = ({ initialLocation = null, nearbyWorkshops }) => {
         </div>
         <Slider {...settings} className="courses-slider">
           {(data || []).map((workshop, index) => {
-            return <WorkShopTile workshop={workshop} key={index} />;
+            return (
+              <WorkShopTile
+                workshop={workshop}
+                key={index}
+                handleSharePopup={handleSharePopup}
+              />
+            );
           })}
         </Slider>
+
+        <SharePopup
+          currentShareLink={currentShareLink}
+          showButton={false}
+          showSharePopupParent={showSharePopup}
+          setShowSharePopupParent={handleSetShowSharePopup}
+        />
 
         <div class="courses-nearby-actions">
           <button class="btn-primary" onClick={moreDatesAction}>

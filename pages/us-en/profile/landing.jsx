@@ -15,6 +15,7 @@ import {
   tConvert,
   getUserTimeZoneAbbreviation,
 } from '@utils';
+import queryString from 'query-string';
 import { useQuery } from '@tanstack/react-query';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
@@ -22,6 +23,7 @@ import { withAuth } from '@hoc';
 
 import { fetchContentfulBannerDetails, pushRouteWithUTMQuery } from '@service';
 import { ABBRS, COURSE_MODES, TIME_ZONE } from '@constants';
+import { SharePopup } from '@components';
 
 dayjs.extend(utc);
 
@@ -530,22 +532,12 @@ const UpcomingEventsComp = ({ item }) => {
   }
 };
 
-const RecommendedCourses = ({ item }) => {
+const RecommendedCourses = ({ item, handleSharePopup }) => {
   const router = useRouter();
 
   const detailsPage = (item) => () => {
     pushRouteWithUTMQuery(router, {
       pathname: `/us-en/course/${item.sfid}`,
-      query: {
-        ctype: item.productTypeId,
-        page: 'c-o',
-      },
-    });
-  };
-
-  const enrollMeetupAction = (item) => () => {
-    pushRouteWithUTMQuery(router, {
-      pathname: `/us-en/meetup/checkout/${item.sfid}`,
       query: {
         ctype: item.productTypeId,
         page: 'c-o',
@@ -562,16 +554,8 @@ const RecommendedCourses = ({ item }) => {
       },
     });
   };
-  const enrollEventAction = (item) => () => {
-    pushRouteWithUTMQuery(router, {
-      pathname: `/us-en/ticketed-event/${item.sfid}`,
-      query: {
-        ctype: item.productTypeId,
-      },
-    });
-  };
+
   const {
-    meetupTitle,
     title,
     mode,
     locationPostalCode,
@@ -580,12 +564,12 @@ const RecommendedCourses = ({ item }) => {
     locationStreet,
     primaryTeacherName,
     coTeacher1Name,
-    meetupDuration,
-    type,
     timings,
     unitPrice,
+    isGuestCheckoutEnabled,
+    productTypeId,
+    sfid,
   } = item || {};
-  const updateMeetupDuration = meetupDuration?.replace(/Minutes/g, 'Min');
   const isOnline = mode === COURSE_MODES.ONLINE.value;
 
   return (
@@ -599,6 +583,21 @@ const RecommendedCourses = ({ item }) => {
         </div>
         <div className="course-price">
           <span>${unitPrice}</span>
+        </div>
+        <div class="course-share">
+          <button
+            class="share-button"
+            onClick={() => {
+              handleSharePopup(item);
+            }}
+          >
+            <img
+              src="/img/share-icon.svg"
+              alt="Share"
+              width="24"
+              class="icon-share"
+            />
+          </button>
         </div>
       </div>
       {!isOnline && locationCity && (
@@ -643,8 +642,11 @@ const RecommendedCourses = ({ item }) => {
 
 const ProfileLanding = () => {
   const { profile } = useAuth();
-
+  const router = useRouter();
+  const [showSharePopup, setShowSharePopup] = useState(false);
+  const [currentShareLink, setCurrentShareLink] = useState('');
   const [banners, setBanners] = useState([]);
+  const { isAuthenticated } = useAuth();
 
   const { first_name } = profile || {};
 
@@ -782,6 +784,38 @@ const ProfileLanding = () => {
     return new Date(aStartTime) - new Date(bStartTime); // Earliest event first
   });
 
+  const handleSharePopup = (item) => {
+    const shareLink =
+      item?.isGuestCheckoutEnabled || isAuthenticated
+        ? `${window.location.origin}/us-en/course/${item.sfid}`
+        : `${window.location.origin}/us-en/course/${item.sfid}?ctype=${item.productTypeId}&page=c-o&${queryString.stringify(
+            router.query,
+          )}`;
+    setCurrentShareLink(shareLink);
+    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+    if (navigator.share && isMobile) {
+      navigator
+        .share({
+          title: 'Check this out!',
+          text: 'Have a look at this amazing content on Art of Living!',
+          url: shareLink,
+        })
+        .then(() => {
+          console.log('Content shared successfully');
+        })
+        .catch((error) => {
+          console.error('Error sharing content:', error);
+        });
+    } else {
+      setShowSharePopup(true);
+    }
+  };
+
+  const handleSetShowSharePopup = () => {
+    setCurrentShareLink('');
+    setShowSharePopup(false);
+  };
+
   return (
     <main className="profile-home">
       <section className="welcome-section">
@@ -915,10 +949,19 @@ const ProfileLanding = () => {
               {recommendedEventsOrdered.map((item) => {
                 return (
                   <SwiperSlide key={item.sfid}>
-                    <RecommendedCourses item={item} />
+                    <RecommendedCourses
+                      item={item}
+                      handleSharePopup={handleSharePopup}
+                    />
                   </SwiperSlide>
                 );
               })}
+              <SharePopup
+                currentShareLink={currentShareLink}
+                showButton={false}
+                showSharePopupParent={showSharePopup}
+                setShowSharePopupParent={handleSetShowSharePopup}
+              />
             </Swiper>
           </div>
         </div>

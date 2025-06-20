@@ -9,7 +9,6 @@ import { useUIDSeed } from 'react-uid';
 import { useAuth } from '@contexts';
 import { withCenterInfo } from '@hoc';
 import { ABBRS, COURSE_MODES, TIME_ZONE, COURSE_MODES_MAP } from '@constants';
-import { useGlobalModalContext } from '@contexts';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import { useRouter } from 'next/router';
@@ -22,7 +21,7 @@ import { orgConfig } from '@org';
 import DateRangePicker from 'rsuite/DateRangePicker';
 import { navigateToLogin } from '@utils';
 import { NextSeo } from 'next-seo';
-import { SmartInput, SmartDropDown, Popup } from '@components';
+import { SmartInput, SmartDropDown, Popup, SharePopup } from '@components';
 import { MobileFilterModal } from '@components/filterComps/mobileFilterModal';
 
 // (Optional) Import component styles. If you are using Less, import the `index.less` file.
@@ -103,7 +102,6 @@ const ItemLoaderTile = () => {
 const EventTile = ({ data, isAuthenticated }) => {
   const router = useRouter();
   const { track } = useAnalytics();
-  const { showModal } = useGlobalModalContext();
   const {
     title,
     mode,
@@ -111,7 +109,6 @@ const EventTile = ({ data, isAuthenticated }) => {
     productTypeId,
     eventStartDate,
     eventEndDate,
-    eventTimeZone,
     sfid,
     locationPostalCode,
     locationCity,
@@ -144,22 +141,14 @@ const EventTile = ({ data, isAuthenticated }) => {
         `/us-en/ticketed-event/${sfid}?${queryString.stringify(router.query)}`,
       );
     }
-
-    // showAlert(ALERT_TYPES.SUCCESS_ALERT, { title: "Success" });
   };
 
-  const getCourseDeration = () => {
-    if (dayjs.utc(eventStartDate).isSame(dayjs.utc(eventEndDate), 'day')) {
-      return <>{`${dayjs.utc(eventStartDate).format('ddd, MMM DD, YYYY')}`}</>;
-    }
-    return (
-      <>
-        {`${dayjs.utc(eventStartDate).format('ddd, MMM DD, YYYY')} - ${dayjs
-          .utc(eventEndDate)
-          .format('ddd, MMM DD, YYYY')}`}
-      </>
-    );
-  };
+  const currentShareLink =
+    isGuestCheckoutEnabled || isAuthenticated
+      ? `${window.location.origin}/us-en/ticketed-event/${sfid}`
+      : `${window.location.origin}/us-en/ticketed-event/${sfid}?${queryString.stringify(
+          router.query,
+        )}`;
 
   return (
     <div
@@ -180,6 +169,7 @@ const EventTile = ({ data, isAuthenticated }) => {
             {COURSE_MODES_MAP[mode]}
           </div>
         </div>
+        <SharePopup currentShareLink={currentShareLink} />
       </div>
       {mode !== 'Online' && locationCity && (
         <div className="course-location">

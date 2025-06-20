@@ -306,7 +306,6 @@ export const PaymentFormNew = ({
 
       if (Object.keys(errors).length > 0) {
         const errorFields = Object.keys(errors);
-        console.log('errorFields', errorFields);
         showAlert(ALERT_TYPES.INLINE_ERROR_ALERT, {
           children: (
             <div>

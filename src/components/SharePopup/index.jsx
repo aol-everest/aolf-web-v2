@@ -1,8 +1,19 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
-export const SharePopup = ({ currentShareLink }) => {
+export const SharePopup = ({
+  currentShareLink,
+  showButton = true,
+  showSharePopupParent = false,
+  setShowSharePopupParent,
+}) => {
   const [showSharePopup, setShowSharePopup] = useState(false);
   const [showToast, setShowToast] = useState(false);
+
+  useEffect(() => {
+    if (setShowSharePopupParent) {
+      setShowSharePopup(showSharePopupParent);
+    }
+  }, [showSharePopupParent]);
 
   const handleSharePopup = () => {
     const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
@@ -11,7 +22,7 @@ export const SharePopup = ({ currentShareLink }) => {
         .share({
           title: 'Check this out!',
           text: 'Have a look at this amazing content on Art of Living!',
-          url: 'https://www.artofliving.com/to/hUbGFdw239',
+          url: currentShareLink,
         })
         .then(() => {
           console.log('Content shared successfully');
@@ -38,21 +49,23 @@ export const SharePopup = ({ currentShareLink }) => {
 
   return (
     <>
-      <div class="course-share">
-        <button
-          class="share-button"
-          onClick={() => {
-            handleSharePopup();
-          }}
-        >
-          <img
-            src="/img/share-icon.svg"
-            alt="Share"
-            width="24"
-            class="icon-share"
-          />
-        </button>
-      </div>
+      {showButton && (
+        <div class="course-share">
+          <button
+            class="share-button"
+            onClick={() => {
+              handleSharePopup();
+            }}
+          >
+            <img
+              src="/img/share-icon.svg"
+              alt="Share"
+              width="24"
+              class="icon-share"
+            />
+          </button>
+        </div>
+      )}
 
       {showToast && (
         <div id="message" class="copy-message">
@@ -67,7 +80,12 @@ export const SharePopup = ({ currentShareLink }) => {
             <button
               id="close-popup"
               class="close-popup"
-              onClick={() => setShowSharePopup(false)}
+              onClick={() => {
+                if (setShowSharePopupParent) {
+                  setShowSharePopupParent(false);
+                }
+                setShowSharePopup(false);
+              }}
             >
               <span class="icon-aol iconaol-close"></span>
             </button>

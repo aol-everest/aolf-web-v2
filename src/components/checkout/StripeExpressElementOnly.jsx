@@ -6,14 +6,7 @@ import {
   Elements,
 } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
-import { ScheduleAgreementForm } from '@components/scheduleAgreementForm';
-import { Formik } from 'formik';
-import * as Yup from 'yup';
-import {
-  api,
-  priceCalculation,
-  convertToUpperCaseAndReplaceSpacesForURL,
-} from '@utils';
+import { api, priceCalculation } from '@utils';
 import { useGlobalAlertContext } from '@contexts';
 import { ALERT_TYPES } from '@constants';
 import queryString from 'query-string';
@@ -89,7 +82,6 @@ const CheckoutPage = ({
   email,
   onPaymentMethodSelected,
 }) => {
-  console.log(email);
   const { track, page } = useAnalytics();
   const stripe = useStripe();
   const elements = useElements();
@@ -103,7 +95,6 @@ const CheckoutPage = ({
   };
 
   const onConfirm = async (event) => {
-    console.log('onConfirm');
     if (loading) {
       return null;
     }

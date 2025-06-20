@@ -60,7 +60,6 @@ const queryInstructor = async ({ queryKey: [_, term] }) => {
 
 const fillDefaultTimeZone = () => {
   const userTimeZoneAbbreviation = getUserTimeZoneAbbreviation() || '';
-  console.log('userTimeZoneAbbreviation', userTimeZoneAbbreviation);
   if (TIME_ZONE[userTimeZoneAbbreviation.toUpperCase()]) {
     return userTimeZoneAbbreviation.toUpperCase();
   }

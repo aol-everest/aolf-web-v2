@@ -142,7 +142,6 @@ export const ResilienceTraining = ({
   const readLessClickAction = (e, id) => {
     if (e) e.preventDefault();
     const filteredId = ellipsisTestimonialIds.filter((item) => item !== id);
-    console.log('filteredId', filteredId);
     setEllipsisTestimonialIds(filteredId);
   };
 
